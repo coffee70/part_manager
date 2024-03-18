@@ -5,9 +5,9 @@ type Props = {
 }
 function Filter(props: Props) {
     const { children } = props
-    return <div
-        className="w-min bg-foreground text-muted-foreground p-2"
-    >{children}</div>
+    return <button
+        className="w-min bg-foreground border border-border text-black p-2"
+    >{children}</button>
 }
 
 export function DateFilter() {
