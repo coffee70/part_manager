@@ -19,7 +19,7 @@ export function FilterTrigger({ children }: FilterTriggerProps) {
     return (
         <DropdownMenuTrigger asChild>
             <button
-                className="w-min bg-foreground border border-border text-black p-2"
+                className="w-min bg-foreground border border-border text-text p-2"
             >{children}</button>
         </DropdownMenuTrigger>
     )

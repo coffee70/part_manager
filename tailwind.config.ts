@@ -19,6 +19,7 @@ const config = {
     },
     extend: {
       colors: {
+        text: "var(--text)",
         hover: "var(--hover)",
         border: "var(--border)",
         input: "var(--input)",

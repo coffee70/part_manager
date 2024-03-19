@@ -31,7 +31,7 @@ const SearchInput = (props: Props) => {
   }, []);
 
   return (
-    <div className="flex items-center bg-foreground border border-border text-black px-2">
+    <div className="flex items-center bg-foreground border border-border text-text px-2">
       <Search />
       <input
         ref={inputRef}
