@@ -1,5 +1,3 @@
-
-import { Calendar } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -9,7 +7,7 @@ import {
 type FilterProps = {
     children: React.ReactNode;
 }
-function Filter({ children }: FilterProps) {
+export function Filter({ children }: FilterProps) {
     return <DropdownMenu>{children}</DropdownMenu>
 }
 
@@ -17,7 +15,7 @@ type FilterTriggerProps = {
     children: React.ReactNode;
 }
 
-function FilterTrigger({ children }: FilterTriggerProps) {
+export function FilterTrigger({ children }: FilterTriggerProps) {
     return (
         <DropdownMenuTrigger asChild>
             <button
@@ -31,7 +29,7 @@ type FilterContentProps = {
     children: React.ReactNode;
 }
 
-function FilterContent({ children }: FilterContentProps) {
+export function FilterContent({ children }: FilterContentProps) {
     return (
         <DropdownMenuContent className="w-56">
             {children}
