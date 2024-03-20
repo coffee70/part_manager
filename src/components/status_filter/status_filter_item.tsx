@@ -9,7 +9,7 @@ type Props = {
 export default function StatusFilterItem({ label, color }: Props) {
     return (
         <DropdownMenuItem>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
                 <StatusIndicator width={8} height={8} color={color} />
                 <span>{label}</span>
             </div>
