@@ -7,7 +7,7 @@ type Props = {
 
 export default function FilterContent({ label, children }: Props) {
     return (
-        <DropdownMenuContent>
+        <DropdownMenuContent className='min-w-56'>
             {label &&
                 <DropdownMenuLabel>
                     {label}
