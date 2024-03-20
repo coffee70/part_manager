@@ -15,15 +15,15 @@ type Props = {
 export default function StatusFilter({ statuses }: Props) {
     return (
         <Filter>
-        <FilterTrigger>
-            <StatusIcon  width={24} height={24}/>
-        </FilterTrigger>
-        <FilterContent>
-            {statuses.map((status) => (
-                <StatusFilterItem key={status.label} label={status.label} color={status.color} />
-            ))}
-        </FilterContent>
-    </Filter>
+            <FilterTrigger>
+                <StatusIcon width={24} height={24} />
+            </FilterTrigger>
+            <FilterContent>
+                {statuses.map((status) => (
+                    <StatusFilterItem key={status.label} label={status.label} color={status.color} />
+                ))}
+            </FilterContent>
+        </Filter>
     )
 }
 
