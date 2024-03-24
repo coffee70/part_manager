@@ -9,11 +9,6 @@ import StatusIndicator from "./svg/status_indicator"
 import { useSelect } from "@mui/base"
 import { Check as CheckIcon } from "lucide-react"
 
-interface ListboxProps
-    extends React.HTMLAttributes<HTMLUListElement> {
-    children: React.ReactNode;
-}
-
 type OptionProps = {
     value: number;
     status: {
@@ -60,14 +55,14 @@ export default function StatusFilter() {
     });
 
     return (
-        <div className="relative p-2">
+        <div className="relative">
             <Button {...getButtonProps()} variant="icon" size="icon" className="relative">
                 <StatusIcon width={24} height={24} />
             </Button>
             <ul
                 {...getListboxProps()}
                 className={clsx(
-                    "absolute h-auto w-full min-w-56 z-10 list-none bg-foreground text-text border border-border p-1 my-1 shadow-sm",
+                    "absolute h-auto w-full min-w-56 z-10 list-none bg-foreground text-text border border-border p-1 my-1 shadow-sm transition-transform",
                     listboxVisible ? "" : "hidden"
                 )}
                 aria-hidden={!listboxVisible}

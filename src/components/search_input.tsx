@@ -1,6 +1,7 @@
 'use client'
 import * as React from "react"
 import { Search, X } from "lucide-react"
+import clsx from "clsx"
 
 type Props = Partial<{
   value: string | number | readonly string[];
@@ -31,20 +32,21 @@ const SearchInput = (props: Props) => {
   }, []);
 
   return (
-    <div className="flex items-center bg-foreground border border-border text-text px-2">
+    <div className="flex items-center space-x-2 px-2 h-10 bg-foreground border border-border text-text">
       <Search />
       <input
         ref={inputRef}
         type='text'
-        className="flex h-10 w-full bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         onChange={onChange}
         value={value}
       />
-      {showClear &&
-        <button onClick={handleClear}>
-          <X />
-        </button>
-      }
+      <button
+        onClick={handleClear}
+        className={showClear ? "" : "invisible disabled"}
+      >
+        <X />
+      </button>
     </div>
   )
 }
