@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 export default function DateFilter() {
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 <Button variant="icon" size="icon">
                     <CalendarIcon />
                 </Button>
