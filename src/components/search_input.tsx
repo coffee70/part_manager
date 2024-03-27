@@ -32,12 +32,12 @@ const SearchInput = (props: Props) => {
   }, []);
 
   return (
-    <div className="flex items-center space-x-2 px-2 h-10 bg-foreground border border-border text-text">
+    <div className="flex items-center flex-grow space-x-2 px-2 h-10 bg-foreground border border-border text-text">
       <Search />
       <input
         ref={inputRef}
         type='text'
-        className="flex bg-transparent text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex bg-transparent w-full text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         onChange={onChange}
         value={value}
       />
