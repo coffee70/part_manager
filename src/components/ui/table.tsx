@@ -2,16 +2,22 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+type TableProps = React.HTMLAttributes<HTMLTableElement>
+& { addSlot?: React.ReactNode }
+
 const Table = React.forwardRef<
   HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
+  TableProps
+>(({ className, addSlot, ...props }, ref) => (
+  <div className="relative overflow-auto">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+      className={cn("w-full caption-bottom text-sm bg-foreground", className)}
       {...props}
     />
+    {addSlot && (
+      <div>{addSlot}</div>
+    )}
   </div>
 ))
 Table.displayName = "Table"
