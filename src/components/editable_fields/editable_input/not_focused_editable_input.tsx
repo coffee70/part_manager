@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { PencilIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DetailT } from '@/components/summary/summary_details';
+import { useFocusContext } from '@/components/summary/summary_details_context';
 
 interface NotFocusedProps {
-    hovered: boolean;
-    setHovered: React.Dispatch<React.SetStateAction<boolean>>;
-    setFocused: React.Dispatch<React.SetStateAction<boolean>>;
-    value: React.InputHTMLAttributes<HTMLInputElement>['value'];
+    detail: DetailT;
 }
 
-export default function NotFocused({ value, hovered, setHovered, setFocused }: NotFocusedProps) {
+export default function NotFocused({ detail }: NotFocusedProps) {
+    const [hovered, setHovered] = React.useState(false);
+    const { focus } = useFocusContext();
     const handleMouseEnter = React.useCallback(() => setHovered(true), [setHovered]);
     const handleMouseLeave = React.useCallback(() => setHovered(false), [setHovered]);
-    const handleClick = React.useCallback(() => setFocused(true), [setFocused]);
+    const handleClick = React.useCallback(() => focus(detail.id), [focus, detail.id]);
 
     return (
         <button className={cn(
@@ -27,7 +28,7 @@ export default function NotFocused({ value, hovered, setHovered, setFocused }: N
                 className={cn(
                     "flex items-center justify-end space-x-2 p-1 border border-transparent",
                 )}
-            >{value}</div>
+            >{detail.value}</div>
             <div className={cn("p-1 bg-foreground", !hovered ? 'invisible disabled' : '')}>
                 <PencilIcon />
             </div>

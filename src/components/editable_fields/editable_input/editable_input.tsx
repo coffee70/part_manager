@@ -3,16 +3,18 @@ import * as React from 'react';
 import { InputProps } from '@/components/ui/input';
 import Focused from './focused_editable_input';
 import NotFocused from './not_focused_editable_input';
+import { useFocusContext } from '@/components/summary/summary_details_context';
+import { DetailT } from '@/components/summary/summary_details';
 
-export default function EditableInput(props: InputProps) {
+interface Props extends InputProps { detail: DetailT }
 
-    const [hovered, setHovered] = React.useState<boolean>(false);
-    const [focused, setFocused] = React.useState<boolean>(false);
-
+export default function EditableInput({ detail, ...other }: Props) {
+    const { focused } = useFocusContext();
+    const isFocused = focused.find(f => f.id === detail.id)?.focused;
     return (
         <>
-            {focused && <Focused {...props} setFocused={setFocused} />}
-            {!focused && <NotFocused hovered={hovered} setHovered={setHovered} setFocused={setFocused} value={props.value} />}
+            {isFocused && <Focused detail={detail} {...other}/>}
+            {!isFocused && <NotFocused detail={detail} />}
         </>
     )
 }
