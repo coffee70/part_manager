@@ -9,7 +9,7 @@ type SummaryDetailsProps = {
     }[]
 }
 
-export function SummaryDetails({ details }: SummaryDetailsProps) {
+export default function SummaryDetails({ details }: SummaryDetailsProps) {
     return (
         <Summary title='Details'>
             <div className='flex flex-col space-y-1 text-sm'>
