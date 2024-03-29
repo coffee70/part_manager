@@ -1,10 +1,11 @@
 'use client'
 import * as React from "react"
 import { Search, X } from "lucide-react"
-import clsx from "clsx"
+import { Input } from "./ui/input";
+
 
 type Props = Partial<{
-  value: string | number | readonly string[];
+  value: React.InputHTMLAttributes<HTMLInputElement>['value'];
   onChange: React.ChangeEventHandler<HTMLInputElement>
 }>
 
@@ -34,10 +35,10 @@ const SearchInput = (props: Props) => {
   return (
     <div className="flex items-center flex-grow space-x-2 px-2 h-10 bg-foreground border border-border text-text">
       <Search />
-      <input
+      <Input
         ref={inputRef}
         type='text'
-        className="flex bg-transparent w-full text-sm placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="bg-transparent"
         onChange={onChange}
         value={value}
       />
