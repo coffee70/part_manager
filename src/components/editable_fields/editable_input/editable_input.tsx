@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import { InputProps } from '@/components/ui/input';
 import Focused from './focused_editable_input';
