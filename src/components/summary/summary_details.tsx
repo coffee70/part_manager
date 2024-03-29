@@ -20,7 +20,7 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
                 <FocusProvider ids={ids}>
                     {details.map(detail => (
                         <div key={detail.id} className="flex items-center justify-between space-x-2 min-w-80">
-                            <div className='text-muted-foreground'>{`${detail.key}:`}</div>
+                            <div className='text-muted-foreground text-nowrap'>{`${detail.key}:`}</div>
                             <EditableInput detail={detail} />
                         </div>
                     ))}

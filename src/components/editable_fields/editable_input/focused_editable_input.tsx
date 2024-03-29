@@ -28,7 +28,7 @@ export default function Focused(props: FocusedProps) {
     }, []);
 
     return (
-        <div className="flex items-center border border-border">
+        <div className="flex items-center border border-border w-full">
             <Input
                 ref={inputRef}
                 className="ml-1"
