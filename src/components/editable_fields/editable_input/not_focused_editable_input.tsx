@@ -25,9 +25,7 @@ export default function NotFocused({ detail }: NotFocusedProps) {
             onClick={handleClick}
         >
             <div
-                className={cn(
-                    "flex items-center justify-end space-x-2 p-1 border border-transparent",
-                )}
+                className="flex items-center justify-end space-x-2 p-1 border border-transparent"
             >{detail.value}</div>
             <div className={cn("p-1 bg-foreground", !hovered ? 'invisible disabled' : '')}>
                 <PencilIcon />
