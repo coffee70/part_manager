@@ -17,6 +17,7 @@ type Props = {
 
 export default function SummaryList({ title, data, addLabel }: Props) {
     const [adding, setAdding] = React.useState(false);
+    const [value, setValue] = React.useState('');
 
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleAdd = React.useCallback(() => {
@@ -46,9 +47,11 @@ export default function SummaryList({ title, data, addLabel }: Props) {
                             ref={inputRef}
                             placeholder={PLACEHOLDER}
                             onBlur={() => setAdding(false)}
+                            value={value}
+                            onChange={e => setValue(e.target.value)}
                         />
                     ) : (
-                        <button className="flex items-center space-x-1 w-full text-muted-foreground"
+                        <button type="button" className="flex items-center space-x-1 w-full text-muted-foreground"
                             onClick={handleAdd}>
                             <PlusIcon />
                             <span>{addLabel}</span>
