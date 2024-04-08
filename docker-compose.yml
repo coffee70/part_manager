@@ -1,5 +1,21 @@
 services:
+  manager:
+    container_name: manager
+    build:
+      context: ./
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    networks:
+      - default
+    restart: always
   db:
+    container_name: db
     image: postgres
     environment:
       POSTGRES_DB: manager
@@ -9,3 +25,6 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
+    networks:
+      - default
+    restart: always
