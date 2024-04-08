@@ -15,7 +15,7 @@ export default function Summary({ title, children }: Props) {
                 {open && <ChevronDownIcon />}
                 {!open && <ChevronRightIcon />}
             </button>
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-2 w-full">
                 <span className='font-bold text-lg'>{title}</span>
                 {open && children}
             </div>
