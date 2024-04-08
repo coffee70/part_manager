@@ -1,8 +1,8 @@
 import React from "react";
 import { Input, InputProps } from "@/components/ui/input";
 import { CheckIcon } from "lucide-react";
-import { useFocusContext } from "@/components/summary/summary_details_context";
-import { DetailT } from "@/components/summary/summary_details";
+import { useFocusContext } from "@/components/summary/summary_details/summary_details_context";
+import { DetailT } from "@/components/summary/summary_details/summary_details";
 
 interface FocusedProps extends InputProps {
     detail: DetailT;

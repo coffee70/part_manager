@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { PencilIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { DetailT } from '@/components/summary/summary_details';
-import { useFocusContext } from '@/components/summary/summary_details_context';
+import { DetailT } from '@/components/summary/summary_details/summary_details';
+import { useFocusContext } from '@/components/summary/summary_details/summary_details_context';
 
 interface NotFocusedProps {
     detail: DetailT;

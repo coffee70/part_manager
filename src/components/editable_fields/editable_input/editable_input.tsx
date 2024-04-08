@@ -3,8 +3,8 @@ import * as React from 'react';
 import { InputProps } from '@/components/ui/input';
 import Focused from './focused_editable_input';
 import NotFocused from './not_focused_editable_input';
-import { useFocusContext } from '@/components/summary/summary_details_context';
-import { DetailT } from '@/components/summary/summary_details';
+import { useFocusContext } from '@/components/summary/summary_details/summary_details_context';
+import { DetailT } from '@/components/summary/summary_details/summary_details';
 
 interface Props extends InputProps { detail: DetailT }
 

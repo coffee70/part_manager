@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import EditableTextarea from '@/components/editable_fields/editable_textarea';
-import Summary from '../summary_base';
+import SummaryBase from '../summary_base';
 import ActionButtons from '@/components/summary/summary_notes/action_buttons';
 
 export default function SummaryNotes() {
@@ -14,7 +14,7 @@ export default function SummaryNotes() {
     }, []);
 
     return (
-        <Summary title="Notes">
+        <SummaryBase title="Notes">
             <EditableTextarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
@@ -26,6 +26,6 @@ export default function SummaryNotes() {
                 onSave={handleSubmit}
                 show={focused}
             />
-        </Summary>
+        </SummaryBase>
     )
 }

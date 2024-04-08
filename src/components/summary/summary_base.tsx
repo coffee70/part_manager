@@ -7,7 +7,7 @@ type Props = {
     children: React.ReactNode;
 }
 
-export default function Summary({ title, children }: Props) {
+export default function SummaryBase({ title, children }: Props) {
     const [open, setOpen] = React.useState<boolean>(true);
     return (
         <div className="flex space-x-4 text-text">

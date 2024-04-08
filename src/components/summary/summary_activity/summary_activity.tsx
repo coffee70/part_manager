@@ -1,13 +1,13 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Summary from "../summary_base";
+import SummaryBase from "../summary_base";
 import Comments from './comments';
 import Logs from './logs';
 
 
 export default function SummaryActivity() {
     return (
-        <Summary title="Activity" >
+        <SummaryBase title="Activity" >
             <Tabs defaultValue="comments">
                 <TabsList>
                     <TabsTrigger value="comments">Comments</TabsTrigger>
@@ -20,6 +20,6 @@ export default function SummaryActivity() {
                     <Logs />
                 </TabsContent>
             </Tabs>
-        </Summary>
+        </SummaryBase>
     )
 }
