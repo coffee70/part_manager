@@ -4,7 +4,7 @@ import People from "../../ui/people";
 
 type PeopleT = {
     id: number;
-    key: string;
+    label: string;
     value: {
         name: string;
     };
@@ -20,7 +20,7 @@ export default function SummaryPeople({ people }: Props) {
             <div className="flex">
                 <div className='flex flex-col space-y-1 text-sm'>
                     {people.map(person => (
-                        <DetailBase key={person.id} detail={person}>
+                        <DetailBase key={person.id} label={person.label}>
                             <People name={person.value.name} />
                         </DetailBase>
                     ))}

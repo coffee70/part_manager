@@ -6,14 +6,10 @@ import EditableInput from "../../editable_fields/editable_input/editable_input";
 import DetailBase from "./summary_detail_base";
 import DetailClickAwayListener from "./summary_detail_CAL";
 
-type Person = {
-    name: string;
-}
-
 export type DetailT = {
     id: number;
-    key: string;
-    value: string | Person;
+    label: string;
+    value: string;
 }
 
 type SummaryDetailsProps = {
@@ -29,7 +25,7 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
                     <FocusProvider ids={ids}>
                         {details.map(detail => (
                             <DetailClickAwayListener key={detail.id} detail={detail}>
-                                <DetailBase detail={detail}>
+                                <DetailBase label={detail.label}>
                                     <EditableInput detail={detail} />
                                 </DetailBase>
                             </DetailClickAwayListener>
