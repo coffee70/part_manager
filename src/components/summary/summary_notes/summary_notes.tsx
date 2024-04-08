@@ -21,7 +21,11 @@ export default function SummaryNotes() {
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
             />
-            {focused && <ActionButtons onCancel={() => setFocused(false)} onSave={handleSubmit} />}
+            <ActionButtons
+                onCancel={() => setFocused(false)}
+                onSave={handleSubmit}
+                show={focused}
+            />
         </Summary>
     )
 }
