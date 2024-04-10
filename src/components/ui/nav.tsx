@@ -6,7 +6,7 @@ type NavBaseProps = {
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className='flex flex-col items-center bg-foreground text-text h-screen w-56'>
+        <div className='flex flex-col items-center bg-foreground text-text h-screen w-64'>
             {children}
         </div>
     )
