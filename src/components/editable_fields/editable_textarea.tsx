@@ -9,8 +9,8 @@ const PLACEHOLDER = 'Click to add notes';
 type Props = {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    onFocus: () => void;
-    onBlur: () => void;
+    onFocus?: () => void;
+    onBlur?: () => void;
 }
 
 export default function EditableTextarea({ value, onChange, onFocus, onBlur }: Props) {
@@ -20,12 +20,12 @@ export default function EditableTextarea({ value, onChange, onFocus, onBlur }: P
     const handleFocus = React.useCallback(() => {
         setFocused(true);
         setHovered(false);
-        onFocus();
+        if (onFocus) onFocus()
     }, [onFocus]);
 
     const handleBlur = React.useCallback(() => {
         setFocused(false);
-        onBlur();
+        if (onBlur) onBlur();
     }, [onBlur]);
 
     return (

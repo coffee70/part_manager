@@ -1,14 +1,9 @@
 import { Button } from './button'
 import { MoreHorizontalIcon } from 'lucide-react'
 
-type Props = {
-    variant?: 'default' | 'small';
-}
-
-export default function More({ variant }: Props) {
-    const size = !variant || variant === 'default' ? 'sm' : 'sm_icon'
+export default function More() {
     return (
-        <Button variant="table" size={size}>
+        <Button variant="icon">
             <MoreHorizontalIcon />
         </Button>
     )

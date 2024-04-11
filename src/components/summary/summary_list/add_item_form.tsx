@@ -27,8 +27,11 @@ export default function AddItemForm({ label, placeholder }: Props) {
             onChange={e => setValue(e.target.value)}
         />
     ) : (
-        <button type="button" className="flex items-center space-x-1 w-full text-muted-foreground"
-            onClick={handleAdd}>
+        <button
+            type="button"
+            className="flex items-center space-x-1 w-full text-muted-foreground"
+            onClick={handleAdd}
+        >
             <PlusIcon />
             <span>{label}</span>
         </button>

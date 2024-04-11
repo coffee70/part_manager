@@ -56,7 +56,7 @@ export default function StatusFilter() {
 
     return (
         <div className="relative">
-            <Button {...getButtonProps()} variant="icon" size="icon" className="relative">
+            <Button {...getButtonProps()} variant="icon" className="relative bg-secondary border border-border h-10 w-10">
                 <StatusIcon width={24} height={24} />
             </Button>
             <ul

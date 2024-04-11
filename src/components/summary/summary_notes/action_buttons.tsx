@@ -15,6 +15,7 @@ export default function ActionButtons({ onCancel, onSave, show }: Props) {
                 onClick={onCancel}
             >Cancel</Button>
             <Button
+                variant='primary'
                 className='flex-1'
                 onClick={onSave}
             >Save</Button>

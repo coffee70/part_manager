@@ -1,4 +1,17 @@
-export type TData = typeof orderData
+export type TData = Array<{
+    id: number;
+    label: string;
+    sublabel?: string;
+    status: {
+        label: string;
+        color: string;
+        completed?: boolean;
+    };
+    updated?: {
+        at: string;
+        by: string;
+    };
+}>
 
 export function fetchOrderData() {
     const complete = orderData.filter(order => order.status.completed)

@@ -11,7 +11,7 @@ export default function DateFilter() {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="icon" size="icon">
+                <Button variant="icon" className='bg-secondary border border-border h-10 w-10'>
                     <CalendarIcon />
                 </Button>
             </PopoverTrigger>

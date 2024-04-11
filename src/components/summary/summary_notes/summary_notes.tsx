@@ -6,25 +6,12 @@ import ActionButtons from '@/components/summary/summary_notes/action_buttons';
 
 export default function SummaryNotes() {
     const [value, setValue] = React.useState<string>('');
-    const [focused, setFocused] = React.useState<boolean>(false);
-
-    const handleSubmit = React.useCallback(() => {
-        // POST request to save notes
-        setFocused(false);
-    }, []);
 
     return (
         <SummaryBase title="Notes">
             <EditableTextarea
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                onFocus={() => setFocused(true)}
-                onBlur={() => setFocused(false)}
-            />
-            <ActionButtons
-                onCancel={() => setFocused(false)}
-                onSave={handleSubmit}
-                show={focused}
             />
         </SummaryBase>
     )
