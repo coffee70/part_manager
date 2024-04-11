@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
 
 import { cn } from "@/lib/utils"
+import SideNavigation from "@/components/side_nav/side_nav";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -27,7 +28,10 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        {children}
+        <main className="flex">
+          <SideNavigation />
+          {children}
+        </main>
       </body>
     </html>
   );
