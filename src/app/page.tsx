@@ -150,7 +150,7 @@ export default function Page() {
         </div>
       }
       rightPaneSlot={
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-6">
           <SummaryTitle title="O-23344" items={[{ label: "Lockheed Martin" }]} />
           <div className="flex space-x-2 py-4">
             <Button variant='toolbar' prependIcon={<ChevronsUp className="text-red-600" />}>Priority</Button>
@@ -166,6 +166,7 @@ export default function Page() {
               label: "Add Part",
               placeholder: "Part Number",
             }} />
+          <SummaryPeople people={people} />
           <SummaryActivity />
         </div>
       }
