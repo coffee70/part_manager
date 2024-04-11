@@ -8,7 +8,7 @@ import AddRow from "./add_row";
 
 type DataTableProps = {
     data: TData;
-    archived: boolean;
+    archived?: boolean;
 }
 
 export function DataTable({ data, archived }: DataTableProps) {
