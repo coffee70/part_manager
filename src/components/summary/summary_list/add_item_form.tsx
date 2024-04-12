@@ -18,22 +18,26 @@ export default function AddItemForm({ label, placeholder }: Props) {
         setTimeout(() => inputRef.current?.focus(), 0);
     }, [inputRef]);
 
-    return adding ? (
-        <Input
-            ref={inputRef}
-            placeholder={placeholder}
-            onBlur={() => setAdding(false)}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-        />
-    ) : (
-        <button
-            type="button"
-            className="flex items-center space-x-1 w-full text-muted-foreground"
-            onClick={handleAdd}
-        >
-            <PlusIcon />
-            <span>{label}</span>
-        </button>
-    );
+    return (
+        <div className='flex items-center border-t border-foreground py-1'>
+            {adding ? (
+                <Input
+                    ref={inputRef}
+                    placeholder={placeholder}
+                    onBlur={() => setAdding(false)}
+                    value={value}
+                    onChange={e => setValue(e.target.value)}
+                />
+            ) : (
+                <button
+                    type="button"
+                    className="flex items-center space-x-1 w-full text-muted-foreground"
+                    onClick={handleAdd}
+                >
+                    <PlusIcon />
+                    <span>{label}</span>
+                </button>
+            )}
+        </div>
+    )
 }
