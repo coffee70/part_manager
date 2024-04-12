@@ -10,7 +10,7 @@ type Props = {
 export default function SummaryListItem({ point }: Props) {
     return (
         <div key={point.id} className='flex items-center justify-between flex-1 py-1 border-t border-foreground'>
-            <div>{point.label}</div>
+            <div className="text-primary cursor-pointer hover:underline hover:underline-offset-2">{point.label}</div>
             <div className='flex items-center space-x-2'>
                 <Badge color={point.status.color} label={point.status.label} />
                 <Button variant='icon'>
