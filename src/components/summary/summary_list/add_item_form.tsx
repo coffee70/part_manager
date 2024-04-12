@@ -1,7 +1,8 @@
 'use client'
 import React from 'react';
 import { Input } from '@/components/ui/input';
-import { PlusIcon } from 'lucide-react';
+import { CheckIcon, PlusIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type Props = {
     label: string;
@@ -19,19 +20,25 @@ export default function AddItemForm({ label, placeholder }: Props) {
     }, [inputRef]);
 
     return (
-        <div className='flex items-center border-t border-foreground py-1'>
+        <div className='border-t border-foreground'>
             {adding ? (
-                <Input
-                    ref={inputRef}
-                    placeholder={placeholder}
-                    onBlur={() => setAdding(false)}
-                    value={value}
-                    onChange={e => setValue(e.target.value)}
-                />
+                <div className='flex items-center'>
+                    <Input
+                        className='py-1'
+                        ref={inputRef}
+                        placeholder={placeholder}
+                        onBlur={() => setAdding(false)}
+                        value={value}
+                        onChange={e => setValue(e.target.value)}
+                    />
+                    <Button variant='icon' className='bg-foreground p-1'>
+                        <CheckIcon />
+                    </Button>
+                </div>
             ) : (
                 <button
                     type="button"
-                    className="flex items-center space-x-1 w-full text-muted-foreground"
+                    className="flex items-center space-x-1 w-full py-1 text-muted-foreground"
                     onClick={handleAdd}
                 >
                     <PlusIcon />
