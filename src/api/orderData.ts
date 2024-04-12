@@ -55,7 +55,7 @@ const orderData = [
         sublabel: "Order from 2021-09-01",
         status: {
             label: "In Progress",
-            color: "yellow",
+            color: "#D6C100",
             completed: false,
         },
         updated: {
@@ -97,7 +97,7 @@ const orderData = [
         sublabel: "Order from 2021-09-01",
         status: {
             label: "In Progress",
-            color: "yellow",
+            color: "#D6C100",
             completed: false,
         },
         updated: {
