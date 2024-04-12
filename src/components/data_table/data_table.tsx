@@ -1,10 +1,22 @@
-import Badge from "../ui/badge";
-import { Table, TableBody, TableCell, TableRow } from "../ui/table"
 import { TData } from "@/api/orderData";
+import Badge from "../ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableRow
+} from "../ui/table"
 import Label from "./label";
 import People from "../ui/people";
-import More from "../ui/more";
+import { More } from "../ui/more";
 import AddRow from "./add_row";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "../ui/dropdown-menu";
 
 type DataTableProps = {
     data: TData;
@@ -14,7 +26,7 @@ type DataTableProps = {
 export function DataTable({ data, archived }: DataTableProps) {
     return (
         <>
-            <Table addSlot={ !archived ? <AddRow label="Order" /> : undefined }>
+            <Table addSlot={!archived ? <AddRow label="Order" /> : undefined}>
                 <TableBody>
                     {data.map((order) => (
                         <TableRow key={order.id}>
@@ -28,7 +40,16 @@ export function DataTable({ data, archived }: DataTableProps) {
                                 <People name={order.updated.by} at={order.updated.at} />
                             </TableCell>
                             <TableCell>
-                                <More />
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <More />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </TableCell>
                         </TableRow>
                     ))}
