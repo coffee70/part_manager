@@ -40,7 +40,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {prependIcon}
         <div className={spacing}>
-        {children}
+          {children}
         </div>
         {appendIcon}
       </Comp>

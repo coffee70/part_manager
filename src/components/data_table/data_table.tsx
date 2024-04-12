@@ -27,7 +27,7 @@ export function DataTable({ data, archived }: DataTableProps) {
                             <TableCell>
                                 <People name={order.updated.by} at={order.updated.at} />
                             </TableCell>
-                            <TableCell className="w-fit">
+                            <TableCell>
                                 <More />
                             </TableCell>
                         </TableRow>
