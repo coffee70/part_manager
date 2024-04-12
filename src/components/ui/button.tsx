@@ -13,7 +13,7 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground h-10",
         icon: "bg-transparent text-text",
         outline: "bg-transparent border border-border text-text",
-        toolbar: "bg-secondary text-text text-md font-light rounded-md p-1",
+        toolbar: "bg-secondary text-text text-md rounded-md p-1",
         ghost: "bg-transparent text-text",
       },
     },
