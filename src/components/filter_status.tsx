@@ -62,7 +62,7 @@ export default function StatusFilter() {
             <ul
                 {...getListboxProps()}
                 className={clsx(
-                    "absolute h-auto w-full min-w-56 z-10 list-none bg-foreground text-text border border-border p-1 my-1 shadow-sm transition-transform",
+                    "absolute h-auto w-full min-w-56 z-10 list-none bg-foreground text-text border border-border p-1 my-1 shadow-sm",
                     listboxVisible ? "" : "hidden"
                 )}
                 aria-hidden={!listboxVisible}
