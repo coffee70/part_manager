@@ -8,7 +8,7 @@ type Props = {
 
 export default function People({ name, at }: Props) {
     return (
-        <div className="flex items-center space-x-2 justify-end text-text text-sm">
+        <div className="flex items-center space-x-2 justify-end text-sm">
             {at ? (
                 <span>{`${formatDate(at)} by ${name}`}</span>
             ) : (

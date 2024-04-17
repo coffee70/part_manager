@@ -11,10 +11,10 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-primary text-primary-foreground h-10",
         secondary: "bg-secondary text-secondary-foreground h-10",
-        icon: "bg-transparent text-text",
-        outline: "bg-transparent border border-border text-text",
-        toolbar: "bg-secondary text-text text-md rounded-md p-1",
-        ghost: "bg-transparent text-text",
+        icon: "bg-transparent",
+        outline: "bg-transparent border border-border",
+        toolbar: "bg-secondary text-md rounded-md p-1",
+        ghost: "bg-transparent",
       },
     },
   }

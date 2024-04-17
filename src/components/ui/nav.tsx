@@ -6,7 +6,7 @@ type NavBaseProps = {
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className='flex flex-col items-center bg-foreground text-text h-screen w-64'>
+        <div className='flex flex-col items-center bg-foreground h-screen w-64'>
             {children}
         </div>
     )
@@ -55,7 +55,7 @@ type NavItemProps = {
 
 function NavItem({ label, icon }: NavItemProps) {
     return (
-        <button className='flex items-center space-x-6 h-12 px-4 text-text hover:bg-hover'>
+        <button className='flex items-center space-x-6 h-12 px-4 hover:bg-hover'>
             {icon}
             <span>{label}</span>
         </button>

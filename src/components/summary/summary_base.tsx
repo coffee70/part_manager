@@ -10,7 +10,7 @@ type Props = {
 export default function SummaryBase({ title, children }: Props) {
     const [open, setOpen] = React.useState<boolean>(true);
     return (
-        <div className="flex space-x-4 text-text">
+        <div className="flex space-x-4">
             <button className="flex-none w-6 h-6 bg-foreground rounded-full" onClick={() => setOpen(prev => !prev)}>
                 {open && <ChevronDownIcon />}
                 {!open && <ChevronRightIcon />}

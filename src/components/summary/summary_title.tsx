@@ -14,7 +14,7 @@ export default function SummaryTitle({ title, items }: Props) {
             <div className="bg-foreground w-16 h-16 rounded-md"></div>
             <div className="flex flex-col">
                 <Breadcrumb items={items} />
-                <span className="text-3xl text-text font-bold">{title}</span>
+                <span className="text-3xl font-bold">{title}</span>
             </div>
         </div>
     )

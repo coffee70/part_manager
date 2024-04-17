@@ -6,8 +6,8 @@ type Props = {
 export default function Label({ label, subLabel }: Props) {
     return (
         <div className="flex flex-col">
-            <span className="text-text font-bold">{label}</span>
-            <span className="text-sm text-text">{subLabel}</span>
+            <span className="font-bold">{label}</span>
+            <span className="text-sm">{subLabel}</span>
         </div>
     )
 }
