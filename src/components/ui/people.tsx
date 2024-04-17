@@ -8,13 +8,13 @@ type Props = {
 
 export default function People({ name, at }: Props) {
     return (
-        <div className="flex items-center space-x-2 justify-end">
+        <div className="flex items-center space-x-2 justify-end text-text text-sm">
             {at ? (
-                <span className="text-sm text-text">{`${formatDate(at)} by ${name}`}</span>
+                <span>{`${formatDate(at)} by ${name}`}</span>
             ) : (
-                <span className="text-sm text-text">{name}</span>
+                <span>{name}</span>
             )}
-            <CircleUserIcon className="text-text" />
+            <CircleUserIcon strokeWidth={1} />
         </div>
     )
 }
