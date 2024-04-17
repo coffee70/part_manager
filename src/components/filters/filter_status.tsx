@@ -4,10 +4,10 @@ import React from 'react';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
 
-import StatusIcon from './svg/status_icon';
-import StatusIndicator from './svg/status_indicator';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Button } from './ui/button';
+import StatusIcon from '../svg/status_icon';
+import StatusIndicator from '../svg/status_indicator';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { Button } from '../ui/button';
 
 
 
