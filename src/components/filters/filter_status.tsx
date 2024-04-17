@@ -11,7 +11,7 @@ import { Button } from '../ui/button';
 
 
 
-export default function FilterStatus() {
+export default function StatusFilter() {
     const { statuses, handleStatusChange } = useStatuses();
     return (
         <Popover>
