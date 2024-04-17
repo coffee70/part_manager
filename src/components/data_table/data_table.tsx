@@ -23,7 +23,7 @@ type DataTableProps = {
     archived?: boolean;
 }
 
-export function DataTable({ data, archived }: DataTableProps) {
+export default function DataTable({ data, archived }: DataTableProps) {
     return (
         <>
             <Table addSlot={!archived ? <AddRow label="Order" /> : undefined}>
