@@ -53,4 +53,4 @@ const SearchInput = (props: Props) => {
 }
 SearchInput.displayName = "Input"
 
-export { SearchInput }
+export default SearchInput
