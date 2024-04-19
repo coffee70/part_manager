@@ -1,19 +1,11 @@
 'use client'
-import { Status } from '@/types/types';
+import { Filters } from '@/types/types';
 import React from 'react';
 
-type FilterContextType = {
-    search: string;
-    dateRange: {
-        start: string;
-        end: string;
-    };
-    statuses: Status[];
-    showArchived: boolean;
-
+type FilterContextType = Filters & {
     setSearch: React.Dispatch<React.SetStateAction<string>>;
     setDateRange: React.Dispatch<React.SetStateAction<{ start: string; end: string; }>>;
-    setStatuses: React.Dispatch<React.SetStateAction<Status[]>>;
+    setStatusIds: React.Dispatch<React.SetStateAction<number[]>>;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -34,7 +26,7 @@ type FilterProviderProps = {
 export const FilterProvider = ({ children }: FilterProviderProps) => {
     const [search, setSearch] = React.useState('');
     const [dateRange, setDateRange] = React.useState({ start: '', end: '' });
-    const [statuses, setStatuses] = React.useState<Status[]>([]);
+    const [statusIds, setStatusIds] = React.useState<number[]>([]);
     const [showArchived, setShowArchived] = React.useState(false);
 
     return (
@@ -42,11 +34,11 @@ export const FilterProvider = ({ children }: FilterProviderProps) => {
         value={{
             search,
             dateRange,
-            statuses,
+            statusIds,
             showArchived,
             setSearch,
             setDateRange,
-            setStatuses,
+            setStatusIds,
             setShowArchived
         }}
         >

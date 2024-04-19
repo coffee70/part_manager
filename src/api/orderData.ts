@@ -1,3 +1,5 @@
+import { Filters } from "@/types/types";
+
 export type TData = Array<{
     id: number;
     label: string;
@@ -13,7 +15,7 @@ export type TData = Array<{
     };
 }>
 
-export function fetchOrderData() {
+export function fetchOrderData(filters: Filters) {
     const complete = orderData.filter(order => order.status.completed)
     const incomplete = orderData.filter(order => !order.status.completed)
 

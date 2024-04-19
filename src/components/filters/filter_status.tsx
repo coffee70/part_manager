@@ -1,18 +1,29 @@
 'use client'
-
 import React from 'react';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
-
 import StatusIcon from '../svg/status_icon';
 import StatusIndicator from '../svg/status_indicator';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
+import { Status } from '@/types/types';
 
+type Props = {
+    value: number[];
+    onChange: React.Dispatch<React.SetStateAction<number[]>>;
+}
 
-
-export default function StatusFilter() {
-    const { statuses, handleStatusChange } = useStatuses();
+export default function StatusFilter({ value, onChange }: Props) {
+    const { statuses } = useStatuses();
+    const handleStatusChange = (id: number) => {
+        // remove status if it's already selected
+        if (value.includes(id)) {
+            onChange(value.filter((status) => status !== id));
+        // add status if it's not selected
+        } else {
+            onChange([...value, id]);
+        }
+    }
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -32,17 +43,13 @@ export default function StatusFilter() {
                                 <StatusIndicator color={status.color} height={12} width={12} />
                                 <span>{status.label}</span>
                             </div>
-                            <CheckIcon className={clsx(status.selected ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                            <CheckIcon className={clsx(value.includes(status.id) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                         </li>
                     ))}
                 </ul>
             </PopoverContent>
         </Popover>
     )
-}
-
-function useMultiSelect() {
-    const [selected, setSelected] = React.useState([]);
 }
 
 function useStatuses() {
@@ -52,14 +59,5 @@ function useStatuses() {
         { id: 2, label: "In Progress", color: "#D6C100", selected: false },
     ])
 
-    const handleStatusChange = (id: number) => {
-        setStatuses(
-            statuses.map((status) =>
-                status.id === id ? { ...status, selected: !status.selected } : status
-            )
-        )
-    }
-
-    return { statuses, handleStatusChange }
-
+    return { statuses }
 }
