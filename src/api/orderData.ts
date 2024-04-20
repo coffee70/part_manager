@@ -16,8 +16,33 @@ export type TData = Array<{
 }>
 
 export function fetchOrderData(filters: Filters) {
-    const complete = orderData.filter(order => order.status.completed)
-    const incomplete = orderData.filter(order => !order.status.completed)
+    const complete = orderData.filter((order) => {
+        if (filters.search) {
+            const search = filters.search.toLowerCase()
+            if (
+                !order.label.toLowerCase().includes(search) &&
+                !order.sublabel?.toLowerCase().includes(search)
+            ) {
+                return false
+            }
+        }
+
+        return true
+    }).filter(order => order.status.completed)
+
+    const incomplete = orderData.filter((order) => {
+        if (filters.search) {
+            const search = filters.search.toLowerCase()
+            if (
+                !order.label.toLowerCase().includes(search) &&
+                !order.sublabel?.toLowerCase().includes(search)
+            ) {
+                return false
+            }
+        }
+
+        return true
+    }).filter(order => !order.status.completed)
 
     return { complete, incomplete }
 }

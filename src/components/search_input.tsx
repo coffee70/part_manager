@@ -4,33 +4,20 @@ import { Search, X } from "lucide-react"
 import { Input } from "./ui/input";
 
 
-type Props = Partial<{
+type Props = {
   value: React.InputHTMLAttributes<HTMLInputElement>['value'];
   onChange: React.ChangeEventHandler<HTMLInputElement>
-}>
+}
 
-const SearchInput = (props: Props) => {
-  const { value, onChange } = props
-
-  const [showClear, setShowClear] = React.useState<boolean>(false);
-
+const SearchInput = ({ value, onChange }: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
       inputRef.current.focus();
-      setShowClear(false);
     }
   }
-
-  React.useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.addEventListener('input', () => {
-        setShowClear(inputRef.current?.value !== "");
-      });
-    }
-  }, []);
 
   return (
     <div className="flex items-center flex-grow space-x-2 px-2 h-10 bg-foreground border border-border">
@@ -44,7 +31,7 @@ const SearchInput = (props: Props) => {
       />
       <button
         onClick={handleClear}
-        className={showClear ? "" : "invisible disabled"}
+        className={value ? "" : "invisible disabled"}
       >
         <X />
       </button>
