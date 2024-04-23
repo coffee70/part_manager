@@ -1,4 +1,4 @@
-import { TData } from "@/api/orderData";
+import { TData } from "@/api/data";
 import Badge from "../ui/badge";
 import {
     Table,

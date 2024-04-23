@@ -1,4 +1,4 @@
-import { TData } from "@/api/orderData";
+import { TData } from "@/api/data";
 import Badge from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { More } from "@/components/ui/more";

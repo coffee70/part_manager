@@ -2,16 +2,14 @@
 import React from 'react';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
-import StatusIcon from '../svg/status_icon';
 import StatusIndicator from '../svg/status_indicator';
-import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
-import { fetchOrderStatuses } from '@/api/statusData';
-import { FilterButton } from './filter_button';
-import { useFilterContext } from './filter_context';
+import { useFilterContext } from '../../context/filters/filter.context';
+import { fetchStatusData } from '@/api/data';
+import { SelectBase, SelectItem } from '../ui/select';
 
 export default function StatusFilter() {
     const { statusIds, setStatusIds } = useFilterContext();
-    const statuses = fetchOrderStatuses();
+    const statuses = fetchStatusData();
     const handleStatusChange = (id: number) => {
         // remove status if it's already selected
         if (statusIds.includes(id)) {
@@ -22,11 +20,10 @@ export default function StatusFilter() {
         }
     }
     return (
-        <ul className="list-none">
+        <SelectBase>
             {statuses.map((status) => (
-                <li
+                <SelectItem
                     key={status.id}
-                    className="flex items-center justify-between px-3 py-2 cursor-default hover:bg-hover focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary"
                     onClick={() => handleStatusChange(status.id)}
                 >
                     <div className='flex items-center space-x-3'>
@@ -34,8 +31,8 @@ export default function StatusFilter() {
                         <span>{status.label}</span>
                     </div>
                     <CheckIcon className={clsx(statusIds.includes(status.id) ? "" : "invisible")} strokeWidth={1.5} size={20} />
-                </li>
+                </SelectItem>
             ))}
-        </ul>
+        </SelectBase>
     )
 }

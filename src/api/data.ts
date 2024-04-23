@@ -53,6 +53,7 @@ const orderData = [
         label: "O-932049",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 3,
             label: "Needs Approval",
             color: "red",
             completed: false,
@@ -61,12 +62,14 @@ const orderData = [
             at: "2024-01-12T12:00:00Z",
             by: "Emily Skarski",
         },
+        archived: undefined
     },
     {
         id: 2,
         label: "O-932050",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 4,
             label: "Completed",
             color: "green",
             completed: true,
@@ -75,12 +78,17 @@ const orderData = [
             at: "2024-03-24T12:00:00Z",
             by: "Dean Applebaum",
         },
+        archived: {
+            at: "2024-03-24T12:00:00Z",
+            by: "Dean Applebaum",
+        }
     },
     {
         id: 3,
         label: "O-932051",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 2,
             label: "In Progress",
             color: "#D6C100",
             completed: false,
@@ -95,6 +103,7 @@ const orderData = [
         label: "O-932052",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 3,
             label: "Needs Approval",
             color: "red",
             completed: false,
@@ -109,8 +118,9 @@ const orderData = [
         label: "O-932053",
         sublabel: "Order from 2021-09-01",
         status: {
-            label: "Approved",
-            color: "green",
+            id: 2,
+            label: "In Progress",
+            color: "#D6C100",
             completed: false,
         },
         updated: {
@@ -123,6 +133,7 @@ const orderData = [
         label: "O-932054",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 2,
             label: "In Progress",
             color: "#D6C100",
             completed: false,
@@ -137,6 +148,7 @@ const orderData = [
         label: "O-932055",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 3,
             label: "Needs Approval",
             color: "red",
             completed: false,
@@ -151,6 +163,7 @@ const orderData = [
         label: "O-932056",
         sublabel: "Order from 2021-09-01",
         status: {
+            id: 4,
             label: "Completed",
             color: "green",
             completed: true
@@ -159,5 +172,32 @@ const orderData = [
             at: "2022-10-01T12:00:00Z",
             by: "Janine Petrov",
         },
+        archived: {
+            at: "2024-03-24T12:00:00Z",
+            by: "Dean Applebaum",
+        }
     }
 ]
+
+const statuses = [
+    {
+        id: 4,
+        label: "Completed",
+        color: "green",
+        completed: true
+    },
+    {
+        id: 3,
+        label: "Needs Approval",
+        color: "red",
+        completed: false,
+    },
+    {
+        id: 2,
+        label: "In Progress",
+        color: "#D6C100",
+        completed: false,
+    },
+]
+
+export const fetchStatusData = () => statuses

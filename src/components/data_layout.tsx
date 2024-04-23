@@ -1,9 +1,10 @@
-import { useFilterContext } from "./filters/filter_context";
+import { useFilterContext } from "../context/filters/filter.context";
 import FilterToolbar from "./filters/filter_toolbar";
-import SearchInput from "./search_input";
+import SearchInput from "./filters/search_input";
 import DataTable from "./data_table/data_table";
-import { fetchOrderData } from "../api/orderData";
+import { fetchOrderData } from "../api/data";
 import Filter from "./filters/filter";
+import Sort from "./sorting/sort";
 
 export default function DataLayout() {
     const {
@@ -22,6 +23,7 @@ export default function DataLayout() {
                     onChange={(e) => setSearch(e.target.value)}
                 />
                 <Filter />
+                <Sort />
             </FilterToolbar>
             <DataTable data={incomplete} />
             {showArchived && <DataTable data={complete} archived />}
