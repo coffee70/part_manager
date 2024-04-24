@@ -13,7 +13,7 @@ export default function Filter() {
                     <FilterIcon width={24} height={24} />
                 </DataAction>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="min-w-56">
                 <DropdownMenuGroup>
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>Date Range</DropdownMenuSubTrigger>
