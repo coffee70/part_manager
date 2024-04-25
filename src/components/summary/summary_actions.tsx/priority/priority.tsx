@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { ChevronsUpIcon, ChevronUpIcon, ChevronDownIcon, ChevronsDownIcon, MinusIcon } from 'lucide-react'
 import PriorityItem from './priority_item'
+import ActionButton from '../action_button'
 
 const priorities = [
     { priority: 'Highest', icon: <ChevronsUpIcon className="text-red-600" size={20} strokeWidth={2.5}/> },
@@ -15,13 +15,7 @@ export default function Priority() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button
-                    className='text-sm'
-                    variant='toolbar'
-                    prependIcon={
-                        <ChevronsUpIcon className="text-red-600" size={20} />
-                    }
-                >Prioritize</Button>
+                <ActionButton action='Priority' />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
