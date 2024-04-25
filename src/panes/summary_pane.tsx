@@ -6,8 +6,8 @@ import SummaryList from "@/components/summary/summary_list/summary_list"
 import SummaryPeople from "@/components/summary/summary_people/summary_people"
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity"
 import { fetchOrder } from "@/api/data"
-import Priority from "@/components/summary/summary_actions.tsx/priority/priority"
-import Status from "@/components/summary/summary_actions.tsx/status/status"
+import Priority from "@/components/summary/summary_actions/priority/priority"
+import Status from "@/components/summary/summary_actions/status/status"
 
 export default function SummaryPane() {
     const { orderNumber, customer, details, people, partData } = fetchOrder()
