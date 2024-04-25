@@ -15,7 +15,7 @@ export type TData = Array<{
     };
 }>
 
-export function fetchOrderData(filters: Filters) {
+export function fetchOrders(filters: Filters) {
     const complete = orderData.filter((order) => {
         if (filters.search) {
             const search = filters.search.toLowerCase()
@@ -201,3 +201,107 @@ const statuses = [
 ]
 
 export const fetchStatusData = () => statuses
+
+const details = [
+    {
+      id: 0,
+      label: "Name",
+      value: "John Brown",
+    },
+    {
+      id: 1,
+      label: "Address",
+      value: "248 Cyber Lane",
+    },
+    {
+      id: 2,
+      label: "City/Town",
+      value: "Leesburg",
+    },
+    {
+      id: 3,
+      label: "Zip Code",
+      value: "20176",
+    },
+    {
+      id: 4,
+      label: "Email",
+      value: "john.brown@leesburg.com",
+    },
+  ]
+  
+  const people = [
+    {
+      id: 0,
+      label: "Person 1",
+      value: {
+        name: "John Brown",
+      },
+    },
+    {
+      id: 1,
+      label: "Person 2",
+      value: {
+        name: "Jane Doe",
+      },
+    },
+    {
+      id: 2,
+      label: "Person 3",
+      value: {
+        name: "John Doe",
+      },
+    },
+  ]
+  
+  const partData: TData = [
+    {
+      id: 0,
+      label: "P-192",
+      status: {
+        label: "In Progress",
+        color: "#D6C100",
+        completed: false,
+      },
+      updated: {
+        at: "2021-09-01T12:00:00Z",
+        by: "John Brown",
+      },
+    },
+    {
+      id: 1,
+      label: "P-334",
+      status: {
+        label: "Needs Approval",
+        color: "red",
+        completed: false,
+      },
+      updated: {
+        at: "2021-09-01T12:00:00Z",
+        by: "Jane Doe",
+      },
+    },
+    {
+      id: 2,
+      label: "P-092",
+      status: {
+        label: "Approved",
+        color: "green",
+        completed: false,
+      },
+      updated: {
+        at: "2021-09-01T12:00:00Z",
+        by: "John Doe",
+      },
+    }
+  ]
+
+export const fetchOrder = () => {
+    return {
+        orderNumber: "O-23344",
+        customer: "Lockheed Martin",
+        details: details,
+        people: people,
+        partData: partData
+    }
+}
