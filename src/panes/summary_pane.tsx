@@ -5,10 +5,9 @@ import SummaryNotes from "@/components/summary/summary_notes/summary_notes"
 import SummaryList from "@/components/summary/summary_list/summary_list"
 import SummaryPeople from "@/components/summary/summary_people/summary_people"
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity"
-import { Button } from "@/components/ui/button"
-import { ChevronsUp, ChevronDown } from "lucide-react"
 import { fetchOrder } from "@/api/data"
-import Priority from "@/components/summary/summary_actions.tsx/priority"
+import Priority from "@/components/summary/summary_actions.tsx/priority/priority"
+import Status from "@/components/summary/summary_actions.tsx/status/status"
 
 export default function SummaryPane() {
     const { orderNumber, customer, details, people, partData } = fetchOrder()
@@ -17,13 +16,7 @@ export default function SummaryPane() {
             <SummaryTitle title={orderNumber} items={[{ label: customer }]} />
             <SummaryToolbar>
                 <Priority />
-                <Button
-                    variant='toolbar'
-                    appendIcon={
-                        <ChevronDown size={20} />
-                    }
-                    className="bg-red-300"
-                >Needs Approval</Button>
+                <Status />
             </SummaryToolbar>
             <SummaryDetails details={details} />
             <SummaryNotes />
