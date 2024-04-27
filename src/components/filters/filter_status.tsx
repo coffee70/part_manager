@@ -27,7 +27,7 @@ export default function StatusFilter() {
                     onClick={() => handleStatusChange(status.id)}
                 >
                     <div className='flex items-center space-x-3'>
-                        <StatusIndicator color={status.color} height={12} width={12} />
+                        <StatusIndicator color={status.color} />
                         <span>{status.label}</span>
                     </div>
                     <CheckIcon className={clsx(statusIds.includes(status.id) ? "" : "invisible")} strokeWidth={1.5} size={20} />

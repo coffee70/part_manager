@@ -1,4 +1,5 @@
-import { Filters } from "@/types/types";
+import { Filters, Status, Priority } from "@/types/types";
+import { ChevronsUpIcon, ChevronsDownIcon, ChevronUpIcon, ChevronDownIcon, MinusIcon } from "lucide-react";
 
 export type TData = Array<{
     id: number;
@@ -90,7 +91,7 @@ const orderData = [
         status: {
             id: 2,
             label: "In Progress",
-            color: "#D6C100",
+            color: "#f39c11",
             completed: false,
         },
         updated: {
@@ -120,7 +121,7 @@ const orderData = [
         status: {
             id: 2,
             label: "In Progress",
-            color: "#D6C100",
+            color: "#f39c11",
             completed: false,
         },
         updated: {
@@ -135,7 +136,7 @@ const orderData = [
         status: {
             id: 2,
             label: "In Progress",
-            color: "#D6C100",
+            color: "#f39c11",
             completed: false,
         },
         updated: {
@@ -179,7 +180,7 @@ const orderData = [
     }
 ]
 
-const statuses = [
+const statuses: Status[] = [
     {
         id: 4,
         label: "Completed",
@@ -195,7 +196,7 @@ const statuses = [
     {
         id: 2,
         label: "In Progress",
-        color: "#D6C100",
+        color: "#f39c11",
         completed: false,
     },
 ]
@@ -260,7 +261,7 @@ const details = [
       label: "P-192",
       status: {
         label: "In Progress",
-        color: "#D6C100",
+        color: "#f39c11",
         completed: false,
       },
       updated: {
@@ -305,3 +306,13 @@ export const fetchOrder = () => {
         partData: partData
     }
 }
+
+const priorities: Priority[] = [
+  { label: "Highest", color: "#ff0000", Icon: ChevronsUpIcon },
+  { label: "High", color: "#fc4949", Icon: ChevronUpIcon },
+  { label: "Medium", color: "#f39c11", Icon: MinusIcon },
+  { label: "Low", color: "#5cbd02", Icon: ChevronDownIcon },
+  { label: "Lowest", color: "#02bd15", Icon: ChevronsDownIcon },
+]
+
+export const fetchPriorities = () => priorities
