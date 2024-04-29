@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { fetchStatusData } from '@/api/data'
