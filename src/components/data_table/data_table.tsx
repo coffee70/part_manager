@@ -36,9 +36,9 @@ export default function DataTable({ data, archived }: DataTableProps) {
                             <TableCell align="right">
                                 <Badge label={order.status.label} color={order.status.color} />
                             </TableCell>
-                            <TableCell>
+                            {order.updated && <TableCell>
                                 <People name={order.updated.by} at={order.updated.at} />
-                            </TableCell>
+                            </TableCell>}
                             <TableCell>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
