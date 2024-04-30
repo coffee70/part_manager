@@ -2,14 +2,10 @@
 import * as React from "react"
 import { Search, X } from "lucide-react"
 import { Input } from "../ui/input";
+import { useFilterContext } from "@/context/filters/filter.context";
 
-
-type Props = {
-  value: React.InputHTMLAttributes<HTMLInputElement>['value'];
-  onChange: React.ChangeEventHandler<HTMLInputElement>
-}
-
-const SearchInput = ({ value, onChange }: Props) => {
+const SearchInput = () => {
+  const { search, setSearch } = useFilterContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
@@ -26,12 +22,12 @@ const SearchInput = ({ value, onChange }: Props) => {
         ref={inputRef}
         type='text'
         className="bg-transparent"
-        onChange={onChange}
-        value={value}
+        onChange={(e) => setSearch(e.target.value)}
+        value={search}
       />
       <button
         onClick={handleClear}
-        className={value ? "" : "invisible disabled"}
+        className={search ? "" : "invisible disabled"}
       >
         <X />
       </button>

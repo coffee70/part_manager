@@ -1,10 +1,11 @@
 'use client'
 import { Filters } from '@/types/types';
 import React from 'react';
+import { DateRange } from 'react-day-picker';
 
 type FilterContextType = Filters & {
     setSearch: React.Dispatch<React.SetStateAction<string>>;
-    setDateRange: React.Dispatch<React.SetStateAction<{ start: string; end: string; }>>;
+    setDateRange: React.Dispatch<React.SetStateAction<DateRange | undefined>>;
     setStatusIds: React.Dispatch<React.SetStateAction<number[]>>;
     setShowArchived: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -25,7 +26,7 @@ type FilterProviderProps = {
 
 export const FilterProvider = ({ children }: FilterProviderProps) => {
     const [search, setSearch] = React.useState('');
-    const [dateRange, setDateRange] = React.useState({ start: '', end: '' });
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>({ from: undefined, to: undefined });
     const [statusIds, setStatusIds] = React.useState<number[]>([]);
     const [showArchived, setShowArchived] = React.useState(false);
 

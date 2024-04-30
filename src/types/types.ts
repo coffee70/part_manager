@@ -1,4 +1,20 @@
 import { LucideIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
+
+export type Order = {
+    id: number;
+    label: string;
+    sublabel?: string;
+    status: Status;
+    updated?: {
+        at: string;
+        by: string;
+    };
+    archived?: {
+        at: string;
+        by: string;
+    }
+}
 
 export type Status = {
     id: number;
@@ -9,10 +25,7 @@ export type Status = {
 
 export type Filters = {
     search: string;
-    dateRange: {
-        start: string;
-        end: string;
-    };
+    dateRange: DateRange | undefined;
     statusIds: number[];
     showArchived: boolean;
 }
