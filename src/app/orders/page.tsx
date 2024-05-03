@@ -44,36 +44,38 @@ export default function Page() {
                         <Filter />
                         <Sort />
                     </FilterToolbar>
-                    <Table>
-                        <TableBody>
-                            {incomplete.map((order) => (
-                                <TableRow key={order.id}>
-                                    <TableCell>
-                                        <Label label={order.label} subLabel={order.sublabel} />
-                                    </TableCell>
-                                    <TableCell align="right">
-                                        <Badge label={order.status.label} color={order.status.color} />
-                                    </TableCell>
-                                    {order.updated && <TableCell>
-                                        <People name={order.updated.by} at={order.updated.at} />
-                                    </TableCell>}
-                                    <TableCell>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <More />
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuGroup>
-                                                    <DropdownMenuItem>Delete</DropdownMenuItem>
-                                                </DropdownMenuGroup>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                  <AddRow label="Add Order" />
+                    <div>
+                        <Table>
+                            <TableBody>
+                                {incomplete.map((order) => (
+                                    <TableRow key={order.id}>
+                                        <TableCell>
+                                            <Label label={order.label} subLabel={order.sublabel} />
+                                        </TableCell>
+                                        <TableCell align="right">
+                                            <Badge label={order.status.label} color={order.status.color} />
+                                        </TableCell>
+                                        {order.updated && <TableCell>
+                                            <People name={order.updated.by} at={order.updated.at} />
+                                        </TableCell>}
+                                        <TableCell>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <More />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuGroup>
+                                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                                    </DropdownMenuGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                        <AddRow label="Add Order" />
+                    </div>
                     <Table>
                         <TableBody>
                             {complete.map((order) => (
@@ -106,24 +108,24 @@ export default function Page() {
                 </DataLayout>
             }
             rightPaneSlot={
-                    <SummaryLayout>
-                        <SummaryTitle title={order.label} items={[{ label: order.customer.name }]} />
-                        <SummaryToolbar>
-                            <Priority />
-                            <Status />
-                        </SummaryToolbar>
-                        <SummaryDetails details={order.details} />
-                        <SummaryNotes />
-                        <SummaryList
-                            title="Parts"
-                            data={order.parts}
-                            addItem={{
-                                label: "Add Part",
-                                placeholder: "Part Number",
-                            }} />
-                        <SummaryPeople people={order.people} />
-                        <SummaryActivity />
-                    </SummaryLayout>
+                <SummaryLayout>
+                    <SummaryTitle title={order.label} items={[{ label: order.customer.name }]} />
+                    <SummaryToolbar>
+                        <Priority />
+                        <Status />
+                    </SummaryToolbar>
+                    <SummaryDetails details={order.details} />
+                    <SummaryNotes />
+                    <SummaryList
+                        title="Parts"
+                        data={order.parts}
+                        addItem={{
+                            label: "Add Part",
+                            placeholder: "Part Number",
+                        }} />
+                    <SummaryPeople people={order.people} />
+                    <SummaryActivity />
+                </SummaryLayout>
             }
         />
     );
