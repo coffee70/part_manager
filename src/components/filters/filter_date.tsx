@@ -1,10 +1,10 @@
 'use client'
 import * as React from 'react'
 import { Calendar } from "../ui/calendar";
-import { useFilterContext } from '@/context/filters/filter.context';
+import { DateRange } from 'react-day-picker';
 
 export default function DateFilter() {
-    const { dateRange, setDateRange } = useFilterContext();
+    const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
     return (
         <Calendar
             mode="range"

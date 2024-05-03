@@ -3,12 +3,11 @@ import React from 'react';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
 import StatusIndicator from '../svg/status_indicator';
-import { useFilterContext } from '../../context/filters/filter.context';
 import { fetchStatusData } from '@/api/data';
 import { SelectBase, SelectItem } from '../ui/select';
 
 export default function StatusFilter() {
-    const { statusIds, setStatusIds } = useFilterContext();
+    const [statusIds, setStatusIds] = React.useState<number[]>([]);
     const statuses = fetchStatusData();
     const handleStatusChange = (id: number) => {
         // remove status if it's already selected

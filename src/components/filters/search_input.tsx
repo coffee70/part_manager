@@ -2,10 +2,9 @@
 import * as React from "react"
 import { Search, X } from "lucide-react"
 import { Input } from "../ui/input";
-import { useFilterContext } from "@/context/filters/filter.context";
 
 const SearchInput = () => {
-  const { search, setSearch } = useFilterContext();
+  const [search, setSearch] = React.useState("");
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleClear = () => {

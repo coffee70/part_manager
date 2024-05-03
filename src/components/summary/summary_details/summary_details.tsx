@@ -5,15 +5,10 @@ import { FocusProvider } from "./summary_details_context";
 import EditableInput from "../../editable_fields/editable_input/editable_input";
 import DetailBase from "./summary_detail_base";
 import DetailClickAwayListener from "./summary_detail_CAL";
-
-export type DetailT = {
-    id: number;
-    label: string;
-    value: string;
-}
+import { Detail } from "@/types/types";
 
 type SummaryDetailsProps = {
-    details: DetailT[];
+    details: Detail[];
 }
 
 export default function SummaryDetails({ details }: SummaryDetailsProps) {

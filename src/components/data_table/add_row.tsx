@@ -39,7 +39,7 @@ export default function AddRow({ label }: { label: string }) {
             onClick={() => setAdding(true)}
         >
             <PlusIcon />
-            <span>{`Add ${label}`}</span>
+            <span>{label}</span>
         </button>
     )
 }

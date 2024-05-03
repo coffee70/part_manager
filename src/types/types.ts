@@ -13,7 +13,13 @@ export type Order = {
     archived?: {
         at: string;
         by: string;
-    }
+    };
+    customer: Customer;
+}
+
+export type Customer = {
+    id: number;
+    name: string;
 }
 
 export type Status = {
@@ -39,3 +45,41 @@ export type Priority = {
     color: string;
     Icon: React.ComponentType<IconProps>;
 }
+
+export type Detail = {
+    id: number;
+    label: string;
+    value: string;
+}
+
+export type SummaryListItemData = {
+    id: number;
+    label: string;
+    status: {
+        label: string;
+        color: string;
+        completed?: boolean;
+    };
+}
+
+export type Person = {
+    id: number;
+    name: string;
+}
+
+export type PersonAction = {
+    id: number;
+    label: string;
+    person: Person;
+}
+
+export type Part = {
+    id: number;
+    label: string;
+    status: Status;
+    updated: {
+        at: string;
+        by: string;
+    };
+}
+

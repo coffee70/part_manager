@@ -1,17 +1,10 @@
 import SummaryBase from "../summary_base";
 import DetailBase from "../summary_details/summary_detail_base";
 import People from "../../ui/people";
-
-type PeopleT = {
-    id: number;
-    label: string;
-    value: {
-        name: string;
-    };
-}
+import { PersonAction } from "@/types/types";
 
 type Props = {
-    people: PeopleT[];
+    people: PersonAction[];
 }
 
 export default function SummaryPeople({ people }: Props) {
@@ -21,7 +14,7 @@ export default function SummaryPeople({ people }: Props) {
                 <div className='flex flex-col space-y-1 text-sm'>
                     {people.map(person => (
                         <DetailBase key={person.id} label={person.label}>
-                            <People name={person.value.name} />
+                            <People name={person.person.name} />
                         </DetailBase>
                     ))}
                 </div>

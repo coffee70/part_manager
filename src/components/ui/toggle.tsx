@@ -1,15 +1,13 @@
 'use client'
 import React from "react"
-
 import { cn } from "@/lib/utils";
-import { useFilterContext } from "../../context/filters/filter.context";
 
 type Props = {
     label: string;
 }
 
 export default function Toggle({ label }: Props) {
-    const { setShowArchived, showArchived } = useFilterContext()
+    const [showArchived, setShowArchived] = React.useState(false);
     return (
         <div className="flex items-center space-x-2">
             <span className="text-muted-foreground text-sm">{label}</span>
