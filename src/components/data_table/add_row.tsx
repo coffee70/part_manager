@@ -10,7 +10,7 @@ type TriggerProps = {
 
 const Trigger = ({ label }: TriggerProps) => {
     return (
-        <div className="flex items-center space-x-2 w-full px-2 h-10 border-x border-b border-border hover:bg-hover">
+        <div className="flex items-center space-x-2 w-full px-2 h-10 border-x border-b border-border cursor-pointer hover:bg-hover">
             <PlusIcon />
             <span>{label}</span>
         </div>

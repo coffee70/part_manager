@@ -11,7 +11,7 @@ type TriggerProps = {
 
 const Trigger = ({ label }: TriggerProps) => {
     return (
-        <div className="flex items-center space-x-1 w-full py-1 text-muted-foreground">
+        <div className="flex items-center space-x-1 w-full py-1 text-muted-foreground cursor-pointer">
             <PlusIcon />
             <span>{label}</span>
         </div>
