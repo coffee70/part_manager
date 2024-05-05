@@ -1,50 +1,58 @@
 'use client'
 import React from 'react';
-import { Input } from '@/components/ui/input';
+import { Input as BaseInput } from '@/components/ui/input';
 import { CheckIcon, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { EditableInput, EditableInputContent, EditableInputTrigger } from '@/components/ui/edit_input';
 
-type Props = {
+type TriggerProps = {
+    label: string;
+}
+
+const Trigger = ({ label }: TriggerProps) => {
+    return (
+        <div className="flex items-center space-x-1 w-full py-1 text-muted-foreground">
+            <PlusIcon />
+            <span>{label}</span>
+        </div>
+    )
+}
+
+const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(({ placeholder, ...props }, ref) => {
+    const [value, setValue] = React.useState('');
+    return (
+        <div className='flex items-center'>
+            <BaseInput
+                className='py-1'
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder={placeholder}
+                ref={ref}
+                {...props} />
+            <Button variant='icon' className='bg-foreground p-1'>
+                <CheckIcon />
+            </Button>
+        </div>
+    )
+})
+Input.displayName = 'Input';
+
+type AddItemFormProps = {
     label: string;
     placeholder: string;
 }
 
-export default function AddItemForm({ label, placeholder }: Props) {
-    const [adding, setAdding] = React.useState(false);
-    const [value, setValue] = React.useState('');
-    const inputRef = React.useRef<HTMLInputElement>(null);
-
-    const handleAdd = React.useCallback(() => {
-        setAdding(true);
-        setTimeout(() => inputRef.current?.focus(), 0);
-    }, [inputRef]);
-
+export default function AddItemForm({ label, placeholder }: AddItemFormProps) {
     return (
         <div className='border-t border-foreground'>
-            {adding ? (
-                <div className='flex items-center'>
-                    <Input
-                        className='py-1'
-                        ref={inputRef}
-                        placeholder={placeholder}
-                        onBlur={() => setAdding(false)}
-                        value={value}
-                        onChange={e => setValue(e.target.value)}
-                    />
-                    <Button variant='icon' className='bg-foreground p-1'>
-                        <CheckIcon />
-                    </Button>
-                </div>
-            ) : (
-                <button
-                    type="button"
-                    className="flex items-center space-x-1 w-full py-1 text-muted-foreground"
-                    onClick={handleAdd}
-                >
-                    <PlusIcon />
-                    <span>{label}</span>
-                </button>
-            )}
+            <EditableInput>
+                <EditableInputTrigger>
+                    <Trigger label={label} />
+                </EditableInputTrigger>
+                <EditableInputContent>
+                    <Input placeholder={placeholder} />
+                </EditableInputContent>
+            </EditableInput>
         </div>
     )
 }
