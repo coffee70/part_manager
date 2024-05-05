@@ -12,11 +12,10 @@ type TriggerProps = {
 }
 
 const Trigger = ({ value }: TriggerProps) => {
-    const { hovered } = useEditableInputContext();
     return (
-        <div className="flex justify-between min-h-24 border border-transparent hover:border-foreground">
+        <div className="group flex justify-between min-h-24 border border-transparent hover:border-foreground">
             <span className='px-1'>{value}</span>
-            <Button variant='icon' className={cn('bg-foreground p-1', !hovered ? 'invisible disabled' : '')}>
+            <Button variant='icon' className='bg-foreground p-1 invisible group-hover:visible'>
                 <PencilIcon />
             </Button>
         </div>

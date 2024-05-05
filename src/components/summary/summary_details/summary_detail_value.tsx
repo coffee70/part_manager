@@ -10,14 +10,10 @@ type TriggerProps = {
     value: string;
 }
 const Trigger = ({ value }: TriggerProps) => {
-    const { hovered } = useEditableInputContext();
     return (
-        <div className={cn(
-            "flex items-center justify-end border w-fit text-sm space-x-2 hover: border-foreground",
-            hovered ? 'border-foreground' : 'border-transparent'
-        )}>
+        <div className="group flex items-center justify-end border border-transparent w-fit text-sm space-x-2 hover:border-foreground">
             <div className="flex items-center justify-end space-x-2 pl-1 border border-transparent">{value}</div>
-            <Button variant='icon' className={cn('bg-foreground p-1', !hovered ? 'invisible disabled' : '')}>
+            <Button variant='icon' className="bg-foreground p-1 invisible group-hover:visible">
                 <PencilIcon />
             </Button>
         </div>
@@ -26,7 +22,7 @@ const Trigger = ({ value }: TriggerProps) => {
 
 const Input = React.forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>((props, ref) => {
     return (
-        <div className="flex items-center border border-border w-full">
+        <div className="flex items-center border border-border w-fit">
             <BaseInput className='ml-1' ref={ref} {...props} />
             <Button variant='icon' className='bg-foreground p-1'>
                 <CheckIcon />

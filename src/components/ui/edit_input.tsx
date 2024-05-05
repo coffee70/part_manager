@@ -5,7 +5,6 @@ import { ClickAwayListener } from '@mui/base';
 type EditableInputContextType = {
     isEditing: boolean;
     setIsEditing: (isEditing: boolean) => void;
-    hovered: boolean;
 }
 
 const EditableInputContext = React.createContext<EditableInputContextType | null>(null);
@@ -24,17 +23,11 @@ type EditableInputProviderProps = {
 
 const EditableInputProvider = ({ children }: EditableInputProviderProps) => {
     const [isEditing, setIsEditing] = React.useState(false);
-    const [hovered, setHovered] = React.useState(false);
 
     return (
-        <div
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
-            <EditableInputContext.Provider value={{ isEditing, setIsEditing, hovered }}>
-                {children}
-            </EditableInputContext.Provider>
-        </div>
+        <EditableInputContext.Provider value={{ isEditing, setIsEditing }}>
+            {children}
+        </EditableInputContext.Provider>
     );
 }
 
