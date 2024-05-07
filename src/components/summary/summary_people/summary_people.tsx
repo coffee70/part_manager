@@ -14,7 +14,7 @@ export default function SummaryPeople({ people }: Props) {
                 <div className='flex flex-col space-y-1 text-sm'>
                     {people.map(person => (
                         <DetailBase key={person.id} label={person.label}>
-                            <People name={person.person.name} />
+                            <People name={person.person.name} iconPosition="left" />
                         </DetailBase>
                     ))}
                 </div>

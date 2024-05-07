@@ -56,7 +56,7 @@ export default function Page() {
                                             <Badge label={order.status.label} color={order.status.color} />
                                         </TableCell>
                                         {order.updated && <TableCell>
-                                            <People name={order.updated.by} at={order.updated.at} />
+                                            <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>
                                         </TableCell>}
                                         <TableCell>
                                             <DropdownMenu>
@@ -87,7 +87,7 @@ export default function Page() {
                                         <Badge label={order.status.label} color={order.status.color} />
                                     </TableCell>
                                     {order.updated && <TableCell>
-                                        <People name={order.updated.by} at={order.updated.at} />
+                                        <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>
                                     </TableCell>}
                                     <TableCell>
                                         <DropdownMenu>
