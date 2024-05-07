@@ -3,15 +3,19 @@ import React from 'react';
 import { Input as BaseInput } from '@/components/ui/input';
 import { CheckIcon, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { EditableInput, EditableInputContent, EditableInputTrigger } from '@/components/ui/edit_input';
+import { EditableInput, EditableInputContent, EditableInputTrigger, useEditableInputContext } from '@/components/ui/edit_input';
 
 type TriggerProps = {
     label: string;
 }
 
 const Trigger = ({ label }: TriggerProps) => {
+    const { setIsEditing } = useEditableInputContext();
     return (
-        <div className="flex items-center space-x-1 w-full py-1 text-muted-foreground cursor-pointer">
+        <div
+            className="flex items-center space-x-1 w-full py-1 text-muted-foreground cursor-pointer"
+            onClick={() => setIsEditing(true)}
+        >
             <PlusIcon />
             <span>{label}</span>
         </div>

@@ -5,6 +5,7 @@ import { ClickAwayListener } from '@mui/base';
 type EditableInputContextType = {
     isEditing: boolean;
     setIsEditing: (isEditing: boolean) => void;
+    ref: React.RefObject<HTMLInputElement>;
 }
 
 const EditableInputContext = React.createContext<EditableInputContextType | null>(null);
@@ -23,9 +24,9 @@ type EditableInputProviderProps = {
 
 const EditableInputProvider = ({ children }: EditableInputProviderProps) => {
     const [isEditing, setIsEditing] = React.useState(false);
-
+    const ref = React.useRef<HTMLInputElement>(null)
     return (
-        <EditableInputContext.Provider value={{ isEditing, setIsEditing }}>
+        <EditableInputContext.Provider value={{ isEditing, setIsEditing, ref }}>
             {children}
         </EditableInputContext.Provider>
     );
@@ -48,13 +49,9 @@ type EditableInputTriggerProps = {
 }
 
 export const EditableInputTrigger = ({ children }: EditableInputTriggerProps) => {
-    const { isEditing, setIsEditing } = useEditableInputContext();
+    const { isEditing } = useEditableInputContext();
     if (isEditing) return;
-    return (
-        <div onClick={() => setIsEditing(true)}>
-            {children}
-        </div>
-    )
+    return children;
 }
 
 type EditableInputContentProps = {
@@ -62,26 +59,19 @@ type EditableInputContentProps = {
 }
 
 export const EditableInputContent = ({ children }: EditableInputContentProps) => {
-    const { isEditing, setIsEditing } = useEditableInputContext();
-    const ref = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+    const { isEditing, setIsEditing, ref } = useEditableInputContext();
 
     React.useEffect(() => {
-        /**
-         * Focus the input/textarea when editing at
-         * the end of the value
-         */
         if (isEditing && ref.current) {
-            const length = ref.current.value.length;
             ref.current.focus();
-            ref.current.setSelectionRange(length, length);
         }
-    }, [isEditing]);
+    }, [isEditing, ref]);
 
     if (!isEditing) return;
 
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
-            {React.cloneElement(children, { ref: ref })}
+            {React.cloneElement(children, { ref })}
         </ClickAwayListener>
     )
 
