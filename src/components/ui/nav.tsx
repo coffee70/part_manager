@@ -1,84 +1,58 @@
-import { cn } from "@/lib/utils"
+import { Jost } from "next/font/google"
+import { cn } from "@/lib/utils";
+
+const jost = Jost({
+    subsets: ["latin"],
+    weight: ["700"],
+})
 
 type NavBaseProps = {
-    children: React.ReactNode
+    children: React.ReactNode;
 }
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className='flex flex-col items-center bg-foreground h-screen w-64'>
+        <div className="flex items-center justify-between space-x-6 w-full py-4 px-6 bg-black text-white">
             {children}
         </div>
     )
 }
 
-type NavHeaderProps = {
-    children: React.ReactNode
+function NavLogo() {
+    return (
+        <div className={cn(jost.className, 'text-4xl')}>
+            <span>Aentx.</span>
+        </div>
+    )
 }
 
-function NavHeader({ children }: NavHeaderProps) {
+type NavTabsProps = {
+    children: React.ReactNode;
+}
+
+function NavTabs({ children }: NavTabsProps) {
     return (
-        <div className="p-4">
+        <div className="flex items-center space-x-10 font-bold h-10">
             {children}
         </div>
     )
 }
 
-type NavContentProps = {
-    children: React.ReactNode
+type NavActionsProps = {
+    children: React.ReactNode;
 }
 
-function NavContent({ children }: NavContentProps) {
+function NavActions({ children }: NavActionsProps) {
     return (
-        <div className="flex flex-col space-y-1 mt-1 w-full">
+        <div className="flex items-center space-x-6">
             {children}
-        </div>
-    )
-}
-
-type NavFooterProps = {
-    children: React.ReactNode
-}
-
-function NavFooter({ children }: NavFooterProps) {
-    return (
-        <div className="flex flex-col space-y-1 mb-2 mt-1 w-full">
-            {children}
-        </div>
-    )
-}
-
-type NavItemProps = {
-    label: string
-    icon: React.ReactNode
-}
-
-function NavItem({ label, icon }: NavItemProps) {
-    return (
-        <button className='flex items-center space-x-6 h-12 px-4 hover:bg-hover'>
-            {icon}
-            <span>{label}</span>
-        </button>
-    )
-}
-
-type NavDividerProps = {
-    bottom?: boolean
-}
-
-function NavDivider({ bottom }: NavDividerProps) {
-    return (
-        <div className={cn("flex items-center w-full px-4", { "mt-auto": bottom })}>
-            <div className="grow border-t border-hover" />
         </div>
     )
 }
 
 export {
     NavBase,
-    NavHeader,
-    NavContent,
-    NavFooter,
-    NavItem,
-    NavDivider,
+    NavLogo,
+    NavTabs,
+    NavActions
 }

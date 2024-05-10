@@ -18,7 +18,7 @@ import {
     NavFooter,
     NavItem,
     NavDivider,
-} from '../ui/nav'
+} from '../../ui/side_nav'
 import Image from 'next/image'
 import {
     DropdownMenu,
@@ -27,7 +27,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuGroup,
     DropdownMenuItem
-} from '../ui/dropdown-menu'
+} from '../../ui/dropdown-menu'
 import Profile from './profile'
 
 export default function SideNavigation() {
