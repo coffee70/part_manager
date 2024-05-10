@@ -17,7 +17,7 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
             <div className="flex">
                 <div className='flex flex-col space-y-1 text-sm'>
                     {details.map(detail => (
-                        <DetailBase key={detail.id} label={detail.label}>
+                        <DetailBase key={detail.id}>
                             <DetailLabel label={detail.label} />
                             <DetailValue value={detail.value} />
                         </DetailBase>

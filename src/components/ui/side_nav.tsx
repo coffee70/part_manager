@@ -6,7 +6,7 @@ type NavBaseProps = {
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className='flex flex-col items-center bg-foreground h-screen w-64'>
+        <div className='flex flex-col items-center bg-foreground h-full w-64'>
             {children}
         </div>
     )
@@ -18,7 +18,7 @@ type NavHeaderProps = {
 
 function NavHeader({ children }: NavHeaderProps) {
     return (
-        <div className="p-4">
+        <div className="w-full p-4">
             {children}
         </div>
     )
