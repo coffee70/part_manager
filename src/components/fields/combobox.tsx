@@ -1,4 +1,4 @@
-import { type Option, SelectBase, SelectTrigger, SelectContent, SelectItem, useCombobox, Badge } from "../ui/combobox"
+import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem, useCombobox, Badge } from "../ui/combobox"
 import { ClickAwayListener } from "@mui/base"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
@@ -26,8 +26,8 @@ export function Select({ options, multiple }: Props) {
 
     return (
         <ClickAwayListener onClickAway={handleBlur}>
-            <SelectBase>
-                <SelectTrigger className={cn('group', open ? 'border-border' : 'hover:border-border')}>
+            <ComboboxBase>
+                <ComboboxTrigger className={cn('group', open ? 'border-border' : 'hover:border-border')}>
                     {multiple && selected.length > 0 && selected.map(option => (
                         <Badge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
                     ))}
@@ -55,17 +55,17 @@ export function Select({ options, multiple }: Props) {
                             <CheckIcon />
                         </Button>
                     )}
-                </SelectTrigger>
+                </ComboboxTrigger>
                 {open && filteredOptions.length > 0 && (
-                    <SelectContent>
+                    <ComboboxContent>
                         {filteredOptions.map(option => (
-                            <SelectItem key={option.id} onClick={() => handleSelect(option)}>
+                            <ComboboxItem key={option.id} onClick={() => handleSelect(option)}>
                                 <span>{option.value}</span>
-                            </SelectItem>
+                            </ComboboxItem>
                         ))}
-                    </SelectContent>
+                    </ComboboxContent>
                 )}
-            </SelectBase>
+            </ComboboxBase>
         </ClickAwayListener>
     )
 }

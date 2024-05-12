@@ -2,7 +2,7 @@
  * Combobox component: A select option input that contains a input search
  * to narrow down the options and a list of options to select from.
  * 
- * The component is composed of a SelectBase, SelectTrigger, SelectContent, and SelectItem.
+ * The component is composed of a ComboboxBase, ComboboxTrigger, ComboboxContent, and ComboboxItem.
  * These components make the building blocks of the combobox component.
  */
 'use client'
@@ -76,25 +76,25 @@ export function useCombobox({ options, multiple }: Props) {
     }
 }
 
-type SelectBaseProps = {
+type ComboboxBaseProps = {
     children: React.ReactNode;
 }
-export const SelectBase = React.forwardRef<HTMLDivElement, SelectBaseProps>(({ children }, ref) => {
+export const ComboboxBase = React.forwardRef<HTMLDivElement, ComboboxBaseProps>(({ children }, ref) => {
     return (
         <div ref={ref} className='relative'>
             {children}
         </div>
     )
 })
-SelectBase.displayName = 'SelectBase'
+ComboboxBase.displayName = 'ComboboxBase'
 
 
-type SelectTriggerProps = {
+type ComboboxTriggerProps = {
     children: React.ReactNode;
     className?: string;
 }
 
-export function SelectTrigger({ children, className }: SelectTriggerProps) {
+export function ComboboxTrigger({ children, className }: ComboboxTriggerProps) {
     return (
         <div className={cn('flex items-center space-x-1 pl-1 border border-transparent', className)}>
             {children}
@@ -102,11 +102,11 @@ export function SelectTrigger({ children, className }: SelectTriggerProps) {
     )
 }
 
-type SelectContentProps = {
+type ComboboxContentProps = {
     children: React.ReactNode;
 }
 
-export function SelectContent({ children }: SelectContentProps) {
+export function ComboboxContent({ children }: ComboboxContentProps) {
     return (
         <ul className='absolute z-10 shadow-md bg-foreground border border-border mt-1 min-w-44 list-none'>
             {children}
@@ -114,12 +114,12 @@ export function SelectContent({ children }: SelectContentProps) {
     )
 }
 
-type SelectItemProps = {
+type ComboboxItemProps = {
     children: React.ReactNode;
     onClick?: () => void;
 }
 
-export function SelectItem({ children, onClick }: SelectItemProps) {
+export function ComboboxItem({ children, onClick }: ComboboxItemProps) {
     return (
         <li className='p-1 hover:bg-hover' onClick={onClick}>
             {children}
