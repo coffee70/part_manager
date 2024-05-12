@@ -18,7 +18,7 @@ import DataLayout from "@/layouts/data_layout";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import Label from "@/components/data_table/label";
 import People from "@/components/ui/people";
-import Badge from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/badge";
 import { More } from "@/components/ui/more";
 import AddRow from "@/components/data_table/add_row";
 import {
@@ -53,7 +53,7 @@ export default function Page() {
                                             <Label label={order.label} subLabel={order.sublabel} />
                                         </TableCell>
                                         <TableCell align="right">
-                                            <Badge label={order.status.label} color={order.status.color} />
+                                            <StatusBadge label={order.status.label} color={order.status.color} />
                                         </TableCell>
                                         {order.updated && <TableCell>
                                             <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>
@@ -84,7 +84,7 @@ export default function Page() {
                                         <Label label={order.label} subLabel={order.sublabel} />
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Badge label={order.status.label} color={order.status.color} />
+                                        <StatusBadge label={order.status.label} color={order.status.color} />
                                     </TableCell>
                                     {order.updated && <TableCell>
                                         <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>

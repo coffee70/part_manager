@@ -11,6 +11,7 @@ import { XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ClickAwayListener } from '@mui/base';
 import { Input } from './input';
+import { ComboboxBadge } from './badge';
 
 export type Option = {
     id: number;
@@ -44,7 +45,7 @@ export function Combobox({ options, multiple, placeholder }: Props) {
         <ComboboxBase onClickAway={handleBlur}>
             <ComboboxTrigger>
                 {multiple && selected.length > 0 && selected.map(option => (
-                    <Badge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
+                    <ComboboxBadge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
                 ))}
                 <Input
                     ref={inputRef}
@@ -182,25 +183,5 @@ export function ComboboxItem({ children, onClick }: ComboboxItemProps) {
         <li className='p-1 hover:bg-hover' onClick={onClick}>
             {children}
         </li>
-    )
-}
-
-type BadgeProps = {
-    label: string;
-    onClick: () => void;
-}
-
-export function Badge({ label, onClick }: BadgeProps) {
-    return (
-        <div
-            className="flex items-center justify-end rounded-sm text-xs text-white font-bold transition-colors"
-            style={{ backgroundColor: 'grey' }}
-            onClick={onClick}
-        >
-            <span className='px-1 py-0.5'>{label}</span>
-            <button>
-                <XIcon size={16} />
-            </button>
-        </div>
     )
 }

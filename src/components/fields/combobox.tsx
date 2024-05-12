@@ -1,5 +1,6 @@
-import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem, useCombobox, Badge } from "../ui/combobox"
-import { ClickAwayListener } from "@mui/base"
+'use client'
+import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem, useCombobox } from "../ui/combobox"
+import { ComboboxBadge } from "../ui/badge"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { CheckIcon, PencilIcon } from "lucide-react"
@@ -10,7 +11,7 @@ type Props = {
     multiple?: boolean;
 }
 
-export function Select({ options, multiple }: Props) {
+export function Combobox({ options, multiple }: Props) {
     const {
         open,
         search,
@@ -28,7 +29,7 @@ export function Select({ options, multiple }: Props) {
         <ComboboxBase onClickAway={handleBlur}>
             <ComboboxTrigger className={cn('group', open ? 'border-border' : 'hover:border-border')}>
                 {multiple && selected.length > 0 && selected.map(option => (
-                    <Badge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
+                    <ComboboxBadge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
                 ))}
                 <Input
                     ref={inputRef}
