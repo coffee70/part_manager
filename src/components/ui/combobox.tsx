@@ -9,6 +9,8 @@
 import React from 'react'
 import { XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ClickAwayListener } from '@mui/base';
+import { Input } from './input';
 
 export type Option = {
     id: number;
@@ -18,9 +20,61 @@ export type Option = {
 type Props = {
     options: Option[];
     multiple?: boolean;
+    placeholder?: string;
 }
 
-export function useCombobox({ options, multiple }: Props) {
+/**
+ * Internal combobox used throughout the application.
+ */
+export function Combobox({ options, multiple, placeholder }: Props) {
+    const {
+        open,
+        search,
+        setSearch,
+        selected,
+        inputRef,
+        filteredOptions,
+        handleSelect,
+        handleRemove,
+        handleFocus,
+        handleBlur,
+    } = useCombobox({ options, multiple })
+
+    return (
+        <ComboboxBase onClickAway={handleBlur}>
+            <ComboboxTrigger>
+                {multiple && selected.length > 0 && selected.map(option => (
+                    <Badge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
+                ))}
+                <Input
+                    ref={inputRef}
+                    className='px-1 border-2 border-muted-foreground'
+                    placeholder={placeholder}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onFocus={handleFocus}
+                />
+            </ComboboxTrigger>
+            {open && filteredOptions.length > 0 && (
+                <ComboboxContent className='w-full'>
+                    {filteredOptions.map(option => (
+                        <ComboboxItem key={option.id} onClick={() => handleSelect(option)}>
+                            {option.value}
+                        </ComboboxItem>
+                    ))}
+                </ComboboxContent>
+            )}
+        </ComboboxBase>
+    )
+}
+
+export function useCombobox({
+    options,
+    multiple
+}: {
+    options: Option[];
+    multiple?: boolean;
+}) {
     const [open, setOpen] = React.useState(false)
     const [search, setSearch] = React.useState('')
     const [selected, _setSelected] = React.useState<Option[]>([])
@@ -78,12 +132,15 @@ export function useCombobox({ options, multiple }: Props) {
 
 type ComboboxBaseProps = {
     children: React.ReactNode;
+    onClickAway: () => void;
 }
-export const ComboboxBase = React.forwardRef<HTMLDivElement, ComboboxBaseProps>(({ children }, ref) => {
+export const ComboboxBase = React.forwardRef<HTMLDivElement, ComboboxBaseProps>(({ children, onClickAway }, ref) => {
     return (
-        <div ref={ref} className='relative'>
-            {children}
-        </div>
+        <ClickAwayListener onClickAway={onClickAway}>
+            <div ref={ref} className='relative'>
+                {children}
+            </div>
+        </ClickAwayListener>
     )
 })
 ComboboxBase.displayName = 'ComboboxBase'
@@ -104,11 +161,12 @@ export function ComboboxTrigger({ children, className }: ComboboxTriggerProps) {
 
 type ComboboxContentProps = {
     children: React.ReactNode;
+    className?: string;
 }
 
-export function ComboboxContent({ children }: ComboboxContentProps) {
+export function ComboboxContent({ children, className }: ComboboxContentProps) {
     return (
-        <ul className='absolute z-10 shadow-md bg-foreground border border-border mt-1 min-w-44 list-none'>
+        <ul className={cn('absolute z-10 shadow-md bg-foreground border border-border mt-1 min-w-44 list-none', className)}>
             {children}
         </ul>
     )
