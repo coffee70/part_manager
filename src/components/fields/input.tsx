@@ -5,32 +5,32 @@ import { Input as BaseInput } from '../ui/input';
 import { cn } from '@/lib/utils';
 
 function useInput() {
-    const [open, setOpen] = React.useState(false);
+    const [focused, setFocused] = React.useState(false);
     const [value, setValue] = React.useState('');
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleFocus = () => {
         inputRef.current?.focus();
-        setOpen(true);
+        setFocused(true);
     }
     const handleBlur = () => {
         inputRef.current?.blur();
-        setOpen(false);
+        setFocused(false);
     }
-    return { open, value, setValue, inputRef, handleFocus, handleBlur }
+    return { focused, value, setValue, inputRef, handleFocus, handleBlur }
 
 }
 
 export default function Input() {
-    const { open, value, setValue, inputRef, handleFocus, handleBlur } = useInput();
+    const { focused, value, setValue, inputRef, handleFocus, handleBlur } = useInput();
     return (
-        <div className={cn('group flex items-center border border-transparent', open ? 'border-border' : 'hover:border-border')}>
+        <div className={cn('group flex items-center border border-transparent', focused ? 'border-border' : 'hover:border-border')}>
             <BaseInput ref={inputRef} value={value} onChange={(e) => setValue(e.target.value)} onFocus={handleFocus} onBlur={handleBlur}/>
-            {!open && (
+            {!focused && (
                 <button className='bg-foreground p-1 invisible group-hover:visible' onClick={handleFocus}>
                     <PencilIcon />
                 </button>
             )}
-            {open && (
+            {focused && (
                 <button className='bg-foreground p-1' onClick={handleBlur}>
                     <CheckIcon />
                 </button>
