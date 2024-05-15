@@ -11,7 +11,7 @@ type Props = {
     setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
 }
 
-function useDate({ setDate }: Props) {
+function useDateInput({ setDate }: Props) {
     const [open, setOpen] = React.useState(false)
     const [input, setInput] = React.useState('')
     const inputRef = React.useRef<HTMLInputElement>(null)
@@ -48,7 +48,7 @@ function useDate({ setDate }: Props) {
 }
 
 export default function DateInput({ date, setDate }: Props) {
-    const { open, input, setInput, inputRef, handleFocus, handleBlur, handleSet, invalidDate } = useDate({ date, setDate })
+    const { open, input, setInput, inputRef, handleFocus, handleBlur, handleSet, invalidDate } = useDateInput({ date, setDate })
     return (
         <ClickAwayListener onClickAway={handleBlur}>
             <div className='group relative'>
