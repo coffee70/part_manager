@@ -115,7 +115,7 @@ export default function Page() {
                         <Status />
                     </SummaryToolbar>
                     <SummaryDetails details={order.details} />
-                    <SummaryNotes value="Here are some notes on the order."/>
+                    <SummaryNotes placeholder="Here are some notes on the order."/>
                     <SummaryList
                         title="Parts"
                         data={order.parts}
