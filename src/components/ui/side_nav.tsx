@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils"
+import { ChevronDownIcon, ChevronUpIcon, CircleIcon } from "lucide-react"
 
 type NavBaseProps = {
     children: React.ReactNode
+    className?: string
 }
 
-function NavBase({ children }: NavBaseProps) {
+function NavBase({ children, className }: NavBaseProps) {
     return (
-        <div className='flex flex-col items-center bg-foreground h-full w-64'>
+        <div className={cn('flex flex-col items-center bg-foreground h-full w-64', className)}>
             {children}
         </div>
     )
@@ -50,15 +52,41 @@ function NavFooter({ children }: NavFooterProps) {
 
 type NavItemProps = {
     label: string
-    icon: React.ReactNode
+    icon?: React.ReactNode
+    open?: boolean
+    onClick?: () => void
 }
 
-function NavItem({ label, icon }: NavItemProps) {
+function NavItem({ label, icon, open, onClick }: NavItemProps) {
     return (
-        <button className='flex items-center space-x-6 h-12 px-4 hover:bg-hover'>
-            {icon}
-            <span>{label}</span>
+        <button className='flex items-center h-12 px-4 hover:bg-hover' onClick={onClick}>
+            <div className='flex items-center space-x-6'>
+                {icon}
+                <span>{label}</span>
+            </div>
+            {open === true && <ChevronUpIcon className='ml-auto' />}
+            {open === false && <ChevronDownIcon className='ml-auto' />}
         </button>
+    )
+}
+
+type SubNavItemProps = {
+    label: string
+    top?: boolean
+    bottom?: boolean
+    onClick?: () => void
+}
+
+function SubNavItem({ label, top, bottom, onClick }: SubNavItemProps) {
+    return (
+        <button className="flex items-center space-x-6 h-10 px-4 text-accent-secondary hover:bg-hover" onClick={onClick}>
+            <div className="flex flex-col items-center h-full w-6">
+                <div className={cn("grow border", top ? "border-transparent" : "border-accent-foreground")} />
+                <CircleIcon size={8} strokeWidth={3} />
+                <div className={cn("grow border", bottom ? "border-transparent" : "border-accent-foreground")} />
+            </div>
+            <span>{label}</span>
+        </button>   
     )
 }
 
@@ -80,5 +108,6 @@ export {
     NavContent,
     NavFooter,
     NavItem,
+    SubNavItem,
     NavDivider,
 }
