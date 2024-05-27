@@ -27,7 +27,7 @@ export default function Textarea({ placeholder }: TextareaProps) {
     const { focused, value, setValue, textareaRef, handleFocus, handleBlur } = useTextarea();
     return (
         <div className={cn('group flex items-center border border-transparent', focused ? 'border-border' : 'hover:border-border')}>
-            <BaseTextarea ref={textareaRef} placeholder={placeholder} value={value} onChange={(e) => setValue(e.target.value)} onFocus={handleFocus} onBlur={handleBlur} />
+            <BaseTextarea ref={textareaRef} className='p-1' placeholder={placeholder} value={value} onChange={(e) => setValue(e.target.value)} onFocus={handleFocus} onBlur={handleBlur} />
             {!focused && (
                 <button className='bg-foreground p-1 h-full invisible group-hover:visible' onClick={handleFocus}>
                     <PencilIcon />
