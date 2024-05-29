@@ -31,16 +31,16 @@ export function StatusBadge({ label, color }: StatusBadgeProps) {
 
 type ComboboxBadgeProps = {
   label: string;
-  onClick: () => void;
+  onRemove: () => void;
 }
 
-export function ComboboxBadge({ label, onClick }: ComboboxBadgeProps) {
+export function ComboboxBadge({ label, onRemove }: ComboboxBadgeProps) {
   return <Badge
       label={label}
       color='grey'
       className="px-1"
       appendIcon={
-          <button onClick={onClick} className="pl-0.5">
+          <button onClick={onRemove} className="pl-0.5">
               <XIcon size={16} />
           </button>
       }

@@ -7,59 +7,61 @@
  */
 'use client'
 import React from 'react'
-import { XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ClickAwayListener } from '@mui/base';
 import { Input } from './input';
 import { ComboboxBadge } from './badge';
+import { useCombobox } from '@/hooks/combobox/combobox.hook';
 
-export type Option = {
-    id: number;
+export interface Option {
     value: string;
 }
 
 type Props = {
     options: Option[];
+    value: Option[];
+    onChange: React.Dispatch<React.SetStateAction<Option[]>>;
     multiple?: boolean;
     placeholder?: string;
+    creative?: boolean;
 }
 
 /**
  * Internal combobox used throughout the application.
  */
-export function Combobox({ options, multiple, placeholder }: Props) {
+export function Combobox({ options, value, onChange, multiple, placeholder, creative }: Props) {
     const {
         open,
         search,
         setSearch,
-        selected,
         inputRef,
         filteredOptions,
         handleSelect,
         handleRemove,
         handleFocus,
         handleBlur,
-    } = useCombobox({ options, multiple })
+        handleKeyDown,
+    } = useCombobox({ options, onChange, multiple, creative })
 
     return (
         <ComboboxBase onClickAway={handleBlur}>
-            <ComboboxTrigger>
-                {multiple && selected.length > 0 && selected.map(option => (
-                    <ComboboxBadge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
+            <ComboboxTrigger className='border border-muted-foreground'>
+                {multiple && value.length > 0 && value.map(option => (
+                    <ComboboxBadge key={option.value} label={option.value} onRemove={() => handleRemove(option)} />
                 ))}
                 <Input
                     ref={inputRef}
-                    className='px-1 border-2 border-muted-foreground'
                     placeholder={placeholder}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onFocus={handleFocus}
+                    onKeyDown={handleKeyDown}
                 />
             </ComboboxTrigger>
             {open && filteredOptions.length > 0 && (
                 <ComboboxContent className='w-full'>
                     {filteredOptions.map(option => (
-                        <ComboboxItem key={option.id} onClick={() => handleSelect(option)}>
+                        <ComboboxItem key={option.value} onClick={() => handleSelect(option)}>
                             {option.value}
                         </ComboboxItem>
                     ))}
@@ -67,68 +69,6 @@ export function Combobox({ options, multiple, placeholder }: Props) {
             )}
         </ComboboxBase>
     )
-}
-
-export function useCombobox({
-    options,
-    multiple
-}: {
-    options: Option[];
-    multiple?: boolean;
-}) {
-    const [open, setOpen] = React.useState(false)
-    const [search, setSearch] = React.useState('')
-    const [selected, _setSelected] = React.useState<Option[]>([])
-    const setSelected = (id: number) => {
-        if (multiple) {
-            _setSelected(prev => {
-                const option = options.find(o => o.id === id)
-                if (option) {
-                    if (prev.some(o => o.id === id)) {
-                        return prev.filter(o => o.id !== id)
-                    } else {
-                        return [...prev, option]
-                    }
-                }
-                return prev
-            })
-        } else {
-            const option = options.find(o => o.id === id)
-            if (option) {
-                _setSelected([option])
-            }
-        }
-    }
-    const inputRef = React.useRef<HTMLInputElement>(null)
-    const filteredOptions = options.filter(option => option.value.toLowerCase().includes(search.toLowerCase()))
-    const handleSelect = ({ id, value }: Option) => {
-        setSearch(multiple ? '' : value);
-        setSelected(id);
-    }
-    const handleRemove = ({ id }: Option) => {
-        setSelected(id)
-    }
-    const handleFocus = () => {
-        inputRef.current?.focus();
-        setOpen(true);
-    }
-    const handleBlur = () => {
-        inputRef.current?.blur();
-        setOpen(false);
-    }
-
-    return {
-        open,
-        search,
-        setSearch,
-        selected,
-        inputRef,
-        filteredOptions,
-        handleSelect,
-        handleRemove,
-        handleFocus,
-        handleBlur,
-    }
 }
 
 type ComboboxBaseProps = {
