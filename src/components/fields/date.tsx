@@ -5,50 +5,15 @@ import { Input as BaseInput } from "../ui/input"
 import { Calendar } from '../ui/calendar'
 import { cn } from '@/lib/utils'
 import { ClickAwayListener } from '@mui/base'
+import { useDateInput } from '@/hooks/date_input.hook'
 
 type Props = {
-    date: Date | undefined;
-    setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
+    value: Date | undefined;
+    onChange: (date: Date | undefined) => void;
 }
 
-function useDateInput({ setDate }: Props) {
-    const [open, setOpen] = React.useState(false)
-    const [input, setInput] = React.useState('')
-    const inputRef = React.useRef<HTMLInputElement>(null)
-
-    const handleFocus = () => {
-        inputRef.current?.focus()
-        setOpen(true)
-    }
-
-    const handleBlur = () => {
-        inputRef.current?.blur()
-        setOpen(false)
-    }
-
-    // handle setting the date from the calendar dropdown
-    const handleSet = (date: Date | undefined) => {
-        setInput(date ? date.toISOString().split('T')[0] : '')
-        setDate(date)
-    }
-
-    // handle setting the date from typing in the input
-    React.useEffect(() => {
-        const date = new Date(input)
-        if (!isNaN(date.getTime())) {
-            setDate(date)
-        }
-    }, [input, setDate])
-
-    // check if the input is a valid date
-    const invalidDate = React.useMemo(() => isNaN(Date.parse(input)), [input])
-
-    return { open, input, setInput, inputRef, handleFocus, handleBlur, handleSet, invalidDate }
-
-}
-
-export default function DateInput({ date, setDate }: Props) {
-    const { open, input, setInput, inputRef, handleFocus, handleBlur, handleSet, invalidDate } = useDateInput({ date, setDate })
+export default function DateInput({ value, onChange }: Props) {
+    const { open, input, setInput, inputRef, handleFocus, handleBlur, handleSet, invalidDate } = useDateInput({ onChange })
     return (
         <ClickAwayListener onClickAway={handleBlur}>
             <div className='group relative'>
@@ -72,7 +37,7 @@ export default function DateInput({ date, setDate }: Props) {
                 </div>
                 {open && (
                     <div className="absolute z-10 shadow-md bg-foreground border border-border mt-1">
-                        <Calendar mode='single' selected={date} onSelect={(e) => handleSet(e)} />
+                        <Calendar mode='single' selected={value} onSelect={(e) => handleSet(e)} />
                     </div>
                 )}
             </div>
