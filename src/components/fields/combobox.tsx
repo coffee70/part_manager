@@ -1,5 +1,6 @@
 'use client'
-import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem, useCombobox } from "../ui/combobox"
+import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem } from "../ui/combobox"
+import { useCombobox } from "@/hooks/combobox/combobox.hook"
 import { ComboboxBadge } from "../ui/badge"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
@@ -8,31 +9,35 @@ import { cn } from "@/lib/utils"
 
 type Props = {
     options: Option[];
+    value: Option[];
+    onChange: React.Dispatch<React.SetStateAction<Option[]>>;
     multiple?: boolean;
+    placeholder?: string;
+    creative?: boolean;
 }
 
-export function Combobox({ options, multiple }: Props) {
+export function Combobox({ options, value, onChange, multiple, placeholder, creative }: Props) {
     const {
         open,
         search,
         setSearch,
-        selected,
         inputRef,
         filteredOptions,
         handleSelect,
         handleRemove,
         handleFocus,
         handleBlur,
-    } = useCombobox({ options, multiple })
+    } = useCombobox({ options, onChange, multiple, creative })
 
     return (
         <ComboboxBase onClickAway={handleBlur}>
             <ComboboxTrigger className={cn('group', open ? 'border-border' : 'hover:border-border')}>
-                {multiple && selected.length > 0 && selected.map(option => (
-                    <ComboboxBadge key={option.id} label={option.value} onClick={() => handleRemove(option)} />
+                {multiple && value.length > 0 && value.map(option => (
+                    <ComboboxBadge key={option.value} label={option.value} onRemove={() => handleRemove(option)} />
                 ))}
                 <Input
                     ref={inputRef}
+                    placeholder={placeholder}
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     onFocus={handleFocus}
@@ -59,7 +64,7 @@ export function Combobox({ options, multiple }: Props) {
             {open && filteredOptions.length > 0 && (
                 <ComboboxContent>
                     {filteredOptions.map(option => (
-                        <ComboboxItem key={option.id} onClick={() => handleSelect(option)}>
+                        <ComboboxItem key={option.value} onClick={() => handleSelect(option)}>
                             <span>{option.value}</span>
                         </ComboboxItem>
                     ))}
