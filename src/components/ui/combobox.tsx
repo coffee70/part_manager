@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { ClickAwayListener } from '@mui/base';
 import { Input } from './input';
 import { ComboboxBadge } from './badge';
-import { useCombobox } from '@/hooks/combobox/combobox.hook';
+import { useCombobox } from '@/hooks/combobox.hook';
 
 export interface Option {
     value: string;
@@ -107,7 +107,7 @@ type ComboboxContentProps = {
 
 export function ComboboxContent({ children, className }: ComboboxContentProps) {
     return (
-        <ul className={cn('absolute z-10 shadow-md bg-foreground border border-border mt-1 min-w-44 list-none', className)}>
+        <ul className={cn('absolute z-10 shadow-md bg-foreground border border-border mt-1 min-w-44 w-full list-none', className)}>
             {children}
         </ul>
     )
