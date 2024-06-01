@@ -1,7 +1,7 @@
 import { ArrowDownIcon, ArrowDownUpIcon, ArrowUpIcon } from "lucide-react";
 import { DataAction } from "../data_actions/data_action_button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import useSort from "../../hooks/sort/sort.hook";
+import useSort from "../../hooks/sort.hook";
 import { SelectBase, SelectItem } from "../ui/select";
 
 export default function Sort() {

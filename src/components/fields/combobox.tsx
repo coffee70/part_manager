@@ -1,6 +1,6 @@
 'use client'
 import { type Option, ComboboxBase, ComboboxTrigger, ComboboxContent, ComboboxItem } from "../ui/combobox"
-import { useCombobox } from "@/hooks/combobox/combobox.hook"
+import { useCombobox } from "@/hooks/combobox.hook"
 import { ComboboxBadge } from "../ui/badge"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
