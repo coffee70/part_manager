@@ -4,11 +4,12 @@ import { ComboboxBadge } from '@/components/ui/badge';
 import { Input as BaseInput } from '@/components/ui/input';
 
 type Props = {
+    placeholder?: string;
     value: string[];
     onChange: (options: string[]) => void;
 }
 
-export default function AddOptions({ value, onChange }: Props) {
+export default function AddOptions({ placeholder, value, onChange }: Props) {
     const [input, setInput] = React.useState<string>('')
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -32,7 +33,12 @@ export default function AddOptions({ value, onChange }: Props) {
                 {value.map(option => (
                     <ComboboxBadge key={option} label={option} onRemove={() => handleRemove(option)} />
                 ))}
-                <BaseInput value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} />
+                <BaseInput
+                    placeholder={value.length === 0 ? placeholder : ''}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                />
             </div>
 
         </div>
