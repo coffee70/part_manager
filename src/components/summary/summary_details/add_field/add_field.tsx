@@ -4,7 +4,7 @@ import { PlusIcon } from "lucide-react";
 import DetailBase from "../summary_detail_base";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import AddOptions from "./fields/add_options";
-import BinaryChoice from "./fields/binary_choice";
+import ButtonGroup from "./fields/button_group";
 import DateInput from "./fields/date_default_input";
 import Input from "./fields/input";
 import Combobox, { type Option } from "./fields/combobox";
@@ -62,34 +62,38 @@ export default function AddField() {
                     <DialogTitle>Add Field</DialogTitle>
                     <DialogDescription>Customize a new order field.</DialogDescription>
                 </DialogHeader>
-                <Combobox label="Field Type" options={fieldOptions} onChange={(option) => handleFieldChange('type', option.label)} />
+                <ButtonGroup
+                    labels={['Text', 'Number', 'Date', 'Time', 'Select', 'Paragraph']}
+                    value={field.type}
+                    onChange={(newValue) => setField(prev => ({ ...prev, type: newValue }))}
+                    stacked
+                />
                 <Input label="Field Name" placeholder="Enter the field name" value={field.name} onChange={(e) => handleFieldChange('name', e.target.value)} />
                 <Textarea label="Description" placeholder="Enter the field description" value={field.description} onChange={(e) => handleFieldChange('description', e.target.value)} />
                 {/** If select field ask multiple and creative */}
                 {field?.type === 'Select' && (
                     <>
-                        <BinaryChoice
-                            value={field.multiple}
-                            setValue={(newValue) => setField(prev => ({ ...prev, multiple: newValue }))}
-                            trueLabel="Multiple"
-                            falseLabel="Single"
+                        <ButtonGroup
+                            value={field.multiple ? 'Multiple' : 'Single'}
+                            onChange={(newValue) => setField(prev => ({ ...prev, multiple: newValue === 'Multiple' }))}
+                            labels={['Multiple', 'Single']}
                         />
-                        <BinaryChoice
-                            value={field.creative}
-                            setValue={(newValue) => setField(prev => ({ ...prev, creative: newValue }))}
-                            trueLabel="Creative"
-                            falseLabel="Standard"
+                        <ButtonGroup
+                            value={field.creative ? 'Creative' : 'Restricted'}
+                            onChange={(newValue) => setField(prev => ({ ...prev, creative: newValue === 'Creative' }))}
+                            labels={['Creative', 'Restricted']}
                         />
                     </>
                 )}
                 {/** If select field ask for options */}
                 {field.type === 'Select' && (
                     <AddOptions
+                        placeholder="Type an option and press enter"
                         value={field.options}
                         onChange={(options) => handleFieldChange('options', options)}
                     />
                 )}
-                
+
                 {/** Ask for defaults for each field */}
                 {field.type === 'Text' && (
                     <Input
@@ -110,6 +114,7 @@ export default function AddField() {
                 {field.type === 'Date' && (
                     <DateInput
                         label="Default Value"
+                        placeholder="Enter the default value"
                         value={new Date(field.defaultValue)}
                         onChange={(date) => handleFieldChange('defaultValue', date?.toISOString() ?? '')}
                     />
