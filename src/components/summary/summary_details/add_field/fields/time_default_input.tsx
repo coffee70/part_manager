@@ -1,4 +1,4 @@
-import { useTimeInput } from "@/components/fields/time";
+import { useTimeInput } from "@/hooks/time_input.hook";
 import { Input as BaseInput } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +22,15 @@ export default function TimeInput({ label, placeholder, time, setTime }: Props) 
         <div>
             <span>{label}</span>
             <div className={cn('group flex items-center border border-transparent', invalidTime ? 'border-red-600' : 'border-muted-foreground')}>
-                <BaseInput ref={inputRef} placeholder={placeholder} value={time} onChange={(e) => handleInput(e)} onFocus={handleFocus} onBlur={handleBlur} />
+                <BaseInput
+                    className="p-1"
+                    ref={inputRef}
+                    placeholder={placeholder}
+                    value={time}
+                    onChange={(e) => handleInput(e)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                />
             </div>
         </div>
     )
