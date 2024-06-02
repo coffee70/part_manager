@@ -1,4 +1,4 @@
-import { useDateInput } from "@/components/fields/date";
+import { useDateInput } from "@/hooks/date_input.hook";
 import { Calendar } from "@/components/ui/calendar";
 import { Input as BaseInput } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -6,11 +6,12 @@ import { ClickAwayListener } from "@mui/base";
 
 type Props = {
     label: string;
+    placeholder?: string;
     value: Date | undefined;
     onChange: (date: Date | undefined) => void;
 }
 
-export default function DateInput({ label, value, onChange }: Props) {
+export default function DateInput({ label, placeholder, value, onChange }: Props) {
     const {
         open,
         input,
@@ -28,7 +29,14 @@ export default function DateInput({ label, value, onChange }: Props) {
             <span>{label}</span>
             <ClickAwayListener onClickAway={handleBlur}>
                 <div className={cn('flex items-center border border-transparent', invalidDate ? 'border-red-600' : 'border-muted-foreground')}>
-                    <BaseInput className="p-1" ref={inputRef} value={input} onChange={(e) => setInput(e.target.value)} onFocus={handleFocus} />
+                    <BaseInput
+                        className="p-1"
+                        placeholder={placeholder}
+                        ref={inputRef}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onFocus={handleFocus}
+                    />
                 </div>
             </ClickAwayListener>
             {open && (
