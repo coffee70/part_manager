@@ -1,9 +1,9 @@
 'use client'
 import React from 'react';
-import Input from '../input';
+import Input from './input';
 import { useFloating, useInteractions, useClick, useDismiss, useRole, offset, flip, shift, autoUpdate, FloatingFocusManager } from '@floating-ui/react';
-import { BUFFER, TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from '../constants';
-import useBuffer from '../buffer.hook';
+import { BUFFER, TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from './constants';
+import useBuffer from './buffer.hook';
 
 type PointProps = {
     point: { x: number, y: number };

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH } from './constants';
-import Point from './point/point';
+import Point from './point';
 
 export default function DimensionTracer() {
     const [points, setPoints] = React.useState<{ x: number, y: number }[]>([]);
