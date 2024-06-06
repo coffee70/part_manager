@@ -12,6 +12,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.26.16",
     "@mui/base": "^5.0.0-beta.40",
     "@prisma/client": "^5.12.1",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -28,6 +29,7 @@
     "react": "^18",
     "react-day-picker": "^8.10.0",
     "react-dom": "^18",
+    "react-pdf": "^9.0.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
