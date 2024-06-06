@@ -4,6 +4,7 @@ import Input from './input';
 import { useFloating, useInteractions, useClick, useDismiss, useRole, offset, flip, shift, autoUpdate, FloatingFocusManager } from '@floating-ui/react';
 import { BUFFER, TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from './constants';
 import useBuffer from './buffer.hook';
+import { Button } from 'react-day-picker';
 
 type PointProps = {
     point: { x: number, y: number };
@@ -42,10 +43,7 @@ export default function Point(props: PointProps) {
                 {...getReferenceProps()}
                 {...props} />
             {open && (
-                <FloatingFocusManager
-                    context={context}
-                    modal={false}
-                >
+                <FloatingFocusManager context={context}>
                     <PointContent
                         ref={refs.setFloating}
                         style={floatingStyles}
