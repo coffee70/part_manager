@@ -11,6 +11,7 @@ const buttonVariants = cva(
       variant: {
         primary: "bg-primary text-primary-foreground h-10",
         secondary: "bg-secondary text-secondary-foreground h-10",
+        destructive: "bg-destructive text-destructive-foreground h-10",
         icon: "bg-transparent",
         outline: "bg-transparent border border-border",
         toolbar: "bg-secondary text-md rounded-sm p-1",
