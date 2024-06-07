@@ -2,11 +2,12 @@
 import React from 'react';
 import { TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH } from './constants';
 import Point from './point';
+import { useDrawingViewerContext } from './context';
 
 export default function DimensionTracer() {
+    const { pointer } = useDrawingViewerContext();
     const [points, setPoints] = React.useState<{ x: number, y: number }[]>([]);
-
-
+    
     const handleBoardClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const rect = event.currentTarget.getBoundingClientRect();
         const x = event.clientX - rect.left;
