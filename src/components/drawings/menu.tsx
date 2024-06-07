@@ -1,3 +1,4 @@
+'use client'
 import { PlusIcon, PointerIcon, Trash2Icon } from "lucide-react"
 import { Button } from "../ui/button"
 import { cn } from "@/lib/utils"
