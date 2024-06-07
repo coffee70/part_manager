@@ -2,9 +2,8 @@
 import React from 'react';
 import Input from './input';
 import { useFloating, useInteractions, useClick, useDismiss, useRole, offset, flip, shift, autoUpdate, FloatingFocusManager } from '@floating-ui/react';
-import { BUFFER, TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from './constants';
+import { TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from './constants';
 import useBuffer from './buffer.hook';
-import { Button } from 'react-day-picker';
 
 type PointProps = {
     point: { x: number, y: number };
@@ -111,7 +110,7 @@ const PointContent = React.forwardRef<HTMLDivElement, PointContentProps>(functio
     return (
         <div
             ref={ref}
-            className='p-2 flex flex-col space-y-1 bg-foreground z-10 border border-border'
+            className='p-2 flex flex-col space-y-2 bg-foreground z-10 border border-border cursor-default'
             {...props}
         >
             <Input label='Name' value={dimension.name} onChange={(e) => handleDimensionChange('name', e.target.value)} />
