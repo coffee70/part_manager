@@ -7,7 +7,7 @@ import { useDrawingViewerContext } from "./context"
 export default function Menu() {
     const { pointer, setPointer } = useDrawingViewerContext()
     return (
-        <div className="flex space-x-2 w-full p-2 bg-foreground">
+        <div className="flex space-x-2 w-full p-2 bg-foreground border border-border">
             <Button variant="icon" className={cn("p-2", pointer === "select" ? "bg-black text-white rounded-full" : "")} onClick={() => setPointer("select")}>
                 <PointerIcon />
             </Button>

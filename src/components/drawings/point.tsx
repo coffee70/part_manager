@@ -1,20 +1,35 @@
 'use client'
 import React from 'react';
 import Input from './input';
-import { useFloating, useInteractions, useClick, useDismiss, useRole, offset, flip, shift, autoUpdate, FloatingFocusManager } from '@floating-ui/react';
-import { TRACER_POINT_HEIGHT, TRACER_POINT_HOVER_HEIGHT, TRACER_POINT_HOVER_WIDTH, TRACER_POINT_WIDTH } from './constants';
+import {
+    useFloating,
+    useInteractions,
+    useClick,
+    useDismiss,
+    useRole,
+    offset,
+    flip,
+    shift,
+    autoUpdate,
+    FloatingFocusManager
+} from '@floating-ui/react';
+import {
+    TRACER_POINT_HEIGHT,
+    TRACER_POINT_HOVER_HEIGHT,
+    TRACER_POINT_HOVER_WIDTH,
+    TRACER_POINT_WIDTH
+} from './constants';
 import useBuffer from './buffer.hook';
+import { useDrawingViewerContext } from './context';
 
 type PointProps = {
     point: { x: number, y: number };
-    index: number;
 }
 
 export default function Point(props: PointProps) {
-    const { index } = props;
     const [open, setOpen] = React.useState<boolean>(false);
-    const [hoveredPointIndex, setHoveredPointIndex] = React.useState<number | null>(null);
-    const { buffer } = useBuffer({ hovered: hoveredPointIndex === index });
+    const [hovered, setHovered] = React.useState<boolean>(false);
+    const { buffer } = useBuffer({ hovered: hovered });
     const { refs, floatingStyles, context } = useFloating({
         placement: 'top',
         open: open,
@@ -37,8 +52,8 @@ export default function Point(props: PointProps) {
         <>
             <PointTrigger
                 ref={refs.setReference}
-                hoveredPointIndex={hoveredPointIndex}
-                setHoveredPointIndex={setHoveredPointIndex}
+                hovered={hovered}
+                setHovered={setHovered}
                 {...getReferenceProps()}
                 {...props} />
             {open && (
@@ -55,36 +70,29 @@ export default function Point(props: PointProps) {
 }
 
 type PointTriggerProps = React.HTMLAttributes<HTMLButtonElement> & {
-    hoveredPointIndex: number | null;
-    setHoveredPointIndex: React.Dispatch<React.SetStateAction<number | null>>;
     point: { x: number, y: number };
-    index: number;
+    hovered: boolean;
+    setHovered: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const PointTrigger = React.forwardRef<HTMLButtonElement, PointTriggerProps>(function PointTrigger(props, ref) {
-    const { point, index, hoveredPointIndex, setHoveredPointIndex, ...other } = props;
-
-    const handleMouseEnter = (index: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        setHoveredPointIndex(index);
-    }
-
-    const handleMouseLeave = () => {
-        setHoveredPointIndex(null);
-    }
+    const { point, hovered, setHovered, ...other } = props;
+    const { pointer } = useDrawingViewerContext();
 
     return (
         <button
             ref={ref}
-            key={index}
             className='absolute bg-primary rounded-full border-2 border-muted-foreground'
             style={{
-                left: point.x - (hoveredPointIndex === index ? TRACER_POINT_HOVER_WIDTH / 2 : TRACER_POINT_WIDTH / 2),
-                top: point.y - (hoveredPointIndex === index ? TRACER_POINT_HOVER_HEIGHT / 2 : TRACER_POINT_HEIGHT / 2),
-                width: hoveredPointIndex === index ? TRACER_POINT_HOVER_WIDTH : TRACER_POINT_WIDTH,
-                height: hoveredPointIndex === index ? TRACER_POINT_HOVER_HEIGHT : TRACER_POINT_HEIGHT,
+                left: point.x - (hovered ? TRACER_POINT_HOVER_WIDTH / 2 : TRACER_POINT_WIDTH / 2),
+                top: point.y - (hovered ? TRACER_POINT_HOVER_HEIGHT / 2 : TRACER_POINT_HEIGHT / 2),
+                width: hovered ? TRACER_POINT_HOVER_WIDTH : TRACER_POINT_WIDTH,
+                height: hovered ? TRACER_POINT_HOVER_HEIGHT : TRACER_POINT_HEIGHT,
+                cursor: pointer === 'add' ? 'crosshair' : pointer === 'delete' ? 'default' : 'pointer',
             }}
-            onMouseEnter={handleMouseEnter(index)}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            disabled={pointer === 'add'}
             {...other}
         />
     )

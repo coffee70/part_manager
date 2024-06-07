@@ -1,7 +1,6 @@
 import DimensionTracer from './dimension_tracer';
 import Menu from './menu';
 import PDFViewer from './pdf_viewer';
-import PageNav from './page_nav';
 import { DrawingViewerProvider } from './context';
 
 type Props = {
@@ -18,7 +17,6 @@ export default function DrawingViewer({ file }: Props) {
                     <PDFViewer file={file} />
                     <DimensionTracer />
                 </div>
-                <PageNav />
             </div>
         </DrawingViewerProvider>
     )
