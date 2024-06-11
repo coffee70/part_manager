@@ -29,6 +29,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { fetchOrder, fetchOrders } from "@/api/data";
+import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachements";
 
 export default function Page() {
     const orders = fetchOrders();
@@ -116,6 +117,7 @@ export default function Page() {
                     </SummaryToolbar>
                     <SummaryDetails details={order.details} />
                     <SummaryNotes placeholder="Here are some notes on the order."/>
+                    <SummaryAttachments files={order.attachments} />
                     <SummaryList
                         title="Parts"
                         data={order.parts}

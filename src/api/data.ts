@@ -309,6 +309,7 @@ export const fetchOrder = () => {
       id: 1,
       name: "Lockheed Martin",
     },
+    attachments: ['./A02056G.pdf', './A19464-S.png.pdf', './A19464.pdf', './A19464.pdf'],
     archived: undefined,
     details: details,
     people: people,
