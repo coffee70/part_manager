@@ -11,13 +11,13 @@ type Params = {
 export async function GET(_: Request, { params }: Params) {
     const { id } = params;
     try {
-        const order = await prisma.order.findUnique({
+        const drawing = await prisma.drawing.findUnique({
             where: {
-                id: parseInt(id)
+                id: id
             }
         });
-        if (!order) return response(HttpStatus.NOT_FOUND);
-        return response(HttpStatus.OK, order);
+        if (!drawing) return response(HttpStatus.NOT_FOUND);
+        return response(HttpStatus.OK, drawing);
     } catch {
         return response(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -27,13 +27,13 @@ export async function PUT(request: Request, { params }: Params) {
     const { id } = params;
     const body = await request.json();
     try {
-        const order = await prisma.order.update({
+        const drawing = await prisma.drawing.update({
             where: {
-                id: parseInt(id)
+                id: id
             },
             data: body
         });
-        return response(HttpStatus.OK, order);
+        return response(HttpStatus.OK, drawing);
     } catch {
         return response(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -42,9 +42,9 @@ export async function PUT(request: Request, { params }: Params) {
 export async function DELETE(_: Request, { params }: Params) {
     const { id } = params;
     try {
-        await prisma.order.delete({
+        await prisma.drawing.delete({
             where: {
-                id: parseInt(id)
+                id: id
             }
         });
         return response(HttpStatus.NO_CONTENT);
