@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/database/prisma";
 import { response } from "@/api/helpers";
 import { HttpStatus } from '../helpers'; // Add this line
 

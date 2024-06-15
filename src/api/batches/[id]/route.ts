@@ -1,5 +1,5 @@
 import { response } from "@/api/helpers";
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/database/prisma";
 import { HttpStatus } from '../../helpers'; // Add this line
 
 type Params = {
