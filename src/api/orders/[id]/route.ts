@@ -29,6 +29,8 @@ export async function PUT(request: Request, { params }: Params) {
     const { id } = params;
     const body = await request.json();
     try {
+        const valid = await validateJson(body.fields, FieldModel.ORDER);
+        if (valid !== true) return response(HttpStatus.BAD_REQUEST, { error: valid });
         const order = await prisma.order.update({
             where: {
                 id: parseInt(id)

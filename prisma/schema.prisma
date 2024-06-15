@@ -20,6 +20,8 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  fields Json
+
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId Int
   parts      Part[]
@@ -33,6 +35,8 @@ model Customer {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  fields Json
+
   orders Order[]
 }
 
@@ -42,6 +46,8 @@ model Part {
   notes     String   @db.Text()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  fields Json
 
   orderId    Int
   order      Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -58,6 +64,8 @@ model Serial {
   notes     String   @db.Text()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  fields Json
 
   partId   Int
   part     Part    @relation(fields: [partId], references: [id], onDelete: Cascade)
@@ -76,6 +84,8 @@ model Dimension {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  fields Json
+
   partId Int
   part   Part @relation(fields: [partId], references: [id], onDelete: Cascade)
 
@@ -88,6 +98,8 @@ model Drawing {
   notes     String   @db.Text()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  fields Json
 
   partId Int
   part   Part @relation(fields: [partId], references: [id], onDelete: Cascade)
@@ -102,6 +114,8 @@ model Batch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  fields Json
+
   billets Billet[]
 }
 
@@ -111,6 +125,8 @@ model Billet {
   notes     String   @db.Text()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  fields Json
 
   batchId Int
   batch   Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
@@ -125,6 +141,8 @@ model Bag {
   notes     String   @db.Text()
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  fields Json
 }
 
 model Log {
@@ -141,13 +159,13 @@ model Comment {
 }
 
 model Status {
-  id              Int          @id @default(autoincrement())
-  label           String
-  color           String
-  resolved        Boolean
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  
+  id        Int      @id @default(autoincrement())
+  label     String
+  color     String
+  resolved  Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   fromTransitions Transition[] @relation("FromStatus")
   toTransitions   Transition[] @relation("ToStatus")
 }
@@ -162,4 +180,37 @@ model Transition {
   from   Status @relation("FromStatus", fields: [fromId], references: [id])
   toId   Int
   to     Status @relation("ToStatus", fields: [toId], references: [id])
+}
+
+enum FieldType {
+  TEXT
+  NUMBER
+  DATE
+  TIME
+  SELECT
+  PARAGRAPH
+}
+
+enum FieldModel {
+  ORDER
+  CUSTOMER
+  PART
+  SERIAL
+  BATCH
+  BILLET
+  BAG
+}
+
+model Field {
+  id        Int        @id @default(autoincrement())
+  name      String
+  model     FieldModel
+  type      FieldType
+  default   Json?
+  options   Json?
+  nullable  Boolean
+  multiple  Boolean?
+  creative  Boolean?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

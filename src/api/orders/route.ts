@@ -17,6 +17,8 @@ export async function GET() {
 export async function POST(request: Request) {
     const body = await request.json();
     try {
+        const valid = await validateJson(body.fields, FieldModel.ORDER);
+        if (valid !== true) return response(HttpStatus.BAD_REQUEST, { error: valid });
         const order = await prisma.order.create({
             data: body
         });
