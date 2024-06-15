@@ -139,3 +139,27 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Status {
+  id              Int          @id @default(autoincrement())
+  label           String
+  color           String
+  resolved        Boolean
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  fromTransitions Transition[] @relation("FromStatus")
+  toTransitions   Transition[] @relation("ToStatus")
+}
+
+model Transition {
+  id        Int      @id @default(autoincrement())
+  label     String   @db.Text()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fromId Int
+  from   Status @relation("FromStatus", fields: [fromId], references: [id])
+  toId   Int
+  to     Status @relation("ToStatus", fields: [toId], references: [id])
+}
