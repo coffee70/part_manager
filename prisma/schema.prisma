@@ -24,6 +24,8 @@ model Order {
 
   customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId Int
+  statusId   Int
+  status     Status   @relation(fields: [statusId], references: [id])
   parts      Part[]
 
   @@index([customerId], name: "customerId")
@@ -168,6 +170,7 @@ model Status {
 
   fromTransitions Transition[] @relation("FromStatus")
   toTransitions   Transition[] @relation("ToStatus")
+  Order           Order[]
 }
 
 model Transition {
