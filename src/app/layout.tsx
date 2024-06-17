@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
-
 import { cn } from "@/lib/utils"
-import SideNavigation from "@/components/navigations/side_nav/side_nav";
 import Navigation from "@/components/navigations/nav/nav";
+import { QueryClientProvider, QueryClient, Query } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,10 +30,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Navigation />
-        <main style={{ height: 'calc(100vh - 72px)'}}>
-          {children}
-        </main>
+        <QueryClientProvider client={queryClient}>
+          <Navigation />
+          <main style={{ height: 'calc(100vh - 72px)' }}>
+            {children}
+          </main>
+        </QueryClientProvider>
       </body>
     </html>
   );
