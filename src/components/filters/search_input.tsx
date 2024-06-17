@@ -3,8 +3,12 @@ import * as React from "react"
 import { Search, X } from "lucide-react"
 import { Input } from "../ui/input";
 
-const SearchInput = () => {
-  const [search, setSearch] = React.useState("");
+type Props = {
+  value: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement> | undefined
+}
+
+const SearchInput = ({ value, onChange }: Props) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleClear = () => {
@@ -21,12 +25,12 @@ const SearchInput = () => {
         ref={inputRef}
         type='text'
         className="bg-transparent"
-        onChange={(e) => setSearch(e.target.value)}
-        value={search}
+        onChange={onChange}
+        value={value}
       />
       <button
         onClick={handleClear}
-        className={search ? "" : "invisible disabled"}
+        className={value ? "" : "invisible disabled"}
       >
         <X />
       </button>
