@@ -1,22 +1,16 @@
 'use client'
 import React from 'react';
 
-type Sort = 'asc' | 'desc' | null;
+export type SortOption = 'asc' | 'desc' | null;
 
-type SortFields = {
-    order_number: Sort;
-    status: Sort;
-    updated_at: Sort;
+type Props<T> = {
+    sort: T;
 }
 
-export default function useSort() {
-    const [sort, setSort] = React.useState<SortFields>({
-        order_number: null,
-        status: null,
-        updated_at: null,
-    })
+export default function useSort<T extends { [key: string]: SortOption }>({ sort }: Props<T>) {
+    const [state, setState] = React.useState<T>(sort);
 
-    const shuffleSort = (s: Sort) => {
+    const shuffleSort = (s: SortOption) => {
         switch (s) {
             case 'asc': return 'desc';
             case 'desc': return null;
@@ -24,20 +18,16 @@ export default function useSort() {
         }
     }
 
-    const handleSortChange = (k: keyof SortFields) => {
-        setSort(prev => {
-            const updatedSort = {...prev};
-            let key: keyof SortFields;
-            for (key in updatedSort) {
-                if (key === k) {
-                    updatedSort[key] = shuffleSort(prev[key]);
-                } else {
-                    updatedSort[key] = null;
-                }
-            }
-            return updatedSort;
-        })
-    }
+const setSort = (k: keyof T) => {
+    // for all keys in sort that are not k, set to null without using reduce
+    setState(prev => Object.keys(prev).reduce((acc, key) => {
+        if (key === k) {
+            return { ...acc, [key]: shuffleSort(prev[key]) };
+        }
+        return { ...acc, [key]: null };
+    }, prev));
 
-    return { sort, handleSortChange }
+}
+
+    return { sort, setSort }
 }

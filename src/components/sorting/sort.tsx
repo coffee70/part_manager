@@ -1,11 +1,21 @@
 import { ArrowDownIcon, ArrowDownUpIcon, ArrowUpIcon } from "lucide-react";
 import { DataAction } from "../data_actions/data_action_button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import useSort from "../../hooks/sort.hook";
+import useSort, { SortOption } from "../../hooks/sort.hook";
 import { SelectBase, SelectItem } from "../ui/select";
 
-export default function Sort() {
-    const { sort, handleSortChange } = useSort();
+type SortFields = {
+    order_number: SortOption;
+    status: SortOption;
+    updated_at: SortOption;
+}
+
+type Props<T> = {
+    sort: T;
+    setSort: (key: keyof T) => void;
+}
+
+export default function Sort<T extends SortFields>({ sort, setSort }: Props<T>) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -15,17 +25,17 @@ export default function Sort() {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="min-w-56">
                 <SelectBase>
-                    <SelectItem onClick={() => handleSortChange('order_number')}>
+                    <SelectItem onClick={() => setSort('order_number')}>
                         <span>Order Number</span>
                         {sort.order_number === 'asc' && <ArrowUpIcon strokeWidth={1.5} size={20} />}
                         {sort.order_number === 'desc' && <ArrowDownIcon strokeWidth={1.5} size={20} />}
                     </SelectItem>
-                    <SelectItem onClick={() => handleSortChange('status')}>
+                    <SelectItem onClick={() => setSort('status')}>
                         <span>Status</span>
                         {sort.status === 'asc' && <ArrowUpIcon strokeWidth={1.5} size={20} />}
                         {sort.status === 'desc' && <ArrowDownIcon strokeWidth={1.5} size={20} />}
                     </SelectItem>
-                    <SelectItem onClick={() => handleSortChange('updated_at')}>
+                    <SelectItem onClick={() => setSort('updated_at')}>
                         <span>Updated</span>
                         {sort.updated_at === 'asc' && <ArrowUpIcon strokeWidth={1.5} size={20} />}
                         {sort.updated_at === 'desc' && <ArrowDownIcon strokeWidth={1.5} size={20} />}
