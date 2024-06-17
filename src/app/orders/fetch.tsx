@@ -28,6 +28,21 @@ async function getOrders() {
     return orders;
 }
 
+function filterOrders(orders: ReturnType, filter: OrderFilter) {
+    const { number, updatedAt, statusId } = filter;
+    return orders.filter((order) => {
+        if (number && !order.number.includes(number)) return false;
+        if (updatedAt?.from) {
+            if (order.updatedAt < updatedAt.from) return false;
+        }
+        if (updatedAt?.to) {
+            if (order.updatedAt > updatedAt.to) return false;
+        }
+        if (statusId && !statusId.includes(order.statusId)) return false;
+        return true;
+    });
+}
+
 function splitByResolution(orders: ReturnType) {
     const complete: ReturnType = [];
     const incomplete: ReturnType = [];
@@ -49,6 +64,7 @@ export default function useOrders(filter: OrderFilter) {
 
     if (isLoading || isError || !orders) return { orders: { complete: [], incomplete: [] }, isLoading, isError };
 
+    orders = filterOrders(orders, filter);
     const { complete, incomplete } = splitByResolution(orders);
 
     return { orders: { complete, incomplete }, isLoading, isError };
