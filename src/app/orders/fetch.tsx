@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Order, Status } from '@prisma/client';
 import { DateRange } from 'react-day-picker';
+import { SortOption } from '@/hooks/sort.hook';
 
 // type the hook should return to the UI
 type ReturnType = (Order & { status: Status })[];
@@ -9,6 +10,32 @@ type OrderFilter = {
     number: string;
     updatedAt: DateRange;
     statusId: number[];
+}
+
+type OrderSort = {
+    number: SortOption;
+    updatedAt: SortOption;
+    statusId: SortOption;
+}
+
+type Props = {
+    filters: OrderFilter;
+    sort: OrderSort;
+}
+
+export default function useOrders({ filters, sort }: Props) {
+    let { data: orders, isLoading, isError } = useQuery({
+        queryKey: ['orders'],
+        queryFn: getOrders,
+    });
+
+    if (isLoading || isError || !orders) return { orders: { complete: [], incomplete: [] }, isLoading, isError };
+
+    orders = filterOrders(orders, filters);
+    orders = sortOrders(orders, sort);
+    const { complete, incomplete } = splitByResolution(orders);
+
+    return { orders: { complete, incomplete }, isLoading, isError };
 }
 
 async function getOrders() {
@@ -43,6 +70,30 @@ function filterOrders(orders: ReturnType, filter: OrderFilter) {
     });
 }
 
+function sortOrders(orders: ReturnType, sort: OrderSort) {
+    return orders.sort((a, b) => {
+        if (sort.number === 'asc') {
+            return a.number.localeCompare(b.number);
+        } else if (sort.number === 'desc') {
+            return b.number.localeCompare(a.number);
+        }
+
+        if (sort.updatedAt === 'asc') {
+            return a.updatedAt.getTime() - b.updatedAt.getTime();
+        } else if (sort.updatedAt === 'desc') {
+            return b.updatedAt.getTime() - a.updatedAt.getTime();
+        }
+
+        if (sort.statusId === 'asc') {
+            return a.status.label.localeCompare(b.status.label);
+        } else if (sort.statusId === 'desc') {
+            return b.status.label.localeCompare(a.status.label);
+        }
+
+        return 0;
+    })
+}
+
 function splitByResolution(orders: ReturnType) {
     const complete: ReturnType = [];
     const incomplete: ReturnType = [];
@@ -54,18 +105,4 @@ function splitByResolution(orders: ReturnType) {
         }
         return acc;
     }, { complete: complete, incomplete: incomplete });
-}
-
-export default function useOrders(filter: OrderFilter) {
-    let { data: orders, isLoading, isError } = useQuery({
-        queryKey: ['orders'],
-        queryFn: getOrders,
-    });
-
-    if (isLoading || isError || !orders) return { orders: { complete: [], incomplete: [] }, isLoading, isError };
-
-    orders = filterOrders(orders, filter);
-    const { complete, incomplete } = splitByResolution(orders);
-
-    return { orders: { complete, incomplete }, isLoading, isError };
 }
