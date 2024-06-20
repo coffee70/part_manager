@@ -21,9 +21,10 @@ type OrderSort = {
 type Props = {
     filters: OrderFilter;
     sort: OrderSort;
+    showCompleted: boolean;
 }
 
-export default function useOrders({ filters, sort }: Props) {
+export default function useOrders({ filters, sort, showCompleted }: Props) {
     let { data: orders, isLoading, isError } = useQuery({
         queryKey: ['orders'],
         queryFn: getOrders,
@@ -34,6 +35,10 @@ export default function useOrders({ filters, sort }: Props) {
     orders = filterOrders(orders, filters);
     orders = sortOrders(orders, sort);
     const { complete, incomplete } = splitByResolution(orders);
+
+    if (!showCompleted) {
+        return { orders: { complete: [], incomplete }, isLoading, isError };
+    }
 
     return { orders: { complete, incomplete }, isLoading, isError };
 }
