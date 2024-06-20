@@ -3,9 +3,7 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils"
 import Navigation from "@/components/navigations/nav/nav";
-import { QueryClientProvider, QueryClient, Query } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+import ReactQueryProvider from "@/lib/react_query";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -30,12 +28,12 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <QueryClientProvider client={queryClient}>
+        <ReactQueryProvider>
           <Navigation />
           <main style={{ height: 'calc(100vh - 72px)' }}>
             {children}
           </main>
-        </QueryClientProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
