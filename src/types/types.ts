@@ -52,16 +52,6 @@ export type Detail = {
     value: string;
 }
 
-export type SummaryListItemData = {
-    id: number;
-    label: string;
-    status: {
-        label: string;
-        color: string;
-        completed?: boolean;
-    };
-}
-
 export type Person = {
     id: number;
     name: string;
