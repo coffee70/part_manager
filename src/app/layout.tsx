@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import Navigation from "@/components/navigations/nav/nav";
 import ReactQueryProvider from "@/lib/react_query";
+import SideNavigation from "@/components/navigations/side_nav/side_nav";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -30,7 +31,8 @@ export default function RootLayout({
       >
         <ReactQueryProvider>
           <Navigation />
-          <main style={{ height: 'calc(100vh - 72px)' }}>
+          <main style={{ height: 'calc(100vh - 80px)' }} className="flex">
+            <SideNavigation />
             {children}
           </main>
         </ReactQueryProvider>
