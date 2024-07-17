@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuConte
 import PriorityItem from './priority_item'
 import { type Priority } from '@/types/types'
 import PriorityButton from './priority_button'
-import { fetchPriorities } from '@/api/data'
+import { fetchPriorities } from '@/app/api/data'
 
 export default function Priority() {
     const priorities = fetchPriorities()
