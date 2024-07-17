@@ -2,11 +2,12 @@ services:
   manager:
     container_name: manager
     build:
-      context: ./
-      target: dev
+      context: .
       dockerfile: Dockerfile
     volumes:
       - .:/app
+      - manager-node_modules:/app/node_modules
+      - manager-next:/app/.next
     ports:
       - 3000:3000
     depends_on:
@@ -28,3 +29,7 @@ services:
     networks:
       - default
     restart: always
+
+volumes:
+  manager-node_modules:
+  manager-next:
