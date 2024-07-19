@@ -1,14 +1,19 @@
 import prisma from "@/lib/database/prisma";
 import { response } from "@/app/api/helpers";
-import { HttpStatus } from '../helpers'; // Add this line
+import { HttpStatus } from '../helpers';
 
 export async function GET() {
     try {
         const logs = await prisma.log.findMany();
-        if (!logs) return response(HttpStatus.NOT_FOUND);
-        return response(HttpStatus.OK, logs);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.OK,
+            body: logs
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
 
@@ -18,8 +23,14 @@ export async function POST(request: Request) {
         const log = await prisma.log.create({
             data: body
         });
-        return response(HttpStatus.CREATED, log);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.CREATED,
+            body: log
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }

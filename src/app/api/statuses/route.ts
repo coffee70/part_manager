@@ -5,10 +5,15 @@ import { HttpStatus } from '../helpers'; // Add this line
 export async function GET() {
     try {
         const statuses = await prisma.status.findMany();
-        if (!statuses) return response(HttpStatus.NOT_FOUND);
-        return response(HttpStatus.OK, statuses);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.OK,
+            body: statuses
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
 
@@ -18,8 +23,14 @@ export async function POST(request: Request) {
         const status = await prisma.status.create({
             data: body
         });
-        return response(HttpStatus.CREATED, status);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.CREATED,
+            body: status
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }

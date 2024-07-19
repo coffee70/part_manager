@@ -1,6 +1,6 @@
 import { response } from "@/app/api/helpers";
 import prisma from "@/lib/database/prisma";
-import { HttpStatus } from '../../helpers'; // Add this line
+import { HttpStatus } from '../../helpers';
 
 type Params = {
     params: {
@@ -16,10 +16,18 @@ export async function GET(_: Request, { params }: Params) {
                 id: id
             }
         });
-        if (!drawing) return response(HttpStatus.NOT_FOUND);
-        return response(HttpStatus.OK, drawing);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        if (!drawing) return response({
+            status: HttpStatus.NOT_FOUND
+        });
+        return response({
+            status: HttpStatus.OK,
+            body: drawing
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
 
@@ -33,9 +41,15 @@ export async function PUT(request: Request, { params }: Params) {
             },
             data: body
         });
-        return response(HttpStatus.OK, drawing);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.OK,
+            body: drawing
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
 
@@ -47,8 +61,13 @@ export async function DELETE(_: Request, { params }: Params) {
                 id: id
             }
         });
-        return response(HttpStatus.NO_CONTENT);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.NO_CONTENT
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }

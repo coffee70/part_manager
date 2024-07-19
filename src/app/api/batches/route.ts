@@ -1,14 +1,19 @@
 import prisma from "@/lib/database/prisma";
 import { response } from "@/app/api/helpers";
-import { HttpStatus } from '../helpers'; // Add this line
+import { HttpStatus } from '../helpers';
 
 export async function GET() {
     try {
         const batches = await prisma.batch.findMany();
-        if (!batches) return response(HttpStatus.NOT_FOUND);
-        return response(HttpStatus.OK, batches);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.OK,
+            body: batches
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
 
@@ -18,8 +23,14 @@ export async function POST(request: Request) {
         const batch = await prisma.batch.create({
             data: body
         });
-        return response(HttpStatus.CREATED, batch);
-    } catch {
-        return response(HttpStatus.INTERNAL_SERVER_ERROR);
+        return response({
+            status: HttpStatus.CREATED,
+            body: batch
+        });
+    } catch (e) {
+        return response({
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            error: e
+        });
     }
 }
