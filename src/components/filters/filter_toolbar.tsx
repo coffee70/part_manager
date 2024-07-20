@@ -13,8 +13,13 @@ type Props = {
  * Example:
  * ```tsx
  * <FilterToolbar>
- *    <DateFilter />
- *    <StatusFilter />
+ *   <FilterToolbarRow>
+ *     <DateFilter />
+ *     <StatusFilter />
+ *   </FilterToolbarRow>
+ *   <FilterToolbarRow>
+ *     <Toggle label="Show Completed" />
+ *   </FilterToolbarRow>
  * </FilterToolbar>
  * ```
  */

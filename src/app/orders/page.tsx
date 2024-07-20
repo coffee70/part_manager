@@ -1,6 +1,7 @@
 'use client'
+import React from "react";
 import SplitPane from "@/components/split_pane/split_pane";
-import FilterToolbar from "@/components/filters/filter_toolbar";
+import { FilterToolbar, FilterToolbarRow } from "@/components/filters/filter_toolbar";
 import SearchInput from "@/components/filters/search_input";
 import Filter from "@/components/filters/filter";
 import Sort from "@/components/sorting/sort";
@@ -28,25 +29,41 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { fetchOrder, fetchOrders } from "@/api/data";
+import { fetchOrder } from "@/app/api/data";
 import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachements";
+import useOrders from "./fetch";
+import Toggle from "@/components/ui/toggle";
 
 export default function Page() {
-    const orders = fetchOrders();
-    const complete = orders.filter((order) => order.status.completed);
-    const incomplete = orders.filter((order) => !order.status.completed);
-    const order = fetchOrder();
+    const {
+        orders: { complete, incomplete },
+        isLoading,
+        isError,
+        filters,
+        setFilters,
+        sort,
+        setSort,
+        showCompleted,
+        setShowCompleted,
+        onSearchChange,
+    } = useOrders()
+
     return (
         <SplitPane
             leftPaneSlot={
                 <DataLayout>
-                    <FilterToolbar toggle={{ label: "Show completed orders" }}>
-                        <SearchInput />
-                        <Filter />
-                        <Sort />
+                    <FilterToolbar>
+                        <FilterToolbarRow>
+                            <SearchInput value={filters.number} onChange={onSearchChange} />
+                            <Filter filters={filters} setFilters={setFilters} />
+                            <Sort sort={sort} setSort={setSort} />
+                        </FilterToolbarRow>
+                        <FilterToolbarRow>
+                            <Toggle label="Show Completed" value={showCompleted} onChange={setShowCompleted} />
+                        </FilterToolbarRow>
                     </FilterToolbar>
-                    <div>
-                        <Table>
+                    {/* <div>
+                         <Table>
                             <TableBody>
                                 {incomplete.map((order) => (
                                     <TableRow key={order.id}>
@@ -57,7 +74,7 @@ export default function Page() {
                                             <StatusBadge label={order.status.label} color={order.status.color} />
                                         </TableCell>
                                         {order.updated && <TableCell>
-                                            <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>
+                                            <People name={order.updated.by} at={order.updated.at} iconPosition="right" />
                                         </TableCell>}
                                         <TableCell>
                                             <DropdownMenu>
@@ -88,7 +105,7 @@ export default function Page() {
                                         <StatusBadge label={order.status.label} color={order.status.color} />
                                     </TableCell>
                                     {order.updated && <TableCell>
-                                        <People name={order.updated.by} at={order.updated.at} iconPosition="right"/>
+                                        <People name={order.updated.by} at={order.updated.at} iconPosition="right" />
                                     </TableCell>}
                                     <TableCell>
                                         <DropdownMenu>
@@ -105,29 +122,30 @@ export default function Page() {
                                 </TableRow>
                             ))}
                         </TableBody>
-                    </Table>
+                    </Table> */}
                 </DataLayout>
             }
             rightPaneSlot={
-                <SummaryLayout>
-                    <SummaryTitle title={order.label} items={[{ label: order.customer.name }]} />
-                    <SummaryToolbar>
-                        <Priority />
-                        <Status />
-                    </SummaryToolbar>
-                    <SummaryDetails details={order.details} />
-                    <SummaryNotes placeholder="Here are some notes on the order."/>
-                    <SummaryAttachments files={order.attachments} />
-                    <SummaryList
-                        title="Parts"
-                        data={order.parts}
-                        addItem={{
-                            label: "Add Part",
-                            placeholder: "Part Number",
-                        }} />
-                    <SummaryPeople people={order.people} />
-                    <SummaryActivity />
-                </SummaryLayout>
+                <></>
+                // <SummaryLayout>
+                //     <SummaryTitle title={order.label} items={[{ label: order.customer.name }]} />
+                //     <SummaryToolbar>
+                //         <Priority />
+                //         <Status />
+                //     </SummaryToolbar>
+                //     <SummaryDetails details={order.details} />
+                //     <SummaryNotes placeholder="Here are some notes on the order." />
+                //     <SummaryAttachments files={order.attachments} />
+                //     <SummaryList
+                //         title="Parts"
+                //         label="Add Part"
+                //         placeholder="Part Number"
+                //         items={order.parts}
+                //         options={undefined}
+                //     />
+                //     <SummaryPeople people={order.people} />
+                //     <SummaryActivity />
+                // </SummaryLayout>
             }
         />
     );

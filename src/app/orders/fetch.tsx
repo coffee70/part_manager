@@ -1,46 +1,92 @@
+'use client'
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Order, Status } from '@prisma/client';
 import { DateRange } from 'react-day-picker';
-import { SortOption } from '@/hooks/sort.hook';
+import useSort, { SortInfo } from '@/hooks/sort.hook';
 
 // type the hook should return to the UI
 type ReturnType = (Order & { status: Status })[];
 
-type OrderFilter = {
+export type OrderFilter = {
     number: string;
     updatedAt: DateRange;
     statusId: number[];
 }
 
-type OrderSort = {
-    number: SortOption;
-    updatedAt: SortOption;
-    statusId: SortOption;
+export type OrderSort = {
+    number: SortInfo;
+    updatedAt: SortInfo;
+    statusId: SortInfo;
 }
 
-type Props = {
-    filters: OrderFilter;
-    sort: OrderSort;
-    showCompleted: boolean;
-}
+export default function useOrders() {
 
-export default function useOrders({ filters, sort, showCompleted }: Props) {
+    // filter state
+    const [filters, _setFilters] = React.useState<OrderFilter>({
+        number: '',
+        updatedAt: { from: new Date(), to: new Date() },
+        statusId: [],
+    })
+    const setFilters = (key: keyof OrderFilter, value: any) => _setFilters({ ...filters, [key]: value });
+    const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => _setFilters({ ...filters, number: e.target.value });
+
+    // sort state
+    const { sort, setSort } = useSort({
+        number: {
+            label: 'Number',
+            type: null,
+        },
+        updatedAt: {
+            label: 'Updated At',
+            type: null,
+        },
+        statusId: {
+            label: 'Status',
+            type: null,
+        },
+    })
+
+    // show completed state
+    const [showCompleted, setShowCompleted] = React.useState(false);
+
     let { data: orders, isLoading, isError } = useQuery({
         queryKey: ['orders'],
         queryFn: getOrders,
     });
 
-    if (isLoading || isError || !orders) return { orders: { complete: [], incomplete: [] }, isLoading, isError };
+    if (isLoading || isError || !orders) return { 
+        orders: { complete: [], incomplete: [] }, 
+        isLoading, 
+        isError,
+        filters,
+        setFilters,
+        sort,
+        setSort,
+        showCompleted,
+        setShowCompleted,
+        onSearchChange,
+    };
 
     orders = filterOrders(orders, filters);
     orders = sortOrders(orders, sort);
     const { complete, incomplete } = splitByResolution(orders);
 
-    if (!showCompleted) {
-        return { orders: { complete: [], incomplete }, isLoading, isError };
-    }
-
-    return { orders: { complete, incomplete }, isLoading, isError };
+    return { 
+        orders: { 
+            complete: showCompleted ? complete : [], 
+            incomplete 
+        }, 
+        isLoading, 
+        isError,
+        filters,
+        setFilters,
+        sort,
+        setSort,
+        showCompleted,
+        setShowCompleted, 
+        onSearchChange,
+    };
 }
 
 async function getOrders() {
@@ -77,21 +123,21 @@ function filterOrders(orders: ReturnType, filter: OrderFilter) {
 
 function sortOrders(orders: ReturnType, sort: OrderSort) {
     return orders.sort((a, b) => {
-        if (sort.number === 'asc') {
+        if (sort.number.type === 'asc') {
             return a.number.localeCompare(b.number);
-        } else if (sort.number === 'desc') {
+        } else if (sort.number.type === 'desc') {
             return b.number.localeCompare(a.number);
         }
 
-        if (sort.updatedAt === 'asc') {
+        if (sort.updatedAt.type === 'asc') {
             return a.updatedAt.getTime() - b.updatedAt.getTime();
-        } else if (sort.updatedAt === 'desc') {
+        } else if (sort.updatedAt.type === 'desc') {
             return b.updatedAt.getTime() - a.updatedAt.getTime();
         }
 
-        if (sort.statusId === 'asc') {
+        if (sort.statusId.type === 'asc') {
             return a.status.label.localeCompare(b.status.label);
-        } else if (sort.statusId === 'desc') {
+        } else if (sort.statusId.type === 'desc') {
             return b.status.label.localeCompare(a.status.label);
         }
 
