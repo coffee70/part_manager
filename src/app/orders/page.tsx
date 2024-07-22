@@ -33,6 +33,7 @@ import { fetchOrder } from "@/app/api/data";
 import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachements";
 import useOrders from "./fetch";
 import Toggle from "@/components/ui/toggle";
+import FilterSort from "./filter_and_sort";
 
 export default function Page() {
     const {
@@ -52,16 +53,7 @@ export default function Page() {
         <SplitPane
             leftPaneSlot={
                 <DataLayout>
-                    <FilterToolbar>
-                        <FilterToolbarRow>
-                            <SearchInput value={filters.number} onChange={onSearchChange} />
-                            <Filter filters={filters} setFilters={setFilters} />
-                            <Sort sort={sort} setSort={setSort} />
-                        </FilterToolbarRow>
-                        <FilterToolbarRow>
-                            <Toggle label="Show Completed" value={showCompleted} onChange={setShowCompleted} />
-                        </FilterToolbarRow>
-                    </FilterToolbar>
+                    <FilterSort />
                     {/* <div>
                          <Table>
                             <TableBody>

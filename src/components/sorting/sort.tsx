@@ -12,10 +12,13 @@ type Props<T> = {
 }
 
 export default function Sort<T extends Sortable>({ sort, setSort }: Props<T>) {
+
+    const enabled = Object.keys(sort).some(key => sort[key].type !== undefined);
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <DataAction>
+                <DataAction enabled={enabled}>
                     <ArrowDownUpIcon size={24} />
                 </DataAction>
             </DropdownMenuTrigger>

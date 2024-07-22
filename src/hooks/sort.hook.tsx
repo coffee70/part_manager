@@ -1,49 +1,49 @@
 'use client'
-import React from 'react';
+import { useRouterHelpers } from '@/lib/search_params';
+import { useSearchParams } from 'next/navigation';
 
-export type SortType = 'asc' | 'desc' | null;
+export type SortType = 'asc' | 'desc' | undefined;
 
 export type SortInfo = {
     label: string;
-    type: SortType;
+    type?: SortType;
 }
 
 export type Sortable = {
     [key: string]: SortInfo;
 }
 
-export default function useSort<T extends Sortable>(_sort: T) {
-    const [sort, _setSort] = React.useState(_sort);
+export default function useSort<T extends Sortable>(sort: T) {
+    const { pushSearchParams } = useRouterHelpers();
+    const searchParams = useSearchParams();
+    const sort_by = searchParams.get('sort_by');
+    const sort_order = searchParams.get('sort_order');
+
+    if (sort_by && sort_by in sort) {
+        sort[sort_by].type = sort_order as SortType;
+    }
 
     const shuffleSort = (s: SortType) => {
         switch (s) {
             case 'asc': return 'desc';
-            case 'desc': return null;
-            case null: return 'asc';
+            case 'desc': return undefined;
+            case undefined: return 'asc';
         }
     }
 
     const setSort = (k: keyof T) => {
-        // for all keys in sort that are not k, set to null without using reduce
-        _setSort(prev => Object.keys(prev).reduce((acc, key) => {
-            if (key === k) {
-                return {
-                    ...acc,
-                    [key]: {
-                        ...prev[key],
-                        type: shuffleSort(prev[key].type)
-                    }
-                };
-            }
-            return {
-                ...acc,
-                [key]: {
-                    ...prev[key],
-                    type: null
-                }
-            };
-        }, prev));
-
+        const type = shuffleSort(sort[k].type);
+        if (type === undefined) {
+            pushSearchParams({
+                sort_by: undefined,
+                sort_order: undefined
+            });
+        } else {
+            pushSearchParams({
+                sort_by: k.toString(),
+                sort_order: type
+            });
+        }
     }
 
     return { sort, setSort }
