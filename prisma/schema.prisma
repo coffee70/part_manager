@@ -13,7 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Order {
+model CustomerOrder {
+  id        Int      @id @default(autoincrement())
+  number    String   @unique
+  notes     String   @db.Text()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fields             Json
+  statusId           Int
+  status             Status              @relation(fields: [statusId], references: [id])
+  customerOrderParts CustomerOrderPart[]
+  serials            Serial[]
+
+  @@index([statusId], name: "customerOrder_statusId")
+}
+
+model ShopOrder {
   id        Int      @id @default(autoincrement())
   number    String   @unique
   notes     String   @db.Text()
@@ -22,24 +38,24 @@ model Order {
 
   fields Json
 
-  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  customerId Int
-  statusId   Int
-  status     Status   @relation(fields: [statusId], references: [id])
-  parts      Part[]
-
-  @@index([customerId], name: "customerId")
+  statusId Int
+  status   Status   @relation(fields: [statusId], references: [id])
+  serials  Serial[]
 }
 
-model Customer {
+model CustomerOrderPart {
   id        Int      @id @default(autoincrement())
-  notes     String   @db.Text()
+  quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  fields Json
+  customerOrderId Int
+  customerOrder   CustomerOrder @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
+  partId          Int
+  part            Part          @relation(fields: [partId], references: [id], onDelete: Cascade)
 
-  orders Order[]
+  @@index([customerOrderId], name: "customerOrderPart_customerOrderId")
+  @@index([partId], name: "customerOrderPart_partId")
 }
 
 model Part {
@@ -51,13 +67,10 @@ model Part {
 
   fields Json
 
-  orderId    Int
-  order      Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  dimensions Dimension[]
-  drawings   Drawing[]
-  serials    Serial[]
-
-  @@index([orderId], name: "orderId")
+  customerOrderParts CustomerOrderPart[]
+  serials            Serial[]
+  statusId           Int
+  status             Status              @relation(fields: [statusId], references: [id])
 }
 
 model Serial {
@@ -69,108 +82,40 @@ model Serial {
 
   fields Json
 
-  partId   Int
-  part     Part    @relation(fields: [partId], references: [id], onDelete: Cascade)
-  billetId Int?
-  billet   Billet? @relation(fields: [billetId], references: [id], onDelete: SetNull)
+  partId          Int
+  part            Part          @relation(fields: [partId], references: [id], onDelete: Cascade)
+  customerOrderId Int
+  customerOrder   CustomerOrder @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
+  shopOrderId     Int
+  shopOrder       ShopOrder     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
+  statusId        Int
+  status          Status        @relation(fields: [statusId], references: [id])
 
   @@index([partId], name: "serial_partId")
-  @@index([billetId], name: "billetId")
 }
 
-model Dimension {
-  id        Int      @id @default(autoincrement())
-  name      String
-  unit      String
-  value     Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fields Json
-
-  partId Int
-  part   Part @relation(fields: [partId], references: [id], onDelete: Cascade)
-
-  @@index([partId], name: "dimension_partId")
-}
-
-model Drawing {
-  id        String   @id @default(uuid())
-  file      String
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fields Json
-
-  partId Int
-  part   Part @relation(fields: [partId], references: [id], onDelete: Cascade)
-
-  @@index([partId], name: "drawing_partId")
-}
-
-model Batch {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fields Json
-
-  billets Billet[]
-}
-
-model Billet {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fields Json
-
-  batchId Int
-  batch   Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  serials Serial[]
-
-  @@index([batchId], name: "batchId")
-}
-
-model Bag {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  fields Json
-}
-
-model Log {
-  id        Int      @id @default(autoincrement())
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-}
-
-model Comment {
-  id        Int      @id @default(autoincrement())
-  text      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum StatusType {
+  CUSTOMER_ORDER
+  SHOP_ORDER
+  PART
+  SERIAL
 }
 
 model Status {
-  id        Int      @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   label     String
   color     String
   resolved  Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  type      StatusType
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 
-  fromTransitions Transition[] @relation("FromStatus")
-  toTransitions   Transition[] @relation("ToStatus")
-  Order           Order[]
+  fromTransitions Transition[]    @relation("FromStatus")
+  toTransitions   Transition[]    @relation("ToStatus")
+  customerOrders  CustomerOrder[]
+  shopOrders      ShopOrder[]
+  parts           Part[]
+  serials         Serial[]
 }
 
 model Transition {
