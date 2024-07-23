@@ -108,6 +108,19 @@ export default async function getCustomerOrders({
                 in: statusId,
             }
         },
+        include: {
+            customer: {
+                select: {
+                    name: true
+                }
+            },
+            status: {
+                select: {
+                    label: true,
+                    color: true
+                }
+            }
+        },
         orderBy: sortBy ? {
             [sortBy]: sortOrder
         } : undefined

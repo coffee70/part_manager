@@ -23,6 +23,8 @@ model CustomerOrder {
   fields             Json
   statusId           Int
   status             Status              @relation(fields: [statusId], references: [id])
+  customerId         Int
+  customer           Customer            @relation(fields: [customerId], references: [id])
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
 
@@ -92,6 +94,17 @@ model Serial {
   status          Status        @relation(fields: [statusId], references: [id])
 
   @@index([partId], name: "serial_partId")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customerOrders CustomerOrder[]
 }
 
 enum StatusType {

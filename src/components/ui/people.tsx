@@ -6,7 +6,7 @@ type IconPosition = 'left' | 'right';
 
 type Props = {
     name: string;
-    at?: string;
+    at?: Date;
     iconPosition: IconPosition;
 }
 
