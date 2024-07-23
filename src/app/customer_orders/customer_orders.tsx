@@ -1,54 +1,21 @@
 'use client'
-import React from "react";
-import SplitPane from "@/components/split_pane/split_pane";
-import { FilterToolbar, FilterToolbarRow } from "@/components/filters/filter_toolbar";
-import SearchInput from "@/components/filters/search_input";
-import Filter from "@/components/filters/filter";
-import Sort from "@/components/sorting/sort";
-import SummaryTitle from "@/components/summary/summary_title";
-import SummaryToolbar from "@/components/summary/summary_toolbar";
-import SummaryDetails from "@/components/summary/summary_details/summary_details";
-import SummaryNotes from "@/components/summary/summary_notes/summary_notes";
-import SummaryList from "@/components/summary/summary_list/summary_list";
-import SummaryPeople from "@/components/summary/summary_people/summary_people";
-import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
-import Priority from "@/components/summary/summary_actions/priority/priority";
-import Status from "@/components/summary/summary_actions/status/status";
-import SummaryLayout from "@/layouts/summary_layout";
-import DataLayout from "@/layouts/data_layout";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-import Label from "@/components/data_table/label";
-import People from "@/components/ui/people";
-import { StatusBadge } from "@/components/ui/badge";
-import { More } from "@/components/ui/more";
-import AddRow from "@/components/data_table/add_row";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
-import { fetchOrder } from "@/app/api/data";
-import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachements";
-import useOrders from "./fetch";
-import Toggle from "@/components/ui/toggle";
+import SplitPane from "@/components/split_pane/split_pane"
+import DataLayout from "@/layouts/data_layout"
 import FilterSort from "./filter_and_sort";
+import { useQuery } from "@tanstack/react-query";
+import getCustomerOrders from "./fetch";
+import { useSearchParams } from "next/navigation";
+import { convertSearchParams } from "@/lib/search_params";
 
-export default function Page() {
-    const {
-        orders: { complete, incomplete },
-        isLoading,
-        isError,
-        filters,
-        setFilters,
-        sort,
-        setSort,
-        showCompleted,
-        setShowCompleted,
-        onSearchChange,
-    } = useOrders()
+export default function CustomerOrders() {
+    const readOnlySearchParams = useSearchParams()
+    const searchParams = convertSearchParams(readOnlySearchParams)
 
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['customerOrders', searchParams],
+        queryFn: () => getCustomerOrders({ searchParams }),
+    })
+    
     return (
         <SplitPane
             leftPaneSlot={
@@ -142,4 +109,3 @@ export default function Page() {
         />
     );
 }
-

@@ -1,6 +1,6 @@
 'use client'
 import React from "react"
-import { usePathname, useSearchParams, useRouter } from "next/navigation"
+import { usePathname, useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation"
 
 export const useRouterHelpers = () => {
     const router = useRouter()
@@ -24,3 +24,17 @@ export const useRouterHelpers = () => {
 
     return { pushSearchParams }
 }
+
+export const convertSearchParams = (
+    readOnlyURLSearchParams: ReadonlyURLSearchParams
+): { [key: string]: string | string[] | undefined } => (
+    Array.from(readOnlyURLSearchParams.keys()).reduce<{ [key: string]: string | string[] | undefined }>((acc, key) => {
+        const value = readOnlyURLSearchParams.getAll(key);
+        if (value.length === 1) {
+            acc[key] = value[0];
+        } else {
+            acc[key] = value;
+        }
+        return acc;
+    }, {})
+)

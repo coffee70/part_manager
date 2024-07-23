@@ -35,10 +35,7 @@ export default function FilterSort() {
         },
         updatedAt: {
             label: 'Updated At',
-        },
-        statusId: {
-            label: 'Status',
-        },
+        }
     })
     
     return (
