@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import getCustomerOrders from "./fetch";
+import { getCustomerOrder, getCustomerOrders } from "./fetch";
 import CustomerOrders from "./customer_orders";
 
 export default async function Page({
@@ -12,6 +12,11 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: ['customerOrders', searchParams],
         queryFn: () => getCustomerOrders({ searchParams }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: ['customerOrder', searchParams],
+        queryFn: () => getCustomerOrder({ searchParams }),
     })
 
     return (

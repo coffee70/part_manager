@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { prisma } from '@/lib/database/prisma';
-import { ReadonlyURLSearchParams } from 'next/navigation';
 
 // schemas
 const UpdatedAt = z.object({
@@ -9,12 +8,11 @@ const UpdatedAt = z.object({
 });
 
 
-export default async function getCustomerOrders({
+export async function getCustomerOrders({
     searchParams
 }: {
     searchParams: { [key: string]: string | string[] | undefined }
 }) {
-
 
     // build whereObject
     // pull out statusId
@@ -35,7 +33,6 @@ export default async function getCustomerOrders({
             statusId = validation.data;
         }
     }
-
 
     // pull out updatedAt
     // Assuming searchParams is an object where updatedAt is one of the properties
@@ -72,9 +69,6 @@ export default async function getCustomerOrders({
     if (Array.isArray(search)) {
         throw new Error("search must be a string");
     }
-
-    // build whereObject
-
 
     // build orderByObject
     // get sort_by
@@ -127,4 +121,56 @@ export default async function getCustomerOrders({
     })
 
     return orders;
+}
+
+export async function getCustomerOrder({
+    searchParams
+}: {
+    searchParams: { [key: string]: string | string[] | undefined }
+}) {
+    let id = searchParams.id;
+    if (Array.isArray(id)) {
+        throw new Error("id must be a string");
+    }
+    
+    if (!id) {
+        const order = await prisma.customerOrder.findFirst({
+            include: {
+                customer: {
+                    select: {
+                        name: true
+                    }
+                },
+                status: {
+                    select: {
+                        label: true,
+                        color: true
+                    }
+                }
+            }
+        });
+
+        return order;
+    }
+
+    const order = await prisma.customerOrder.findUnique({
+        where: {
+            id: Number(id)
+        },
+        include: {
+            customer: {
+                select: {
+                    name: true
+                }
+            },
+            status: {
+                select: {
+                    label: true,
+                    color: true
+                }
+            }
+        }
+    })
+
+    return order;
 }
