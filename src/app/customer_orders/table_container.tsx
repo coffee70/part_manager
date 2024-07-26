@@ -1,7 +1,7 @@
 'use client'
 import DataLayout from "@/layouts/data_layout"
 import { useQuery } from "@tanstack/react-query";
-import { getCustomerOrders } from "./fetch";
+import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
 import { useSearchParams } from "next/navigation";
 import { useRouterHelpers } from "@/lib/search_params";
 import useSort from "@/hooks/sort.hook";
