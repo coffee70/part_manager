@@ -6,12 +6,13 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
-      - manager-node_modules:/app/node_modules
-      - manager-next:/app/.next
+      - /app/node_modules
+      - /app/.next
     ports:
       - 3000:3000
     depends_on:
       - db
+      - file-service
     networks:
       - default
     restart: always
@@ -26,6 +27,14 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/var/lib/postgresql/data
+    networks:
+      - default
+    restart: always
+  file-service:
+    container_name: file-service
+    image: file-service
+    ports:
+      - "9000:9000"
     networks:
       - default
     restart: always

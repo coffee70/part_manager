@@ -13,8 +13,7 @@ RUN npx prisma generate
 RUN rm -rf prisma
 
 RUN mkdir -p .next
-RUN chown node:node . node_modules .next
-RUN chown -R node:node node_modules/.prisma
+RUN chown -R node:node . node_modules .next
 
 USER node
 
