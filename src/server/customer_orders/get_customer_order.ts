@@ -35,13 +35,15 @@ export async function getCustomerOrder({
                         }
                     }
                 }
-            }
+            },
+            attachments: true
         }
     })
 
     if (order === null) return order
 
     return {
+        id: order.id,
         parts: order.customerOrderParts.map((part) => ({
             id: part.id,
             label: part.part.number,
@@ -52,5 +54,10 @@ export async function getCustomerOrder({
         number: order.number,
         updatedAt: order.updatedAt,
         notes: order.notes,
+        attachments: await Promise.all(order.attachments.map(async (attachment) => {
+ 
+                const url = process.env.FILE_GET_URL + attachment.id
+                return url
+        }))
     };
 }

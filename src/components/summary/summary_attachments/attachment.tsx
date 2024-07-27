@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Dialog, DialogTrigger, DialogTitle, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogTitle, DialogContent } from '@/components/ui/dialog';
 import PDFViewer from './pdf_viewer';
 import PDFPreview from './pdf_preview';
 

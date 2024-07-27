@@ -27,6 +27,7 @@ model CustomerOrder {
   customer           Customer            @relation(fields: [customerId], references: [id])
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
+  attachments        Attachment[]
 
   @@index([statusId], name: "customerOrder_statusId")
 }
@@ -40,9 +41,10 @@ model ShopOrder {
 
   fields Json
 
-  statusId Int
-  status   Status   @relation(fields: [statusId], references: [id])
-  serials  Serial[]
+  statusId    Int
+  status      Status       @relation(fields: [statusId], references: [id])
+  serials     Serial[]
+  attachments Attachment[]
 }
 
 model CustomerOrderPart {
@@ -69,10 +71,11 @@ model Part {
 
   fields Json
 
-  customerOrderParts CustomerOrderPart[]
-  serials            Serial[]
   statusId           Int
   status             Status              @relation(fields: [statusId], references: [id])
+  customerOrderParts CustomerOrderPart[]
+  serials            Serial[]
+  attachments        Attachment[]
 }
 
 model Serial {
@@ -92,6 +95,7 @@ model Serial {
   shopOrder       ShopOrder     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
   statusId        Int
   status          Status        @relation(fields: [statusId], references: [id])
+  attachments     Attachment[]
 
   @@index([partId], name: "serial_partId")
 }
@@ -105,6 +109,20 @@ model Customer {
   updatedAt DateTime @updatedAt
 
   customerOrders CustomerOrder[]
+}
+
+model Attachment {
+  id       String @id @default(uuid())
+  filename String
+
+  serialId        Int?
+  serial          Serial?        @relation(fields: [serialId], references: [id])
+  partId          Int?
+  part            Part?          @relation(fields: [partId], references: [id])
+  shopOrderId     Int?
+  shopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id])
+  customerOrderId Int?
+  customerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id])
 }
 
 enum StatusType {

@@ -18,5 +18,7 @@ RUN chown -R node:node . node_modules .next
 USER node
 
 EXPOSE 3000
+# prisma studio
+EXPOSE 5555
 
 CMD ["npm", "run", "dev"]

@@ -1,4 +1,5 @@
 'use client'
+import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
 import { getParts } from "@/server/customer_orders/get_parts";
@@ -10,6 +11,7 @@ import SummaryToolbar from "@/components/summary/summary_toolbar";
 import Priority from "@/components/summary/summary_actions/priority/priority";
 import Status from "@/components/summary/summary_actions/status/status";
 import SummaryNotes from "@/components/summary/summary_notes/summary_notes";
+import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachments";
 import SummaryList, { Item } from "@/components/summary/summary_list/summary_list";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 
@@ -37,7 +39,7 @@ export default function SummaryContainer() {
             </SummaryToolbar>
             {/* <SummaryDetails details={order.details} /> */}
             <SummaryNotes placeholder="Here are some notes on the order." />
-            {/* <SummaryAttachments files={order.attachments} /> */}
+            <SummaryAttachments files={data.attachments} uploads={{ id: data.id, type: 'customerOrder'}}/>
             <SummaryListContainer items={data.parts} />
             {/* <SummaryPeople people={order.people} />  */}
             <SummaryActivity />

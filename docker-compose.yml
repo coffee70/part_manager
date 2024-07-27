@@ -10,6 +10,7 @@ services:
       - /app/.next
     ports:
       - 3000:3000
+      - 5555:5555
     depends_on:
       - db
       - file-service
@@ -24,7 +25,7 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - ./db:/var/lib/postgresql/data
     networks:
@@ -34,7 +35,7 @@ services:
     container_name: file-service
     image: file-service
     ports:
-      - "9000:9000"
+      - 9000:9000
     networks:
       - default
     restart: always
