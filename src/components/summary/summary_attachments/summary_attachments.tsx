@@ -4,7 +4,10 @@ import UploadAttachment from "./upload_attachment";
 import { AttachmentData } from "@/server/attachments/create_attachment";
 
 type Props = {
-    files: string[];
+    files: {
+        name: string;
+        url: string;
+    }[];
     uploads: Omit<AttachmentData, 'file'>;
 }
 

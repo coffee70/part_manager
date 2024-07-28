@@ -54,10 +54,9 @@ export async function getCustomerOrder({
         number: order.number,
         updatedAt: order.updatedAt,
         notes: order.notes,
-        attachments: await Promise.all(order.attachments.map(async (attachment) => {
- 
-                const url = process.env.FILE_GET_URL + attachment.id
-                return url
-        }))
+        attachments: await Promise.all(order.attachments.map(async (attachment) => ({
+            name: attachment.filename,
+            url: process.env.FILE_GET_URL + attachment.id
+        })))
     };
 }

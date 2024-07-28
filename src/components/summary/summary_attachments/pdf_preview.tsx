@@ -11,7 +11,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 type Props = {
-    file: string;
+    file: {
+        name: string;
+        url: string
+    };
     setOpen: (open: boolean) => void;
 }
 
@@ -23,7 +26,7 @@ export default function PDFPreview({ file, setOpen }: Props) {
             onMouseLeave={() => setHovered(false)}
             onClick={() => setOpen(true)}
         >
-            <Document file={file} className='border border-foreground'>
+            <Document file={file.url} className='border border-foreground'>
                 <Thumbnail
                     scale={0.25}
                     pageNumber={1}
@@ -31,7 +34,7 @@ export default function PDFPreview({ file, setOpen }: Props) {
                 />
             </Document>
             <div className={cn('flex items-center justify-between bg-foreground', !hovered ? 'invisible' : '')}>
-                <div className='text-sm p-2'>{file}</div>
+                <div className='text-sm p-2'>{file.name}</div>
                 <Button variant='icon' disabled={!hovered} className='p-2'>
                     <Trash2Icon strokeWidth={1} size={20} />
                 </Button>

@@ -5,7 +5,10 @@ import PDFViewer from './pdf_viewer';
 import PDFPreview from './pdf_preview';
 
 type Props = {
-    file: string;
+    file: {
+        name: string;
+        url: string;
+    };
 }
 
 export default function Attachment({ file }: Props) {
@@ -15,8 +18,8 @@ export default function Attachment({ file }: Props) {
             <PDFPreview file={file} setOpen={setOpen} />
             <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
                 <DialogContent>
-                    <DialogTitle>{file}</DialogTitle>
-                    <PDFViewer file={file} />
+                    <DialogTitle>{file.name}</DialogTitle>
+                    <PDFViewer url={file.url} />
                 </DialogContent>
             </Dialog>
         </>
