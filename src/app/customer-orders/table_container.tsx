@@ -17,6 +17,7 @@ import { StatusBadge } from "@/components/ui/badge";
 import People from "@/components/ui/people";
 import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { More } from "@/components/ui/more";
+import TableSkeleton from "@/components/data_table/table_skeleton";
 
 export default function TableContainer() {
 
@@ -54,20 +55,20 @@ export default function TableContainer() {
         }
     })
 
-    if (isPending) return <div>Loading...</div>
+    if (isPending) return <TableSkeleton />
 
     if (isError) return <div>Error...</div>
 
     return (
         <DataLayout>
-        <FilterToolbar>
-            <FilterToolbarRow>
-                <SearchInput value={search} onChange={handleSearchChange} />
-                <Filter filters={filters} setFilters={setFilters} />
-                <Sort sort={sort} setSort={setSort} />
-            </FilterToolbarRow>
-        </FilterToolbar>
-         <Table>
+            <FilterToolbar>
+                <FilterToolbarRow>
+                    <SearchInput value={search} onChange={handleSearchChange} />
+                    <Filter filters={filters} setFilters={setFilters} />
+                    <Sort sort={sort} setSort={setSort} />
+                </FilterToolbarRow>
+            </FilterToolbar>
+            <Table>
                 <TableBody>
                     {data.map((order) => (
                         <TableRow key={order.id}>
@@ -96,6 +97,6 @@ export default function TableContainer() {
                     ))}
                 </TableBody>
             </Table>
-    </DataLayout>
+        </DataLayout>
     )
 }

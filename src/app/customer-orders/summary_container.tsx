@@ -14,6 +14,7 @@ import SummaryNotes from "@/components/summary/summary_notes/summary_notes";
 import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachments";
 import SummaryList, { Item } from "@/components/summary/summary_list/summary_list";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
+import SummarySkeleton from '@/components/summary/summary_skeleton';
 
 export default function SummaryContainer() {
     const readOnlySearchParams = useSearchParams()
@@ -24,7 +25,7 @@ export default function SummaryContainer() {
         queryFn: () => getCustomerOrder({ searchParams }),
     })
 
-    if (isPending) return <div>Loading...</div>
+    if (isPending) return <SummarySkeleton />
 
     if (isError) return <div>Error...</div>
 
