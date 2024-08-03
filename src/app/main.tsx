@@ -2,7 +2,7 @@
 import React from "react";
 import { Context } from "../components/navigations/nav/nav";
 import CustomerSideNavigation from "../components/navigations/side_nav/customers_side_nav";
-import ShopSideNavigation from "../components/navigations/side_nav/shop_side_navigation";
+import ShopSideNavigation from "../components/navigations/side_nav/shop_side_nav";
 import Navigation from "../components/navigations/nav/nav";
 
 type Props = {
