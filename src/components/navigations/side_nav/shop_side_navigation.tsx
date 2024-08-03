@@ -24,9 +24,6 @@ export default function ShopSideNavigation() {
                 <NavItem label='Furnaces' icon={<FlameIcon />} />
             </NavContent>
             <NavDivider bottom />
-            <NavFooter>
-                <NavItem label='Settings' icon={<SettingsIcon />} />
-            </NavFooter>
         </NavBase>
     )
 }

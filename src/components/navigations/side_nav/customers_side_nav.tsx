@@ -22,9 +22,6 @@ export default function CustomerSideNavigation() {
                 <NavItem label='Customers' icon={<UserIcon />} />
             </NavContent>
             <NavDivider bottom />
-            <NavFooter>
-                <NavItem label='Settings' icon={<SettingsIcon />} />
-            </NavFooter>
         </NavBase>
     )
 }

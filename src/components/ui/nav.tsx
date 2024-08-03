@@ -12,7 +12,7 @@ type NavBaseProps = {
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className="flex items-center justify-between space-x-6 w-full py-4 px-6 bg-black text-white">
+        <div className="flex items-center justify-between space-x-6 w-full bg-black text-white">
             {children}
         </div>
     )
@@ -20,7 +20,7 @@ function NavBase({ children }: NavBaseProps) {
 
 function NavLogo() {
     return (
-        <div className={cn(jost.className, 'flex-1 text-4xl')}>
+        <div className={cn(jost.className, 'flex-1 text-4xl pl-6')}>
             <span>Aentx.</span>
         </div>
     )
@@ -44,7 +44,7 @@ type NavActionsProps = {
 
 function NavActions({ children }: NavActionsProps) {
     return (
-        <div className="flex items-center justify-end flex-1 space-x-6">
+        <div className="flex items-center justify-end flex-1">
             {children}
         </div>
     )
