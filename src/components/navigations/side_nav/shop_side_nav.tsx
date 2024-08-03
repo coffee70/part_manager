@@ -20,7 +20,6 @@ export default function ShopSideNavigation() {
                 <NavItem label='Batches' icon={<FlaskConicalIcon />} />
                 <NavItem label='Furnaces' icon={<FlameIcon />} />
             </NavContent>
-            <NavDivider bottom />
         </NavBase>
     )
 }

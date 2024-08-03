@@ -18,7 +18,6 @@ export default function CustomerSideNavigation() {
                 <NavItem label='Parts' icon={<DraftingCompassIcon />} />
                 <NavItem label='Customers' icon={<UserIcon />} />
             </NavContent>
-            <NavDivider bottom />
         </NavBase>
     )
 }
