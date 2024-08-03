@@ -3,16 +3,13 @@ import {
     FlaskConicalIcon,
     GalleryHorizontalEndIcon,
     HammerIcon,
-    SettingsIcon
 } from 'lucide-react'
 import {
     NavBase,
     NavContent,
-    NavFooter,
     NavItem,
     NavDivider,
 } from '../../ui/side_nav'
-import Profile from './profile'
 
 export default function ShopSideNavigation() {
     return (

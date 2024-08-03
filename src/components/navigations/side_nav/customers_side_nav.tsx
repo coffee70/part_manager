@@ -1,17 +1,14 @@
 import {
     DraftingCompassIcon,
     GalleryHorizontalEndIcon,
-    SettingsIcon,
     UserIcon
 } from 'lucide-react'
 import {
     NavBase,
     NavContent,
-    NavFooter,
     NavItem,
     NavDivider,
 } from '../../ui/side_nav'
-import Profile from './profile'
 
 export default function CustomerSideNavigation() {
     return (
