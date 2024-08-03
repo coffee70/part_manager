@@ -2,8 +2,8 @@
 import React from 'react';
 import { NavActions, NavBase, NavLogo } from "../../ui/nav";
 import { cn } from '@/lib/utils';
-import Profile from '../side_nav/profile';
-import Settings from '../side_nav/settings';
+import Profile from './profile';
+import Settings from './settings';
 
 export type Context = "Customers" | "Shop"
 
