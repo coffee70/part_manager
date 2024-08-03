@@ -8,7 +8,6 @@ import {
     NavBase,
     NavContent,
     NavItem,
-    NavDivider,
 } from '../../ui/side_nav'
 
 export default function ShopSideNavigation() {
