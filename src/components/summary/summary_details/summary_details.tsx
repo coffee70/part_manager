@@ -2,8 +2,7 @@
 import React from "react";
 import SummaryBase from "../summary_base"
 import DetailBase from "./summary_detail_base";
-import DetailLabel from "./summary_detail_label";
-import DetailValue from "./summary_detail_value";
+import Field from "@/components/ui/field";
 import { Detail } from "@/types/types";
 import AddField from "./add_field/add_field";
 
@@ -19,8 +18,8 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
                 <div className='flex flex-col space-y-1 text-sm'>
                     {details.map(detail => (
                         <DetailBase key={detail.id}>
-                            <DetailLabel label={detail.label} />
-                            <DetailValue value={detail.value} />
+                            <div className='text-muted-foreground text-nowrap'>{`${detail.label}:`}</div>
+                            <Field value={detail.value} />
                         </DetailBase>
                     ))}
                     <AddField />
