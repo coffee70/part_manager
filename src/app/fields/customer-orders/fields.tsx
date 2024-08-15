@@ -1,13 +1,29 @@
 'use client'
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableRow, TableCell, TableHeader, TableHead } from "@/components/ui/table";
+import {
+    Table,
+    TableBody,
+    TableRow,
+    TableCell,
+    TableHeader,
+    TableHead
+} from "@/components/ui/table";
 import { PlusIcon } from "lucide-react";
 import Field from "@/components/ui/field";
 import Header from "@/components/fields/header";
 import { useQuery } from "@tanstack/react-query";
 import { getFields } from "@/server/fields/get_fields";
 import AddField from '@/components/fields/add_field/form/add_field';
+import { More } from '@/components/ui/more';
+import {
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenu
+} from "@/components/ui/dropdown-menu";
+
 
 export default function Fields() {
     const { data, isError, isPending } = useQuery({
@@ -42,6 +58,7 @@ export default function Fields() {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Type</TableHead>
                                     <TableHead>Default Values</TableHead>
+                                    <TableHead></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -50,6 +67,18 @@ export default function Fields() {
                                         <TableCell>{field.name}</TableCell>
                                         <TableCell>{field.type}</TableCell>
                                         <TableCell>{field.default}</TableCell>
+                                        <TableCell className='w-8'>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <More />
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuGroup>
+                                                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                                                    </DropdownMenuGroup>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
