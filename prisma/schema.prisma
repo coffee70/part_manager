@@ -14,11 +14,12 @@ datasource db {
 }
 
 model CustomerOrder {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  number      String   @unique
+  notes       String   @db.Text()
+  sectionData Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   fields             Json
   statusId           Int
@@ -28,16 +29,18 @@ model CustomerOrder {
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
+  sections           Section[]
 
   @@index([statusId], name: "customerOrder_statusId")
 }
 
 model ShopOrder {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  number      String   @unique
+  notes       String   @db.Text()
+  sectionData Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   fields Json
 
@@ -45,6 +48,7 @@ model ShopOrder {
   status      Status       @relation(fields: [statusId], references: [id])
   serials     Serial[]
   attachments Attachment[]
+  sections    Section[]
 }
 
 model CustomerOrderPart {
@@ -63,11 +67,12 @@ model CustomerOrderPart {
 }
 
 model Part {
-  id        Int      @id @default(autoincrement())
-  number    String   @unique
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  number      String   @unique
+  notes       String   @db.Text()
+  sectionData Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   fields Json
 
@@ -76,14 +81,16 @@ model Part {
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
+  sections           Section[]
 }
 
 model Serial {
-  id        Int      @id @default(autoincrement())
-  number    String
-  notes     String   @db.Text()
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  number      String
+  notes       String   @db.Text()
+  sectionData Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   fields Json
 
@@ -96,19 +103,20 @@ model Serial {
   statusId        Int
   status          Status        @relation(fields: [statusId], references: [id])
   attachments     Attachment[]
+  sections        Section[]
 
   @@index([partId], name: "serial_partId")
 }
 
 model Customer {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  phone     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  sectionData Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   customerOrders CustomerOrder[]
+  sections       Section[]
 }
 
 model Attachment {
@@ -171,25 +179,50 @@ enum FieldType {
 }
 
 enum FieldModel {
-  ORDER
-  CUSTOMER
+  CUSTOMER_ORDER
+  SHOP_ORDER
   PART
   SERIAL
-  BATCH
-  BILLET
-  BAG
+  CUSTOMER
+}
+
+model Section {
+  id        Int        @id @default(autoincrement())
+  title     String
+  model     FieldModel
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  fields          Field[]
+  CustomerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id])
+  customerOrderId Int?
+  ShopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id])
+  shopOrderId     Int?
+  Part            Part?          @relation(fields: [partId], references: [id])
+  partId          Int?
+  Serial          Serial?        @relation(fields: [serialId], references: [id])
+  serialId        Int?
+  Customer        Customer?      @relation(fields: [customerId], references: [id])
+  customerId      Int?
+
+  @@index([customerOrderId], name: "section_customerOrderId")
+  @@index([shopOrderId], name: "section_shopOrderId")
+  @@index([partId], name: "section_partId")
+  @@index([serialId], name: "section_serialId")
+  @@index([customerId], name: "section_customerId")
 }
 
 model Field {
-  id        Int        @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String
-  model     FieldModel
   type      FieldType
   default   Json?
   options   Json?
-  nullable  Boolean
   multiple  Boolean?
   creative  Boolean?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  sectionId Int
+  section   Section @relation(fields: [sectionId], references: [id])
 }
