@@ -5,19 +5,16 @@ import { Button } from "@/components/ui/button"
 import { CheckIcon, PencilIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-type Props = {
-    value?: React.InputHTMLAttributes<HTMLInputElement>['value'];
-    className?: string;
+type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+    className?: string
 }
 
-export default function Title({ value, className }: Props) {
+export default function Title(props: Props) {
     const [isEditing, setIsEditing] = React.useState(false)
     return (
         <div className={cn("group flex border border-transparent pl-1 hover:border-foreground", isEditing ? "border-foreground" : "")}>
             <Input
-                className={className}
-                placeholder="Section Name"
-                value={value}
+                {...props}
                 onFocus={() => setIsEditing(true)}
                 onBlur={() => setIsEditing(false)}
             />

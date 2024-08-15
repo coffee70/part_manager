@@ -1,14 +1,14 @@
 import { CircleCheckIcon, CircleIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type Props = {
-    value?: string;
-    onChange: (value: string) => void;
+type Props<T extends string> = {
+    value?: T;
+    onChange: (value: T) => void;
     labels: string[]
     stacked?: boolean;
 }
 
-export default function ButtonGroup({ value, onChange, labels, stacked }: Props) {
+export default function ButtonGroup<T extends string>({ value, onChange, labels, stacked }: Props<T>) {
     return (
         <div className="flex justify-between space-x-2 min-h-12">
             {labels.map(label => (

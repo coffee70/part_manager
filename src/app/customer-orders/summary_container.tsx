@@ -10,6 +10,7 @@ import SummaryTitle from "@/components/summary/summary_title";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
 import Priority from "@/components/summary/summary_actions/priority/priority";
 import Status from "@/components/summary/summary_actions/status/status";
+import SummaryDetails from "@/components/summary/summary_details/summary_details";
 import SummaryNotes from "@/components/summary/summary_notes/summary_notes";
 import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachments";
 import SummaryList, { Item } from "@/components/summary/summary_list/summary_list";
@@ -30,6 +31,14 @@ export default function SummaryContainer() {
     if (isError) return <div>Error...</div>
 
     if (data === null) return <div>Not found</div>
+    
+    let order = { 
+        details: [
+            { id: 1, label: 'Label 1', value: 'Super large value here to overflow!!!!!!!!' },
+            { id: 2, label: 'Label 2', value: 'Value 2' },
+            { id: 3, label: 'Label 3', value: 'Value 3' },
+        ]
+    }
 
     return (
         <SummaryLayout>
@@ -38,7 +47,7 @@ export default function SummaryContainer() {
                 <Priority />
                 <Status />
             </SummaryToolbar>
-            {/* <SummaryDetails details={order.details} /> */}
+            <SummaryDetails details={order.details} />
             <SummaryNotes placeholder="Here are some notes on the order." />
             <SummaryAttachments files={data.attachments} uploads={{ id: data.id, type: 'customerOrder'}}/>
             <SummaryListContainer items={data.parts} />

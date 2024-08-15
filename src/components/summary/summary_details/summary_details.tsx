@@ -4,7 +4,6 @@ import SummaryBase from "../summary_base"
 import DetailBase from "./summary_detail_base";
 import Field from "@/components/ui/field";
 import { Detail } from "@/types/types";
-import AddField from "./add_field/add_field";
 
 type SummaryDetailsProps = {
     details: Detail[];
@@ -22,7 +21,6 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
                             <Field value={detail.value} />
                         </DetailBase>
                     ))}
-                    <AddField />
                 </div>
             </div>
         </SummaryBase>
