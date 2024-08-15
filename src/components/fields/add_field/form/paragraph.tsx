@@ -28,12 +28,6 @@ export default function ParagraphForm() {
         <>
             <Input label="Field Name" placeholder="Enter the field name" value={field.name} onChange={(e) => handleFieldChange('name', e.target.value)} />
             <Textarea label="Description" placeholder="Enter the field description" value={field.description} onChange={(e) => handleFieldChange('description', e.target.value)} />
-            <Input
-                label="Default Value"
-                placeholder="Enter the default value"
-                value={field.defaultValue}
-                onChange={(e) => handleFieldChange('defaultValue', e.target.value)}
-            />
         </>
     )
 }
