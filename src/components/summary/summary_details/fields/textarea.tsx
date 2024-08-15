@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Textarea as BaseTextarea } from '../ui/textarea';
+import { Textarea as BaseTextarea } from '@/components/ui/textarea';
 import { CheckIcon, PencilIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 
