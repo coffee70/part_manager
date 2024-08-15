@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableHead
 } from "@/components/ui/table";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import Field from "@/components/ui/field";
 import Header from "@/components/fields/header";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ import {
     DropdownMenuItem,
     DropdownMenu
 } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 
 export default function Fields() {
@@ -43,6 +44,7 @@ export default function Fields() {
                     <React.Fragment key={section.id}>
                         <div className="flex items-center justify-between">
                             <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' />
+                            <div className='flex space-x-3'>
                             <AddField>
                                 <Button className="bg-foreground rounded-md p-1">
                                     <div className="flex items-center">
@@ -51,6 +53,21 @@ export default function Fields() {
                                     </div>
                                 </Button>
                             </AddField>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button className="bg-foreground rounded-md px-1.5 py-1">
+                                            <div className="flex items-center">
+                                                <Trash2Icon size={16} />
+                                            </div>
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>Delete Section</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                            </div>
                         </div>
                         <Table>
                             <TableHeader>
