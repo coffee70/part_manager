@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 type Props<T extends string> = {
     value?: T;
     onChange: (value: T) => void;
-    labels: string[]
+    labels: T[]
     stacked?: boolean;
 }
 
