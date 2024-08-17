@@ -82,6 +82,8 @@ model Part {
   serials            Serial[]
   attachments        Attachment[]
   sections           Section[]
+
+  @@index([statusId], name: "part_statusId")
 }
 
 model Serial {
@@ -106,6 +108,9 @@ model Serial {
   sections        Section[]
 
   @@index([partId], name: "serial_partId")
+  @@index([customerOrderId], name: "serial_customerOrderId")
+  @@index([shopOrderId], name: "serial_shopOrderId")
+  @@index([statusId], name: "serial_statusId")
 }
 
 model Customer {
@@ -131,6 +136,11 @@ model Attachment {
   shopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
   customerOrderId Int?
   customerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
+
+  @@index([serialId], name: "attachment_serialId")
+  @@index([partId], name: "attachment_partId")
+  @@index([shopOrderId], name: "attachment_shopOrderId")
+  @@index([customerOrderId], name: "attachment_customerOrderId")
 }
 
 enum StatusType {
@@ -167,6 +177,9 @@ model Transition {
   from   Status? @relation("FromStatus", fields: [fromId], references: [id], onDelete: SetNull)
   toId   Int?
   to     Status? @relation("ToStatus", fields: [toId], references: [id], onDelete: SetNull)
+
+  @@index([fromId], name: "transition_fromId")
+  @@index([toId], name: "transition_toId")
 }
 
 enum FieldType {
@@ -225,4 +238,6 @@ model Field {
 
   sectionId Int
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId], name: "field_sectionId")
 }
