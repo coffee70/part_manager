@@ -1,22 +1,22 @@
 services:
-  manager:
-    container_name: manager
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/.next
-    ports:
-      - 3000:3000
-      - 5555:5555
-    depends_on:
-      - db
-      - file-service
-    networks:
-      - default
-    restart: always
+  # manager:
+  #   container_name: manager
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - .:/app
+  #     - /app/node_modules
+  #     - /app/.next
+  #   ports:
+  #     - 3000:3000
+  #     - 5555:5555
+  #   depends_on:
+  #     - db
+  #     - file-service
+  #   networks:
+  #     - default
+  #   restart: always
   db:
     container_name: db
     image: postgres
@@ -40,6 +40,6 @@ services:
       - default
     restart: always
 
-volumes:
-  manager-node_modules:
-  manager-next:
+# volumes:
+#   manager-node_modules:
+#   manager-next:
