@@ -10,7 +10,7 @@ export default function Header() {
                 </div>
                 <div className="flex flex-col">
                     <h1 className="text-3xl font-bold">Fields</h1>
-                    <h3 className="text-lg text-secondary">Customer Orders</h3>
+                    <h3 className="text-lg text-accent-secondary">Customer Orders</h3>
                 </div>
             </div>
             <AddSection />

@@ -15,7 +15,7 @@ import DateForm from "./date";
 import TimeForm from "./time";
 import TextForm from "./text";
 import ParagraphForm from "./paragraph";
-import ActionButtons from "../action_buttons";
+import ActionButtons from "../../action_buttons";
 
 const labels = [
     'Text',

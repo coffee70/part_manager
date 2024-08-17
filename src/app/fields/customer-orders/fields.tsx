@@ -9,21 +9,14 @@ import {
     TableHeader,
     TableHead
 } from "@/components/ui/table";
-import { PlusIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import Field from "@/components/ui/field";
 import Header from "@/components/fields/header";
 import { useQuery } from "@tanstack/react-query";
 import { getFields } from "@/server/fields/get_fields";
 import AddField from '@/components/fields/add_field/form/add_field';
-import { More } from '@/components/ui/more';
-import {
-    DropdownMenuTrigger,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenu
-} from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import AdditionalOptions from '@/components/fields/additional_options';
+import DeleteSection from '@/components/fields/delete_section';
 
 
 export default function Fields() {
@@ -43,30 +36,17 @@ export default function Fields() {
                 {data.map(section => (
                     <React.Fragment key={section.id}>
                         <div className="flex items-center justify-between">
-                            <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' />
+                            <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' readOnly/>
                             <div className='flex space-x-3'>
-                            <AddField>
-                                <Button className="bg-foreground rounded-md p-1">
-                                    <div className="flex items-center">
-                                        <PlusIcon size={20} className='pr-1' />
-                                        <span className="pr-1">New Field</span>
-                                    </div>
-                                </Button>
-                            </AddField>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button className="bg-foreground rounded-md px-1.5 py-1">
-                                            <div className="flex items-center">
-                                                <Trash2Icon size={16} />
-                                            </div>
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Delete Section</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                                <AddField>
+                                    <Button variant='secondary'>
+                                        <div className="flex items-center">
+                                            <PlusIcon size={20} className='pr-1' />
+                                            <span className="pr-1">New Field</span>
+                                        </div>
+                                    </Button>
+                                </AddField>
+                                <DeleteSection id={section.id}/>
                             </div>
                         </div>
                         <Table>
@@ -85,16 +65,7 @@ export default function Fields() {
                                         <TableCell>{field.type}</TableCell>
                                         <TableCell>{field.default}</TableCell>
                                         <TableCell className='w-8'>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <More />
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent>
-                                                    <DropdownMenuGroup>
-                                                        <DropdownMenuItem>Delete</DropdownMenuItem>
-                                                    </DropdownMenuGroup>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                            <AdditionalOptions id={field.id} />
                                         </TableCell>
                                     </TableRow>
                                 ))}

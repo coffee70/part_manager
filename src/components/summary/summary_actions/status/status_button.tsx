@@ -20,7 +20,7 @@ const StatusButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ st
             <div className='border-l'></div>
             <Button
                 {...props}
-                className='px-1 hover:bg-hover rounded-r-sm'
+                className='px-1 hover:bg-hover rounded-r-sm rounded-l-none'
                 variant='icon'
             >
                 <ChevronDownIcon size={16} strokeWidth={3} />
