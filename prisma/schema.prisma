@@ -22,10 +22,10 @@ model CustomerOrder {
   updatedAt   DateTime @updatedAt
 
   fields             Json
-  statusId           Int
-  status             Status              @relation(fields: [statusId], references: [id])
+  statusId           Int?
+  status             Status?              @relation(fields: [statusId], references: [id], onDelete: SetNull)
   customerId         Int
-  customer           Customer            @relation(fields: [customerId], references: [id])
+  customer           Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
@@ -44,8 +44,8 @@ model ShopOrder {
 
   fields Json
 
-  statusId    Int
-  status      Status       @relation(fields: [statusId], references: [id])
+  statusId    Int?
+  status      Status?       @relation(fields: [statusId], references: [id], onDelete: SetNull)
   serials     Serial[]
   attachments Attachment[]
   sections    Section[]
@@ -76,8 +76,8 @@ model Part {
 
   fields Json
 
-  statusId           Int
-  status             Status              @relation(fields: [statusId], references: [id])
+  statusId           Int?
+  status             Status?              @relation(fields: [statusId], references: [id], onDelete: SetNull)
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
@@ -100,8 +100,8 @@ model Serial {
   customerOrder   CustomerOrder @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
   shopOrderId     Int
   shopOrder       ShopOrder     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
-  statusId        Int
-  status          Status        @relation(fields: [statusId], references: [id])
+  statusId        Int?
+  status          Status?        @relation(fields: [statusId], references: [id], onDelete: SetNull)
   attachments     Attachment[]
   sections        Section[]
 
@@ -124,13 +124,13 @@ model Attachment {
   filename String
 
   serialId        Int?
-  serial          Serial?        @relation(fields: [serialId], references: [id])
+  serial          Serial?        @relation(fields: [serialId], references: [id], onDelete: Cascade)
   partId          Int?
-  part            Part?          @relation(fields: [partId], references: [id])
+  part            Part?          @relation(fields: [partId], references: [id], onDelete: Cascade)
   shopOrderId     Int?
-  shopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id])
+  shopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
   customerOrderId Int?
-  customerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id])
+  customerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
 }
 
 enum StatusType {
@@ -163,10 +163,10 @@ model Transition {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  fromId Int
-  from   Status @relation("FromStatus", fields: [fromId], references: [id])
-  toId   Int
-  to     Status @relation("ToStatus", fields: [toId], references: [id])
+  fromId Int?
+  from   Status? @relation("FromStatus", fields: [fromId], references: [id], onDelete: SetNull)
+  toId   Int?
+  to     Status? @relation("ToStatus", fields: [toId], references: [id], onDelete: SetNull)
 }
 
 enum FieldType {
@@ -194,15 +194,15 @@ model Section {
   updatedAt DateTime   @updatedAt
 
   fields          Field[]
-  CustomerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id])
+  CustomerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id], onDelete: SetNull)
   customerOrderId Int?
-  ShopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id])
+  ShopOrder       ShopOrder?     @relation(fields: [shopOrderId], references: [id], onDelete: SetNull)
   shopOrderId     Int?
-  Part            Part?          @relation(fields: [partId], references: [id])
+  Part            Part?          @relation(fields: [partId], references: [id], onDelete: SetNull)
   partId          Int?
-  Serial          Serial?        @relation(fields: [serialId], references: [id])
+  Serial          Serial?        @relation(fields: [serialId], references: [id], onDelete: SetNull)
   serialId        Int?
-  Customer        Customer?      @relation(fields: [customerId], references: [id])
+  Customer        Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
   customerId      Int?
 
   @@index([customerOrderId], name: "section_customerOrderId")
@@ -224,5 +224,5 @@ model Field {
   updatedAt DateTime  @updatedAt
 
   sectionId Int
-  section   Section @relation(fields: [sectionId], references: [id])
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
 }
