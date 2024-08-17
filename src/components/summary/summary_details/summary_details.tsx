@@ -18,7 +18,7 @@ export default function SummaryDetails({ details }: SummaryDetailsProps) {
                     {details.map(detail => (
                         <DetailBase key={detail.id}>
                             <div className='text-muted-foreground text-nowrap'>{`${detail.label}:`}</div>
-                            <Field value={detail.value} />
+                            <Field value={detail.value} readOnly/>
                         </DetailBase>
                     ))}
                 </div>
