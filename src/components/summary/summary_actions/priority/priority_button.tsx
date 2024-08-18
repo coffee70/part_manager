@@ -4,7 +4,7 @@ import { Priority } from "@/types/types";
 import { ButtonProps } from "@/components/ui/button";
 import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
-import tinycolor from "tinycolor2";
+import { darken } from "@/lib/colors";
 
 type Props = {
     priority: Priority;
@@ -32,7 +32,7 @@ const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ 
                 {...props}
                 className='px-1 rounded-r-sm rounded-l-none'
                 style={{ 
-                    backgroundColor: isHovered ? tinycolor(priority.color).darken().toString() : priority.color,
+                    backgroundColor: isHovered ? darken(priority.color) : priority.color,
                 }}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
