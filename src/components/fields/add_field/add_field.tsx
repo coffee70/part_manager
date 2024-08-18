@@ -34,7 +34,7 @@ export default function AddField({ children }: { children: React.ReactNode }) {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="min-w-[650px]">
                 <DialogHeader>
                     <DialogTitle>New Field</DialogTitle>
                     <DialogDescription>Customize a new order field.</DialogDescription>
