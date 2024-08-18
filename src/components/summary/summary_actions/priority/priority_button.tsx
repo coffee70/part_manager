@@ -2,7 +2,6 @@
 import React from "react";
 import { Priority } from "@/types/types";
 import { ButtonProps } from "@/components/ui/button";
-import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
 import { darken } from "@/lib/colors";
 
@@ -28,9 +27,9 @@ const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ 
                 <span>{priority.label}</span>
             </div>
             <div className='border-l'></div>
-            <Button
+            <button
                 {...props}
-                className='px-1 rounded-r-sm rounded-l-none'
+                className='px-1 rounded-r-sm'
                 style={{ 
                     backgroundColor: isHovered ? darken(priority.color) : priority.color,
                 }}
@@ -38,7 +37,7 @@ const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ 
                 onMouseLeave={handleMouseLeave}
             >
                 <ChevronDownIcon size={16} strokeWidth={3} />
-            </Button>
+            </button>
         </div>
     )
 })

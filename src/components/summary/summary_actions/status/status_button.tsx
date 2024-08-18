@@ -1,7 +1,7 @@
 import React from "react"
 import { ChevronDownIcon } from "lucide-react"
 import StatusIndicator from "@/components/svg/status_indicator"
-import { Button, ButtonProps } from "@/components/ui/button"
+import { ButtonProps } from "@/components/ui/button"
 import { Status } from "@/types/types"
 
 type Props = {
@@ -18,13 +18,12 @@ const StatusButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ st
                 </div>
             </div>
             <div className='border-l'></div>
-            <Button
+            <button
                 {...props}
                 className='px-1 hover:bg-hover rounded-r-sm rounded-l-none'
-                variant='icon'
             >
                 <ChevronDownIcon size={16} strokeWidth={3} />
-            </Button>
+            </button>
         </div>
     )
 })

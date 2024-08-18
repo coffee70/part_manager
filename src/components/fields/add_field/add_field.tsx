@@ -8,14 +8,14 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import ButtonGroup from "../fields/button_group";
-import SelectForm from "./select";
-import NumberForm from "./number";
-import DateForm from "./date";
-import TimeForm from "./time";
-import TextForm from "./text";
-import ParagraphForm from "./paragraph";
-import ActionButtons from "../../action_buttons";
+import ButtonGroup from "./fields/button_group";
+import SelectForm from "./form/select";
+import NumberForm from "./form/number";
+import DateForm from "./form/date";
+import TimeForm from "./form/time";
+import TextForm from "./form/text";
+import ParagraphForm from "./form/paragraph";
+import { Button } from "@/components/ui/button";
 
 const labels = [
     'Text',
@@ -63,7 +63,7 @@ export default function AddField({ children }: { children: React.ReactNode }) {
                 {type === 'Paragraph' && (
                     <ParagraphForm />
                 )}
-                <ActionButtons />
+                <Button className="w-full">Save</Button>
             </DialogContent>
         </Dialog>
     )

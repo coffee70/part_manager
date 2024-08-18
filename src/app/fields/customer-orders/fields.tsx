@@ -14,7 +14,7 @@ import Field from "@/components/ui/field";
 import Header from "@/components/fields/header";
 import { useQuery } from "@tanstack/react-query";
 import { getFields } from "@/server/fields/get_fields";
-import AddField from '@/components/fields/add_field/form/add_field';
+import AddField from '@/components/fields/add_field/add_field';
 import AdditionalOptions from '@/components/fields/additional_options';
 import DeleteSection from '@/components/fields/delete_section';
 

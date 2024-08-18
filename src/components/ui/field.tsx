@@ -18,10 +18,10 @@ export default function Title(props: Props) {
                 onFocus={() => setIsEditing(true)}
                 onBlur={() => setIsEditing(false)}
             />
-            {!isEditing && <Button variant='icon' className="bg-foreground p-1 invisible group-hover:visible">
+            {!isEditing && <Button variant='icon' className="bg-foreground p-1 rounded-none invisible group-hover:visible">
                 <PencilIcon />
             </Button>}
-            {isEditing && <Button variant='icon' className="bg-foreground p-1">
+            {isEditing && <Button variant='icon' className="bg-foreground p-1 rounded-none">
                 <CheckIcon />
             </Button>}
         </div>

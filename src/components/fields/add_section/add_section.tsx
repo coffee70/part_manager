@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
 import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
-import ActionButtons from '../action_buttons';
 
 export default function AddSection() {
     return (
@@ -22,7 +21,7 @@ export default function AddSection() {
                 </DialogHeader>
                 <Input placeholder='Section Name' className='border border-muted-foreground p-1' />
                 <DialogFooter>
-                    <ActionButtons />
+                    <Button className="w-full">Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
