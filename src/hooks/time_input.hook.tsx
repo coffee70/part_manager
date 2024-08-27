@@ -1,12 +1,15 @@
 'use client'
 import React from 'react';
 
-type UseTimeInputProps = {
+type Props = {
     time: string;
     setTime: (time: string) => void;
 }
 
-export function useTimeInput({ time, setTime }: UseTimeInputProps) {
+export const MERIDIEM_INDICATORS = ['AM', 'PM'] as const;
+export type Meridiem = typeof MERIDIEM_INDICATORS[number];
+
+export function useTimeInput({ time, setTime }: Props) {
     const [focused, setFocused] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
     const handleFocus = () => {
@@ -18,22 +21,37 @@ export function useTimeInput({ time, setTime }: UseTimeInputProps) {
         setFocused(false);
     }
 
-    // formatter for time
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (time.length > value.length) {
-            return setTime(value)
-        } else {
-            if (value.length === 2) {
-                return setTime(value + ':')
-            } else if (value.length === 5) {
-                return setTime(value + ':')
-            } else if (value.length > 8) {
-                return
-            } else {
-                return setTime(value)
-            }
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const key = e.key;
+
+        // backspace handler
+        if (key === 'Backspace') {
+            setTime(time.slice(0, -1));
+            return;
         }
+
+        if (key === ':' && (time.length === 2 || time.length === 5)) {
+            setTime(time + ':');
+            return;
+        }
+
+        // number validator
+        if (!/^\d*$/.test(key)) {
+            return;
+        }
+
+        // time formatter
+        if (time.length === 2 || time.length === 5) {
+            setTime(time + ':' + key);
+            return;
+        }
+
+        // string length validator
+        if (time.length >= 8) {
+            return;
+        }
+
+        setTime(time + key);
     }
 
     // validator for time
@@ -46,7 +64,6 @@ export function useTimeInput({ time, setTime }: UseTimeInputProps) {
 
         // number validator
         const [hours, minutes, seconds] = time.split(':').map(Number)
-        console.log(hours, minutes, seconds)
         if (isNaN(hours) || hours < 0 || hours > 23) {
             return true
         }
@@ -59,5 +76,5 @@ export function useTimeInput({ time, setTime }: UseTimeInputProps) {
         return false
     }, [time])
 
-    return { focused, handleInput, inputRef, handleFocus, handleBlur, invalidTime }
+    return { focused, handleKeyDown, inputRef, handleFocus, handleBlur, invalidTime }
 }

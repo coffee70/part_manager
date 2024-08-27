@@ -1,18 +1,17 @@
 import { Input as BaseInput } from "@/components/ui/input"
+import { cn } from "@/lib/utils"
 
-type Props = {
-    type?: string;
-    label: string;
-    value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    placeholder: string;
+type Props = React.InputHTMLAttributes<HTMLInputElement> & {
+    label: string
 }
 
-export default function Input({ type, label, value, onChange, placeholder }: Props) {
+export default function Input({ label, className, ...props }: Props) {
     return (
-        <div className="flex flex-col">
-            <span>{label}</span>
-            <BaseInput type={type} value={value} onChange={onChange} placeholder={placeholder} className='border border-muted-foreground p-1' />
-        </div>
+        <>
+            <label>
+                {label}
+                <BaseInput {...props} className={cn('border border-muted-foreground p-1', className)} />
+            </label>
+        </>
     )
 }

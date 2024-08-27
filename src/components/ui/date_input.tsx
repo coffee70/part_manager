@@ -1,8 +1,8 @@
 'use client'
 import React from 'react'
 import { CheckIcon, PencilIcon, TriangleAlertIcon } from "lucide-react"
-import { Input as BaseInput } from "../ui/input"
-import { Calendar } from '../ui/calendar'
+import { Input as BaseInput } from "@/components/ui/input"
+import { Calendar } from '@/components/ui/calendar'
 import { cn } from '@/lib/utils'
 import { ClickAwayListener } from '@mui/base'
 import { useDateInput } from '@/hooks/date_input.hook'

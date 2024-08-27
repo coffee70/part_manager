@@ -55,6 +55,10 @@ const config = {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",
         },
+        alert: {
+          DEFAULT: "var(--alert)",
+          foreground: "var(--alert-foreground)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

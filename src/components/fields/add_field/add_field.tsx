@@ -9,13 +9,12 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import ButtonGroup from "./fields/button_group";
-import SelectForm from "./form/select";
-import NumberForm from "./form/number";
-import DateForm from "./form/date";
-import TimeForm from "./form/time";
-import TextForm from "./form/text";
-import ParagraphForm from "./form/paragraph";
-import { Button } from "@/components/ui/button";
+import SelectForm from "./forms/select";
+import NumberForm from "./forms/number";
+import DateForm from "./forms/date";
+import TimeForm from "./forms/time";
+import TextForm from "./forms/text";
+import ParagraphForm from "./forms/paragraph";
 
 const labels = [
     'Text',
@@ -26,7 +25,12 @@ const labels = [
     'Paragraph'
 ]
 
-export default function AddField({ children }: { children: React.ReactNode }) {
+type Props = {
+    id: number;
+    children: React.ReactNode;
+}
+
+export default function AddField({ id, children }: Props) {
     const [type, setType] = React.useState(labels[0]);
 
     return (
@@ -46,24 +50,23 @@ export default function AddField({ children }: { children: React.ReactNode }) {
                     stacked
                 />
                 {type === 'Text' && (
-                    <TextForm />
+                    <TextForm id={id} />
                 )}
                 {type === 'Number' && (
-                    <NumberForm />
+                    <NumberForm id={id} />
                 )}
                 {type === 'Date' && (
-                    <DateForm />
+                    <DateForm id={id} />
                 )}
                 {type === 'Time' && (
-                    <TimeForm />
+                    <TimeForm id={id} />
                 )}
                 {type === 'Select' && (
-                    <SelectForm />
+                    <SelectForm id={id} />
                 )}
                 {type === 'Paragraph' && (
-                    <ParagraphForm />
+                    <ParagraphForm id={id} />
                 )}
-                <Button className="w-full">Save</Button>
             </DialogContent>
         </Dialog>
     )

@@ -1,17 +1,17 @@
 import { Textarea as BaseTextarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
 
-type Props = {
-    label: string;
-    value?: string;
-    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-    placeholder: string;
+type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+    label: string
 }
 
-export default function Textarea({ label, value, onChange, placeholder }: Props) {
+export default function Textarea({ label, className, ...props }: Props) {
     return (
-        <div>
-            <span>{label}</span>
-            <BaseTextarea value={value} onChange={onChange} placeholder={placeholder} className='border border-muted-foreground p-1' />
-        </div>
+        <>
+            <label>
+                {label}
+                <BaseTextarea {...props} className={cn('border border-muted-foreground p-1', className)} />
+            </label>
+        </>
     )
 }

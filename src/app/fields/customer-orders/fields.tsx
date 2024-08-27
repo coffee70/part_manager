@@ -38,7 +38,7 @@ export default function Fields() {
                         <div className="flex items-center justify-between">
                             <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' readOnly/>
                             <div className='flex space-x-3'>
-                                <AddField>
+                                <AddField id={section.id}>
                                     <Button variant='secondary'>
                                         <div className="flex items-center">
                                             <PlusIcon size={20} className='pr-1' />

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import SummaryBase from '../summary_base';
-import Textarea from '@/components/summary/summary_details/fields/textarea';
+import { StyledTextarea as Textarea } from '@/components/ui/textarea';
 
 type SummaryNotesProps = {
     placeholder?: string;

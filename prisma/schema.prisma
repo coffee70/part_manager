@@ -226,15 +226,16 @@ model Section {
 }
 
 model Field {
-  id        Int       @id @default(autoincrement())
-  name      String
-  type      FieldType
-  default   Json?
-  options   Json?
-  multiple  Boolean?
-  creative  Boolean?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        FieldType
+  default     Json?
+  options     Json?
+  multiple    Boolean?
+  creative    Boolean?
+  description String    @db.Text()
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   sectionId Int
   section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
