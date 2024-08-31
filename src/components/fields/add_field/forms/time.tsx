@@ -1,20 +1,33 @@
 'use client'
 import React from 'react';
 import Input from "../fields/input";
+import { Input as BaseInput } from '@/components/ui/input';
 import Textarea from "../fields/textarea";
-import TimeInput from '@/components/ui/time_input';
 import FormBase from './base';
+import TimeInput from '../fields/time_default_input';
 
 type Props = {
     id: number;
 }
 
+type FormState = {
+    name: string;
+    description: string;
+    defaultTime: string;
+}
+
 export default function TimeForm({ id }: Props) {
-    const [formState, setFormState] = React.useState({
+    const [formState, setFormState] = React.useState<FormState>({
         name: '',
         description: '',
-        default: '',
+        defaultTime: '',
     });
+
+    React.useEffect(() => {
+        if (formState.defaultTime) {
+            console.log(formState.defaultTime);
+        }
+    }, [formState.defaultTime])
 
     return (
         <FormBase
@@ -37,10 +50,14 @@ export default function TimeForm({ id }: Props) {
                 value={formState.description}
                 onChange={(e) => setFormState(prev => ({ ...prev, description: e.target.value }))}
             />
-            <TimeInput
-                time={formState.default}
-                setTime={(time) => setFormState(prev => ({ ...prev, default: time }))}
+            <BaseInput
+                id='default'
+                name='default'
+                className='hidden'
+                value={formState.defaultTime}
+                readOnly
             />
+            <TimeInput setTime={(time) => setFormState(prev => ({ ...prev, defaultTime: time }))} />
         </FormBase>
     )
 }
