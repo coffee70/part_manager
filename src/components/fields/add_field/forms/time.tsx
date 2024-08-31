@@ -23,12 +23,6 @@ export default function TimeForm({ id }: Props) {
         defaultTime: '',
     });
 
-    React.useEffect(() => {
-        if (formState.defaultTime) {
-            console.log(formState.defaultTime);
-        }
-    }, [formState.defaultTime])
-
     return (
         <FormBase
             sectionId={id}
