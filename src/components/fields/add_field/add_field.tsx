@@ -24,16 +24,29 @@ const labels = [
     'Time',
     'Select',
     'Paragraph'
-]
+];
+
+type Label = typeof labels[number];
+
+const formComponents: Record<Label, React.FC> = {
+    Text: TextForm,
+    Number: NumberForm,
+    Date: DateForm,
+    Time: TimeForm,
+    Select: SelectForm,
+    Paragraph: ParagraphForm
+};
 
 type Props = {
     children: React.ReactNode;
-}
+};
 
 export default function AddField({ children }: Props) {
-    const [type, setType] = React.useState(labels[0]);
+    const [type, setType] = React.useState<Label>(labels[0]);
 
     const { open, setOpen } = useAddFieldContext();
+
+    const FormComponent = formComponents[type];
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -51,25 +64,8 @@ export default function AddField({ children }: Props) {
                     onChange={(newValue) => setType(newValue)}
                     stacked
                 />
-                {type === 'Text' && (
-                    <TextForm />
-                )}
-                {type === 'Number' && (
-                    <NumberForm />
-                )}
-                {type === 'Date' && (
-                    <DateForm />
-                )}
-                {type === 'Time' && (
-                    <TimeForm />
-                )}
-                {type === 'Select' && (
-                    <SelectForm />
-                )}
-                {type === 'Paragraph' && (
-                    <ParagraphForm />
-                )}
+                {FormComponent && <FormComponent />}
             </DialogContent>
         </Dialog>
-    )
+    );
 }
