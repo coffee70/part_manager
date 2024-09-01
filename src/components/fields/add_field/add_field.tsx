@@ -15,6 +15,7 @@ import DateForm from "./forms/date";
 import TimeForm from "./forms/time";
 import TextForm from "./forms/text";
 import ParagraphForm from "./forms/paragraph";
+import { useAddFieldContext } from "./add_field.context";
 
 const labels = [
     'Text',
@@ -26,15 +27,16 @@ const labels = [
 ]
 
 type Props = {
-    id: number;
     children: React.ReactNode;
 }
 
-export default function AddField({ id, children }: Props) {
+export default function AddField({ children }: Props) {
     const [type, setType] = React.useState(labels[0]);
 
+    const { open, setOpen } = useAddFieldContext();
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
@@ -50,22 +52,22 @@ export default function AddField({ id, children }: Props) {
                     stacked
                 />
                 {type === 'Text' && (
-                    <TextForm id={id} />
+                    <TextForm />
                 )}
                 {type === 'Number' && (
-                    <NumberForm id={id} />
+                    <NumberForm />
                 )}
                 {type === 'Date' && (
-                    <DateForm id={id} />
+                    <DateForm />
                 )}
                 {type === 'Time' && (
-                    <TimeForm id={id} />
+                    <TimeForm />
                 )}
                 {type === 'Select' && (
-                    <SelectForm id={id} />
+                    <SelectForm />
                 )}
                 {type === 'Paragraph' && (
-                    <ParagraphForm id={id} />
+                    <ParagraphForm />
                 )}
             </DialogContent>
         </Dialog>

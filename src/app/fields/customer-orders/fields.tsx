@@ -17,6 +17,7 @@ import { getFields } from "@/server/fields/get_fields";
 import AddField from '@/components/fields/add_field/add_field';
 import AdditionalOptions from '@/components/fields/additional_options';
 import DeleteSection from '@/components/fields/delete_section';
+import { AddFieldProvider } from '@/components/fields/add_field/add_field.context';
 
 
 export default function Fields() {
@@ -36,17 +37,19 @@ export default function Fields() {
                 {data.map(section => (
                     <React.Fragment key={section.id}>
                         <div className="flex items-center justify-between">
-                            <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' readOnly/>
+                            <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' readOnly />
                             <div className='flex space-x-3'>
-                                <AddField id={section.id}>
-                                    <Button variant='secondary'>
-                                        <div className="flex items-center">
-                                            <PlusIcon size={20} className='pr-1' />
-                                            <span className="pr-1">New Field</span>
-                                        </div>
-                                    </Button>
-                                </AddField>
-                                <DeleteSection id={section.id}/>
+                                <AddFieldProvider value={{ id: section.id }}>
+                                    <AddField>
+                                        <Button variant='secondary'>
+                                            <div className="flex items-center">
+                                                <PlusIcon size={20} className='pr-1' />
+                                                <span className="pr-1">New Field</span>
+                                            </div>
+                                        </Button>
+                                    </AddField>
+                                </AddFieldProvider>
+                                <DeleteSection id={section.id} />
                             </div>
                         </div>
                         <Table>

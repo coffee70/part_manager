@@ -5,6 +5,7 @@ import { FieldType } from '@prisma/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useAddFieldContext } from '../add_field.context';
 
 type Props = {
     sectionId: number;
@@ -14,12 +15,15 @@ type Props = {
 
 export default function FormBase({ sectionId, type, children }: Props) {
 
-    const queryClient = useQueryClient()
+    const queryClient = useQueryClient();
+
+    const { setOpen } = useAddFieldContext();
 
     const { mutate } = useMutation({
         mutationFn: createField,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] })
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
         }
     })
 

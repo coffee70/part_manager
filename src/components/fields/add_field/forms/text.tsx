@@ -3,17 +3,16 @@ import React from 'react';
 import Input from "../fields/input";
 import Textarea from "../fields/textarea";
 import FormBase from './base';
+import { useAddFieldContext } from '../add_field.context';
 
-type Props = {
-    id: number;
-}
-
-export default function TextForm({ id }: Props) {
+export default function TextForm() {
     const [formState, setFormState] = React.useState({
         name: '',
         description: '',
         default: ''
     })
+
+    const { id } = useAddFieldContext();
 
     return (
         <FormBase

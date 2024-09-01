@@ -5,10 +5,7 @@ import Textarea from "../fields/textarea";
 import ButtonGroup from "../fields/button_group";
 import TagInput from "@/components/ui/tag_input";
 import FormBase from './base';
-
-type Props = {
-    id: number;
-}
+import { useAddFieldContext } from '../add_field.context';
 
 type FormState = {
     name: string;
@@ -19,7 +16,7 @@ type FormState = {
     defaultValue: string[];
 }
 
-export default function SelectForm({ id }: Props) {
+export default function SelectForm() {
     const [formState, setFormState] = React.useState<FormState>({
         name: '',
         description: '',
@@ -28,6 +25,8 @@ export default function SelectForm({ id }: Props) {
         options: [],
         defaultValue: [],
     });
+
+    const { id } = useAddFieldContext();
 
     return (
         <FormBase

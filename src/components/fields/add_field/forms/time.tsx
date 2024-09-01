@@ -5,10 +5,7 @@ import { Input as BaseInput } from '@/components/ui/input';
 import Textarea from "../fields/textarea";
 import FormBase from './base';
 import TimeInput from '../fields/time_default_input';
-
-type Props = {
-    id: number;
-}
+import { useAddFieldContext } from '../add_field.context';
 
 type FormState = {
     name: string;
@@ -16,12 +13,14 @@ type FormState = {
     defaultTime: string;
 }
 
-export default function TimeForm({ id }: Props) {
+export default function TimeForm() {
     const [formState, setFormState] = React.useState<FormState>({
         name: '',
         description: '',
         defaultTime: '',
     });
+
+    const { id } = useAddFieldContext();
 
     return (
         <FormBase
