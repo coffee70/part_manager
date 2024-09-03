@@ -1,6 +1,6 @@
 import { getSections } from "@/server/sections/get_sections";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import Fields from "./sections";
+import Sections from "./sections";
 
 export default async function Page() {
     const queryClient = new QueryClient();
@@ -12,7 +12,7 @@ export default async function Page() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <Fields />
+            <Sections />
         </HydrationBoundary>
     )
 }
