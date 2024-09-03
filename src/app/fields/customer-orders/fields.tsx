@@ -11,12 +11,12 @@ import AddField from '@/components/fields/add_field/add_field';
 import AdditionalOptions from '@/components/fields/additional_options';
 import DeleteSection from '@/components/fields/delete_section';
 import { AddFieldProvider } from '@/components/fields/add_field/add_field.context';
-import { Field as FieldModel, Section as SectionModel } from '@prisma/client';
+import { Badge } from '@/components/ui/badge';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
-type Section = SectionModel & { fields: FieldModel[] }
+type Section = Awaited<ReturnType<typeof getFields>>[number];
 
 const Section = React.memo(({ section } : { section: Section }) => (
     <React.Fragment key={section.id}>
@@ -42,6 +42,7 @@ const Section = React.memo(({ section } : { section: Section }) => (
                     <TableHead>Name</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Default Values</TableHead>
+                    <TableHead>Options</TableHead>
                     <TableHead></TableHead>
                 </TableRow>
             </TableHeader>
@@ -51,6 +52,9 @@ const Section = React.memo(({ section } : { section: Section }) => (
                         <TableCell>{field.name}</TableCell>
                         <TableCell>{field.type}</TableCell>
                         <TableCell>{field.default}</TableCell>
+                        <TableCell>{field.options?.map(option => (
+                            <Badge key={option} label={option} color='gray' className='px-2 ml-1' />
+                        ))}</TableCell>
                         <TableCell className='w-8'>
                             <AdditionalOptions id={field.id} />
                         </TableCell>

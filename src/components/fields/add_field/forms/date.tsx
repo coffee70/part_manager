@@ -2,21 +2,42 @@
 import React from 'react';
 import Input from "../fields/input";
 import Textarea from "../fields/textarea";
-import FormBase from './base';
 import { useAddFieldContext } from '../add_field.context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createDateField } from '@/server/fields/create_field';
+import { Button } from '@/components/ui/button';
+
+type FormState = {
+    sectionId: number;
+    type: 'DATE';
+    name: string;
+    description: string;
+}
 
 export default function DateForm() {
-    const [formState, setFormState] = React.useState({
+    const { id, setOpen } = useAddFieldContext();
+
+    const [formState, setFormState] = React.useState<FormState>({
+        sectionId: id,
+        type: 'DATE',
         name: '',
         description: '',
     })
 
-    const { id } = useAddFieldContext();
+    const queryClient = useQueryClient();
+    
+    const { mutate } = useMutation({
+        mutationFn: createDateField,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
+        }
+    })
 
     return (
-        <FormBase
-            sectionId={id}
-            type='DATE'
+        <form
+            onSubmit={() => mutate(formState)}
+            className='flex flex-col space-y-4'
         >
             <Input
                 id='name'
@@ -34,6 +55,10 @@ export default function DateForm() {
                 value={formState.description}
                 onChange={(e) => setFormState(prev => ({ ...prev, description: e.target.value }))}
             />
-        </FormBase>
+            <Button
+                className='w-full'
+                type='submit'
+            >Create</Button>
+        </form>
     )
 }

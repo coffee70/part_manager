@@ -1,48 +1,127 @@
 'use server'
 import prisma from "@/lib/database/prisma";
-import { FieldType, Prisma } from "@prisma/client";
+import { FieldType } from "@prisma/client";
 import { z } from "zod";
 
-const FieldSchema = z.object({
+// Define schemas for each field type
+const TextFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.TEXT),
     name: z.string(),
-    type: z.custom<FieldType>(),
-    default: z.union([z.string(), z.array(z.string())]).nullable(),
-    options: z.union([z.string(), z.array(z.string())]).nullable(),
-    multiple: z.boolean().nullable(),
-    creative: z.boolean().nullable(),
+    default: z.string(),
     description: z.string(),
-    sectionId: z.coerce.number(),
-})
+});
 
-export async function createField(formData: FormData) {
-    const { data, success, error } = FieldSchema.safeParse({
-        name: formData.get('name'),
-        type: formData.get('type'),
-        default: formData.get('default'),
-        options: formData.get('options'),
-        multiple: formData.get('multiple'),
-        creative: formData.get('creative'),
-        description: formData.get('description'),
-        sectionId: formData.get('sectionId'),
-    });
+export async function createTextField(rawData: z.input<typeof TextFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = TextFieldSchema.safeParse(rawData);
 
     if (!success) {
         throw new Error(`Invalid parameters: ${error}`);
     }
 
-    const field = await prisma.field.create({ 
-        data: {
-            name: data.name,
-            type: data.type,
-            // json fields need to be cast to Prisma.JsonArray
-            default: data.default as Prisma.JsonArray,
-            options: data.options as Prisma.JsonArray,
-            multiple: data.multiple,
-            creative: data.creative,
-            description: data.description,
-            sectionId: data.sectionId,
-        }
-     });
+    // Create the field in the database
+    return await prisma.field.create({ data });
+}
 
-    return field;
+const NumberFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.NUMBER),
+    name: z.string(),
+    default: z.string().transform((val) => {
+        const num = Number(val);
+        return isNaN(num) ? undefined : num;
+    }).optional(),
+    description: z.string(),
+});
+
+export async function createNumberField(rawData: z.input<typeof NumberFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = NumberFieldSchema.safeParse(rawData);
+
+    if (!success) {
+        throw new Error(`Invalid parameters: ${error}`);
+    }
+
+    // Create the field in the database
+    return await prisma.field.create({ data });
+}
+
+const DateFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.DATE),
+    name: z.string(),
+    description: z.string(),
+});
+
+export async function createDateField(rawData: z.input<typeof DateFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = DateFieldSchema.safeParse(rawData);
+
+    if (!success) {
+        throw new Error(`Invalid parameters: ${error}`);
+    }
+
+    // Create the field in the database
+    return await prisma.field.create({ data });
+}
+
+const TimeFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.TIME),
+    name: z.string(),
+    description: z.string(),
+});
+
+export async function createTimeField(rawData: z.input<typeof TimeFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = TimeFieldSchema.safeParse(rawData);
+
+    if (!success) {
+        throw new Error(`Invalid parameters: ${error}`);
+    }
+
+    // Create the field in the database
+    return await prisma.field.create({ data });
+}
+
+const SelectFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.SELECT),
+    name: z.string(),
+    options: z.array(z.string()),
+    multiple: z.boolean(),
+    creative: z.boolean(),
+    description: z.string(),
+});
+
+export async function createSelectField(rawData: z.input<typeof SelectFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = SelectFieldSchema.safeParse(rawData);
+
+    if (!success) {
+        throw new Error(`Invalid parameters: ${error}`);
+    }
+
+    // Create the field in the database
+    return await prisma.field.create({ data });
+}
+
+const ParagraphFieldSchema = z.object({
+    sectionId: z.number(),
+    type: z.literal(FieldType.PARAGRAPH),
+    name: z.string(),
+    description: z.string(),
+});
+
+export async function createParagraphField(rawData: z.input<typeof ParagraphFieldSchema>) {
+    // Validate the data using the schema
+    const { data, success, error } = ParagraphFieldSchema.safeParse(rawData);
+
+    if (!success) {
+        throw new Error(`Invalid parameters: ${error}`);
+    }
+
+    // Create the field in the database
+    return await prisma.field.create({ data });
 }

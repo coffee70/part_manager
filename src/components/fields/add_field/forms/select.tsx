@@ -4,34 +4,48 @@ import Input from "../fields/input";
 import Textarea from "../fields/textarea";
 import ButtonGroup from "../fields/button_group";
 import TagInput from "@/components/ui/tag_input";
-import FormBase from './base';
 import { useAddFieldContext } from '../add_field.context';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createSelectField } from "@/server/fields/create_field";
+import { Button } from '@/components/ui/button';
 
 type FormState = {
+    sectionId: number;
+    type: 'SELECT'
     name: string;
     description: string;
     multiple: boolean;
     creative: boolean;
     options: string[];
-    defaultValue: string[];
 }
 
 export default function SelectForm() {
+    const { id, setOpen } = useAddFieldContext();
+
     const [formState, setFormState] = React.useState<FormState>({
+        sectionId: id,
+        type: 'SELECT',
         name: '',
         description: '',
         multiple: false,
         creative: false,
         options: [],
-        defaultValue: [],
     });
 
-    const { id } = useAddFieldContext();
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: createSelectField,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
+        }
+    });
 
     return (
-        <FormBase
-            sectionId={id}
-            type='SELECT'
+        <form
+            onSubmit={() => mutate(formState)}
+            className='flex flex-col space-y-4'
         >
             <Input
                 id='name'
@@ -68,15 +82,10 @@ export default function SelectForm() {
                     onChange={(options) => setFormState(prev => ({ ...prev, options: options }))}
                 />
             </div>
-            <div className="flex flex-col">
-                <span>Default Values</span>
-                <TagInput
-                    className='border border-muted-foreground p-1'
-                    placeholder="Type an option and press enter"
-                    value={formState.defaultValue}
-                    onChange={(options) => setFormState(prev => ({ ...prev, defaultValue: options }))}
-                />
-            </div>
-        </FormBase>
+            <Button
+                className="w-full"
+                type='submit'
+            >Create</Button>
+        </form>
     )
 }

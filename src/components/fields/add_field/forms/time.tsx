@@ -1,56 +1,61 @@
 'use client'
 import React from 'react';
 import Input from "../fields/input";
-import { Input as BaseInput } from '@/components/ui/input';
 import Textarea from "../fields/textarea";
-import FormBase from './base';
-import TimeInput from '../fields/time_default_input';
 import { useAddFieldContext } from '../add_field.context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createTimeField } from '@/server/fields/create_field';
+import { Button } from '@/components/ui/button';
 
+// Define the type for formState
 type FormState = {
+    sectionId: number;
+    type: 'TIME';
     name: string;
     description: string;
-    defaultTime: string;
-}
+};
 
 export default function TimeForm() {
+    const { id, setOpen } = useAddFieldContext();
+
     const [formState, setFormState] = React.useState<FormState>({
+        sectionId: id,
+        type: 'TIME',
         name: '',
         description: '',
-        defaultTime: '',
+    })
+
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: createTimeField,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
+        }
     });
 
-    const { id } = useAddFieldContext();
-
     return (
-        <FormBase
-            sectionId={id}
-            type='TIME'
+        <form
+            onSubmit={() => mutate(formState)}
+            className='flex flex-col space-y-4'
         >
             <Input
-                id='name'
-                name='name'
                 label="Field Name"
                 placeholder="Enter the field name"
                 value={formState.name}
                 onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
             />
             <Textarea
-                id='description'
-                name='description'
                 label="Description"
                 placeholder="Enter the field description"
                 value={formState.description}
                 onChange={(e) => setFormState(prev => ({ ...prev, description: e.target.value }))}
             />
-            <BaseInput
-                id='default'
-                name='default'
-                className='hidden'
-                value={formState.defaultTime}
-                readOnly
-            />
-            <TimeInput setTime={(time) => setFormState(prev => ({ ...prev, defaultTime: time }))} />
-        </FormBase>
+            <Button
+                className="w-full"
+                type='submit'
+            >Create</Button>
+        </form>
     )
 }

@@ -2,48 +2,68 @@
 import React from 'react';
 import Input from "../fields/input";
 import Textarea from "../fields/textarea";
-import FormBase from './base';
 import { useAddFieldContext } from '../add_field.context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createNumberField } from '@/server/fields/create_field';
+import { Button } from '@/components/ui/button';
+
+type FormState = {
+    sectionId: number;
+    type: 'NUMBER';
+    name: string;
+    description: string;
+    default: string;
+}
 
 export default function NumberForm() {
-    const [formState, setFormState] = React.useState({
+    const { id, setOpen } = useAddFieldContext();
+
+    const [formState, setFormState] = React.useState<FormState>({
+        sectionId: id,
+        type: 'NUMBER',
         name: '',
         description: '',
         default: '',
     });
 
-    const { id } = useAddFieldContext();
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: createNumberField,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
+        }
+    });
 
     return (
-        <FormBase
-            sectionId={id}
-            type='NUMBER'
+        <form
+            onSubmit={() => mutate(formState)}
+            className='flex flex-col space-y-4'
         >
             <Input
-                id='name'
-                name='name'
                 label="Field Name"
                 placeholder="Enter the field name"
                 value={formState.name}
                 onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
             />
             <Textarea
-                id='description'
-                name='description'
                 label="Description"
                 placeholder="Enter the field description"
                 value={formState.description}
                 onChange={(e) => setFormState(prev => ({ ...prev, description: e.target.value }))}
             />
             <Input
-                id='default'
-                name='default'
                 type="number"
                 label="Default Value"
                 placeholder="Enter the default value"
                 value={formState.default}
                 onChange={(e) => setFormState(prev => ({ ...prev, default: e.target.value }))}
             />
-        </FormBase>
+            <Button
+                className='w-full'
+                type='submit'
+            >Create</Button>
+        </form>
     )
 }

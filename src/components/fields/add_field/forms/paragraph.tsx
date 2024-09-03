@@ -2,38 +2,60 @@
 import React from 'react';
 import Input from "../fields/input";
 import Textarea from "../fields/textarea";
-import FormBase from './base';
 import { useAddFieldContext } from '../add_field.context';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createParagraphField } from '@/server/fields/create_field';
+import { Button } from '@/components/ui/button';
+
+type FormState = {
+    sectionId: number,
+    type: 'PARAGRAPH',
+    name: string,
+    description: string
+};
 
 export default function ParagraphForm() {
-    const [formState, setFormState] = React.useState({
+    const { id, setOpen } = useAddFieldContext();
+
+    const [formState, setFormState] = React.useState<FormState>({
+        sectionId: id,
+        type: 'PARAGRAPH',
         name: '',
         description: '',
     });
 
-    const { id } = useAddFieldContext();
-    
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: createParagraphField,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            setOpen(false);
+        }
+    });
+
     return (
-        <FormBase
-            sectionId={id}
-            type='PARAGRAPH'
+        <form
+            onSubmit={() => mutate(formState)}
+            className='flex flex-col space-y-4'
         >
             <Input
-                id='name'
-                name='name'
                 label="Field Name"
                 placeholder="Enter the field name"
                 value={formState.name}
                 onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
             />
             <Textarea
-                id="description"
-                name="description"
                 label="Description"
                 placeholder="Enter the field description"
                 value={formState.description}
                 onChange={(e) => setFormState(prev => ({ ...prev, description: e.target.value }))}
             />
-        </FormBase>
+            <Button
+                className='w-full'
+                type="submit"
+            >Create</Button>
+        </form>
+
     )
 }
