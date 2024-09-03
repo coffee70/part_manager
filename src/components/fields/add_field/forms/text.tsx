@@ -5,7 +5,7 @@ import Textarea from "../fields/textarea";
 import { Button } from '@/components/ui/button';
 import { useAddFieldContext } from '../add_field.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createTextField } from '@/server/fields/create_field';
+import { createTextField } from '@/server/sections/create_field';
 
 type FormState = {
     sectionId: number;

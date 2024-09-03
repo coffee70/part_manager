@@ -6,7 +6,7 @@ import {
     DropdownMenu
 } from "@/components/ui/dropdown-menu";
 import { More } from '@/components/ui/more';
-import { deleteField } from "@/server/fields/delete_field";
+import { deleteField } from "@/server/sections/delete_field";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useConfirm } from "@/hooks/confirm.hook";

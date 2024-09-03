@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { Button } from '@/components/ui/button';
 import { Trash2Icon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteSection } from '@/server/fields/delete_section';
+import { deleteSection } from '@/server/sections/delete_section';
 import {
     AlertDialog,
     AlertDialogDescription,

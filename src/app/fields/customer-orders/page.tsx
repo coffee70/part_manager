@@ -1,13 +1,13 @@
-import { getFields } from "@/server/fields/get_fields";
+import { getSections } from "@/server/sections/get_sections";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import Fields from "./fields";
+import Fields from "./sections";
 
 export default async function Page() {
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
         queryKey: ['fields', 'customerOrders'],
-        queryFn: () => getFields('CUSTOMER_ORDER')
+        queryFn: () => getSections('CUSTOMER_ORDER')
     })
 
     return (

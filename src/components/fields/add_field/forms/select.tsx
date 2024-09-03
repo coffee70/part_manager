@@ -6,7 +6,7 @@ import ButtonGroup from "../fields/button_group";
 import TagInput from "@/components/ui/tag_input";
 import { useAddFieldContext } from '../add_field.context';
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createSelectField } from "@/server/fields/create_field";
+import { createSelectField } from "@/server/sections/create_field";
 import { Button } from '@/components/ui/button';
 
 type FormState = {

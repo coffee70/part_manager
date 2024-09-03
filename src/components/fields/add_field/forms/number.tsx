@@ -4,7 +4,7 @@ import Input from "../fields/input";
 import Textarea from "../fields/textarea";
 import { useAddFieldContext } from '../add_field.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createNumberField } from '@/server/fields/create_field';
+import { createNumberField } from '@/server/sections/create_field';
 import { Button } from '@/components/ui/button';
 
 type FormState = {

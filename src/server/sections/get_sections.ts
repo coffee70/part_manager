@@ -7,7 +7,7 @@ import { FieldModel } from "@prisma/client";
 const DefaultSchema = z.union([z.string(), z.number()]).nullable();
 const OptionsSchema = z.array(z.string()).nullable();
 
-export async function getFields(model: FieldModel) {
+export async function getSections(model: FieldModel) {
     const sections = await prisma.section.findMany({
         where: {
             model

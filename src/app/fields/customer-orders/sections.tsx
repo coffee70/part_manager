@@ -6,7 +6,7 @@ import { PlusIcon } from "lucide-react";
 import Field from "@/components/ui/field";
 import Header from "@/components/fields/header";
 import { useQuery } from "@tanstack/react-query";
-import { getFields } from "@/server/fields/get_fields";
+import { getSections } from "@/server/sections/get_sections";
 import AddField from '@/components/fields/add_field/add_field';
 import AdditionalOptions from '@/components/fields/additional_options';
 import DeleteSection from '@/components/fields/delete_section';
@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
-type Section = Awaited<ReturnType<typeof getFields>>[number];
+type Section = Awaited<ReturnType<typeof getSections>>[number];
 
 const Section = React.memo(({ section } : { section: Section }) => (
     <React.Fragment key={section.id}>
@@ -65,10 +65,10 @@ const Section = React.memo(({ section } : { section: Section }) => (
     </React.Fragment>
 ));
 
-export default function Fields() {
+export default function Sections() {
     const { data, isError, isPending } = useQuery({
         queryKey: ['fields', 'customerOrders'],
-        queryFn: () => getFields('CUSTOMER_ORDER')
+        queryFn: () => getSections('CUSTOMER_ORDER')
     });
 
     if (isPending) return <Loading />;
