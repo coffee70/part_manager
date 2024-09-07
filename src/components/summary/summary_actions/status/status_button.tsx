@@ -1,6 +1,6 @@
 import React from "react"
 import { ChevronDownIcon } from "lucide-react"
-import StatusIndicator from "@/components/svg/status_indicator"
+import StatusIndicator from "@/components/ui/status_indicator"
 import { ButtonProps } from "@/components/ui/button"
 import { Status } from "@/types/types"
 

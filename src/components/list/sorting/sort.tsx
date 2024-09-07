@@ -1,10 +1,10 @@
 'use client'
 import React from 'react';
 import { ArrowDownIcon, ArrowDownUpIcon, ArrowUpIcon } from "lucide-react";
-import { DataAction } from "../data_actions/data_action_button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Sortable } from "../../hooks/sort.hook";
-import { SelectBase, SelectItem } from "../ui/select";
+import { DataAction } from "@/components/ui/data_action";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Sortable } from "@/hooks/sort.hook";
+import { SelectBase, SelectItem } from "@/components/ui/select";
 
 type Props<T> = {
     sort: T;

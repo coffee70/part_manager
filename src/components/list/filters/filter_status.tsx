@@ -2,8 +2,8 @@
 import React from 'react';
 import clsx from 'clsx';
 import { CheckIcon } from 'lucide-react';
-import StatusIndicator from '../svg/status_indicator';
-import { SelectBase, SelectItem } from '../ui/select';
+import StatusIndicator from '../../ui/status_indicator';
+import { SelectBase, SelectItem } from '../../ui/select';
 import { useQuery } from '@tanstack/react-query';
 import { Status } from '@prisma/client';
 

@@ -7,17 +7,17 @@ import { useRouterHelpers } from "@/lib/search_params";
 import useSort from "@/hooks/sort.hook";
 import useFilter from "@/hooks/filter.hook";
 import { convertSearchParams } from "@/lib/search_params";
-import { FilterToolbar, FilterToolbarRow } from "@/components/filters/filter_toolbar";
-import SearchInput from "@/components/filters/search_input";
-import Filter from "@/components/filters/filter";
-import Sort from "@/components/sorting/sort";
+import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
+import SearchInput from "@/components/list/filters/search_input";
+import Filter from "@/components/list/filters/filter";
+import Sort from "@/components/list/sorting/sort";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
-import Label from "@/components/data_table/label";
+import Label from "@/components/list/data_table/label";
 import { StatusBadge } from "@/components/ui/badge";
 import People from "@/components/ui/people";
 import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { More } from "@/components/ui/more";
-import TableSkeleton from "@/components/data_table/table_skeleton";
+import TableSkeleton from "@/components/list/data_table/table_skeleton";
 
 export default function TableContainer() {
 

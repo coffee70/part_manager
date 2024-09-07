@@ -1,6 +1,6 @@
 'use client'
 import * as React from 'react'
-import { Calendar } from "../ui/calendar";
+import { Calendar } from "../../ui/calendar";
 import { DateRange } from 'react-day-picker';
 
 type Props = {

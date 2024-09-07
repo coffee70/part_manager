@@ -1,5 +1,5 @@
-import TableContainer from "./table_container";
-import SummaryContainer from "./summary_container";
+import TableContainer from "@/components/customer-orders/table_container";
+import SummaryContainer from "@/components/customer-orders/summary_container";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 export default function CustomerOrders() {

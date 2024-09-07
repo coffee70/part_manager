@@ -1,7 +1,7 @@
 'use client'
 import * as React from "react"
 import { Search, X } from "lucide-react"
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 
 type Props = {
   value: string;

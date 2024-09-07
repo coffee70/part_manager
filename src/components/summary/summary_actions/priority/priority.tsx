@@ -4,10 +4,10 @@ import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuConte
 import PriorityItem from './priority_item'
 import { type Priority } from '@/types/types'
 import PriorityButton from './priority_button'
-import { fetchPriorities } from '@/app/api/data'
+
+const priorities: Priority[] = []
 
 export default function Priority() {
-    const priorities = fetchPriorities()
     const [priority, setPriority] = React.useState<Priority>(priorities[0])
     return (
         <DropdownMenu>

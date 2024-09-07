@@ -1,4 +1,4 @@
-import Toggle from "../ui/toggle";
+import Toggle from "../../ui/toggle";
 
 type Props = {
     children: React.ReactNode;

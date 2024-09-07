@@ -1,4 +1,4 @@
-import StatusIndicator from "@/components/svg/status_indicator";
+import StatusIndicator from "@/components/ui/status_indicator";
 import { Status } from "@/types/types";
 
 type Props = {
