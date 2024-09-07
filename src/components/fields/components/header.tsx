@@ -1,5 +1,5 @@
 import { AlignLeftIcon } from 'lucide-react';
-import AddSection from './add_section/add_section';
+import AddSection from '../add_section/add_section';
 
 export default function Header() {
     return (

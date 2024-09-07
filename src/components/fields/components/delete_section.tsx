@@ -15,7 +15,7 @@ import {
     AlertDialogFooter,
     AlertDialogCancel,
     AlertDialogAction
-} from '../ui/alert-dialog';
+} from '../../ui/alert-dialog';
 import { useConfirm } from '@/hooks/confirm.hook';
 
 type Props = {

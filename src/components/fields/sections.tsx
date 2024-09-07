@@ -3,25 +3,25 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableRow, TableCell, TableHeader, TableHead } from "@/components/ui/table";
 import { PlusIcon } from "lucide-react";
-import Field from "@/components/ui/field";
-import Header from "@/components/fields/header";
+import Header from "@/components/fields/components/header";
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import AddField from '@/components/fields/add_field/add_field';
-import AdditionalOptions from '@/components/fields/additional_options';
-import DeleteSection from '@/components/fields/delete_section';
-import { AddFieldProvider } from '@/components/fields/add_field/add_field.context';
+import AdditionalOptions from '@/components/fields/components/additional_options';
+import DeleteSection from '@/components/fields/components/delete_section';
+import { AddFieldProvider } from '@/components/fields/context/add_field.context';
 import { Badge } from '@/components/ui/badge';
+import SectionTitle from './components/section_title';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 type Section = Awaited<ReturnType<typeof getSections>>[number];
 
-const Section = React.memo(({ section } : { section: Section }) => (
-    <React.Fragment key={section.id}>
+const Section = React.memo(({ section }: { section: Section }) => (
+    <>
         <div className="flex items-center justify-between">
-            <Field className="text-xl font-bold" value={section.title} placeholder='Section Name' readOnly />
+            <SectionTitle title={section.title} />
             <div className='flex space-x-3'>
                 <AddFieldProvider value={{ id: section.id }}>
                     <AddField>
@@ -62,8 +62,9 @@ const Section = React.memo(({ section } : { section: Section }) => (
                 ))}
             </TableBody>
         </Table>
-    </React.Fragment>
+    </>
 ));
+Section.displayName = "Section";
 
 export default function Sections() {
     const { data, isError, isPending } = useQuery({

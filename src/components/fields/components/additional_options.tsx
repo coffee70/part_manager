@@ -10,7 +10,7 @@ import { deleteField } from "@/server/sections/delete_field";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useConfirm } from "@/hooks/confirm.hook";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 
 type Props = {
     id: number

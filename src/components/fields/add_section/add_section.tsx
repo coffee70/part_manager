@@ -6,7 +6,7 @@ import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
-import { useSectionModelContext } from '../section_model.context';
+import { useSectionModelContext } from '../context/section_model.context';
 import { SectionModel } from '@prisma/client';
 
 type FormState = {
