@@ -8,7 +8,7 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import ButtonGroup from "./fields/button_group";
+import ButtonGroup from "@/components/ui/button_group";
 import SelectForm from "./forms/select";
 import NumberForm from "./forms/number";
 import DateForm from "./forms/date";

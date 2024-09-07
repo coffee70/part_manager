@@ -1,8 +1,8 @@
 'use client'
 import React from 'react';
-import Input from "../fields/input";
-import Textarea from "../fields/textarea";
-import ButtonGroup from "../fields/button_group";
+import Input from "./form_fields/input";
+import Textarea from "./form_fields/textarea";
+import ButtonGroup from "@/components/ui/button_group";
 import TagInput from "@/components/ui/tag_input";
 import { useAddFieldContext } from '../add_field.context';
 import { useMutation, useQueryClient } from "@tanstack/react-query";

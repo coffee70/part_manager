@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
-import Input from "../fields/input";
-import Textarea from "../fields/textarea";
+import Input from "./form_fields/input";
+import Textarea from "./form_fields/textarea";
 import { useAddFieldContext } from '../add_field.context';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createParagraphField } from '@/server/sections/create_field';
