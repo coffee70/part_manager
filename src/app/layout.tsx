@@ -13,14 +13,14 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: "Aentx Manager",
-  description: "Aentx Manager is a web application that helps you manage your manufacturing pipelin.",
+  description: "Aentx Manager is a web application that helps you manage your manufacturing pipeline.",
 };
 
 type Props = Readonly<{
   children: React.ReactNode;
 }>
 
-export default function RootLayout({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <html lang="en">
       <body
