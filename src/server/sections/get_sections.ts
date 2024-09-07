@@ -14,6 +14,9 @@ export async function getSections(model: SectionModel) {
         },
         include: {
             fields: true
+        },
+        orderBy: {
+            createdAt: 'desc'
         }
     });
 

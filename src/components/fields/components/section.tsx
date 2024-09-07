@@ -18,48 +18,51 @@ type Props = {
 export default function Section({ section }: Props) {
     return (
         <>
-        <div className="flex items-center justify-between">
-            <SectionTitle title={section.title} />
-            <div className='flex space-x-3'>
-                <AddFieldProvider value={{ id: section.id }}>
-                    <AddField>
-                        <Button variant='secondary'>
-                            <div className="flex items-center">
-                                <PlusIcon size={20} className='pr-1' />
-                                <span className="pr-1">New Field</span>
-                            </div>
-                        </Button>
-                    </AddField>
-                </AddFieldProvider>
-                <DeleteSection id={section.id} />
+            <div className="flex items-center justify-between">
+                <SectionTitle
+                    id={section.id}
+                    title={section.title}
+                />
+                <div className='flex space-x-3'>
+                    <AddFieldProvider value={{ id: section.id }}>
+                        <AddField>
+                            <Button variant='secondary'>
+                                <div className="flex items-center">
+                                    <PlusIcon size={20} className='pr-1' />
+                                    <span className="pr-1">New Field</span>
+                                </div>
+                            </Button>
+                        </AddField>
+                    </AddFieldProvider>
+                    <DeleteSection id={section.id} />
+                </div>
             </div>
-        </div>
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Default Values</TableHead>
-                    <TableHead>Options</TableHead>
-                    <TableHead></TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {section.fields.map(field => (
-                    <TableRow key={field.id}>
-                        <TableCell>{field.name}</TableCell>
-                        <TableCell>{field.type}</TableCell>
-                        <TableCell>{field.default}</TableCell>
-                        <TableCell>{field.options?.map(option => (
-                            <Badge key={option} label={option} color='gray' className='px-2 ml-1' />
-                        ))}</TableCell>
-                        <TableCell className='w-8'>
-                            <AdditionalOptions id={field.id} />
-                        </TableCell>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Default Values</TableHead>
+                        <TableHead>Options</TableHead>
+                        <TableHead></TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </>
+                </TableHeader>
+                <TableBody>
+                    {section.fields.map(field => (
+                        <TableRow key={field.id}>
+                            <TableCell>{field.name}</TableCell>
+                            <TableCell>{field.type}</TableCell>
+                            <TableCell>{field.default}</TableCell>
+                            <TableCell>{field.options?.map(option => (
+                                <Badge key={option} label={option} color='gray' className='px-2 ml-1' />
+                            ))}</TableCell>
+                            <TableCell className='w-8'>
+                                <AdditionalOptions id={field.id} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </>
     )
 }
