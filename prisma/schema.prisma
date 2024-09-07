@@ -191,7 +191,7 @@ enum FieldType {
   PARAGRAPH
 }
 
-enum FieldModel {
+enum SectionModel {
   CUSTOMER_ORDER
   SHOP_ORDER
   PART
@@ -200,11 +200,11 @@ enum FieldModel {
 }
 
 model Section {
-  id        Int        @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   title     String
-  model     FieldModel
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  model     SectionModel
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   fields          Field[]
   CustomerOrder   CustomerOrder? @relation(fields: [customerOrderId], references: [id], onDelete: SetNull)

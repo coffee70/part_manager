@@ -1,11 +1,11 @@
 'use server'
 import { z } from "zod"
 import { prisma } from "@/lib/database/prisma";
-import { FieldModel } from "@prisma/client";
+import { SectionModel } from "@prisma/client";
 
 const Schema = z.object({
     title: z.string(),
-    model: z.custom<FieldModel>(),
+    model: z.custom<SectionModel>(),
 })
 
 export async function createSection(rawData: z.input<typeof Schema>) {

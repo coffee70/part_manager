@@ -6,21 +6,21 @@ import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
-import { useFieldModelContext } from '../field_model.context';
-import { FieldModel } from '@prisma/client';
+import { useSectionModelContext } from '../section_model.context';
+import { SectionModel } from '@prisma/client';
 
 type FormState = {
     title: string,
-    model: FieldModel
+    model: SectionModel
 }
 
 export default function AddSection() {
-    const { fieldModel } = useFieldModelContext();
+    const { sectionModel } = useSectionModelContext();
 
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({
         title: '',
-        model: fieldModel,
+        model: sectionModel,
     })
 
     const queryClient = useQueryClient();
