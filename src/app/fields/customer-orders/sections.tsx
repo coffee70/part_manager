@@ -67,7 +67,7 @@ const Section = React.memo(({ section } : { section: Section }) => (
 
 export default function Sections() {
     const { data, isError, isPending } = useQuery({
-        queryKey: ['fields', 'customerOrders'],
+        queryKey: ['sections', 'CUSTOMER_ORDER'],
         queryFn: () => getSections('CUSTOMER_ORDER')
     });
 

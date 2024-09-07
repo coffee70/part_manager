@@ -28,7 +28,7 @@ export default function AddSection() {
     const { mutate } = useMutation({
         mutationFn: createSection,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['fields', 'customerOrders'] });
+            queryClient.invalidateQueries({ queryKey: ['sections', sectionModel] });
             setOpen(false);
         }
     })
