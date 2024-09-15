@@ -1,6 +1,7 @@
 'use client'
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { InputRefType } from '../fields/components/fields/base';
 
 type Meridiem = 'AM' | 'PM'
 
@@ -14,7 +15,7 @@ type Time = {
 }
 
 type UseTimeInputProps = {
-    setTime: (time: string) => void
+    setTime?: (time: string) => void
 }
 
 export function useTimeInput({ setTime }: UseTimeInputProps) {
@@ -27,8 +28,8 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
 
     // any time time updates, sync it with the input using setTime
     React.useEffect(() => {
-        setTime(time.hours + ':' + time.minutes + ':' + time.seconds + ' ' + time.meridiem)
-    }, [time])
+        setTime && setTime(time.hours + ':' + time.minutes + ':' + time.seconds + ' ' + time.meridiem)
+    }, [time, setTime])
 
     const getPrevRef = (input: Input) => {
         switch (input) {
@@ -69,8 +70,7 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
             }
             if (dashCount === 1) {
                 _setTime(prev => ({ ...prev, [input]: prev[input][1] + key }));
-                const nextRef = getNextRef(input);
-                nextRef?.current?.focus();
+                handleFocus(getNextRef(input))
             }
             if (dashCount === 2) {
                 _setTime(prev => ({ ...prev, [input]: '-' + key }));
@@ -86,16 +86,14 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
                 _setTime(prev => ({ ...prev, [input]: '--' }));
             }
             if (dashCount === 2) {
-                const prevRef = getPrevRef(input);
-                prevRef?.current?.focus();
+                handleFocus(getPrevRef(input))
             }
         }
 
         // case when key is tab
         if (key === 'Tab') {
             e.preventDefault()
-            const nextRef = getNextRef(input);
-            nextRef?.current?.focus();
+            handleFocus(getNextRef(input))
         }
     }
 
@@ -111,8 +109,7 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
         }
 
         if (key === 'Backspace') {
-            const prevRef = getPrevRef('meridiem');
-            prevRef?.current?.focus();
+            handleFocus(secondsRef)
         }
     }
 
@@ -146,30 +143,61 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
         return false
     }, [time])
 
+
+    const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+        // handles focus logic for when input is clicked on
+        switch (e.target) {
+            case hoursRef.current:
+                handleFocus(hoursRef);
+                return;
+            case minutesRef.current:
+                handleFocus(minutesRef);
+                return;
+            case secondsRef.current:
+                handleFocus(secondsRef);
+                return;
+            case meridiemRef.current:
+                handleFocus(meridiemRef);
+                return;
+        }
+
+        // handles focus logic for when white space is clicked on
+        if (time.hours === '--') {
+            handleFocus(hoursRef);
+        }
+        else if (time.minutes === '--') {
+            handleFocus(minutesRef);
+        }
+        else if (time.seconds === '--') {
+            handleFocus(secondsRef);
+        }
+        else {
+            handleFocus(meridiemRef);
+        }
+    }
+
+    const handleFocus = (ref: React.RefObject<HTMLInputElement> | undefined) => {
+        ref?.current?.focus();
+    }
+
     return {
-        time, 
+        time,
         hoursRef,
         minutesRef,
         secondsRef,
         meridiemRef,
         invalidTime,
         handleKeyDown,
-        handleKeyDownMeridiem
+        handleKeyDownMeridiem,
+        handleClick,
     }
 }
 
 type TimeInputProps = {
-    time: Time,
-    hoursRef: React.RefObject<HTMLInputElement>,
-    minutesRef: React.RefObject<HTMLInputElement>,
-    secondsRef: React.RefObject<HTMLInputElement>,
-    meridiemRef: React.RefObject<HTMLInputElement>,
-    invalidTime: boolean,
-    handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>, input: Input) => void,
-    handleKeyDownMeridiem: (e: React.KeyboardEvent<HTMLInputElement>) => void
+    setTime?: (time: string) => void
 }
 
-export const TimeInput = (props: TimeInputProps) => {
+export const TimeInput = React.forwardRef<InputRefType, TimeInputProps>(({ setTime }, ref) => {
     const {
         time,
         hoursRef,
@@ -178,11 +206,19 @@ export const TimeInput = (props: TimeInputProps) => {
         meridiemRef,
         invalidTime,
         handleKeyDown,
-        handleKeyDownMeridiem
-    } = props
+        handleKeyDownMeridiem,
+        handleClick,
+    } = useTimeInput({ setTime });
+
+    React.useImperativeHandle(ref, () => ({ 
+        refs: [hoursRef, minutesRef, secondsRef, meridiemRef] 
+    }));
 
     return (
-        <div className='flex space-x-0.5'>
+        <div
+            className='flex items-center space-x-0.5 cursor-text w-full'
+            onClick={handleClick}
+        >
             <input
                 ref={hoursRef}
                 className={cn(
@@ -192,6 +228,7 @@ export const TimeInput = (props: TimeInputProps) => {
                 maxLength={2}
                 value={time.hours}
                 onKeyDown={(e) => handleKeyDown(e, 'hours')}
+                onClick={handleClick}
                 readOnly
             />
             <span className="text-muted-foreground">:</span>
@@ -204,6 +241,7 @@ export const TimeInput = (props: TimeInputProps) => {
                 maxLength={2}
                 value={time.minutes}
                 onKeyDown={(e) => handleKeyDown(e, 'minutes')}
+                onClick={handleClick}
                 readOnly
             />
             <span className="text-muted-foreground">:</span>
@@ -216,6 +254,7 @@ export const TimeInput = (props: TimeInputProps) => {
                 maxLength={2}
                 value={time.seconds}
                 onKeyDown={(e) => handleKeyDown(e, 'seconds')}
+                onClick={handleClick}
                 readOnly
             />
             <input
@@ -227,8 +266,11 @@ export const TimeInput = (props: TimeInputProps) => {
                 maxLength={2}
                 value={time.meridiem}
                 onKeyDown={(e) => handleKeyDownMeridiem(e)}
+                onClick={handleClick}
                 readOnly
             />
         </div>
     )
-}
+})
+
+TimeInput.displayName = 'TimeInput'
