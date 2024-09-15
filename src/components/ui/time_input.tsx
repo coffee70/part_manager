@@ -1,7 +1,7 @@
 'use client'
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { InputRefType } from '../fields/components/fields/base';
+import { FieldRefs } from '../fields/components/fields/base';
 
 type Meridiem = 'AM' | 'PM'
 
@@ -15,7 +15,7 @@ type Time = {
 }
 
 type UseTimeInputProps = {
-    setTime?: (time: string) => void
+    setTime: (time: string) => void
 }
 
 export function useTimeInput({ setTime }: UseTimeInputProps) {
@@ -28,7 +28,7 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
 
     // any time time updates, sync it with the input using setTime
     React.useEffect(() => {
-        setTime && setTime(time.hours + ':' + time.minutes + ':' + time.seconds + ' ' + time.meridiem)
+        setTime(time.hours + ':' + time.minutes + ':' + time.seconds + ' ' + time.meridiem)
     }, [time, setTime])
 
     const getPrevRef = (input: Input) => {
@@ -194,10 +194,19 @@ export function useTimeInput({ setTime }: UseTimeInputProps) {
 }
 
 type TimeInputProps = {
-    setTime?: (time: string) => void
+    setTime: (time: string) => void;
+    setError?: (error: boolean) => void;
+    setErrorMessage?: (message: string) => void;
 }
 
-export const TimeInput = React.forwardRef<InputRefType, TimeInputProps>(({ setTime }, ref) => {
+export const TimeInput = React.forwardRef<FieldRefs, TimeInputProps>((props, ref) => {
+
+    const {
+        setTime,
+        setError,
+        setErrorMessage,
+    } = props;
+
     const {
         time,
         hoursRef,
@@ -211,8 +220,19 @@ export const TimeInput = React.forwardRef<InputRefType, TimeInputProps>(({ setTi
     } = useTimeInput({ setTime });
 
     React.useImperativeHandle(ref, () => ({ 
-        refs: [hoursRef, minutesRef, secondsRef, meridiemRef] 
+        inputRefs: [hoursRef, minutesRef, secondsRef, meridiemRef] 
     }));
+
+    React.useEffect(() => {
+        if (invalidTime) {
+            setError && setError(true);
+            setErrorMessage && setErrorMessage('Invalid time');
+        }
+        else {
+            setError && setError(false);
+            setErrorMessage && setErrorMessage('');
+        }
+    }, [invalidTime, setError, setErrorMessage])
 
     return (
         <div

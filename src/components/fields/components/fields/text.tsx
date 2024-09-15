@@ -1,33 +1,33 @@
 'use client'
 import React from 'react';
-import FieldBase, { InputRefType } from "./base"
+import FieldBase, { FieldRefs } from "./base"
 import { Input } from "@/components/ui/input"
 
 type TextFieldProps = React.InputHTMLAttributes<HTMLInputElement>
 
 export default function TextField(props: TextFieldProps) {
     const formRef = React.useRef<HTMLFormElement>(null);
-    const inputRef = React.useRef<InputRefType>(null);
+    const fieldRefs = React.useRef<FieldRefs>(null);
 
     return (
         <form ref={formRef}>
             <FieldBase
                 formRef={formRef}
-                inputRefs={inputRef}
+                fieldRefs={fieldRefs}
             >
                 <InputFieldBase
                     {...props}
-                    ref={inputRef}
+                    ref={fieldRefs}
                 />
             </FieldBase>
         </form>
     )
 }
 
-const InputFieldBase = React.forwardRef<InputRefType, TextFieldProps>((props, ref) => {
+const InputFieldBase = React.forwardRef<FieldRefs, TextFieldProps>((props, ref) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
-    React.useImperativeHandle(ref, () => ({ refs: [inputRef] }));
+    React.useImperativeHandle(ref, () => ({ inputRefs: [inputRef] }));
 
     return <Input {...props} ref={inputRef} />
 })

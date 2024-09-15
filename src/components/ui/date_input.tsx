@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { InputRefType } from '../fields/components/fields/base';
+import { FieldRefs } from '../fields/components/fields/base';
 
 type Input = 'month' | 'day' | 'year'
 
@@ -133,7 +133,6 @@ export function useDateInput({ setDate }: UseDateInputProps) {
     }
 
     const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
-        console.log("date_input handleClick", e.target)
         // handle focus logic when input is clicked on
         switch (e.target) {
             case monthRef.current:
@@ -158,11 +157,24 @@ export function useDateInput({ setDate }: UseDateInputProps) {
         }
     }
 
+    const invalidDate = React.useMemo(() => {
+        // if any fields contain default return false since the user is still inputting values
+        if (_date.month === defaults.month || _date.day === defaults.day || _date.year === defaults.year) {
+            return false
+        }
+        if (isNaN(new Date(_date.year + "/" + _date.month + "/" + _date.day).getTime())) {
+            return true
+        }
+
+        return false
+    }, [_date])
+
     return {
         monthRef,
         dayRef,
         yearRef,
         _date,
+        invalidDate,
         handleKeyDown,
         handleYearKeyDown,
         handleClick,
@@ -171,23 +183,43 @@ export function useDateInput({ setDate }: UseDateInputProps) {
 
 type DateInputProps = {
     setDate: (date: string) => void;
+    setError?: (error: boolean) => void;
+    setErrorMessage?: (message: string) => void;
 }
 
-export const DateInput = React.forwardRef<InputRefType, DateInputProps>(({ setDate }, ref) => {
+export const DateInput = React.forwardRef<FieldRefs, DateInputProps>((props, ref) => {
+
+    const {
+        setDate,
+        setError,
+        setErrorMessage,
+    } = props;
 
     const {
         monthRef,
         dayRef,
         yearRef,
         _date,
+        invalidDate,
         handleKeyDown,
         handleYearKeyDown,
         handleClick,
     } = useDateInput({ setDate });
 
     React.useImperativeHandle(ref, () => ({
-        refs: [monthRef, dayRef, yearRef]
+        inputRefs: [monthRef, dayRef, yearRef]
     }))
+
+    React.useEffect(() => {
+        if (invalidDate) {
+            setError && setError(true);
+            setErrorMessage && setErrorMessage('Invalid date');
+        }
+        else {
+            setError && setError(false);
+            setErrorMessage && setErrorMessage('');
+        }
+    }, [invalidDate, setError, setErrorMessage])
 
     return (
         <div
@@ -198,7 +230,7 @@ export const DateInput = React.forwardRef<InputRefType, DateInputProps>(({ setDa
                 ref={monthRef}
                 className={cn(
                     'w-8 text-center rounded-sm caret-transparent bg-transparent focus:outline-none',
-                    "focus:bg-foreground" // invalidTime ? "focus:bg-red-300" : "focus:bg-foreground"
+                    invalidDate ? "focus:bg-red-300" : "focus:bg-foreground"
                 )}
                 maxLength={2}
                 value={_date.month}
@@ -211,7 +243,7 @@ export const DateInput = React.forwardRef<InputRefType, DateInputProps>(({ setDa
                 ref={dayRef}
                 className={cn(
                     'w-7 text-center rounded-sm caret-transparent bg-transparent focus:outline-none',
-                    "focus:bg-foreground" // invalidTime ? "focus:bg-red-300" : "focus:bg-foreground"
+                    invalidDate ? "focus:bg-red-300" : "focus:bg-foreground"
                 )}
                 maxLength={2}
                 value={_date.day}
@@ -224,7 +256,7 @@ export const DateInput = React.forwardRef<InputRefType, DateInputProps>(({ setDa
                 ref={yearRef}
                 className={cn(
                     'w-11 text-center rounded-sm caret-transparent bg-transparent focus:outline-none',
-                    "focus:bg-foreground" // invalidTime ? "focus:bg-red-300" : "focus:bg-foreground"
+                    invalidDate ? "focus:bg-red-300" : "focus:bg-foreground"
                 )}
                 maxLength={4}
                 value={_date.year}

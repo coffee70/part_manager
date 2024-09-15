@@ -6,12 +6,13 @@ import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ClickAwayListener } from '@mui/base'
 
-export type InputRefType = {
-    refs: React.RefObject<HTMLInputElement>[];
+export type FieldRefs = {
+    inputRefs?: React.RefObject<HTMLInputElement>[];
+    textareaRefs?: React.RefObject<HTMLTextAreaElement>[];
 }
 
 type Props = {
-    inputRefs: React.RefObject<InputRefType>;
+    fieldRefs: React.RefObject<FieldRefs>;
     formRef: React.RefObject<HTMLFormElement>;
     loading?: boolean
     error?: boolean
@@ -21,7 +22,7 @@ type Props = {
 
 export default function FieldBase(props: Props) {
     const {
-        inputRefs,
+        fieldRefs,
         formRef,
         loading,
         error,
@@ -33,30 +34,45 @@ export default function FieldBase(props: Props) {
 
     // check if any input ref is focused
     const checkFocus = React.useCallback(() => {
-        const refs = inputRefs?.current?.refs;
-        const isAnyRefFocused = refs?.some((ref) => {
+        const inputRefs = fieldRefs?.current?.inputRefs;
+        const textareaRefs = fieldRefs?.current?.textareaRefs;
+
+        const isAnyInputRefFocused = inputRefs?.some((ref) => {
             const isRefFocused = ref.current?.contains(document.activeElement);
             return isRefFocused;
         }) || false;
 
-        setIsEditing(isAnyRefFocused);
-    }, [inputRefs]);
+        const isAnyTextareaRefFocused = textareaRefs?.some((ref) => {
+            const isRefFocused = ref.current?.contains(document.activeElement);
+            return isRefFocused;
+        }) || false;
+
+        setIsEditing(isAnyInputRefFocused || isAnyTextareaRefFocused);
+    }, [fieldRefs]);
 
     // add focus event listeners to all input refs
     React.useEffect(() => {
-        const refs = inputRefs?.current?.refs;
+        const inputRefs = fieldRefs?.current?.inputRefs;
+        const textareaRefs = fieldRefs?.current?.textareaRefs;
+
         // add event listeners
-        refs?.forEach((ref) => {
+        inputRefs?.forEach((ref) => {
+            ref.current?.addEventListener('focus', checkFocus);
+        })
+        textareaRefs?.forEach((ref) => {
             ref.current?.addEventListener('focus', checkFocus);
         })
 
         return () => {
             // remove event listeners
-            refs?.forEach((ref) => {
+            inputRefs?.forEach((ref) => {
+                ref.current?.removeEventListener('focus', checkFocus);
+            })
+            textareaRefs?.forEach((ref) => {
                 ref.current?.removeEventListener('focus', checkFocus);
             })
         }
-    }, [inputRefs, checkFocus]);
+    }, [fieldRefs, checkFocus]);
 
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
@@ -109,7 +125,7 @@ const Button = ({ isEditing, setIsEditing, formRef }: ButtonProps) => {
 
 const Loading = () => (
     <div className='grow flex items-center p-1 bg-foreground'>
-        <LoaderCircleIcon size={20} className="animate-spin" />
+        <LoaderCircleIcon className="animate-spin" />
     </div>
 )
 
@@ -117,7 +133,7 @@ const Error = ({ errorMessage }: { errorMessage?: string }) => (
     <Tooltip>
         <TooltipTrigger asChild>
             <div className='grow flex items-center p-1 bg-red-500'>
-                <TriangleAlertIcon size={20} className="text-white" />
+                <TriangleAlertIcon className="text-white" />
             </div>
         </TooltipTrigger>
         <TooltipContent>
