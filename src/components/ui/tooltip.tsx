@@ -14,7 +14,6 @@ import {
   FloatingPortal
 } from "@floating-ui/react";
 import type { Placement } from "@floating-ui/react";
-import { cn } from "@/lib/utils";
 
 interface TooltipOptions {
   initialOpen?: boolean;
