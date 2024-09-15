@@ -1,19 +1,14 @@
 'use client'
-import React, { Ref } from 'react'
+import React from 'react'
 import { Button as BaseButton } from "@/components/ui/button"
 import { CheckIcon, PencilIcon, LoaderCircleIcon, TriangleAlertIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ClickAwayListener } from '@mui/base'
 
-export type FieldRefs = {
-    inputRefs?: React.RefObject<HTMLInputElement>[];
-    textareaRefs?: React.RefObject<HTMLTextAreaElement>[];
-}
-
 type Props = {
-    fieldRefs: React.RefObject<FieldRefs>;
-    formRef: React.RefObject<HTMLFormElement>;
+    inputRef?: React.RefObject<HTMLInputElement>;
+    textareaRef?: React.RefObject<HTMLTextAreaElement>;
     loading?: boolean
     error?: boolean
     errorMessage?: string
@@ -22,57 +17,33 @@ type Props = {
 
 export default function FieldBase(props: Props) {
     const {
-        fieldRefs,
-        formRef,
+        inputRef,
+        textareaRef,
         loading,
         error,
         errorMessage,
         children
     } = props
 
+    const formRef = React.useRef<HTMLFormElement>(null);
+
     const [isEditing, setIsEditing] = React.useState(false);
-
-    // check if any input ref is focused
-    const checkFocus = React.useCallback(() => {
-        const inputRefs = fieldRefs?.current?.inputRefs;
-        const textareaRefs = fieldRefs?.current?.textareaRefs;
-
-        const isAnyInputRefFocused = inputRefs?.some((ref) => {
-            const isRefFocused = ref.current?.contains(document.activeElement);
-            return isRefFocused;
-        }) || false;
-
-        const isAnyTextareaRefFocused = textareaRefs?.some((ref) => {
-            const isRefFocused = ref.current?.contains(document.activeElement);
-            return isRefFocused;
-        }) || false;
-
-        setIsEditing(isAnyInputRefFocused || isAnyTextareaRefFocused);
-    }, [fieldRefs]);
 
     // add focus event listeners to all input refs
     React.useEffect(() => {
-        const inputRefs = fieldRefs?.current?.inputRefs;
-        const textareaRefs = fieldRefs?.current?.textareaRefs;
+        const _inputRef = inputRef?.current;
+        const _textareaRef = textareaRef?.current;
 
         // add event listeners
-        inputRefs?.forEach((ref) => {
-            ref.current?.addEventListener('focus', checkFocus);
-        })
-        textareaRefs?.forEach((ref) => {
-            ref.current?.addEventListener('focus', checkFocus);
-        })
+        _inputRef?.addEventListener('focus', () => setIsEditing(true));
+        _textareaRef?.addEventListener('focus', () => setIsEditing(true));
 
         return () => {
             // remove event listeners
-            inputRefs?.forEach((ref) => {
-                ref.current?.removeEventListener('focus', checkFocus);
-            })
-            textareaRefs?.forEach((ref) => {
-                ref.current?.removeEventListener('focus', checkFocus);
-            })
+            _inputRef?.removeEventListener('focus', () => setIsEditing(true));
+            _textareaRef?.removeEventListener('focus', () => setIsEditing(true));
         }
-    }, [fieldRefs, checkFocus]);
+    }, [inputRef, textareaRef]);
 
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
@@ -83,9 +54,9 @@ export default function FieldBase(props: Props) {
                         loading ? "border-foreground" :
                             isEditing ? "border-foreground" : "hover:border-foreground",
                 )}>
-                <div className="grow flex items-center px-1">
+                <form ref={formRef} className="grow flex items-center px-1">
                     {children}
-                </div>
+                </form>
                 <div className="flex flex-col">
                     {error ? (
                         <Error errorMessage={errorMessage} />
