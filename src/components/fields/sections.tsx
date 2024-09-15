@@ -6,14 +6,17 @@ import Section from './components/section';
 import { AppBar } from '../ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
+import { useSectionModel } from '@/hooks/section_model.hook';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
+    const sectionModel = useSectionModel();
+
     const { data, isError, isPending } = useQuery({
-        queryKey: ['sections', 'CUSTOMER_ORDER'],
-        queryFn: () => getSections('CUSTOMER_ORDER')
+        queryKey: ['sections', sectionModel],
+        queryFn: () => getSections(sectionModel),
     });
 
     if (isPending) return <Loading />;
@@ -21,7 +24,6 @@ export default function Sections() {
 
     return (
         <div className="flex flex-col w-full h-full">
-            {/* <Header /> */}
             <AppBar>
                 <Title />
                 <AddSection />

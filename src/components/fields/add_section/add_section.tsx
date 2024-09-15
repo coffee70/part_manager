@@ -6,8 +6,8 @@ import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
-import { useSectionModelContext } from '../context/section_model.context';
 import { SectionModel } from '@prisma/client';
+import { useSectionModel } from '@/hooks/section_model.hook';
 
 type FormState = {
     title: string,
@@ -15,7 +15,7 @@ type FormState = {
 }
 
 export default function AddSection() {
-    const { sectionModel } = useSectionModelContext();
+    const sectionModel = useSectionModel();
 
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({

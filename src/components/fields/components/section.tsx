@@ -7,7 +7,7 @@ import { Table, TableBody, TableRow, TableCell, TableHeader, TableHead } from "@
 import { PlusIcon } from "lucide-react";
 import { AddFieldProvider } from '@/components/fields/context/add_field.context';
 import { Badge } from '@/components/ui/badge';
-import { getSections } from "@/server/sections/get_sections";
+import { getSections } from '@/server/sections/get_sections';
 
 type Section = Awaited<ReturnType<typeof getSections>>[number];
 
