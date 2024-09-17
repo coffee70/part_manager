@@ -1,15 +1,18 @@
 'use client'
 import React from 'react';
-import FieldBase from "./base"
+import FieldBase, { useIsEditing } from "./base"
 import { Input } from "@/components/ui/input"
 
 type NumberFieldProps = React.InputHTMLAttributes<HTMLInputElement>
 
 export default function NumberField(props: NumberFieldProps) {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
     return (
-        <FieldBase inputRef={inputRef}>
+        <FieldBase
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+        >
             <Input
                 ref={inputRef}
                 type='number'

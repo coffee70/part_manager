@@ -1,15 +1,18 @@
 'use client'
 import React from "react";
-import FieldBase from "./base";
+import FieldBase, { useIsEditing } from "./base";
 import { Textarea } from "@/components/ui/textarea";
 
 type ParagraphFieldProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
 export default function ParagraphField(props: ParagraphFieldProps) {
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+    const { isEditing, setIsEditing, textareaRef } = useIsEditing();
 
     return (
-        <FieldBase textareaRef={textareaRef}>
+        <FieldBase
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+        >
             <Textarea
                 ref={textareaRef}
                 {...props}
