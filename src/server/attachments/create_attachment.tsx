@@ -1,10 +1,11 @@
 'use server'
 import prisma from "@/lib/database/prisma";
+import { SectionModel } from "@prisma/client";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
     file: z.custom<File>(),
-    type: z.enum(['part', 'serial', 'customerOrder', 'shopOrder']),
+    type: z.custom<SectionModel>(),
     id: z.coerce.number(),
 })
 
@@ -25,10 +26,10 @@ export async function createAttachment(formData: FormData): Promise<string> {
     const attachment = await prisma.attachment.create({
         data: {
             filename: data.file.name,
-            serialId: data.type === 'serial' ? data.id : undefined,
-            partId: data.type === 'part' ? data.id : undefined,
-            customerOrderId: data.type === 'customerOrder' ? data.id : undefined,
-            shopOrderId: data.type === 'shopOrder' ? data.id : undefined,
+            serialId: data.type === 'SERIAL' ? data.id : undefined,
+            partId: data.type === 'PART' ? data.id : undefined,
+            customerOrderId: data.type === 'CUSTOMER_ORDER' ? data.id : undefined,
+            shopOrderId: data.type === 'SHOP_ORDER' ? data.id : undefined,
         }
     });
 
