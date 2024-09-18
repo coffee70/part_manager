@@ -7,6 +7,7 @@ const conversion: Record<string, SectionModel> = {
     'shop-orders': 'SHOP_ORDER',
     'parts': 'PART',
     'serials': 'SERIAL',
+    'customers': 'CUSTOMER',
 }
 
 export function useSectionModel() {

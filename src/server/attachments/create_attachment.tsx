@@ -1,11 +1,11 @@
 'use server'
 import prisma from "@/lib/database/prisma";
-import { SectionModel } from "@prisma/client";
+import { AttachmentModel } from "@prisma/client";
 import { z } from "zod";
 
 const ParamsSchema = z.object({
     file: z.custom<File>(),
-    type: z.custom<SectionModel>(),
+    type: z.custom<AttachmentModel>(),
     id: z.coerce.number(),
 })
 
