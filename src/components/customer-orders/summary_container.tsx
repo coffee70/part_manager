@@ -16,14 +16,10 @@ import SummaryAttachments from "@/components/summary/summary_attachments/summary
 import SummaryList, { Item } from "@/components/summary/summary_list/summary_list";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 import SummarySkeleton from '@/components/summary/summary_skeleton';
-import { useSectionModel } from '@/hooks/section_model.hook';
-import { useAttachmentModel } from '@/hooks/attachment_model.hook';
 
 export default function SummaryContainer() {
     const readOnlySearchParams = useSearchParams()
     const searchParams = convertSearchParams(readOnlySearchParams)
-
-    const attachmentModel = useAttachmentModel()
 
     const { data, isError, isPending } = useQuery({
         queryKey: ['customerOrder', searchParams],
@@ -53,7 +49,7 @@ export default function SummaryContainer() {
             </SummaryToolbar>
             <SummaryDetails details={order.details} />
             <SummaryNotes placeholder="Here are some notes on the order." />
-            <SummaryAttachments files={data.attachments} uploads={{ id: data.id, type: attachmentModel }}/>
+            <SummaryAttachments files={data.attachments} uploads={{ id: data.id }}/>
             {/* <SummaryListContainer items={data.parts} /> */}
             {/* <SummaryPeople people={order.people} />  */}
             <SummaryActivity />
@@ -62,7 +58,7 @@ export default function SummaryContainer() {
 }
 
 
-function SummaryListContainer({ items }: { items: Item[]}) {
+function SummaryListContainer({ items }: { items: Item[] }) {
     const { data, isError, isPending } = useQuery({
         queryKey: ['parts'],
         queryFn: getParts,

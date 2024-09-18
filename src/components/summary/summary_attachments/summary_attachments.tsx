@@ -8,7 +8,9 @@ type Props = {
         name: string;
         url: string;
     }[];
-    uploads: Omit<AttachmentData, 'file'>;
+    uploads: {
+        id: number;
+    }
 }
 
 export default function SummaryAttachments({ files, uploads }: Props) {
