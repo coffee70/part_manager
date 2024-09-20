@@ -5,7 +5,14 @@ import { type Status } from '@/types/types'
 import StatusButton from './status_button'
 import StatusItem from './status_item'
 
-const statuses: Status[] = []
+const statuses: Status[] = [
+    {
+        id: 1,
+        label: 'Open',
+        color: 'blue',
+        completed: false,
+    }
+]
 
 export default function Status() {
     const [status, setStatus] = React.useState<Status>(statuses[0])

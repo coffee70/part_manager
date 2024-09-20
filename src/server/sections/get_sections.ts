@@ -35,8 +35,10 @@ export async function getSections(model: SectionModel) {
 
             return {
                 ...field,
-                default: parsedDefault.data,
-                options: parsedOptions.data
+                multiple: field.multiple ?? undefined,
+                creative: field.creative ?? undefined,
+                default: parsedDefault.data ?? undefined,
+                options: parsedOptions.data ?? undefined
             };
         })
     }));

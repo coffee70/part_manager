@@ -4,8 +4,15 @@ import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuConte
 import PriorityItem from './priority_item'
 import { type Priority } from '@/types/types'
 import PriorityButton from './priority_button'
+import { ChevronDownIcon } from 'lucide-react'
 
-const priorities: Priority[] = []
+const priorities: Priority[] = [
+    {
+        label: 'Low',
+        color: 'green',
+        Icon: ChevronDownIcon
+    }
+]
 
 export default function Priority() {
     const [priority, setPriority] = React.useState<Priority>(priorities[0])

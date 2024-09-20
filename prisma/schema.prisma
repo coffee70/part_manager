@@ -17,11 +17,11 @@ model CustomerOrder {
   id          Int      @id @default(autoincrement())
   number      String   @unique
   notes       String   @db.Text()
-  sectionData Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  fields             Json
+  sections Json
+
   statusId           Int?
   status             Status?             @relation(fields: [statusId], references: [id], onDelete: SetNull)
   customerId         Int
@@ -29,7 +29,7 @@ model CustomerOrder {
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
-  sections           Section[]
+  sectionDefinitions Section[]
 
   @@index([statusId], name: "customerOrder_statusId")
 }
@@ -38,17 +38,16 @@ model ShopOrder {
   id          Int      @id @default(autoincrement())
   number      String   @unique
   notes       String   @db.Text()
-  sectionData Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  fields Json
+  sections Json
 
-  statusId    Int?
-  status      Status?      @relation(fields: [statusId], references: [id], onDelete: SetNull)
-  serials     Serial[]
-  attachments Attachment[]
-  sections    Section[]
+  statusId           Int?
+  status             Status?      @relation(fields: [statusId], references: [id], onDelete: SetNull)
+  serials            Serial[]
+  attachments        Attachment[]
+  sectionDefinitions Section[]
 }
 
 model CustomerOrderPart {
@@ -70,18 +69,17 @@ model Part {
   id          Int      @id @default(autoincrement())
   number      String   @unique
   notes       String   @db.Text()
-  sectionData Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  fields Json
+  sections Json
 
   statusId           Int?
   status             Status?             @relation(fields: [statusId], references: [id], onDelete: SetNull)
   customerOrderParts CustomerOrderPart[]
   serials            Serial[]
   attachments        Attachment[]
-  sections           Section[]
+  sectionDefinitions Section[]
 
   @@index([statusId], name: "part_statusId")
 }
@@ -90,22 +88,21 @@ model Serial {
   id          Int      @id @default(autoincrement())
   number      String
   notes       String   @db.Text()
-  sectionData Json
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  fields Json
+  sections Json
 
-  partId          Int
-  part            Part          @relation(fields: [partId], references: [id], onDelete: Cascade)
-  customerOrderId Int
-  customerOrder   CustomerOrder @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
-  shopOrderId     Int
-  shopOrder       ShopOrder     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
-  statusId        Int?
-  status          Status?       @relation(fields: [statusId], references: [id], onDelete: SetNull)
-  attachments     Attachment[]
-  sections        Section[]
+  partId             Int
+  part               Part          @relation(fields: [partId], references: [id], onDelete: Cascade)
+  customerOrderId    Int
+  customerOrder      CustomerOrder @relation(fields: [customerOrderId], references: [id], onDelete: Cascade)
+  shopOrderId        Int
+  shopOrder          ShopOrder     @relation(fields: [shopOrderId], references: [id], onDelete: Cascade)
+  statusId           Int?
+  status             Status?       @relation(fields: [statusId], references: [id], onDelete: SetNull)
+  attachments        Attachment[]
+  sectionDefinitions Section[]
 
   @@index([partId], name: "serial_partId")
   @@index([customerOrderId], name: "serial_customerOrderId")
@@ -114,14 +111,15 @@ model Serial {
 }
 
 model Customer {
-  id          Int      @id @default(autoincrement())
-  name        String
-  sectionData Json
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  customerOrders CustomerOrder[]
-  sections       Section[]
+  sections Json
+
+  customerOrders     CustomerOrder[]
+  sectionDefinitions Section[]
 }
 
 model Attachment {

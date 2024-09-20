@@ -1,4 +1,15 @@
 import prisma from "@/lib/database/prisma";
+import { Prisma } from "@prisma/client";
+import { z } from "zod";
+import { getSections } from "../sections/get_sections";
+
+export const SectionSchema = z.array(z.object({
+    sectionId: z.number(),
+    fields: z.array(z.object({
+        fieldId: z.number(),
+        value: z.union([z.string(), z.array(z.string())])
+    }))
+}))
 
 export async function getCustomerOrder({
     searchParams
@@ -36,11 +47,17 @@ export async function getCustomerOrder({
                     }
                 }
             },
-            attachments: true
+            attachments: true,
         }
     })
 
     if (order === null) return order
+
+    const { data: sections, success, error } = SectionSchema.safeParse(order.sections)
+
+    if (!success) {
+        throw new Error("Error parsing sections: " + error)
+    }
 
     return {
         id: order.id,
@@ -57,6 +74,26 @@ export async function getCustomerOrder({
         attachments: await Promise.all(order.attachments.map(async (attachment) => ({
             name: attachment.filename,
             url: process.env.FILE_GET_URL + attachment.id
-        })))
+        }))),
+        sections: await validateSections(sections)
     };
+}
+
+async function validateSections(sections: z.infer<typeof SectionSchema>) {
+    const sectionDefintions = await getSections("CUSTOMER_ORDER")
+
+    return sectionDefintions.map(definition => ({
+        id: definition.id,
+        title: definition.title,
+        fields: definition.fields.map(field => ({
+            id: field.id,
+            name: field.name,
+            type: field.type,
+            options: field.options,
+            multiple: field.multiple,
+            creative: field.creative,
+            value: sections.find(section => section.sectionId === definition.id)?.fields.find(f => f.fieldId === field.id)?.value
+        }))
+    }))
+
 }

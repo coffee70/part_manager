@@ -76,7 +76,7 @@ export default function TableContainer() {
                                 <Label label={order.number} subLabel={order.customer.name} />
                             </TableCell>
                             <TableCell align="right">
-                                <StatusBadge label={order.status.label} color={order.status.color} />
+                                {/* <StatusBadge label={order.status.label} color={order.status.color} /> */}
                             </TableCell>
                             <TableCell>
                                 <People name={'PLACEHOLDER'} at={order.updatedAt} iconPosition="right" />

@@ -1,5 +1,5 @@
 import SummaryBase from "../summary_base";
-import DetailBase from "../summary_details/summary_detail_base";
+import DetailBase from "../summary_sections/summary_sections_base";
 import People from "../../ui/people";
 import { PersonAction } from "@/types/types";
 

@@ -20,21 +20,27 @@ import { CheckIcon } from 'lucide-react';
 import { ComboboxBadge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-interface Option {
-    value: string;
-}
-
-type Props = {
-    options: Option[];
+type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> & {
+    value: string | string[];
+    onChange: (value: string | string[]) => void;
+    options: string[];
     multiple?: boolean;
     creative?: boolean;
 }
 
-export default function Select({ options, multiple = true, creative = true }: Props) {
+export default function Select(props: Props) {
+
+    const {
+        options,
+        multiple,
+        creative,
+        value, 
+        onChange,
+        ...other
+    } = props;
+
     const [open, setOpen] = React.useState(false);
 
-    // the option or options selected
-    const [value, setValue] = React.useState<string | string[]>(multiple ? [] : "")
     // the current text in the input component
     const [input, setInput] = React.useState("")
 
@@ -48,18 +54,18 @@ export default function Select({ options, multiple = true, creative = true }: Pr
     const handleSet = (currentValue: string) => {
         if (multiple && Array.isArray(value)) {
             if (value.includes(currentValue)) {
-                setValue(value.filter((v) => v !== currentValue))
+                onChange(value.filter((v) => v !== currentValue))
             }
-            else if (creative || options.some((option) => option.value === currentValue)) {
-                setValue([...value, currentValue])
+            else if (creative || options.some((option) => option === currentValue)) {
+                onChange([...value, currentValue])
             }
             setInput("")
             inputRef.current?.focus()
         }
         else {
-            if (creative || options.some((option) => option.value === currentValue)) {
+            if (creative || options.some((option) => option === currentValue)) {
                 setInput(currentValue === value ? "" : currentValue)
-                setValue(currentValue === value ? "" : currentValue)
+                onChange(currentValue === value ? "" : currentValue)
             }
             setOpen(false)
         }
@@ -67,13 +73,13 @@ export default function Select({ options, multiple = true, creative = true }: Pr
 
     const handleRemove = (v: string) => {
         if (multiple && Array.isArray(value)) {
-            setValue(value.filter((value) => value !== v))
+            onChange(value.filter((value) => value !== v))
         }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Backspace" && multiple && Array.isArray(value) && value.length > 0 && input === "") {
-            setValue(value.slice(0, value.length - 1))
+            onChange(value.slice(0, value.length - 1))
         }
 
         if (e.key === "Enter") {
@@ -116,6 +122,7 @@ export default function Select({ options, multiple = true, creative = true }: Pr
                 ))}
             </div>
             <Input
+                {...other}
                 ref={ref}
                 {...getReferenceProps()}
                 value={input}
@@ -133,22 +140,22 @@ export default function Select({ options, multiple = true, creative = true }: Pr
                             <CommandList>
                                 <CommandEmpty>No framework found.</CommandEmpty>
                                 <CommandGroup>
-                                    {options.filter((option) => option.value.includes(input)).map((option) => (
+                                    {options.filter((option) => option.includes(input)).map((option) => (
                                         <CommandItem
-                                            key={option.value}
-                                            value={option.value}
+                                            key={option}
+                                            value={option}
                                             onSelect={handleSet}
                                         >
                                             <CheckIcon
                                                 className={cn(
                                                     "mr-2 h-4 w-4",
-                                                    value === option.value ? "opacity-100" : "opacity-0"
+                                                    value === option ? "opacity-100" : "opacity-0"
                                                 )}
                                             />
-                                            {option.value}
+                                            {option}
                                         </CommandItem>
                                     ))}
-                                    {creative && !options.some((option) => option.value.includes(input)) && (
+                                    {creative && !options.some((option) => option.includes(input)) && (
                                         <CommandItem
                                             value={input}
                                             onSelect={handleSet}
