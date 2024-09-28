@@ -1,12 +1,20 @@
 'use server'
-import prisma from "@/lib/database/prisma";
+import client from "@/lib/mongo/db"
+import { ObjectId } from "mongodb"
+import { Field } from "@/types/collections"
+import { z } from "zod"
 
-export async function deleteField(id: number) {
-    const field = await prisma.field.delete({
-        where: {
-            id
-        }
-    })
+type Input = {
+    _id: string;
+}
 
-    return field;
+export async function deleteField(input: Input) {
+    const { data, success, error } = z.custom<Input>().safeParse(input)
+    if (!success) {
+        throw new Error(error.message)
+    }
+    const { _id } = data
+    const db = client.db('test')
+    const fields = db.collection<Field>('fields')
+    await fields.deleteOne({ _id: new ObjectId(_id) })
 }

@@ -5,11 +5,16 @@ import { CheckIcon } from 'lucide-react';
 import StatusIndicator from '../../ui/status_indicator';
 import { SelectBase, SelectItem } from '../../ui/select';
 import { useQuery } from '@tanstack/react-query';
-import { Status } from '@prisma/client';
+
+type Status = {
+    _id: string;
+    label: string;
+    color: string;
+}
 
 type Props = {
-    value: number[];
-    onChange: (ids: number[]) => void;
+    value: string[];
+    onChange: (ids: string[]) => void;
 }
 
 const useStatusFilter = ({ value, onChange }: Props) => {
@@ -22,13 +27,13 @@ const useStatusFilter = ({ value, onChange }: Props) => {
         }
     });
 
-    const handleStatusChange = (id: number) => {
+    const handleStatusChange = (_id: string) => {
         // remove status if it's already selected
-        if (value.includes(id)) {
-            onChange(value.filter((status) => status !== id));
+        if (value.includes(_id)) {
+            onChange(value.filter((status) => status !== _id));
             // add status if it's not selected
         } else {
-            onChange([...value, id]);
+            onChange([...value, _id]);
         }
     }
 
@@ -43,14 +48,14 @@ export default function StatusFilter({ value, onChange }: Props) {
         <SelectBase>
             {statuses?.map((status) => (
                 <SelectItem
-                    key={status.id}
-                    onClick={() => handleStatusChange(status.id)}
+                    key={status._id}
+                    onClick={() => handleStatusChange(status._id)}
                 >
                     <div className='flex items-center space-x-3'>
                         <StatusIndicator color={status.color} />
                         <span>{status.label}</span>
                     </div>
-                    <CheckIcon className={clsx(value.includes(status.id) ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={clsx(value.includes(status._id) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             ))}
         </SelectBase>

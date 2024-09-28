@@ -1,45 +1,28 @@
 'use server'
+import client from "@/lib/mongo/db"
+import { Section, SectionCollection } from "@/types/collections";
+import { getFields } from "@/server/fields/get_fields";
 import { z } from "zod";
-import prisma from "@/lib/database/prisma";
-import { SectionModel } from "@prisma/client";
 
-// Define the DefaultSchema
-const DefaultSchema = z.union([z.string(), z.number()]).nullable();
-const OptionsSchema = z.array(z.string()).nullable();
+type Input = {
+    collection: SectionCollection;
+}
 
-export async function getSections(model: SectionModel) {
-    const sections = await prisma.section.findMany({
-        where: {
-            model
-        },
-        include: {
-            fields: true
-        },
-        orderBy: {
-            createdAt: 'desc'
-        }
-    });
-
-    return sections.map(section => ({
+export async function getSections(input: Input) {
+    const { data, success, error } = z.custom<Input>().safeParse(input)
+    if (!success) {
+        throw new Error(error.message)
+    }
+    const { collection } = data
+    const db = client.db('test')
+    const sections = db.collection<Section>('sections')
+    const result = await sections.find({ collection }).toArray()
+    
+    const sectionsWithFields = await Promise.all(result.map(async section => ({
         ...section,
-        fields: section.fields.map(field => {
-            const parsedDefault = DefaultSchema.safeParse(field.default);
-            if (!parsedDefault.success) {
-                throw new Error(`Invalid default value: ${parsedDefault.error}`);
-            }
+        _id: section._id.toString(),
+        fields: await getFields({ sectionId: section._id.toString() })
+    })))
 
-            const parsedOptions = OptionsSchema.safeParse(field.options);
-            if (!parsedOptions.success) {
-                throw new Error(`Invalid options value: ${parsedOptions.error}`);
-            }
-
-            return {
-                ...field,
-                multiple: field.multiple ?? undefined,
-                creative: field.creative ?? undefined,
-                default: parsedDefault.data ?? undefined,
-                options: parsedOptions.data ?? undefined
-            };
-        })
-    }));
+    return sectionsWithFields
 }

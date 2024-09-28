@@ -6,11 +6,8 @@ WORKDIR /app
 ENV NODE_ENV development
 
 COPY package.json ./
-COPY prisma ./prisma
 
 RUN npm install
-RUN npx prisma generate
-RUN rm -rf prisma
 
 RUN mkdir -p .next
 RUN chown -R node:node . node_modules .next
@@ -18,7 +15,5 @@ RUN chown -R node:node . node_modules .next
 USER node
 
 EXPOSE 3000
-# prisma studio
-EXPOSE 5555
 
 CMD ["npm", "run", "dev"]

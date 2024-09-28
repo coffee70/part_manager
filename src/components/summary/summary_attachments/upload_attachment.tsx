@@ -1,29 +1,62 @@
+'use client'
+import React from "react";
 import { PlusIcon } from "lucide-react";
-import { AttachmentData, createAttachment } from "@/server/attachments/create_attachment";
-import { useAttachmentModel } from "@/hooks/attachment_model.hook";
+import { createAttachment } from "@/server/attachments/create_attachment";
+import { useAttachmentCollection } from "@/hooks/attachment_collection.hook";
+import { ObjectId } from "mongodb";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AttachmentCollection } from "@/types/collections";
+import { collectionKeys } from "@/lib/query_keys";
+import { useURLMetadata } from "@/hooks/url_metadata.hook";
 
-type Props = {
-    id: number;
+type FormState = {
+    file: File | null;
+    collection: AttachmentCollection;
+    modelId: string;
 }
 
-export default function UploadAttachment({ id }: Props) {
-    const attachmentModel = useAttachmentModel();
+type Props = {
+    _id: string;
+}
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const form = event.target.closest('form');
-        if (form) {
-            form.requestSubmit();
+export default function UploadAttachment({ _id }: Props) {
+    const { id } = useURLMetadata();
+    const attachmentCollection = useAttachmentCollection();
+
+    const [formState, setFormState] = React.useState<FormState>({
+        file: null,
+        collection: attachmentCollection,
+        modelId: _id,
+    })
+
+    const queryClient = useQueryClient();
+
+    const { mutate } = useMutation({
+        mutationFn: createAttachment,
+        onSuccess: () => {
+            console.log('Attachment created');
+            queryClient.invalidateQueries({ queryKey: collectionKeys.id(attachmentCollection, id) }); // Invalidate queries to refresh data
         }
-    };
+    })
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
+        if (file) {
+            setFormState(prevState => ({ ...prevState, file }));
+            mutate({ ...formState, file });
+        }
+    }
 
     return (
-        <form action={createAttachment}>
+        <form>
             <label className="flex items-center justify-center space-x-1 p-1 border border-dashed border-gray-500 text-gray-600 rounded-md cursor-pointer">
                 <PlusIcon />
                 <span>Add Attachment</span>
-                <input type="file" className="hidden" name="file" onChange={handleFileChange} />
-                <input type="text" className="hidden" name="type" value={attachmentModel} readOnly />
-                <input type="number" className="hidden" name="id" value={id} readOnly />
+                <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFileChange}
+                />
             </label>
         </form>
     );

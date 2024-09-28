@@ -6,8 +6,8 @@ export default async function Page() {
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: ['sections', 'CUSTOMER_ORDER'],
-        queryFn: () => getSections('CUSTOMER_ORDER')
+        queryKey: ['sections', 'customerOrders'],
+        queryFn: () => getSections({ collection: 'customerOrders' }),
     })
 
     return (

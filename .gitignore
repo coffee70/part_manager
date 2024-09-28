@@ -38,6 +38,7 @@ next-env.d.ts
 
 # database
 db
+mongo
 
 # drawings
 *.pdf

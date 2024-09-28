@@ -1,58 +1,52 @@
 'use server'
-import prisma from "@/lib/database/prisma";
-import { AttachmentModel } from "@prisma/client";
-import { z } from "zod";
+import client from "@/lib/mongo/db";
+import { Attachable, AttachmentCollection } from "@/types/collections";
+import { ObjectId } from "mongodb";
 
-const ParamsSchema = z.object({
-    file: z.custom<File>(),
-    type: z.custom<AttachmentModel>(),
-    id: z.coerce.number(),
-})
-
-export type AttachmentData = z.infer<typeof ParamsSchema>;
-
-export async function createAttachment(formData: FormData): Promise<string> {
-
-    const { data, success, error } = ParamsSchema.safeParse({
-        file: formData.get('file'),
-        type: formData.get('type'),
-        id: formData.get('id'),
-    });
-
-    if (!success) {
-        throw new Error(`Invalid parameters: ${error}`);
-    }
-
-    const attachment = await prisma.attachment.create({
-        data: {
-            filename: data.file.name,
-            serialId: data.type === 'SERIAL' ? data.id : undefined,
-            partId: data.type === 'PART' ? data.id : undefined,
-            customerOrderId: data.type === 'CUSTOMER_ORDER' ? data.id : undefined,
-            shopOrderId: data.type === 'SHOP_ORDER' ? data.id : undefined,
+export async function createAttachment({
+    file,
+    collection,
+    modelId
+}: {
+    file: File;
+    collection: AttachmentCollection;
+    modelId: string;
+}) {
+    const _id = new ObjectId(modelId)
+    const db = client.db('test')
+    const attachable = db.collection<Attachable>(collection)
+    const attachmentId = new ObjectId()
+    attachable.updateOne(
+        {
+            _id: _id
+        },
+        {
+            $push: {
+                attachments: {
+                    _id: attachmentId,
+                    filename: file.name
+                }
+            }
         }
-    });
+    )
 
-    // rename the file to the attachment uuid for storage
-    const uuid = attachment.id;
-    const uploadData = new FormData();
-    uploadData.append('file', data.file, uuid);
-
+    const data = new FormData()
+    data.append('file', file, attachmentId.toString())
 
     const response = await fetch(process.env.FILE_POST_URL as string, {
         method: 'POST',
-        body: uploadData,
-    });
+        body: data
+    })
 
     if (!response.ok) {
-        throw new Error(`Failed to upload file: ${response.statusText}`);
+        throw new Error('Failed to upload file: ' + response.statusText)
     }
 
-    const json = await response.json();
+    const json = await response.json()
 
     if (json.filename) {
-        return json.filename;
+        return json.filename
     } else {
-        throw new Error("Failed to upload file: No filename returned");
+        throw new Error('Failed to upload file: No filename returned')
     }
 }

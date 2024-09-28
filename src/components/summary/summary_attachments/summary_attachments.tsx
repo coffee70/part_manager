@@ -1,7 +1,6 @@
 import SummaryBase from "../summary_base";
 import Attachment from './attachment';
 import UploadAttachment from "./upload_attachment";
-import { AttachmentData } from "@/server/attachments/create_attachment";
 
 type Props = {
     files: {
@@ -9,7 +8,7 @@ type Props = {
         url: string;
     }[];
     uploads: {
-        id: number;
+        _id: string;
     }
 }
 

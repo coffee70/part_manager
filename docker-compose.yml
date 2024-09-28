@@ -31,6 +31,16 @@ services:
     networks:
       - default
     restart: always
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo:/data/db
+    networks:
+      - default
+    restart: always
   file-service:
     container_name: file-service
     image: file-service

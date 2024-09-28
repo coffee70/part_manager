@@ -1,99 +1,93 @@
-import prisma from "@/lib/database/prisma";
-import { Prisma } from "@prisma/client";
+'use server'
+import client from "@/lib/mongo/db";
+import { ObjectId } from "mongodb";
+import { Customer, CustomerOrder, FieldType } from "@/types/collections";
+import { getFieldValues } from "@/server/customer_orders/fields/get_field_values";
 import { z } from "zod";
-import { getSections } from "../sections/get_sections";
+import { redirect } from "next/navigation";
 
-export const SectionSchema = z.array(z.object({
-    sectionId: z.number(),
-    fields: z.array(z.object({
-        fieldId: z.number(),
-        value: z.union([z.string(), z.array(z.string())])
-    }))
-}))
-
-export async function getCustomerOrder({
-    searchParams
-}: {
-    searchParams: { [key: string]: string | string[] | undefined }
-}) {
-    let id = searchParams.id;
-    if (Array.isArray(id)) {
-        throw new Error("id must be a string");
-    }
-
-    const order = await prisma.customerOrder.findFirst({
-        where: id ? {
-            id: parseInt(id)
-        } : undefined,
-        include: {
-            customer: {
-                select: {
-                    name: true
-                }
-            },
-            status: {
-                select: {
-                    label: true,
-                    color: true
-                }
-            },
-            customerOrderParts: {
-                include: {
-                    part: {
-                        select: {
-                            number: true,
-                            status: true,
-                        }
-                    }
-                }
-            },
-            attachments: true,
-        }
-    })
-
-    if (order === null) return order
-
-    const { data: sections, success, error } = SectionSchema.safeParse(order.sections)
-
-    if (!success) {
-        throw new Error("Error parsing sections: " + error)
-    }
-
-    return {
-        id: order.id,
-        parts: order.customerOrderParts.map((part) => ({
-            id: part.id,
-            label: part.part.number,
-            status: part.part.status
-        })),
-        customer: order.customer,
-        status: order.status,
-        number: order.number,
-        updatedAt: order.updatedAt,
-        notes: order.notes,
-        attachments: await Promise.all(order.attachments.map(async (attachment) => ({
-            name: attachment.filename,
-            url: process.env.FILE_GET_URL + attachment.id
-        }))),
-        sections: await validateSections(sections)
+type Output = {
+    _id: string;
+    number: string;
+    customerId: string;
+    attachments: {
+        name: string;
+        url: string;
+    }[];
+    sections: {
+        _id: string;
+        name: string;
+        fields: {
+            _id: string;
+            name: string;
+            type: FieldType;
+            options?: string[];
+            multiple?: boolean;
+            creative?: boolean;
+            value?: string | string[];
+        }[];
+    }[];
+    customer: {
+        _id: string;
+        name: string;
     };
 }
 
-async function validateSections(sections: z.infer<typeof SectionSchema>) {
-    const sectionDefintions = await getSections("CUSTOMER_ORDER")
+type Input = {
+    _id?: string | null;
+}
 
-    return sectionDefintions.map(definition => ({
-        id: definition.id,
-        title: definition.title,
-        fields: definition.fields.map(field => ({
-            id: field.id,
-            name: field.name,
-            type: field.type,
-            options: field.options,
-            multiple: field.multiple,
-            creative: field.creative,
-            value: sections.find(section => section.sectionId === definition.id)?.fields.find(f => f.fieldId === field.id)?.value
-        }))
-    }))
+export async function getCustomerOrder({ _id }: Input): Promise<Output> {
 
+    const db = client.db('test')
+    const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders')
+    const customersCollection = db.collection<Customer>('customers')
+
+    // if no id is provided, redirect to the first customer order so the URL is formed correctly
+    // since alot of frontend functionality relies on the id being present in the URL
+    if (!_id) {
+        const customerOrder = await customerOrdersCollection.findOne();
+        if (!customerOrder) {
+            throw new Error('No customer orders found');
+        }
+
+        _id = customerOrder._id.toString();
+
+        redirect(`/customer-orders/?id=${_id}`);
+    }
+
+    const customerOrder = await customerOrdersCollection.findOne({ _id: new ObjectId(_id) })
+    
+    if (!customerOrder) {
+        throw new Error(`Customer Order with id ${_id} not found`);
+    }
+
+    const sections = await getFieldValues({ customerOrderId: customerOrder._id.toString() })
+
+    const customer = await customersCollection.findOne({ _id: new ObjectId(customerOrder.customerId) })
+
+    if (!customer) {
+        throw new Error(`Customer with id ${customerOrder.customerId} not found`);
+    }
+
+    const res = {
+        ...customerOrder,
+        customer: customer,
+        attachments: customerOrder.attachments.map((attachment) => ({
+            name: attachment.filename,
+            url: process.env.FILE_GET_URL as string + attachment._id
+        })),
+        sections: sections
+    };
+
+    const serialized = JSON.parse(JSON.stringify(res));
+
+    // validate the return value
+    const { data: parsed, success, error } = z.custom<Output>().safeParse(serialized);
+
+    if (!success) {
+        throw new Error(`Failed to serialize response: ${error}`);
+    }
+
+    return parsed;
 }

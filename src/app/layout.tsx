@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import ReactQueryProvider from "@/app/providers";
 import SideNavigation from "@/components/navigations/side_nav/main";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function Layout({ children }: Props) {
             <SideNavigation />
             {children}
           </main>
+          <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryProvider>
       </body>
     </html>

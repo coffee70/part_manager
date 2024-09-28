@@ -3,17 +3,20 @@ import React from 'react';
 import Field from "@/components/ui/field";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSection } from '@/server/sections/update_section';
+import { sectionKeys } from '@/lib/query_keys';
+import { useURLMetadata } from '@/hooks/url_metadata.hook';
 
 type Props = {
-    id: number;
-    title: string;
+    _id: string;
+    name: string;
 }
 
-export default function SectionTitle({ id, title }: Props) {
+export default function SectionTitle({ _id, name }: Props) {
+
+    const { collection } = useURLMetadata();
 
     const [formState, setFormState] = React.useState({
-        id: id,
-        title: title,
+        name: name,
     })
 
     const queryClient = useQueryClient();
@@ -21,19 +24,19 @@ export default function SectionTitle({ id, title }: Props) {
     const { mutate, isPending } = useMutation({
         mutationFn: updateSection,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['sections'] })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(collection) })
         }
     })
 
     return (
-        <form onSubmit={() => mutate(formState)}>
+        <form onSubmit={() => mutate({ _id: _id, section: formState})}>
             <Field
                 className="text-xl font-bold"
-                value={formState.title}
-                onChange={(e) => setFormState({ ...formState, title: e.target.value })}
+                value={formState.name}
+                onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                 placeholder='Section Name'
                 loading={isPending}
-                onFormSubmit={() => mutate(formState)}
+                onFormSubmit={() => mutate({ _id: _id, section: formState })}
             />
         </form>
     )

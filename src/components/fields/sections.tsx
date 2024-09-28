@@ -1,22 +1,23 @@
 'use client'
 import React from 'react';
 import Title from '@/components/fields/components/title';
-import AddSection from './add_section/add_section';
-import Section from './components/section';
+import AddSection from './section/add_section';
+import Section from './section';
 import { AppBar } from '../ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
-import { useSectionModel } from '@/hooks/section_model.hook';
+import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { sectionKeys } from '@/lib/query_keys';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const sectionModel = useSectionModel();
+    const { collection } = useURLMetadata();
 
     const { data, isError, isPending } = useQuery({
-        queryKey: ['sections', sectionModel],
-        queryFn: () => getSections(sectionModel),
+        queryKey: sectionKeys.all(collection),
+        queryFn: () => getSections({ collection: collection }),
     });
 
     if (isPending) return <Loading />;
@@ -30,7 +31,7 @@ export default function Sections() {
             </AppBar>
             <div className="flex-1 p-6 space-y-4 overflow-y-auto">
                 {data.map(section => (
-                    <Section key={section.id} section={section} />
+                    <Section key={section._id} section={section} />
                 ))}
             </div>
         </div>

@@ -1,22 +1,29 @@
 'use server'
+import client from "@/lib/mongo/db"
+import { ObjectId } from "mongodb"
+import { Section } from "@/types/collections"
 import { z } from "zod"
-import { prisma } from "@/lib/database/prisma";
-import { SectionModel } from "@prisma/client";
 
-const Schema = z.object({
-    id: z.number(),
-    title: z.string().optional(),
-    model: z.custom<SectionModel>().optional(),
-})
+type Input = {
+    _id: string;
+    section: Partial<Section>;
+}
 
-export async function updateSection(rawData: z.input<typeof Schema>) {
-    // Validate the data using the schema
-    const { data, success, error } = Schema.safeParse(rawData);
-
+export async function updateSection(input: Input) {
+    const { data, success, error } = z.custom<Input>().safeParse(input)
     if (!success) {
-        throw new Error(`Invalid parameters: ${error}`);
+        throw new Error(error.message)
     }
-
-    // Update the section in the database
-    return await prisma.section.update({ where: { id: data.id }, data });
+    const { _id, section } = data
+    const db = client.db('test')
+    const sections = db.collection<Section>('sections')
+    const result = await sections.updateOne(
+        {
+            _id: new ObjectId(_id)
+        },
+        {
+            $set: section
+        }
+    )
+    return result
 }

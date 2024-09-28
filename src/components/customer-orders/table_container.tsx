@@ -13,11 +13,11 @@ import Filter from "@/components/list/filters/filter";
 import Sort from "@/components/list/sorting/sort";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
-import { StatusBadge } from "@/components/ui/badge";
 import People from "@/components/ui/people";
 import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
+import { collectionKeys } from "@/lib/query_keys";
 
 export default function TableContainer() {
 
@@ -27,7 +27,7 @@ export default function TableContainer() {
     // queries
     const searchParams = convertSearchParams(readOnlySearchParams)
     const { data, isError, isPending } = useQuery({
-        queryKey: ['customerOrders', searchParams],
+        queryKey: collectionKeys.all('customerOrders'),
         queryFn: () => getCustomerOrders({ searchParams }),
     })
 
@@ -71,7 +71,7 @@ export default function TableContainer() {
             <Table>
                 <TableBody>
                     {data.map((order) => (
-                        <TableRow key={order.id}>
+                        <TableRow key={order._id} onClick={() => pushSearchParams({ id: order._id })}>
                             <TableCell>
                                 <Label label={order.number} subLabel={order.customer.name} />
                             </TableCell>

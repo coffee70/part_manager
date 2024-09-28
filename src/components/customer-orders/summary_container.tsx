@@ -2,9 +2,6 @@
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
-import { getParts } from "@/server/customer_orders/get_parts";
-import { useSearchParams } from "next/navigation";
-import { convertSearchParams } from "@/lib/search_params";
 import SummaryLayout from "@/layouts/summary_layout";
 import SummaryTitle from "@/components/summary/summary_title";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
@@ -16,21 +13,22 @@ import SummaryAttachments from "@/components/summary/summary_attachments/summary
 import SummaryList, { Item } from "@/components/summary/summary_list/summary_list";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 import SummarySkeleton from '@/components/summary/summary_skeleton';
+import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { collectionKeys } from '@/lib/query_keys';
 
 export default function SummaryContainer() {
-    const readOnlySearchParams = useSearchParams()
-    const searchParams = convertSearchParams(readOnlySearchParams)
+    const { id } = useURLMetadata();
 
     const { data, isError, isPending } = useQuery({
-        queryKey: ['customerOrder', searchParams],
-        queryFn: () => getCustomerOrder({ searchParams }),
+        queryKey: collectionKeys.id('customerOrders', id),
+        queryFn: () => getCustomerOrder({ _id: id }),
     })
 
     if (isPending) return <SummarySkeleton />
 
     if (isError) return <div>Error...</div>
 
-    if (data === null) return <div>Not found</div>
+    if (!data) return <div>Not found</div>
 
     return (
         <SummaryLayout>
@@ -40,35 +38,11 @@ export default function SummaryContainer() {
                 <Status />
             </SummaryToolbar>
             <SummarySections sections={data.sections} />
-            <SummaryNotes placeholder="Here are some notes on the order." />
-            <SummaryAttachments files={data.attachments} uploads={{ id: data.id }}/>
-            {/* <SummaryListContainer items={data.parts} /> */}
+            {/* <SummaryNotes placeholder="Here are some notes on the order." /> */}
+            <SummaryAttachments files={data.attachments} uploads={{ _id: data._id }} />
+            {/* <SummaryList items={data.parts} /> */}
             {/* <SummaryPeople people={order.people} />  */}
             <SummaryActivity />
         </SummaryLayout>
-    )
-}
-
-
-function SummaryListContainer({ items }: { items: Item[] }) {
-    const { data, isError, isPending } = useQuery({
-        queryKey: ['parts'],
-        queryFn: getParts,
-    })
-
-    if (isPending) return <div>Loading...</div>
-
-    if (isError) return <div>Error...</div>
-
-    if (data === null) return <div>Not found</div>
-
-    return (
-        <SummaryList
-            title="Parts"
-            label="Add Part"
-            placeholder="Part Number"
-            items={items}
-            options={data}
-        />
     )
 }

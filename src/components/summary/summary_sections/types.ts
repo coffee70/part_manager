@@ -1,17 +1,17 @@
-import { FieldType } from "@prisma/client";
+import { FieldType, SectionCollection } from "@/types/collections";
 
 export type Field = {
-    id: number;
+    _id: string;
     name: string;
     type: FieldType;
-    options?: Array<string>;
+    options?: string[];
     multiple?: boolean;
     creative?: boolean;
-    value?: string | Array<string>;
+    value?: string | string[];
 }
 
 export type Section = {
-    id: number;
-    title: string;
-    fields: Array<Field>;
+    _id: string;
+    name: string;
+    fields: Field[];
 }

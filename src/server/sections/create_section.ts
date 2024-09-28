@@ -1,21 +1,19 @@
 'use server'
-import { z } from "zod"
-import { prisma } from "@/lib/database/prisma";
-import { SectionModel } from "@prisma/client";
+import client from "@/lib/mongo/db"
+import { Section } from "@/types/collections";
+import { z } from "zod";
 
-const Schema = z.object({
-    title: z.string(),
-    model: z.custom<SectionModel>(),
-})
+type Input = {
+    section: Section;
+}
 
-export async function createSection(rawData: z.input<typeof Schema>) {
-    // Validate the data using the schema
-    const { data, success, error } = Schema.safeParse(rawData);
-
+export async function createSection(input: Input) {
+    const { data, success, error } = z.custom<Input>().safeParse(input)
     if (!success) {
-        throw new Error(`Invalid parameters: ${error}`);
+        throw new Error(error.message)
     }
-
-    // Create the section in the database
-    return await prisma.section.create({ data });
+    const { section } = data
+    const db = client.db('test')
+    const sections = db.collection<Section>('sections')
+    await sections.insertOne(section)
 }

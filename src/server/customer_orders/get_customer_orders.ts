@@ -1,5 +1,8 @@
+'use server'
 import { z } from 'zod';
-import { prisma } from '@/lib/database/prisma';
+import client from '@/lib/mongo/db';
+import { Customer, CustomerOrder } from '@/types/collections';
+import { ObjectId } from 'mongodb';
 
 // schemas
 const UpdatedAt = z.object({
@@ -7,6 +10,7 @@ const UpdatedAt = z.object({
     from: z.coerce.date(),
 });
 
+const QueryResultSchema = z.custom<CustomerOrder[]>();
 
 export async function getCustomerOrders({
     searchParams
@@ -21,16 +25,16 @@ export async function getCustomerOrders({
         throw new Error("statusId must be a json string");
     }
 
-    let statusId;
+    let statusIds: ObjectId[] = [];
 
     if (statusIdJson) {
-        statusId = JSON.parse(statusIdJson);
+        statusIds = JSON.parse(statusIdJson);
 
-        const validation = z.array(z.number()).safeParse(statusId);
+        const validation = z.array(z.string()).safeParse(statusIds);
         if (!validation.success) {
             throw new Error("statusId is not a valid array of numbers");
         } else {
-            statusId = validation.data;
+            statusIds = validation.data.map(id => new ObjectId(id));
         }
     }
 
@@ -90,35 +94,46 @@ export async function getCustomerOrders({
         sortOrder = validation.data;
     }
 
-    // call prisma
-    const orders = await prisma.customerOrder.findMany({
-        where: {
-            number: search,
-            updatedAt: {
-                gte: updatedAt?.from,
-                lte: updatedAt?.to,
-            },
-            statusId: {
-                in: statusId,
-            }
-        },
-        include: {
-            customer: {
-                select: {
-                    name: true
-                }
-            },
-            status: {
-                select: {
-                    label: true,
-                    color: true
-                }
-            }
-        },
-        orderBy: sortBy ? {
-            [sortBy]: sortOrder
-        } : undefined
-    })
+    const db = client.db('test');
+    const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders');
+    const customersCollection = db.collection<Customer>('customers');
 
-    return orders;
+    const matchStage: any = {};
+
+    // Add statusId condition if it's not empty
+    if (statusIds && statusIds.length > 0) {
+        matchStage.statusId = { $in: statusIds };
+    }
+
+    // Add updatedAt condition if it's defined
+    if (updatedAt) {
+        matchStage.updatedAt = {
+            $gte: updatedAt.from,
+            $lte: updatedAt.to
+        };
+    }
+
+    // Add $text search condition if search is defined
+    if (search) {
+        matchStage.$text = { $search: search };
+    }
+
+    const customerOrders = await customerOrdersCollection.find(matchStage).toArray();
+
+    return await Promise.all(customerOrders.map(async order => {
+        const customer = await customersCollection.findOne({ _id: new ObjectId(order.customerId) });
+
+        if (!customer) {
+            throw new Error(`Customer with id ${order.customerId} not found`);
+        }
+
+        return {
+            _id: order._id.toString(),
+            customer: {
+                name: customer.name
+            },
+            number: order.number,
+            updatedAt: order.updatedAt,
+        };
+    }));
 }
