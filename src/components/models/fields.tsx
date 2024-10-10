@@ -28,64 +28,66 @@ export default function Fields({ fieldState, setFieldState }: Props) {
         queryFn: () => getSections({ collection }),
     })
 
-    if (!sections || sections.length === 0) return null;
-    
+    if (!sections
+        || sections.length === 0
+        || sections.filter(section => section.fields.length > 0).length === 0) return null;
+
     return (
         <Tabs defaultValue={sections[0].name}>
-        <TabsList>
+            <TabsList>
+                {sections.map(section => (
+                    <TabsTrigger
+                        key={section._id}
+                        value={section.name}>
+                        {section.name}
+                    </TabsTrigger>
+                ))}
+            </TabsList>
             {sections.map(section => (
-                <TabsTrigger
-                    key={section._id}
-                    value={section.name}>
-                    {section.name}
-                </TabsTrigger>
+                <TabsContent key={section._id} value={section.name}>
+                    <div className="flex flex-col space-y-1">
+                        {section.fields.map(field => (
+                            <div key={field._id}>
+                                {field.type === 'select' ? (
+                                    <Select
+                                        label={field.name}
+                                        description={field.description}
+                                        multiple={field.multiple}
+                                        creative={field.creative}
+                                        options={field.options || []}
+                                        value={fieldState?.[field._id]}
+                                        onChange={value => setFieldState?.({
+                                            ...fieldState,
+                                            [field._id]: value,
+                                        })}
+                                    />
+                                ) : field.type === 'paragraph' ? (
+                                    <Textarea
+                                        label={field.name}
+                                        description={field.description}
+                                        value={fieldState?.[field._id]}
+                                        onChange={value => setFieldState?.({
+                                            ...fieldState,
+                                            [field._id]: value,
+                                        })}
+                                    />
+                                ) : (
+                                    <Input
+                                        label={field.name}
+                                        description={field.description}
+                                        type={field.type}
+                                        value={fieldState?.[field._id]}
+                                        onChange={value => setFieldState?.({
+                                            ...fieldState,
+                                            [field._id]: value,
+                                        })}
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </TabsContent>
             ))}
-        </TabsList>
-        {sections.map(section => (
-            <TabsContent key={section._id} value={section.name}>
-                <div className="flex flex-col space-y-1">
-                    {section.fields.map(field => (
-                        <div key={field._id}>
-                            {field.type === 'select' ? (
-                                <Select
-                                    label={field.name}
-                                    description={field.description}
-                                    multiple={field.multiple}
-                                    creative={field.creative}
-                                    options={field.options || []}
-                                    value={fieldState?.[field._id]}
-                                    onChange={value => setFieldState?.({
-                                        ...fieldState,
-                                        [field._id]: value,
-                                    })}
-                                />
-                            ) : field.type === 'paragraph' ? (
-                                <Textarea
-                                    label={field.name}
-                                    description={field.description}
-                                    value={fieldState?.[field._id]}
-                                    onChange={value => setFieldState?.({
-                                        ...fieldState,
-                                        [field._id]: value,
-                                    })}
-                                />
-                            ) : (
-                                <Input
-                                    label={field.name}
-                                    description={field.description}
-                                    type={field.type}
-                                    value={fieldState?.[field._id]}
-                                    onChange={value => setFieldState?.({
-                                        ...fieldState,
-                                        [field._id]: value,
-                                    })}
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
-            </TabsContent>
-        ))}
-    </Tabs>
+        </Tabs>
     )
 }
