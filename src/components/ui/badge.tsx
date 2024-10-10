@@ -11,7 +11,7 @@ type BadgeProps = {
 export function Badge({ label, color, appendIcon, className }: BadgeProps) {
   return (
     <div
-      className={cn("inline-flex items-center rounded-sm text-xs text-white font-bold", className)}
+      className={cn("inline-flex items-center rounded-sm text-xs text-white text-nowrap font-bold", className)}
       style={{ backgroundColor: color }}
     >
       <span>{label}</span>
