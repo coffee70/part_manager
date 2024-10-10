@@ -36,7 +36,7 @@ export default function TagInput({ value, onChange, className, ...props }: Props
     }
 
     return (
-        <div className={cn("flex items-center space-x-1", className)}>
+        <div className={cn("inline-flex items-center flex-wrap", className)}>
             {tags.map(tag => (
                 <ComboboxBadge key={tag} label={tag} onRemove={() => handleRemove(tag)} />
             ))}

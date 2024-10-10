@@ -38,7 +38,7 @@ export function ComboboxBadge({ label, onRemove }: ComboboxBadgeProps) {
   return <Badge
       label={label}
       color='grey'
-      className="px-1"
+      className="px-1 my-1 mx-0.5"
       appendIcon={
           <button onClick={onRemove} className="pl-0.5">
               <XIcon size={16} />
