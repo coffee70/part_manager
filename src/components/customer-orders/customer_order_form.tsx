@@ -40,7 +40,7 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
     const { mutate: create } = useMutation({
         mutationFn: createCustomerOrder,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all('customerOrders')})
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all('customerOrders') })
         }
     })
 
@@ -73,40 +73,42 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-                    <div className="flex flex-col space-y-1">
-                        <Input
-                            label='Number'
-                            description='The customer order number'
-                            type='text'
-                            value={attributeState.number}
-                            onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
-                        />
-                        <Select
-                            label='Customer'
-                            description='The customer for this order'
-                            creative
-                            options={customers?.map(customer => customer.name) || []}
-                            value={attributeState.customerName}
-                            onChange={(v) => setAttributeState({ ...attributeState, customerName: Array.isArray(v) ? v[0] : v })}
-                        />
-                        <Select
-                            label='Priority'
-                            description='The priority of this order'
-                            options={['Lowest', 'Low', 'Normal', 'High', 'Highest']}
-                            value={attributeState.priority}
-                            onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
-                        />
-                        <Textarea
-                            label='Notes'
-                            description='Any notes about this order'
-                            value={attributeState.notes}
-                            onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
+                    <div className='max-h-[700px] overflow-y-auto'>
+                        <div className="flex flex-col space-y-1">
+                            <Input
+                                label='Number'
+                                description='The customer order number'
+                                type='text'
+                                value={attributeState.number}
+                                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
+                            />
+                            <Select
+                                label='Customer'
+                                description='The customer for this order'
+                                creative
+                                options={customers?.map(customer => customer.name) || []}
+                                value={attributeState.customerName}
+                                onChange={(v) => setAttributeState({ ...attributeState, customerName: Array.isArray(v) ? v[0] : v })}
+                            />
+                            <Select
+                                label='Priority'
+                                description='The priority of this order'
+                                options={['Lowest', 'Low', 'Normal', 'High', 'Highest']}
+                                value={attributeState.priority}
+                                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
+                            />
+                            <Textarea
+                                label='Notes'
+                                description='Any notes about this order'
+                                value={attributeState.notes}
+                                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
+                            />
+                        </div>
+                        <Fields
+                            fieldState={fieldState}
+                            setFieldState={setFieldState}
                         />
                     </div>
-                    <Fields
-                        fieldState={fieldState}
-                        setFieldState={setFieldState}
-                    />
                     <Button
                         className="w-full"
                         type='submit'
