@@ -42,6 +42,7 @@ export default function TagInput({ value, onChange, className, ...props }: Props
             ))}
             <BaseInput
                 {...props}
+                className='pl-1'
                 onKeyDown={handleKeyDown}
             />
         </div>
