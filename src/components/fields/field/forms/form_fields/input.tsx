@@ -9,7 +9,7 @@ export default function Input({ label, className, ...props }: Props) {
     return (
         <label>
             {label}
-            <BaseInput {...props} className={cn('border border-muted-foreground p-1', className)} />
+            <BaseInput {...props} className={cn('border border-muted-foreground p-1 w-full', className)} />
         </label>
     )
 }
