@@ -16,7 +16,7 @@ export async function updateSection(input: Input) {
     }
     const { _id, section } = data
     const db = client.db('test')
-    const sections = db.collection<Section>('sections')
+    const sections = db.collection('sections')
     const result = await sections.updateOne(
         {
             _id: new ObjectId(_id)

@@ -5,25 +5,13 @@ import SectionTitle from '@/components/fields/components/section_title';
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Fields from './fields';
-import { FieldType } from '@/types/collections';
+import type { FieldType, Section, Field } from '@/types/collections';
 import FieldForm from '@/components/fields/field/field_form';
 
 type Props = {
-    section: {
-        _id: string;
-        name: string;
-        fields: {
-            _id: string;
-            name: string;
-            sectionId: string;
-            type: FieldType;
-            description: string;
-            multiple?: boolean;
-            creative?: boolean;
-            default?: string;
-            options?: string[];
-        }[];
-    }
+    section: Section & { 
+        fields: Field[]; 
+    };
 }
 
 export default function Section({ section }: Props) {

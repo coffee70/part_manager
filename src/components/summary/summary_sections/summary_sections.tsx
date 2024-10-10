@@ -3,18 +3,32 @@ import React from "react";
 import SummaryBase from "../summary_base"
 import SummarySection from "./summary_section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Section } from "./types";
+import { Field, Valuable, Section } from "@/types/collections";
+import { useURLMetadata } from "@/hooks/url_metadata.hook";
+import { useQuery } from "@tanstack/react-query";
+import { sectionKeys } from "@/lib/query_keys";
+import { getSections } from "@/server/sections/get_sections";
+import { mergeValues } from "@/lib/merge_values";
 
-type SummarySectionsProps = {
-    sections: Array<Section>;
-}
+type SummarySectionsProps = Valuable;
 
-export default function SummarySections({ sections }: SummarySectionsProps) {
+export default function SummarySections({ values }: SummarySectionsProps) {
+    const { collection } = useURLMetadata();
+
+    const { data: sections } = useQuery({
+        queryKey: sectionKeys.all(collection),
+        queryFn: () => getSections({ collection }),
+    })
+
+    if (!sections || sections.length === 0) return null;
+
+    const mergedSections = mergeValues(sections, values);
+
     return (
         <SummaryBase title='Details'>
             <Tabs defaultValue={sections[0].name}>
                 <TabsList>
-                    {sections.map(section => (
+                    {mergedSections.map(section => (
                         <TabsTrigger
                             key={section._id}
                             value={section.name}>
@@ -22,7 +36,7 @@ export default function SummarySections({ sections }: SummarySectionsProps) {
                         </TabsTrigger>
                     ))}
                 </TabsList>
-                {sections.map(section => (
+                {mergedSections.map(section => (
                     <TabsContent key={section._id} value={section.name}>
                         <SummarySection section={section} />
                     </TabsContent>

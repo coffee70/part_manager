@@ -18,7 +18,7 @@ export default function Sort<T extends Sortable>({ sort, setSort }: Props<T>) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <DataAction enabled={enabled}>
+                <DataAction enabled={enabled} label='Sort'>
                     <ArrowDownUpIcon size={24} />
                 </DataAction>
             </DropdownMenuTrigger>

@@ -7,11 +7,9 @@ type Props = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 
 export default function Textarea({ label, className, ...props }: Props) {
     return (
-        <>
-            <label>
-                {label}
-                <BaseTextarea {...props} className={cn('border border-muted-foreground p-1', className)} />
-            </label>
-        </>
+        <label>
+            {label}
+            <BaseTextarea {...props} className={cn('border border-muted-foreground p-1', className)} />
+        </label>
     )
 }

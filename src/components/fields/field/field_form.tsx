@@ -14,7 +14,7 @@ import DateForm from "./forms/date";
 import TimeForm from "./forms/time";
 import TextForm from "./forms/text";
 import ParagraphForm from "./forms/paragraph";
-import { FieldType } from "@/types/collections";
+import { Field, FieldType } from "@/types/collections";
 
 const labels: Record<FieldType, string> = {
     text: 'Text',
@@ -29,17 +29,7 @@ type Props = {
     sectionId?: string;
     open: boolean;
     onOpenChange: (value: boolean) => void;
-    field?: {
-        _id: string;
-        name: string;
-        sectionId: string;
-        type: FieldType;
-        description: string;
-        multiple?: boolean;
-        creative?: boolean;
-        default?: string;
-        options?: string[];
-    }
+    field?: Field;
 };
 
 export default function FieldForm({ field, open, onOpenChange, sectionId }: Props) {

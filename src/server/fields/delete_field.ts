@@ -15,6 +15,6 @@ export async function deleteField(input: Input) {
     }
     const { _id } = data
     const db = client.db('test')
-    const fields = db.collection<Field>('fields')
+    const fields = db.collection('fields')
     await fields.deleteOne({ _id: new ObjectId(_id) })
 }

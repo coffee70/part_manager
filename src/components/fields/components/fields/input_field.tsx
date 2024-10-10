@@ -2,17 +2,15 @@
 import React from 'react'
 import { cn } from "@/lib/utils"
 import { ClickAwayListener } from '@mui/base'
-import { FieldType } from '@/types/collections'
+import { Field, FieldType } from '@/types/collections'
 import Error from './error'
 import Loading from './loading'
 import Editing from './editing'
 import NotEditing from './not_editing'
 import { Input } from '@/components/ui/input'
 import { useIsEditing } from './is_editing.hook'
-import { Field } from '@/components/summary/summary_sections/types'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateFieldValue } from '@/server/fields/update_field_value'
-import './inputs.css'
 import { useURLMetadata } from '@/hooks/url_metadata.hook'
 import { collectionKeys } from '@/lib/query_keys'
 
@@ -29,7 +27,9 @@ export const FieldComponent = React.forwardRef<HTMLInputElement, FieldComponentP
 FieldComponent.displayName = 'FieldComponent'
 
 type Props = {
-    field: Field;
+    field: Field & {
+        value?: string | string[];
+    };
 }
 
 export default function InputField({ field }: Props) {

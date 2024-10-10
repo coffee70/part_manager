@@ -6,21 +6,12 @@ import ButtonGroup from "@/components/ui/button_group";
 import TagInput from "@/components/ui/tag_input";
 import { Button } from '@/components/ui/button';
 import { useFieldForm } from './use_field_form.hook';
-import { FieldType } from '@/types/collections';
+import { Field, FieldType } from '@/types/collections';
 
 type Props = {
     sectionId?: string;
     setOpen: (value: boolean) => void;
-    field?: {
-        _id: string;
-        name: string;
-        sectionId: string;
-        type: FieldType;
-        description: string;
-        multiple?: boolean;
-        creative?: boolean;
-        options?: string[];
-    }
+    field?: Field;
 }
 
 export default function SelectForm({ field, setOpen, sectionId }: Props) {

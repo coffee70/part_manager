@@ -16,6 +16,6 @@ export async function updateField(input: Input) {
     }
     const { _id, field } = data
     const db = client.db('test')
-    const fields = db.collection<Field>('fields')
+    const fields = db.collection('fields')
     await fields.updateOne({ _id: new ObjectId(_id) }, { $set: field })
 }

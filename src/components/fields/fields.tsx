@@ -1,19 +1,9 @@
 import { Table, TableBody, TableRow, TableHeader, TableHead } from "@/components/ui/table";
-import Field from "./field";
-import { FieldType } from "@/types/collections";
+import FieldInfo from "./field";
+import { type Field } from "@/types/collections";
 
 type Props = {
-    fields: {
-        _id: string;
-        name: string;
-        sectionId: string;
-        type: FieldType;
-        description: string;
-        multiple?: boolean;
-        creative?: boolean;
-        default?: string;
-        options?: string[];
-    }[];
+    fields: Field[];
 }
 
 export default function Fields({ fields }: Props) {
@@ -31,7 +21,7 @@ export default function Fields({ fields }: Props) {
             </TableHeader>
             <TableBody>
                 {fields.map(field => (
-                    <Field key={field._id} field={field} />
+                    <FieldInfo key={field._id} field={field} />
                 ))}
             </TableBody>
         </Table>

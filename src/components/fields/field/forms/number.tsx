@@ -4,19 +4,12 @@ import Input from "./form_fields/input";
 import Textarea from "./form_fields/textarea";
 import { Button } from '@/components/ui/button';
 import { useFieldForm } from './use_field_form.hook';
-import { FieldType } from '@/types/collections';
+import { Field, FieldType } from '@/types/collections';
 
 type Props = {
     sectionId?: string;
     setOpen: (value: boolean) => void;
-    field?: {
-        _id: string;
-        name: string;
-        sectionId: string;
-        type: FieldType;
-        description: string;
-        default?: string;
-    }
+    field?: Field;
 }
 
 export default function NumberForm({ field, sectionId, setOpen }: Props) {

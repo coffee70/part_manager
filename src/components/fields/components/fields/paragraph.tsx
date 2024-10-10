@@ -7,11 +7,11 @@ import Loading from './loading'
 import Editing from './editing'
 import NotEditing from './not_editing'
 import { Textarea } from '@/components/ui/textarea'
-import { Field } from '@/components/summary/summary_sections/types'
 import { useURLMetadata } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateFieldValue } from '@/server/fields/update_field_value'
 import { collectionKeys } from '@/lib/query_keys'
+import { Field } from '@/types/collections'
 
 function useIsEditing() {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -40,7 +40,9 @@ function useIsEditing() {
 }
 
 type Props = {
-    field: Field;
+    field: Field & {
+        value?: string | string[];
+    };
 }
 export default function ParagraphField({ field }: Props) {
 

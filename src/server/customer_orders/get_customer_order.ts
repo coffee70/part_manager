@@ -1,37 +1,19 @@
 'use server'
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
-import { Customer, CustomerOrder, FieldType } from "@/types/collections";
+import { Customer, CustomerOrder, Section, Field } from "@/types/collections";
 import { getFieldValues } from "@/server/customer_orders/fields/get_field_values";
 import { z } from "zod";
 import { redirect } from "next/navigation";
+import { validators } from "../validators/validators";
 
-type Output = {
-    _id: string;
-    number: string;
-    customerId: string;
+type Output = CustomerOrder & {
+    customer: Customer;
     attachments: {
         name: string;
         url: string;
     }[];
-    sections: {
-        _id: string;
-        name: string;
-        fields: {
-            _id: string;
-            name: string;
-            type: FieldType;
-            options?: string[];
-            multiple?: boolean;
-            creative?: boolean;
-            value?: string | string[];
-        }[];
-    }[];
-    customer: {
-        _id: string;
-        name: string;
-    };
-}
+} | null;
 
 type Input = {
     _id?: string | null;
@@ -48,7 +30,7 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
     if (!_id) {
         const customerOrder = await customerOrdersCollection.findOne();
         if (!customerOrder) {
-            throw new Error('No customer orders found');
+            return null;
         }
 
         _id = customerOrder._id.toString();
@@ -62,8 +44,6 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
         throw new Error(`Customer Order with id ${_id} not found`);
     }
 
-    const sections = await getFieldValues({ customerOrderId: customerOrder._id.toString() })
-
     const customer = await customersCollection.findOne({ _id: new ObjectId(customerOrder.customerId) })
 
     if (!customer) {
@@ -73,21 +53,14 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
     const res = {
         ...customerOrder,
         customer: customer,
-        attachments: customerOrder.attachments.map((attachment) => ({
+        attachments: customerOrder.attachments?.map((attachment) => ({
             name: attachment.filename,
             url: process.env.FILE_GET_URL as string + attachment._id
         })),
-        sections: sections
     };
 
     const serialized = JSON.parse(JSON.stringify(res));
 
     // validate the return value
-    const { data: parsed, success, error } = z.custom<Output>().safeParse(serialized);
-
-    if (!success) {
-        throw new Error(`Failed to serialize response: ${error}`);
-    }
-
-    return parsed;
+    return validators.output<Output>(serialized);
 }

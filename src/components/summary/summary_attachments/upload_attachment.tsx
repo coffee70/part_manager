@@ -12,21 +12,17 @@ import { useURLMetadata } from "@/hooks/url_metadata.hook";
 type FormState = {
     file: File | null;
     collection: AttachmentCollection;
-    modelId: string;
+    modelId: string | null;
 }
 
-type Props = {
-    _id: string;
-}
-
-export default function UploadAttachment({ _id }: Props) {
+export default function UploadAttachment() {
     const { id } = useURLMetadata();
     const attachmentCollection = useAttachmentCollection();
 
     const [formState, setFormState] = React.useState<FormState>({
         file: null,
         collection: attachmentCollection,
-        modelId: _id,
+        modelId: id,
     })
 
     const queryClient = useQueryClient();

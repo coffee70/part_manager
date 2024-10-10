@@ -2,20 +2,22 @@
 import React from 'react';
 import { ClickAwayListener } from "@mui/base";
 import { cn } from "@/lib/utils";
-import Error from "../error";
-import Loading from "../loading";
-import Editing from "../editing";
-import NotEditing from "../not_editing";
-import { useIsEditing } from "../is_editing.hook";
-import SelectBase from "./select_base";
-import { Field } from "@/components/summary/summary_sections/types";
+import Error from "./error";
+import Loading from "./loading";
+import Editing from "./editing";
+import NotEditing from "./not_editing";
+import { useIsEditing } from "./is_editing.hook";
+import { Combobox } from "@/components/ui/combobox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateFieldValue } from "@/server/fields/update_field_value";
 import { useURLMetadata } from "@/hooks/url_metadata.hook";
 import { collectionKeys } from '@/lib/query_keys';
+import { Field } from '@/types/collections';
 
 type Props = {
-    field: Field;
+    field: Field & {
+        value?: string | string[];
+    };
 }
 
 export default function SelectField({ field }: Props) {
@@ -49,7 +51,7 @@ export default function SelectField({ field }: Props) {
                     value
                 })}
             >
-                <SelectBase
+                <Combobox
                     ref={inputRef}
                     options={field.options || []}
                     value={value}

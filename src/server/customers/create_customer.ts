@@ -3,9 +3,8 @@ import client from "@/lib/mongo/db"
 import { Customer } from "@/types/collections"
 import { WithoutId } from "mongodb"
 
-export async function createCustomer({ customer }: { customer: WithoutId<Customer> }) {
+export async function createCustomer({ customer }: { customer: Customer }) {
     const db = client.db('test')
-    const customers = db.collection<WithoutId<Customer>>('customers')
-    const res = await customers.insertOne(customer)
-    return res.insertedId.toString()
+    const customers = db.collection<Customer>('customers')
+    await customers.insertOne(customer)
 }

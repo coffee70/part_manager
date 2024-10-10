@@ -1,28 +1,33 @@
 'use server'
 import client from "@/lib/mongo/db"
-import { Section, SectionCollection } from "@/types/collections";
+import { Field, Section, SectionCollection } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
 import { z } from "zod";
+import { validators } from "../validators/validators";
+
+type Output = Array<Section & {
+    fields: Field[];
+}>;
+
 
 type Input = {
     collection: SectionCollection;
 }
 
 export async function getSections(input: Input) {
-    const { data, success, error } = z.custom<Input>().safeParse(input)
-    if (!success) {
-        throw new Error(error.message)
-    }
-    const { collection } = data
+
+    const { collection } = validators.input<Input>(input);
     const db = client.db('test')
-    const sections = db.collection<Section>('sections')
-    const result = await sections.find({ collection }).toArray()
-    
-    const sectionsWithFields = await Promise.all(result.map(async section => ({
+    const sectionsCollection = db.collection<Section>('sections')
+    const sections = await sectionsCollection.find({ collection }).toArray()
+
+    const fields = await Promise.all(sections.map(async section => ({
         ...section,
-        _id: section._id.toString(),
         fields: await getFields({ sectionId: section._id.toString() })
     })))
 
-    return sectionsWithFields
+    const serialized = JSON.parse(JSON.stringify(fields))
+
+    // validate the return value
+    return validators.output<Output>(serialized);
 }

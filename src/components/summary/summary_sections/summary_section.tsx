@@ -1,12 +1,14 @@
 'use client'
 import React from 'react';
 import ParagraphField from "@/components/fields/components/fields/paragraph";
-import SelectField from "@/components/fields/components/fields/select/select";
-import { Section } from './types';
+import SelectField from "@/components/fields/components/fields/select";
 import InputField from '@/components/fields/components/fields/input_field';
+import { Field, Section } from '@/types/collections';
 
 type SummarySectionProps = {
-    section: Section;
+    section: Section & {
+        fields: Field[];
+    };
 }
 
 export default function SummarySection({ section }: SummarySectionProps) {

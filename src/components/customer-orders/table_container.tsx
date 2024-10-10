@@ -17,19 +17,27 @@ import People from "@/components/ui/people";
 import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
-import { collectionKeys } from "@/lib/query_keys";
+import { collectionKeys, sectionKeys } from "@/lib/query_keys";
+import CustomerOrderForm from "./customer_order_form";
+import NewCustomerOrder from "./new_customer_order";
 
 export default function TableContainer() {
 
     const readOnlySearchParams = useSearchParams()
     const { pushSearchParams } = useRouterHelpers()
+    const searchParams = convertSearchParams(readOnlySearchParams)
 
     // queries
-    const searchParams = convertSearchParams(readOnlySearchParams)
-    const { data, isError, isPending } = useQuery({
+    const { 
+        data, 
+        isError, 
+        isPending 
+    } = useQuery({
         queryKey: collectionKeys.all('customerOrders'),
         queryFn: () => getCustomerOrders({ searchParams }),
     })
+
+
 
     // filter and sort
     const search = readOnlySearchParams.get('search') || ''
@@ -63,6 +71,7 @@ export default function TableContainer() {
         <DataLayout>
             <FilterToolbar>
                 <FilterToolbarRow>
+                    <NewCustomerOrder />
                     <SearchInput value={search} onChange={handleSearchChange} />
                     <Filter filters={filters} setFilters={setFilters} />
                     <Sort sort={sort} setSort={setSort} />

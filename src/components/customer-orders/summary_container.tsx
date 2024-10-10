@@ -15,6 +15,8 @@ import SummaryActivity from "@/components/summary/summary_activity/summary_activ
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
+import EditCustomerOrder from './edit_customer_order';
+import SummaryError from '../summary/summary_error';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -26,20 +28,21 @@ export default function SummaryContainer() {
 
     if (isPending) return <SummarySkeleton />
 
-    if (isError) return <div>Error...</div>
+    if (isError) return <SummaryError />
 
-    if (!data) return <div>Not found</div>
+    if (!data) return <SummaryError />
 
     return (
         <SummaryLayout>
             <SummaryTitle title={data.number} items={[{ label: data.customer.name }]} />
             <SummaryToolbar>
+                <EditCustomerOrder customerOrder={data}/>
                 <Priority />
-                <Status />
+                {/* <Status /> */}
             </SummaryToolbar>
-            <SummarySections sections={data.sections} />
-            {/* <SummaryNotes placeholder="Here are some notes on the order." /> */}
-            <SummaryAttachments files={data.attachments} uploads={{ _id: data._id }} />
+            <SummarySections values={data.values} />
+            <SummaryNotes initialValue={data.notes} />
+            <SummaryAttachments files={data.attachments} />
             {/* <SummaryList items={data.parts} /> */}
             {/* <SummaryPeople people={order.people} />  */}
             <SummaryActivity />

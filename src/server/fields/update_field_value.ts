@@ -1,7 +1,7 @@
 'use server'
 import client from "@/lib/mongo/db"
 import { ObjectId } from "mongodb"
-import { SectionCollection } from "@/types/collections"
+import { Valuable, SectionCollection } from "@/types/collections"
 import { z } from "zod"
 
 type Input = {
@@ -21,26 +21,16 @@ export async function updateFieldValue(input: Input) {
     if (!value) return
 
     const db = client.db('test')
-    const collection = db.collection(sectionCollection)
+    const collection = db.collection<Valuable>(sectionCollection)
 
-    await collection.updateOne(
-        { _id: new ObjectId(modelId), 'fields._id': fieldId },
-        {
-            $set: {
-                'fields.$.value': value
+    const update = await collection.updateOne(
+        { 
+            _id: new ObjectId(modelId) 
+        }, 
+        { 
+            $set: { 
+                [`values.${fieldId}`]: value
             }
         }
-    )
-
-    await collection.updateOne(
-        { _id: new ObjectId(modelId), 'fields._id': { $ne: fieldId } },
-        {
-            $addToSet: {
-                fields: {
-                    _id: fieldId,
-                    value: value
-                }
-            }
-        }
-    )
+    );
 }

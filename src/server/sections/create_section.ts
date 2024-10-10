@@ -1,10 +1,10 @@
 'use server'
 import client from "@/lib/mongo/db"
-import { Section } from "@/types/collections";
+import { Create, Section } from "@/types/collections";
 import { z } from "zod";
 
 type Input = {
-    section: Section;
+    section: Create<Section>;
 }
 
 export async function createSection(input: Input) {
@@ -14,6 +14,6 @@ export async function createSection(input: Input) {
     }
     const { section } = data
     const db = client.db('test')
-    const sections = db.collection<Section>('sections')
+    const sections = db.collection('sections')
     await sections.insertOne(section)
 }

@@ -65,3 +65,25 @@
     @apply bg-background text-text;
   }
 }
+
+/* .no-clock-icon {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+}
+
+.no-clock-icon::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.no-calendar-icon {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+} */
+
+.no-calendar-icon::-webkit-calendar-picker-indicator {
+  display: none;
+}

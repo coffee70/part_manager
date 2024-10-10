@@ -7,12 +7,9 @@ type Props = {
         name: string;
         url: string;
     }[];
-    uploads: {
-        _id: string;
-    }
 }
 
-export default function SummaryAttachments({ files, uploads }: Props) {
+export default function SummaryAttachments({ files }: Props) {
     return (
         <SummaryBase title="Attachments">
             <div className="flex flex-wrap gap-x-8 gap-y-2">
@@ -20,7 +17,7 @@ export default function SummaryAttachments({ files, uploads }: Props) {
                     <Attachment key={index} file={file} />
                 ))}
             </div>
-            <UploadAttachment {...uploads} />
+            <UploadAttachment />
         </SummaryBase>
     )
 }

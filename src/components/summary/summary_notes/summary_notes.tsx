@@ -4,13 +4,18 @@ import SummaryBase from '../summary_base';
 import { StyledTextarea as Textarea } from '@/components/ui/textarea';
 
 type SummaryNotesProps = {
-    placeholder?: string;
+    initialValue?: string;
 }
 
-export default function SummaryNotes({ placeholder }: SummaryNotesProps) {
+export default function SummaryNotes({ initialValue }: SummaryNotesProps) {
+    const [notes, setNotes] = React.useState(initialValue);
+
     return (
         <SummaryBase title="Notes">
-            <Textarea placeholder={placeholder}/>
+            <Textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+            />
         </SummaryBase>
     )
 }

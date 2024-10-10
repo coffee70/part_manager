@@ -11,7 +11,7 @@ type Filters = {
         value: DateRange;
     };
     statusId: {
-        value: number[];
+        value: string[];
     };
 }
 
@@ -30,7 +30,7 @@ export default function Filter<T extends Filters>({ filters, setFilters }: Props
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <DataAction enabled={enabled}>
+                <DataAction enabled={enabled} label='Filters'>
                     <FilterIcon width={24} height={24} />
                 </DataAction>
             </DropdownMenuTrigger>

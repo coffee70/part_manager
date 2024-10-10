@@ -7,11 +7,9 @@ type Props = React.InputHTMLAttributes<HTMLInputElement> & {
 
 export default function Input({ label, className, ...props }: Props) {
     return (
-        <>
-            <label>
-                {label}
-                <BaseInput {...props} className={cn('border border-muted-foreground p-1', className)} />
-            </label>
-        </>
+        <label>
+            {label}
+            <BaseInput {...props} className={cn('border border-muted-foreground p-1', className)} />
+        </label>
     )
 }

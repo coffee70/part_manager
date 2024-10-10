@@ -10,8 +10,11 @@ export async function createAttachment({
 }: {
     file: File;
     collection: AttachmentCollection;
-    modelId: string;
+    modelId: string | null;
 }) {
+    if (!modelId) {
+        throw new Error('No model id provided')
+    }
     const _id = new ObjectId(modelId)
     const db = client.db('test')
     const attachable = db.collection<Attachable>(collection)

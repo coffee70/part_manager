@@ -3,11 +3,11 @@ import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createField } from '@/server/fields/create_field';
 import { updateField } from '@/server/fields/update_field';
-import { Field, FieldType } from '@/types/collections';
+import { Create, Field, FieldType } from '@/types/collections';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 
-type Props<T extends Field> = {
+type Props<T extends Create<Field>> = {
     setOpen: (value: boolean) => void;
     initialState: T;
     field?: {
@@ -23,7 +23,7 @@ type Props<T extends Field> = {
     }
 }
 
-export function useFieldForm<T extends Field>(props: Props<T>) {
+export function useFieldForm<T extends Create<Field>>(props: Props<T>) {
 
     const { setOpen, initialState, field } = props;
 

@@ -15,8 +15,8 @@ export async function deleteSection(input: Input) {
     }
     const { _id } = data
     const db = client.db('test')
-    const sections = db.collection<Section>('sections')
-    const fields = db.collection<Field>('fields')
+    const sections = db.collection('sections')
+    const fields = db.collection('fields')
     await fields.deleteMany({ sectionId: _id })
     await sections.deleteOne({ _id: new ObjectId(_id) })
 }

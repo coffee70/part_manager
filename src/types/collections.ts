@@ -21,22 +21,43 @@ export type AttachmentCollection =
     | 'parts'
     | 'serials'
 
+export type Priority = 
+    | 'Lowest'
+    | 'Low'
+    | 'Normal'
+    | 'High'
+    | 'Highest'
+
+const priorities: Priority[] = [
+    'Lowest',
+    'Low',
+    'Normal',
+    'High',
+    'Highest'
+]
+
 export type CustomerOrder = {
     customerId: string;
     number: string;
+    priority: Priority;
     notes: string;
-    fields: {
-        _id: string;
-        value: string;
-    }[];
-    updatedAt: Date;
-} & Attachable
+} 
+& Attachable
+& Valuable
 
 export interface Attachable {
-    attachments: {
+    attachments?: {
         _id: ObjectId;
         filename: string;
     }[];
+}
+
+export interface Valuable {
+    values: Values;
+}
+
+export type Values = {
+    [key: string]: string | string[];
 }
 
 export type Customer = {
@@ -44,11 +65,13 @@ export type Customer = {
 }
 
 export type Section = {
+    _id: string;
     collection: SectionCollection;
     name: string;
 }
 
 export type Field = {
+    _id: string;
     sectionId: string;
     type: FieldType;
     name: string;
@@ -58,3 +81,5 @@ export type Field = {
     creative?: boolean;
     default?: string;
 }
+
+export type Create<T> = Omit<T, '_id'>
