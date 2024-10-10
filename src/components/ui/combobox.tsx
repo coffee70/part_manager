@@ -34,13 +34,22 @@ const Item = React.forwardRef<
 
 Item.displayName = 'Item';
 
-type ComboboxProps = {
-    value?: string | string[];
-    onChange?: (value: string | string[]) => void;
-    options: string[];
-    multiple?: boolean;
-    creative?: boolean;
+type SingleComboxProps = {
+    multiple?: false;
+    value?: string;
+    onChange?: (value: string) => void;
 }
+
+type MultipleComboboxProps = {
+    multiple: true;
+    value?: string[];
+    onChange?: (value: string[]) => void;
+}
+
+type ComboboxProps = {
+    options: string[];
+    creative?: boolean;
+} & (SingleComboxProps | MultipleComboboxProps);
 
 export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>((props, ref) => {
 
@@ -117,8 +126,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 _onChange && _onChange([...value, currentValue])
             }
             setInput("")
-        }
-        else {
+        } 
+        else if (!multiple) {
             if (creative || options.some((option) => option === currentValue)) {
                 setInput(currentValue === value ? "" : currentValue)
                 _onChange && _onChange(currentValue === value ? "" : currentValue)
