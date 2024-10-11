@@ -8,7 +8,7 @@ type Props = {
     multiple?: boolean;
     creative?: boolean;
     value?: string | string[];
-    onChange?: (value: string | string[]) => void;
+    onChange?: (value?: string | string[]) => void;
 }
 
 export default function Select({ label, description, className, ...props }: Props) {
