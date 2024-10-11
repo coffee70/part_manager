@@ -1,12 +1,22 @@
 'use client'
 import React from 'react';
-import { CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { autoUpdate, flip, FloatingFocusManager, FloatingPortal, offset, shift, size, useDismiss, useFloating, useInteractions, useListNavigation, useMergeRefs, useRole } from '@floating-ui/react';
+import {
+    autoUpdate,
+    flip,
+    FloatingFocusManager,
+    offset,
+    shift,
+    size,
+    useDismiss,
+    useFloating,
+    useInteractions,
+    useListNavigation,
+    useRole
+} from '@floating-ui/react';
 import { Input } from './input';
 import { ComboboxBadge } from './badge';
 import { ClickAwayListener } from '@mui/base';
-import { set } from 'date-fns';
 
 type ItemProps = {
     active: boolean;
@@ -117,20 +127,24 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
 
     // select logic
-    const onSelect = (currentValue: string) => {
+    const filteredOptions = !input ? options : options.filter((option) =>
+        option.toLowerCase().startsWith(input.toLowerCase())
+    );
+
+    const onSelect = (selected: string) => {
         if (multiple && Array.isArray(value)) {
-            if (value.includes(currentValue)) {
-                _onChange && _onChange(value.filter((v) => v !== currentValue))
+            if (value.includes(selected)) {
+                _onChange && _onChange(value.filter((v) => v !== selected))
             }
-            else if (creative || options.some((option) => option === currentValue)) {
-                _onChange && _onChange([...value, currentValue])
+            else if (creative || options.some((option) => option === selected)) {
+                _onChange && _onChange([...value, selected])
             }
             setInput("")
-        } 
+        }
         else if (!multiple) {
-            if (creative || options.some((option) => option === currentValue)) {
-                setInput(currentValue === value ? "" : currentValue)
-                _onChange && _onChange(currentValue === value ? "" : currentValue)
+            if (creative || options.some((option) => option === selected)) {
+                setInput(selected)
+                _onChange && _onChange(selected)
             }
             setOpen(false)
         }
@@ -144,7 +158,11 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
         if (e.key === "Enter") {
             e.preventDefault()
-            if (creative) {
+            if (activeIndex !== null && filteredOptions[activeIndex]) {
+                onSelect(filteredOptions[activeIndex])
+                setActiveIndex(null)
+            }
+            else if (creative) {
                 onSelect(input)
             }
         }
@@ -162,16 +180,6 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         setOpen(true);
     }
 
-    const selected = (option: string) => {
-        if (Array.isArray(value)) {
-            return value.includes(option)
-        }
-        if (creative) {
-            return option === input
-        }
-        return option === value
-    }
-
     const onClick = () => {
         setOpen(true);
         setActiveIndex(0);
@@ -179,7 +187,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     const onClickAway = () => {
         if (!creative) {
-            if (value && !Array.isArray(value)) {
+            if (value && !Array.isArray(value) && input !== "") {
                 setInput(value)
             }
             else {
@@ -187,10 +195,6 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
             }
         }
     }
-
-    const items = !input ? options : options.filter((option) =>
-        option.toLowerCase().startsWith(input.toLowerCase())
-    );
 
     return (
         <ClickAwayListener onClickAway={onClickAway}>
@@ -231,28 +235,22 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                                 }
                             })}
                         >
-                            {items.length > 0 && items.map((item, index) => (
+                            {filteredOptions.length > 0 && filteredOptions.map((option, index) => (
                                 <Item
                                     className='flex items-center p-1'
-                                    key={item}
+                                    key={option}
                                     active={activeIndex === index}
                                     {...getItemProps({
-                                        onClick: () => onSelect(item),
+                                        onClick: () => onSelect(option),
                                         ref(node) {
                                             listRef.current[index] = node;
                                         }
                                     })}
                                 >
-                                    <CheckIcon
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            selected(item) ? "opacity-100" : "opacity-0"
-                                        )}
-                                    />
-                                    {item}
+                                    {option}
                                 </Item>
                             ))}
-                            {items.length === 0 && (
+                            {filteredOptions.length === 0 && (
                                 <div className='p-1 text-sm'>No options found.</div>
                             )}
                         </div>
