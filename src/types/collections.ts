@@ -57,7 +57,7 @@ export interface Valuable {
 }
 
 export type Values = {
-    [key: string]: string | string[];
+    [key: string]: string | string[] | undefined;
 }
 
 export type Customer = {

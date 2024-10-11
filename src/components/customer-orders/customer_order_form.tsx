@@ -20,7 +20,7 @@ type Props = {
 
 type AttributeState = {
     number: string;
-    customerName: string;
+    customerName: string | undefined;
     priority: Priority;
     notes: string;
 }
@@ -85,10 +85,10 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
                             <Select
                                 label='Customer'
                                 description='The customer for this order'
-                                creative
                                 options={customers?.map(customer => customer.name) || []}
                                 value={attributeState.customerName}
                                 onChange={(v) => setAttributeState({ ...attributeState, customerName: Array.isArray(v) ? v[0] : v })}
+                                creative
                             />
                             <Select
                                 label='Priority'

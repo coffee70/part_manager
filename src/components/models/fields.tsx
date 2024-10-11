@@ -8,15 +8,15 @@ import {
 import Input from './fields/input';
 import Textarea from './fields/textarea';
 import Select from './fields/select';
-import { Section, Field } from '@/types/collections';
+import { Values } from '@/types/collections';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { getSections } from '@/server/sections/get_sections';
 import { sectionKeys } from '@/lib/query_keys';
 import { useQuery } from '@tanstack/react-query';
 
 type Props = {
-    fieldState?: Record<string, any>;
-    setFieldState?: (fieldState: Record<string, any>) => void;
+    fieldState?: Values;
+    setFieldState?: (fieldState: Values) => void;
 }
 
 export default function Fields({ fieldState, setFieldState }: Props) {
@@ -66,9 +66,9 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                         label={field.name}
                                         description={field.description}
                                         value={fieldState?.[field._id]}
-                                        onChange={value => setFieldState?.({
+                                        onChange={e => setFieldState?.({
                                             ...fieldState,
-                                            [field._id]: value,
+                                            [field._id]: e.target.value,
                                         })}
                                     />
                                 ) : (
@@ -77,9 +77,9 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                         description={field.description}
                                         type={field.type}
                                         value={fieldState?.[field._id]}
-                                        onChange={value => setFieldState?.({
+                                        onChange={e => setFieldState?.({
                                             ...fieldState,
-                                            [field._id]: value,
+                                            [field._id]: e.target.value,
                                         })}
                                     />
                                 )}

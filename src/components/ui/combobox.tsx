@@ -47,12 +47,12 @@ Item.displayName = 'Item';
 type SingleComboxProps = {
     multiple?: false;
     value?: string;
-    onChange?: (value: string) => void;
+    onChange?: (value: string | undefined) => void;
 }
 
 type MultipleComboboxProps = {
     multiple: true;
-    value?: string[];
+    value: string[];
     onChange?: (value: string[]) => void;
 }
 
@@ -175,9 +175,13 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     }
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setInput(value);
+        const inputValue = e.target.value;
+        setInput(inputValue);
         setOpen(true);
+
+        if (inputValue === "" && !multiple) {
+            _onChange && _onChange(undefined)
+        }
     }
 
     const onClick = () => {

@@ -4,7 +4,7 @@ import { Customer, CustomerOrder } from "@/types/collections"
 import { validators } from "../validators/validators";
 
 type Input = {
-    customerOrder: Omit<CustomerOrder, 'customerId'> & { customerName: string };
+    customerOrder: Omit<CustomerOrder, 'customerId'> & { customerName: string | undefined };
 }
 
 export async function createCustomerOrder(input: Input) {
@@ -15,6 +15,9 @@ export async function createCustomerOrder(input: Input) {
     const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders')
 
     let customerId: string;
+    if (customerOrder.customerName === undefined) {
+        throw new Error('Customer name is required')
+    }
     const customer = await customersCollection.findOne({ name: customerOrder.customerName })
     if (!customer) {
         const { insertedId } = await customersCollection.insertOne({ name: customerOrder.customerName })
