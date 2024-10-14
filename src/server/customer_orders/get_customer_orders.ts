@@ -133,7 +133,6 @@ export async function getCustomerOrders({
                 name: customer.name
             },
             number: order.number,
-            updatedAt: order.updatedAt,
         };
     }));
 }
