@@ -30,7 +30,7 @@ export default function Sections() {
                 <PageTitle
                     title="Fields"
                     subtitle={name}
-                    Icon={AlignLeftIcon}
+                    icon={<AlignLeftIcon strokeWidth={3} size={50} />}
                 />
                 <AddSection />
             </AppBar>

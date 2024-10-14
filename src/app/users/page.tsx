@@ -20,7 +20,7 @@ export default async function Page() {
             <div className="flex flex-col w-full h-full">
                 <AppBar>
                     <PageTitle
-                        Icon={UsersIcon}
+                        icon={<UsersIcon strokeWidth={2} size={50} />}
                         title="Users"
                     />
                     <CreateUser />
