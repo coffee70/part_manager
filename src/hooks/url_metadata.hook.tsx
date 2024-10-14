@@ -11,6 +11,13 @@ const conversion: Record<string, SectionCollection> = {
     'customers': 'customers',
 }
 
+const nameConversion: Record<SectionCollection, string> = {
+    customerOrders: 'Customer Orders',
+    shopOrders: 'Shop Orders',
+    parts: 'Parts',
+    serials: 'Serials',
+    customers: 'Customers',
+}
 
 export function useURLMetadata() {
     const searchParams = useSearchParams();
@@ -24,5 +31,7 @@ export function useURLMetadata() {
 
     const collection = conversion[urlCollection];
 
-    return { id, collection };
+    const name = nameConversion[collection];
+
+    return { id, collection, name };
 }

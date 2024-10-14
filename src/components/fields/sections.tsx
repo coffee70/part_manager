@@ -1,6 +1,5 @@
 'use client'
 import React from 'react';
-import Title from '@/components/fields/components/title';
 import AddSection from './section/add_section';
 import Section from './section';
 import { AppBar } from '../ui/app_bar';
@@ -8,12 +7,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
+import PageTitle from '../ui/page_title';
+import { AlignLeftIcon } from 'lucide-react';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const { collection } = useURLMetadata();
+    const { collection, name } = useURLMetadata();
 
     const { data, isError, isPending } = useQuery({
         queryKey: sectionKeys.all(collection),
@@ -26,7 +27,11 @@ export default function Sections() {
     return (
         <div className="flex flex-col w-full h-full">
             <AppBar>
-                <Title />
+                <PageTitle
+                    title="Fields"
+                    subtitle={name}
+                    Icon={AlignLeftIcon}
+                />
                 <AddSection />
             </AppBar>
             <div className="flex-1 p-6 space-y-4 overflow-y-auto">
