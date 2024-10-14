@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '@/server/users/create_user';
 import { userKeys } from '@/lib/query_keys';
 import { updateUser } from '@/server/users/update_user';
+import PasswordInput from './fields/password_input';
 
 type Props = {
     open?: boolean;
@@ -92,7 +93,7 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
                             value={formState.role}
                             onChange={v => setFormState({ ...formState, role: v as Role })}
                         />
-                        <Input
+                        <PasswordInput
                             label='Password'
                             value={formState.password}
                             onChange={e => setFormState({ ...formState, password: e.target.value })}
