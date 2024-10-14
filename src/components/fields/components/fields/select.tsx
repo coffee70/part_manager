@@ -7,7 +7,7 @@ import Loading from "./loading";
 import Editing from "./editing";
 import NotEditing from "./not_editing";
 import { useIsEditing } from "./is_editing.hook";
-import { Combobox } from "@/components/ui/combobox";
+import { Combobox } from "@/components/ui/combobox/combobox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateFieldValue } from "@/server/fields/update_field_value";
 import { useURLMetadata } from "@/hooks/url_metadata.hook";
