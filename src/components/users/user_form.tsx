@@ -52,7 +52,7 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (user) {
-            update({ user: { ...user, ...formState } });
+            update({ user: { _id: user._id, ...formState } });
         } else {
             create({ user: formState });
         }

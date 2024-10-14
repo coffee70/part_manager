@@ -21,26 +21,23 @@ export async function updateUser(input: Input) {
         user.username.length > 31 ||
         !/^[a-z0-9_-]+$/.test(user.username)
     ) {
-        return {
-            error: "Invalid username"
-        };
+        throw new Error("Invalid username");
     }
 
     const db = client.db('test');
     const users = db.collection<UserDoc>('users');
 
-    const usernameInUse = await users.findOne({ username: user.username }) !== null;
-    if (usernameInUse) {
-        return {
-            error: "Username already in use"
-        };
+    const userNameChanged = await users.findOne({ _id: user._id, username: { $ne: user.username } }) !== null;
+    if (userNameChanged) {
+        const usernameInUse = await users.findOne({ username: user.username }) !== null;
+        if (usernameInUse) {
+            throw new Error("Username already in use");
+        }
     }
 
     if (user.password.length > 0) {
         if (user.password.length < 6 || user.password.length > 255) {
-            return {
-                error: "Invalid password"
-            };
+            throw new Error("Invalid password");
         }
 
         const passwordHash = await hash(user.password, {
