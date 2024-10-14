@@ -5,9 +5,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { type User } from '@/types/collections';
 import { More } from "@/components/ui/more";
 import UserForm from './user_form';
+import DeleteUser, { useDeleteUser } from './delete_user';
 
 export default function User({ user }: { user: User }) {
     const [editOpen, setEditOpen] = React.useState(false)
+    const [deleteOpen, setDeleteOpen] = React.useState(false)
+
+    const {
+        handleConfirm,
+        handleCancel,
+        mutate
+    } = useDeleteUser({ _id: user._id })
 
     return (
         <>
@@ -24,14 +32,26 @@ export default function User({ user }: { user: User }) {
                         <DropdownMenuContent>
                             <DropdownMenuGroup>
                                 <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => mutate({ setOpen: setDeleteOpen })}>Delete</DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </TableCell>
             </TableRow>
 
-            <UserForm user={user} open={editOpen} onOpenChange={setEditOpen} />
+            <UserForm
+                user={user}
+                open={editOpen}
+                onOpenChange={setEditOpen}
+            />
+
+            <DeleteUser
+                _id={user._id}
+                open={deleteOpen}
+                onOpenChange={setDeleteOpen}
+                handleCancel={handleCancel}
+                handleConfirm={handleConfirm}
+            />
         </>
     )
 }
