@@ -1,7 +1,7 @@
 'use server'
 
 import client from "@/lib/mongo/db";
-import { Create, Role, User, UserDoc } from "@/types/collections";
+import { Create, User, UserDoc } from "@/types/collections";
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
