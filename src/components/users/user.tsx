@@ -16,7 +16,7 @@ export default function User({ user }: { user: User }) {
                 <TableCell>{user.title}</TableCell>
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.role}</TableCell>
-                <TableCell>
+                <TableCell className='w-8'>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <More />
