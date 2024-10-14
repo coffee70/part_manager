@@ -9,12 +9,18 @@ import { Button } from '../ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser } from '@/server/users/create_user';
 import { userKeys } from '@/lib/query_keys';
+import { updateUser } from '@/server/users/update_user';
 
-export default function UserForm({ children, user }: { children: React.ReactNode, user?: User }) {
+type Props = {
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    user?: User;
+    children?: React.ReactNode;
+}
+
+export default function UserForm({ user, open, onOpenChange, children }: Props) {
     const title = user ? 'Edit User' : 'New User';
     const description = user ? 'Edit the user details' : 'Create a new user';
-
-    const [open, setOpen] = React.useState(false);
 
     const [formState, setFormState] = React.useState({
         name: user?.name || '',
@@ -30,21 +36,29 @@ export default function UserForm({ children, user }: { children: React.ReactNode
         mutationFn: createUser,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all })
-            setOpen(false);
+            onOpenChange && onOpenChange(false);
+        }
+    })
+
+    const { mutate: update } = useMutation({
+        mutationFn: updateUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: userKeys.all })
+            onOpenChange && onOpenChange(false);
         }
     })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (user) {
-            // edit
+            update({ user: { ...user, ...formState } });
         } else {
             create({ user: formState });
         }
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
