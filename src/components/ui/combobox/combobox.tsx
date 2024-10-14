@@ -26,9 +26,6 @@ const Item = React.forwardRef<
     HTMLDivElement,
     ItemProps
 >(({ active, children, className, ...others }, ref) => {
-    React.useEffect(() => {
-        console.log(active)
-    })
     const id = React.useId();
     return (
         <div
