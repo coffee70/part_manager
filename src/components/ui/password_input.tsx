@@ -18,11 +18,11 @@ export const PasswordInput = React.forwardRef<HTMLInputElement, Props>(({ contai
                 {...props}
             />
             {show ? (
-                <button onClick={() => setShow(false)}>
+                <button type='button' onClick={() => setShow(false)}>
                     <EyeOffIcon />
                 </button>
             ) : (
-                <button onClick={() => setShow(true)}>
+                <button type='button' onClick={() => setShow(true)}>
                     <EyeIcon />
                 </button>
             )}
