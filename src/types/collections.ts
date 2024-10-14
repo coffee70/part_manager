@@ -1,3 +1,4 @@
+import { LuciaUser } from "@/lib/auth"
 import { DBRef, ObjectId, WithId } from "mongodb"
 
 export type FieldType =
@@ -81,5 +82,25 @@ export type Field = {
     creative?: boolean;
     default?: string;
 }
+
+export interface UserDoc extends LuciaUser {
+    name: string;
+    title: string;
+    role: Role;
+    password_hash: string;
+}
+
+export interface User {
+    _id: string;
+    name: string;
+    username: string;
+    title: string;
+    role: Role;
+    password: string;
+}
+
+export type Role = 'admin' | 'user'
+
+export const roles: Role[] = ['admin', 'user'];
 
 export type Create<T> = Omit<T, '_id'>

@@ -1,6 +1,7 @@
 import { NavBase, NavContent, NavLogo, NavDivider, NavHeader, NavItem, SubNav, SubNavItem } from "@/components/ui/side_nav";
 import {
     AlignLeftIcon,
+    Building2Icon,
     DraftingCompassIcon,
     FactoryIcon,
     GalleryHorizontalEndIcon,
@@ -22,7 +23,7 @@ export default function SideNavigation() {
                 <NavItem label='Shop Orders' icon={<FactoryIcon />} />
                 <NavItem label='Parts' icon={<DraftingCompassIcon />} />
                 <NavItem label='Serials' icon={<HammerIcon />} />
-                <NavItem label='Customers' icon={<UserIcon />} />
+                <NavItem label='Customers' icon={<Building2Icon />} />
             </NavContent>
             <NavDivider />
             <NavContent>
@@ -38,6 +39,7 @@ export default function SideNavigation() {
                     <SubNavItem label="Parts" />
                     <SubNavItem label="Serials" bottom />
                 </SubNav>
+                <NavItem label='Users' icon={<UserIcon />} />
             </NavContent>
             <NavDivider bottom />
             <NavContent>
