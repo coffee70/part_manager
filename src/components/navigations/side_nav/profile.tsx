@@ -10,6 +10,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "../../ui/dropdown-menu"
+import Logout from "@/components/auth/logout"
 
 
 export default function Profile() {
@@ -34,9 +35,7 @@ export default function Profile() {
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem className='flex items-center justify-center w-full h-full border border-red-700 text-red-700 font-bold cursor-pointer focus-visible:bg-red-700 focus-visible:text-white'>
-                            <span>Logout</span>
-                        </DropdownMenuItem>
+                        <Logout />
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
