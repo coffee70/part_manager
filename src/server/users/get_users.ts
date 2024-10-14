@@ -11,7 +11,5 @@ export async function getUsers() {
     const users = db.collection('users');
     const result = await users.find().toArray();
     const serialized = JSON.parse(JSON.stringify(result));
-    const valid = validators.output<Output>(serialized);
-    console.log(valid);
-    return valid;
+    return validators.output<Output>(serialized);
 }
