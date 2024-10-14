@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
-import PageTitle from '../ui/page_title';
+import { PageTitle } from '../ui/page_title';
 import { AlignLeftIcon } from 'lucide-react';
 
 const Loading = () => <div>Loading...</div>;

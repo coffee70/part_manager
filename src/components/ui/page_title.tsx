@@ -5,7 +5,7 @@ type Props = {
     subtitle?: string;
     Icon: LucideIcon;
 }
-export default function PageTitle({ title, subtitle, Icon }: Props) {
+export function PageTitle({ title, subtitle, Icon }: Props) {
     return (
         <div className="flex items-center space-x-4">
             <div className='flex items-center justify-center w-14 h-14 bg-black rounded-md text-white'>
