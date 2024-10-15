@@ -12,6 +12,8 @@ import Textarea from '../models/fields/textarea';
 import Fields from '../models/fields';
 import { Button } from '../ui/button';
 import { createCustomerOrder } from '@/server/customer_orders/create_customer_order';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 type Props = {
     customerOrder?: CustomerOrder;
@@ -32,21 +34,24 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
 
     const queryClient = useQueryClient();
 
+    const [open, setOpen] = React.useState(false);
+
     const { data: customers } = useQuery({
         queryKey: collectionKeys.all('customers'),
         queryFn: () => getCustomers(),
     })
 
-    const { mutate: create } = useMutation({
+    const { mutate: create, error: createError } = useMutation({
         mutationFn: createCustomerOrder,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: collectionKeys.all('customerOrders') })
+            setOpen(false)
         }
     })
 
     const [attributeState, setAttributeState] = React.useState<AttributeState>({
         number: customerOrder?.number || '',
-        customerName: customers?.find(customer => customer._id.toString() === customerOrder?.customerId)?.name || '',
+        customerName: customers?.find(customer => customer._id === customerOrder?.customerId)?.name || '',
         priority: customerOrder?.priority || 'Normal',
         notes: customerOrder?.notes || '',
     })
@@ -59,7 +64,7 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
@@ -72,6 +77,11 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
                         </VisuallyHidden.Root>
                     </DialogDescription>
                 </DialogHeader>
+                {createError && <Alert variant='destructive'>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{createError.message}</AlertDescription>
+                </Alert>}
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
                     <div className='max-h-[700px] overflow-y-auto'>
                         <div className="flex flex-col space-y-1">
