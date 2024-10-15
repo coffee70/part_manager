@@ -1,16 +1,17 @@
+import { Role, SessionDoc, UserDoc } from "@/types/collections";
 import client from "./mongo/db";
 import { MongodbAdapter } from "@lucia-auth/adapter-mongodb";
 import { webcrypto } from "crypto";
 import { Lucia, User, Session } from "lucia";
-import { ObjectId } from "mongodb";
 import { cookies } from "next/headers";
 import { cache } from "react";
+import { Collection } from "mongodb";
 
 globalThis.crypto = webcrypto as Crypto;
 
 const db = client.db("test");
-const UserCollection = db.collection<LuciaUser>("users");
-const SessionCollection = db.collection<LuciaSession>("sessions");
+const UserCollection = db.collection("users") as Collection<UserDoc>;
+const SessionCollection = db.collection("sessions") as Collection<SessionDoc>;
 
 const adapter = new MongodbAdapter(SessionCollection, UserCollection);
 
@@ -64,15 +65,8 @@ declare module "lucia" {
 
 interface DatabaseUserAttributes {
 	username: string;
-}
-
-export interface LuciaUser {
-    _id: string;
-    username: string;
-}
-
-export interface LuciaSession {
-    _id: string;
-    expires_at: Date;
-    user_id: string;
+	password_hash: string;
+	title: string;
+	role: Role;
+	name: string;
 }

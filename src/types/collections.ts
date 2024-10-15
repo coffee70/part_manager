@@ -1,5 +1,4 @@
-import { LuciaUser } from "@/lib/auth"
-import { DBRef, ObjectId, WithId } from "mongodb"
+import { ObjectId } from "mongodb"
 
 export type FieldType =
     | 'text'
@@ -83,11 +82,19 @@ export type Field = {
     default?: string;
 }
 
-export interface UserDoc extends LuciaUser {
+export interface UserDoc {
+    _id: string;
+    username: string;
+    password_hash: string;
     name: string;
     title: string;
     role: Role;
-    password_hash: string;
+}
+
+export interface SessionDoc {
+    _id: string;
+    expires_at: Date;
+    user_id: string;
 }
 
 export interface User {

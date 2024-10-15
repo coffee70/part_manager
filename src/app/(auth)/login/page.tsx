@@ -1,14 +1,21 @@
 import { Form } from "@/components/auth/form";
 import { verify } from "@node-rs/argon2";
 import { cookies } from "next/headers";
-import { lucia } from "@/lib/auth";
+import { lucia, validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import client from "@/lib/mongo/db";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password_input";
+import { UserDoc } from "@/types/collections";
 
 export default async function Page() {
+    
+    const { user } = await validateRequest();
+    if (user) {
+        redirect("/");
+    }
+
     return (
         <div className="flex w-full h-full items-center justify-center">
             <div className="flex flex-col space-y-4 shadow-md rounded-md border border-gray-200 p-4 w-1/4">
@@ -48,7 +55,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
     }
 
     const db = client.db("test");
-    const existingUser = await db.collection("users").findOne({ username });
+    const existingUser = await db.collection<UserDoc>("users").findOne({ username });
     if (!existingUser) {
         // NOTE:
         // Returning immediately allows malicious actors to figure out valid usernames from response times,
@@ -76,10 +83,10 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
         }
     }
 
-    const session = await lucia.createSession(existingUser.id, {});
+    const session = await lucia.createSession(existingUser._id, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
-    return redirect("/");
+    redirect("/");
 }
 
 interface ActionResult {
