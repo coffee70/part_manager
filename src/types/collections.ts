@@ -61,6 +61,7 @@ export type Values = {
 }
 
 export type Customer = {
+    _id: string;
     name: string;
 }
 
@@ -111,3 +112,5 @@ export type Role = 'admin' | 'user'
 export const roles: Role[] = ['admin', 'user'];
 
 export type Create<T> = Omit<T, '_id'>
+
+export type Doc<T> = Omit<T, '_id'> & { _id: string };

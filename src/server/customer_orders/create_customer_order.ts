@@ -11,8 +11,8 @@ export async function createCustomerOrder(input: Input) {
     const { customerOrder } = validators.input<Input>(input)
 
     const db = client.db('test')
-    const customersCollection = db.collection<Customer>('customers')
-    const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders')
+    const customersCollection = db.collection('customers')
+    const customerOrdersCollection = db.collection('customerOrders')
 
     let customerId: string;
     if (customerOrder.customerName === undefined) {
