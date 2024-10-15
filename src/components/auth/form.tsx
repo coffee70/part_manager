@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useFormState } from "react-dom";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
 type Props = Omit<React.FormHTMLAttributes<HTMLFormElement>, 'action'> & {
