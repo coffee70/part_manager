@@ -169,9 +169,14 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         const inputValue = e.target.value;
         setInput(inputValue);
         setOpen(true);
-
-        if (inputValue === "" && !multiple) {
-            _onChange && _onChange(undefined)
+        
+        if (!creative) {
+            if (!multiple && inputValue === "") {
+                _onChange && _onChange(undefined)
+            }
+        }
+        else {
+            _onChange && _onChange(inputValue)
         }
     }
 
