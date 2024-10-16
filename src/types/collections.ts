@@ -41,16 +41,29 @@ export type CustomerOrder = {
     number: string;
     priority: Priority;
     notes: string;
-} 
-& Attachable
-& Valuable
+} & Valuable
+
+export type CustomerOrderDoc = {
+    _id: ObjectId;
+    customerId: ObjectId;
+    number: string;
+    priority: Priority;
+    notes: string;
+}
 
 export interface Attachable {
+    attachments: {
+        name: string;
+        url: string;
+    }[];
+};
+
+export interface AttachableDoc {
     attachments?: {
         _id: ObjectId;
         filename: string;
     }[];
-}
+};
 
 export interface Valuable {
     values: Values;
@@ -62,6 +75,11 @@ export type Values = {
 
 export type Customer = {
     _id: string;
+    name: string;
+}
+
+export type CustomerDoc = {
+    _id: ObjectId;
     name: string;
 }
 

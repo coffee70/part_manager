@@ -1,6 +1,6 @@
 'use server'
 import client from "@/lib/mongo/db"
-import { Customer, CustomerOrder } from "@/types/collections"
+import { CustomerOrder } from "@/types/collections"
 import { validators } from "../validators/validators";
 
 type Input = {

@@ -1,19 +1,27 @@
 'use server'
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
-import { Customer, CustomerOrder, Section, Field } from "@/types/collections";
-import { getFieldValues } from "@/server/customer_orders/fields/get_field_values";
-import { z } from "zod";
+import { CustomerOrderDoc, CustomerDoc, AttachableDoc, Priority } from "@/types/collections";
 import { redirect } from "next/navigation";
-import { validators } from "../validators/validators";
+import { z } from "zod";
 
-type Output = CustomerOrder & {
-    customer: Customer;
-    attachments: {
-        name: string;
-        url: string;
-    }[];
-} | null;
+const OutputSchema = z.object({
+    customerId: z.string(),
+    number: z.string(),
+    priority: z.custom<Priority>(),
+    notes: z.string(),
+    customer: z.object({
+        _id: z.string(),
+        name: z.string()
+    }),
+    attachments: z.array(z.object({
+        name: z.string(),
+        url: z.string()
+    })),
+    values: z.record(z.union([z.string(), z.array(z.string())]))
+}).nullable();
+
+type Output = z.infer<typeof OutputSchema>;
 
 type Input = {
     _id?: string | null;
@@ -22,8 +30,8 @@ type Input = {
 export async function getCustomerOrder({ _id }: Input): Promise<Output> {
 
     const db = client.db('test')
-    const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders')
-    const customersCollection = db.collection<Customer>('customers')
+    const customerOrdersCollection = db.collection<CustomerOrderDoc & AttachableDoc>('customerOrders')
+    const customersCollection = db.collection<CustomerDoc>('customers')
 
     // if no id is provided, redirect to the first customer order so the URL is formed correctly
     // since alot of frontend functionality relies on the id being present in the URL
@@ -56,11 +64,11 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
         attachments: customerOrder.attachments?.map((attachment) => ({
             name: attachment.filename,
             url: process.env.FILE_GET_URL as string + attachment._id
-        })),
+        })) || [],
     };
 
     const serialized = JSON.parse(JSON.stringify(res));
 
-    // validate the return value
-    return validators.output<Output>(serialized);
+    const parsed = OutputSchema.parse(serialized);
+    return parsed;
 }
