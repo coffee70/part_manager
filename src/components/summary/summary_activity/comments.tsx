@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { Textarea } from "@/components/ui/textarea";
-import ActionButtons from '../summary_notes/action_buttons';
+import ActionButtons from './action_buttons';
 
 const PLACEHOLDER = "Add a comment..."
 
