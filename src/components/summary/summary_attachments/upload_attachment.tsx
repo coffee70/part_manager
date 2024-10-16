@@ -1,9 +1,7 @@
 'use client'
 import React from "react";
-import { PlusIcon } from "lucide-react";
 import { createAttachment } from "@/server/attachments/create_attachment";
 import { useAttachmentCollection } from "@/hooks/attachment_collection.hook";
-import { ObjectId } from "mongodb";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AttachmentCollection } from "@/types/collections";
 import { collectionKeys } from "@/lib/query_keys";
@@ -15,7 +13,11 @@ type FormState = {
     modelId: string | null;
 }
 
-export default function UploadAttachment() {
+type Props = {
+    inputRef: React.RefObject<HTMLInputElement>;
+}
+
+export default function UploadAttachment({ inputRef }: Props) {
     const { id } = useURLMetadata();
     const attachmentCollection = useAttachmentCollection();
 
@@ -45,15 +47,12 @@ export default function UploadAttachment() {
 
     return (
         <form>
-            <label className="flex items-center justify-center space-x-1 p-1 border border-dashed border-gray-500 text-gray-600 rounded-md cursor-pointer">
-                <PlusIcon />
-                <span>Add Attachment</span>
-                <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleFileChange}
-                />
-            </label>
+            <input
+                ref={inputRef}
+                type="file"
+                className="hidden"
+                onChange={handleFileChange}
+            />
         </form>
     );
 }
