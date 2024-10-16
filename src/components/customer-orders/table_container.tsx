@@ -17,9 +17,9 @@ import People from "@/components/ui/people";
 import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
-import { collectionKeys, sectionKeys } from "@/lib/query_keys";
-import CustomerOrderForm from "./customer_order_form";
+import { collectionKeys } from "@/lib/query_keys";
 import NewCustomerOrder from "./new_customer_order";
+import Priority from "../list/priority/priority";
 
 export default function TableContainer() {
 
@@ -28,16 +28,14 @@ export default function TableContainer() {
     const searchParams = convertSearchParams(readOnlySearchParams)
 
     // queries
-    const { 
-        data, 
-        isError, 
-        isPending 
+    const {
+        data,
+        isError,
+        isPending
     } = useQuery({
         queryKey: collectionKeys.all('customerOrders'),
         queryFn: () => getCustomerOrders({ searchParams }),
     })
-
-
 
     // filter and sort
     const search = readOnlySearchParams.get('search') || ''
@@ -81,6 +79,9 @@ export default function TableContainer() {
                 <TableBody>
                     {data.map((order) => (
                         <TableRow key={order._id} onClick={() => pushSearchParams({ id: order._id })}>
+                            <TableCell className="px-1">
+                                <Priority priority={order.priority} />
+                            </TableCell>
                             <TableCell>
                                 <Label label={order.number} subLabel={order.customer.name} />
                             </TableCell>

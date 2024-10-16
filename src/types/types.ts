@@ -40,12 +40,6 @@ export type Icon = LucideIcon;
 
 export type IconProps = React.ComponentProps<Icon>;
 
-export type Priority = {
-    label: string;
-    color: string;
-    Icon: React.ComponentType<IconProps>;
-}
-
 export type Detail = {
     id: number;
     label: string;

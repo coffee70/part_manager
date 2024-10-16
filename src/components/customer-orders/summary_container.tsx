@@ -37,7 +37,7 @@ export default function SummaryContainer() {
             <SummaryTitle title={data.number} items={[{ label: data.customer.name }]} />
             <SummaryToolbar>
                 <EditCustomerOrder customerOrder={data}/>
-                <Priority />
+                <Priority priority={data.priority} />
                 {/* <Status /> */}
             </SummaryToolbar>
             <SummarySections values={data.values} />

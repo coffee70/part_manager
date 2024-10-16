@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb"
+import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
 
 export type FieldType =
     | 'text'
@@ -21,19 +22,45 @@ export type AttachmentCollection =
     | 'parts'
     | 'serials'
 
-export type Priority = 
+export type Priority =
     | 'Lowest'
     | 'Low'
     | 'Normal'
     | 'High'
     | 'Highest'
 
-const priorities: Priority[] = [
-    'Lowest',
-    'Low',
-    'Normal',
-    'High',
-    'Highest'
+export type PriorityInfo = {
+    label: Priority;
+    color: string;
+    Icon: LucideIcon;
+}
+
+export const priorities: PriorityInfo[] = [
+    {
+        label: 'Highest',
+        color: 'red',
+        Icon: ChevronsUpIcon
+    },
+    {
+        label: 'High',
+        color: 'orange',
+        Icon: ChevronUpIcon
+    },
+    {
+        label: 'Normal',
+        color: 'yellow',
+        Icon: CircleMinusIcon
+    },
+    {
+        label: 'Low',
+        color: 'green',
+        Icon: ChevronDownIcon
+    },
+    {
+        label: 'Lowest',
+        color: 'darkgreen',
+        Icon: ChevronsDownIcon
+    },
 ]
 
 export type CustomerOrder = {

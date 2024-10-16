@@ -1,7 +1,7 @@
 'use server'
 import { z } from 'zod';
 import client from '@/lib/mongo/db';
-import { Customer, CustomerOrder } from '@/types/collections';
+import { Customer, CustomerDoc, CustomerOrder, priorities } from '@/types/collections';
 import { ObjectId } from 'mongodb';
 
 // schemas
@@ -9,8 +9,6 @@ const UpdatedAt = z.object({
     to: z.coerce.date(),
     from: z.coerce.date(),
 });
-
-const QueryResultSchema = z.custom<CustomerOrder[]>();
 
 export async function getCustomerOrders({
     searchParams
@@ -96,7 +94,7 @@ export async function getCustomerOrders({
 
     const db = client.db('test');
     const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders');
-    const customersCollection = db.collection<Customer>('customers');
+    const customersCollection = db.collection<CustomerDoc>('customers');
 
     const matchStage: any = {};
 
@@ -133,6 +131,7 @@ export async function getCustomerOrders({
                 name: customer.name
             },
             number: order.number,
+            priority: order.priority,
         };
     }));
 }
