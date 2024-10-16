@@ -24,7 +24,7 @@ export default function SummaryBase({ title, action, label, children }: Props) {
                     <span className='font-bold text-lg'>{title}</span>
                     {action && (
                         <Tooltip>
-                            <TooltipTrigger>
+                            <TooltipTrigger asChild>
                                 <button
                                     type='button'
                                     className='p-1 rounded-full hover:bg-foreground'
