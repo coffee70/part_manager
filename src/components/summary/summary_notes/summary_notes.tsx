@@ -15,6 +15,7 @@ export default function SummaryNotes({ initialValue }: SummaryNotesProps) {
             <Textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add notes..."
             />
         </SummaryBase>
     )
