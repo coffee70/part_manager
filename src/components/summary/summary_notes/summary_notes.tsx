@@ -1,22 +1,22 @@
 'use client'
 import React from 'react';
 import SummaryBase from '../summary_base';
-import { StyledTextarea as Textarea } from '@/components/ui/textarea';
+import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateNotes } from '@/server/notes/update_notes';
+import { collectionKeys } from '@/lib/query_keys';
+import TextField from './notes';
+import Notes from './notes';
 
 type SummaryNotesProps = {
     initialValue?: string;
 }
 
 export default function SummaryNotes({ initialValue }: SummaryNotesProps) {
-    const [notes, setNotes] = React.useState(initialValue);
 
     return (
         <SummaryBase title="Notes">
-            <Textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Add notes..."
-            />
+            <Notes initialValue={initialValue} />
         </SummaryBase>
     )
 }
