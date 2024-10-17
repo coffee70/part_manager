@@ -11,6 +11,8 @@ import { createUser } from '@/server/users/create_user';
 import { userKeys } from '@/lib/query_keys';
 import { updateUser } from '@/server/users/update_user';
 import PasswordInput from './fields/password_input';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 type Props = {
     open?: boolean;
@@ -33,7 +35,7 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
 
     const queryClient = useQueryClient();
 
-    const { mutate: create } = useMutation({
+    const { mutate: create, error: createError } = useMutation({
         mutationFn: createUser,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all })
@@ -41,13 +43,15 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
         }
     })
 
-    const { mutate: update } = useMutation({
+    const { mutate: update, error: updateError } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all })
             onOpenChange && onOpenChange(false);
         }
     })
+
+    const error = createError || updateError;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,6 +74,11 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
                         <DialogDescription>{description}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
+                {error && <Alert variant='destructive'>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error.message}</AlertDescription>
+                </Alert>}
                 <form onSubmit={handleSubmit} className='flex flex-col space-y-6'>
                     <div className='flex flex-col space-y-1'>
                         <Input
