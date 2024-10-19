@@ -4,7 +4,6 @@ import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils"
 import ReactQueryProvider from "@/app/(user)/providers";
-import SideNavigation from "@/components/navigations/side_nav/main";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const fontSans = FontSans({
