@@ -1,13 +1,11 @@
 import React from "react";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"
-import "../globals.css";
+import "./globals.css";
 import { cn } from "@/lib/utils"
-import ReactQueryProvider from "@/app/(manager)/providers";
+import ReactQueryProvider from "@/app/(user)/providers";
 import SideNavigation from "@/components/navigations/side_nav/main";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { validateRequest } from "@/lib/auth";
-import { redirect } from "next/navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -25,11 +23,6 @@ type Props = Readonly<{
 
 export default async function Layout({ children }: Props) {
 
-  const { user } = await validateRequest();
-  if (!user) {
-    redirect("/login");
-  }
-
   return (
     <html lang="en">
       <body
@@ -39,10 +32,7 @@ export default async function Layout({ children }: Props) {
         )}
       >
         <ReactQueryProvider>
-          <main className="flex h-screen">
-            <SideNavigation />
-            {children}
-          </main>
+          {children}
           <ReactQueryDevtools initialIsOpen={false} />
         </ReactQueryProvider>
       </body>
