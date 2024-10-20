@@ -19,8 +19,6 @@ export default function Comments() {
         queryFn: () => getComments({ collection, id }),
     })
 
-    console.log(data)
-
     return (
         <>
             <div className="flex flex-col space-y-2">
