@@ -7,7 +7,8 @@ import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { getComments } from '@/server/comments/get_comments';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { formatDate } from '@/lib/date';
+import Comment from './comment';
+
 
 export default function Comments() {
 
@@ -34,10 +35,7 @@ export default function Comments() {
                 ) : data.comments.length === 0 ? (
                     <div>No comments yet</div>
                 ) : data.comments.map(comment => (
-                    <div key={comment._id} className='flex flex-col space-y-2 border-t border-foreground'>
-                        <div className='text-sm text-muted-foreground'>{comment.user.name} commented {formatDate(comment.updatedAt).toLowerCase()}</div>
-                        <div className='text-sm'>{comment.text}</div>
-                    </div>
+                    <Comment key={comment._id} comment={comment} />
                 ))}
                 <div className='border-b border-b-foreground h-6'></div>
                 <CreateComment />
