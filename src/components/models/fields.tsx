@@ -15,8 +15,8 @@ import { sectionKeys } from '@/lib/query_keys';
 import { useQuery } from '@tanstack/react-query';
 
 type Props = {
-    fieldState?: Values;
-    setFieldState?: (fieldState: Values) => void;
+    fieldState: Values;
+    setFieldState: (fieldState: Values) => void;
 }
 
 export default function Fields({ fieldState, setFieldState }: Props) {
@@ -55,8 +55,8 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                         multiple={field.multiple}
                                         creative={field.creative}
                                         options={field.options || []}
-                                        value={fieldState?.[field._id]}
-                                        onChange={value => setFieldState?.({
+                                        value={fieldState[field._id] || (field.multiple ? [] : '')}
+                                        onChange={value => setFieldState({
                                             ...fieldState,
                                             [field._id]: value,
                                         })}
@@ -65,8 +65,8 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                     <Textarea
                                         label={field.name}
                                         description={field.description}
-                                        value={fieldState?.[field._id]}
-                                        onChange={e => setFieldState?.({
+                                        value={fieldState[field._id] || ''}
+                                        onChange={e => setFieldState({
                                             ...fieldState,
                                             [field._id]: e.target.value,
                                         })}
@@ -76,8 +76,8 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                         label={field.name}
                                         description={field.description}
                                         type={field.type}
-                                        value={fieldState?.[field._id]}
-                                        onChange={e => setFieldState?.({
+                                        value={fieldState[field._id] || ''}
+                                        onChange={e => setFieldState({
                                             ...fieldState,
                                             [field._id]: e.target.value,
                                         })}
