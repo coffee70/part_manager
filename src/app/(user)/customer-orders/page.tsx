@@ -1,9 +1,10 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import CustomerOrders from "@/components/customer-orders/customer_orders";
+import { collectionKeys, commentKeys, sectionKeys } from "@/lib/query_keys";
 import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
 import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
-import CustomerOrders from "@/components/customer-orders/customer_orders";
-import { collectionKeys, sectionKeys } from "@/lib/query_keys";
 import { getSections } from "@/server/sections/get_sections";
+import { getComments } from "@/server/comments/get_comments";
 
 export default async function Page({
     searchParams
@@ -30,6 +31,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: sectionKeys.all('customerOrders'),
         queryFn: () => getSections({ collection: 'customerOrders' }),
+    })
+
+    // prefetch comments
+    await queryClient.prefetchQuery({
+        queryKey: commentKeys.all('customerOrders', id),
+        queryFn: () => getComments({ collection: 'customerOrders', id }),
     })
 
     return (

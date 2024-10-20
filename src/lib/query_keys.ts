@@ -13,3 +13,7 @@ export const userKeys = {
     all: ['users'],
     current: ['user']
 }
+
+export const commentKeys = {
+    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'comments']
+}
