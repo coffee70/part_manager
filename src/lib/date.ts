@@ -22,3 +22,25 @@ export function formatDate(date: Date | string): string {
         return `${diffDays}d ago`;
     }
 }
+
+// formats date to be displayed as "Today", "Yesterday", or "MM-DD-YYYY"
+export function formatCommentDate(date: Date): string;
+export function formatCommentDate(date: string): string;
+
+export function formatCommentDate(date: Date | string): string {
+    const inputDate = typeof date === 'string' ? new Date(date) : date;
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - inputDate.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+        return 'Today';
+    } else if (diffDays === 1) {
+        return 'Yesterday';
+    } else {
+        const month = (inputDate.getMonth() + 1).toString().padStart(2, '0');
+        const day = inputDate.getDate().toString().padStart(2, '0');
+        const year = inputDate.getFullYear().toString();
+        return `${month}-${day}-${year}`;
+    }
+}
