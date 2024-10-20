@@ -41,6 +41,18 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
         queryFn: () => getCustomers(),
     })
 
+    React.useEffect(() => {
+        if (customerOrder) {
+            setAttributeState({
+                number: customerOrder.number,
+                customerName: customers?.find(customer => customer._id === customerOrder.customerId)?.name || '',
+                priority: customerOrder.priority,
+                notes: customerOrder.notes,
+            })
+            setFieldState(customerOrder.values)
+        }
+    }, [customerOrder, customers])
+
     const { mutate: create, error: createError } = useMutation({
         mutationFn: createCustomerOrder,
         onSuccess: () => {
@@ -50,13 +62,13 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
     })
 
     const [attributeState, setAttributeState] = React.useState<AttributeState>({
-        number: customerOrder?.number || '',
-        customerName: customers?.find(customer => customer._id === customerOrder?.customerId)?.name || '',
-        priority: customerOrder?.priority || 'Normal',
-        notes: customerOrder?.notes || '',
+        number: '',
+        customerName: '',
+        priority: 'Normal',
+        notes: '',
     })
 
-    const [fieldState, setFieldState] = React.useState<Values>(customerOrder ? customerOrder.values : {})
+    const [fieldState, setFieldState] = React.useState<Values>({})
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
