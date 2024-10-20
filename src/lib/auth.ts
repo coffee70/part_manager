@@ -60,14 +60,6 @@ export const validateRequest = cache(
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
-		DatabaseUserAttributes: DatabaseUserAttributes;
+		DatabaseUserAttributes: UserDoc;
 	}
-}
-
-interface DatabaseUserAttributes {
-	username: string;
-	password_hash: string;
-	title: string;
-	role: Role;
-	name: string;
 }

@@ -152,10 +152,21 @@ export interface User {
     password: string;
 }
 
+export type CommentDoc = {
+    _id: ObjectId;
+    userId: string;
+    text: string;
+    updatedAt: Date;
+}
+
+export interface Commentable {
+    comments: CommentDoc[];
+}
+
 export type Role = 'admin' | 'user'
 
 export const roles: Role[] = ['admin', 'user'];
 
-export type Create<T> = Omit<T, '_id'>
+export type Create<T> = Omit<T, '_id' | 'updatedAt'>
 
 export type Doc<T> = Omit<T, '_id'> & { _id: string };

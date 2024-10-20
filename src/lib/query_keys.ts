@@ -11,4 +11,5 @@ export const collectionKeys = {
 
 export const userKeys = {
     all: ['users'],
+    current: ['user']
 }
