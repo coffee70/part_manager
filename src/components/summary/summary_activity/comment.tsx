@@ -1,6 +1,7 @@
 import { formatCommentDate } from '@/lib/date';
 import { PencilIcon, TrashIcon } from 'lucide-react';
 import UpdateComment from './update_comment';
+import DeleteComment from './delete_comment';
 
 type Props = {
     comment: {
@@ -26,10 +27,12 @@ export default function Comment({ comment }: Props) {
                     </button>
                 </UpdateComment>
                 <div className='border-l border-foreground my-1'></div>
-                <button type='button' className='flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary'>
-                    <TrashIcon className='h-3 w-3' />
-                    <span>Delete</span>
-                </button>
+                <DeleteComment id={comment._id}>
+                    <button type='button' className='flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary'>
+                        <TrashIcon className='h-3 w-3' />
+                        <span>Delete</span>
+                    </button>
+                </DeleteComment>
             </div>
         </div>
     )
