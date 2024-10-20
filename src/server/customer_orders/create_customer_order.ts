@@ -28,6 +28,7 @@ export async function createCustomerOrder(input: Input) {
     }
     await customerOrdersCollection.insertOne({
         ...customerOrder,
-        customerId: customerId
+        customerId: customerId,
+        comments: []
     })
 }
