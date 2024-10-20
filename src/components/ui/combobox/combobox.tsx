@@ -50,7 +50,7 @@ type ComboboxProps = {
     multiple?: boolean;
     value?: string | string[];
     onChange?: (value: string | string[] | undefined) => void;
-} 
+}
 
 export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>((props, ref) => {
 
@@ -62,12 +62,18 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         onChange: _onChange,
     } = props;
 
+    const initalValue = () => {
+        if (value && !Array.isArray(value)) {
+            return value
+        }
+        else return ""
+    }
+
+    const [input, setInput] = React.useState(initalValue);
 
     // floating logic
     const [open, setOpen] = React.useState(false);
-    const [input, setInput] = React.useState('');
     const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-
     const listRef = React.useRef<Array<HTMLElement | null>>([]);
 
     const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
@@ -169,14 +175,9 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         const inputValue = e.target.value;
         setInput(inputValue);
         setOpen(true);
-        
-        if (!creative) {
-            if (!multiple && inputValue === "") {
-                _onChange && _onChange(undefined)
-            }
-        }
-        else {
-            _onChange && _onChange(inputValue)
+
+        if (!creative && !multiple && inputValue === "") {
+            _onChange && _onChange(undefined)
         }
     }
 
