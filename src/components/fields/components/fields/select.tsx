@@ -40,6 +40,16 @@ export default function SelectField({ field }: Props) {
         }
     })
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate({
+            modelId: id,
+            fieldId: field._id,
+            sectionCollection: collection,
+            value
+        });
+    }
+
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
             <form className={cn(
@@ -48,12 +58,7 @@ export default function SelectField({ field }: Props) {
                     isPending ? "border-foreground" :
                         isEditing ? "border-foreground" : "hover:border-foreground",
             )}
-                onSubmit={() => mutate({
-                    modelId: id,
-                    fieldId: field._id,
-                    sectionCollection: collection,
-                    value
-                })}
+                onSubmit={handleSubmit}
             >
                 <Combobox
                     ref={inputRef}

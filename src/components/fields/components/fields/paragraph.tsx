@@ -65,20 +65,25 @@ export default function ParagraphField({ field }: Props) {
         }
     })
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate({
+            modelId: id,
+            fieldId: field._id,
+            sectionCollection: collection,
+            value
+        });
+    }
+
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
-            <div className={cn(
+            <form className={cn(
                 "group relative flex justify-between border border-transparent pl-1",
                 isError ? "border-red-500" :
                     isPending ? "border-foreground" :
                         isEditing ? "border-foreground" : "hover:border-foreground",
             )}
-                onSubmit={() => mutate({
-                    modelId: id,
-                    fieldId: field._id,
-                    sectionCollection: collection,
-                    value
-                })}
+                onSubmit={handleSubmit}
             >
                 <Textarea
                     ref={textareaRef}
@@ -96,7 +101,7 @@ export default function ParagraphField({ field }: Props) {
                         <NotEditing setIsEditing={setIsEditing} />
                     )}
                 </div>
-            </div>
+            </form>
         </ClickAwayListener>
     )
 }
