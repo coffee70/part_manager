@@ -44,6 +44,16 @@ type Props = {
 
 export default function Notes({ initialValue }: Props) {
 
+    /** 
+     * updating using the form will not cause the notes
+     * to re-render with the new initialValue so we need to
+     * update the value when the initialValue changes
+     */
+    // TODO: find a better way to handle this
+    React.useEffect(() => {
+        setValue(initialValue ?? '')
+    }, [initialValue])
+
     const [value, setValue] = React.useState(initialValue ?? '');
 
     const { id, collection } = useURLMetadata();

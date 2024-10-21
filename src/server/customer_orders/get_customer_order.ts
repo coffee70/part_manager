@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 const OutputSchema = z.object({
+    _id: z.string(),
     customerId: z.string(),
     number: z.string(),
     priority: z.custom<Priority>(),

@@ -64,6 +64,7 @@ export const priorities: PriorityInfo[] = [
 ]
 
 export type CustomerOrder = {
+    _id: string;
     customerId: string;
     number: string;
     priority: Priority;

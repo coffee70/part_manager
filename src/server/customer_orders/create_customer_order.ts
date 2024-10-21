@@ -1,10 +1,11 @@
 'use server'
 import client from "@/lib/mongo/db"
-import { CustomerOrder } from "@/types/collections"
+import { Create, CustomerOrder } from "@/types/collections"
 import { validators } from "../validators/validators";
+import { ObjectId } from "mongodb";
 
 type Input = {
-    customerOrder: Omit<CustomerOrder, 'customerId'> & { customerName: string | undefined };
+    customerOrder: Omit<Create<CustomerOrder>, 'customerId'> & { customerName: string | undefined };
 }
 
 export async function createCustomerOrder(input: Input) {
@@ -26,9 +27,13 @@ export async function createCustomerOrder(input: Input) {
     else {
         customerId = customer._id.toString()
     }
+
     await customerOrdersCollection.insertOne({
-        ...customerOrder,
+        number: customerOrder.number,
+        priority: customerOrder.priority,
+        notes: customerOrder.notes,
+        values: customerOrder.values,
         customerId: customerId,
-        comments: []
+        comments: [],
     })
 }

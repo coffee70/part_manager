@@ -1,4 +1,4 @@
-import { CustomerOrder, Section, Field } from "@/types/collections";
+import { CustomerOrder } from "@/types/collections";
 import CustomerOrderForm from "./customer_order_form";
 import { Button } from "@/components/ui/button";
 import { PencilIcon } from "lucide-react";

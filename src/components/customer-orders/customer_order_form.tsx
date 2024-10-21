@@ -14,6 +14,7 @@ import { Button } from '../ui/button';
 import { createCustomerOrder } from '@/server/customer_orders/create_customer_order';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { updateCustomerOrder } from '@/server/customer_orders/update_customer_order';
 
 type Props = {
     customerOrder?: CustomerOrder;
@@ -61,6 +62,17 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
         }
     })
 
+    const { mutate: update, error: updateError } = useMutation({
+        mutationFn: updateCustomerOrder,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all('customerOrders') })
+            queryClient.invalidateQueries({ queryKey: collectionKeys.id('customerOrders', customerOrder?._id) })
+            setOpen(false)
+        }
+    })
+
+    const error = createError || updateError;
+
     const [attributeState, setAttributeState] = React.useState<AttributeState>({
         number: '',
         customerName: '',
@@ -72,7 +84,11 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        create({ customerOrder: { ...attributeState, values: fieldState } })
+        if (customerOrder) {
+            update({ customerOrder: { _id: customerOrder._id, ...attributeState, values: fieldState } })
+        } else {
+            create({ customerOrder: { ...attributeState, values: fieldState } })
+        }
     }
 
     return (
@@ -89,10 +105,10 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
                         </VisuallyHidden.Root>
                     </DialogDescription>
                 </DialogHeader>
-                {createError && <Alert variant='destructive'>
+                {error && <Alert variant='destructive'>
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{createError.message}</AlertDescription>
+                    <AlertDescription>{error.message}</AlertDescription>
                 </Alert>}
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
                     <div className='max-h-[700px] overflow-y-auto'>
