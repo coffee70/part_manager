@@ -9,10 +9,7 @@ type Input = {
 }
 
 export async function updateCustomerOrder(input: Input) {
-
     const { customerOrder } = validators.input<Input>(input);
-
-    console.log(customerOrder._id);
 
     const db = client.db('test');
     const customersCollection = db.collection('customers');
