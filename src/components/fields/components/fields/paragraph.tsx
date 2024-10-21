@@ -48,6 +48,10 @@ export default function ParagraphField({ field }: Props) {
 
     const [value, setValue] = React.useState(field.value);
 
+    React.useEffect(() => {
+        setValue(field.value)
+    }, [field.value])
+
     const { id, collection } = useURLMetadata();
 
     const { isEditing, setIsEditing, textareaRef } = useIsEditing();

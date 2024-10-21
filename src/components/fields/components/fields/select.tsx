@@ -25,6 +25,10 @@ export default function SelectField({ field }: Props) {
 
     const [value, setValue] = React.useState(field.multiple ? field.value : field.value?.[0]);
 
+    React.useEffect(() => {
+        setValue(field.multiple ? field.value : field.value?.[0])
+    }, [field.value])
+
     const { collection, id } = useURLMetadata();
 
     const queryclient = useQueryClient();
