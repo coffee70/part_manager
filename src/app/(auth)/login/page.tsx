@@ -1,17 +1,18 @@
 import { Form } from "@/components/auth/form";
 import { verify } from "@node-rs/argon2";
-import { cookies } from "next/headers";
-import { lucia, validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import client from "@/lib/mongo/db";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password_input";
 import { UserDoc } from "@/types/collections";
+import { createSession, generateSessionToken } from "@/lib/session";
+import { getCurrentSession } from "@/server/auth/get_current_session";
+import { setSessionTokenCookie } from "@/lib/cookies";
 
 export default async function Page() {
     
-    const { user } = await validateRequest();
+    const { user } = await getCurrentSession();
     if (user) {
         redirect("/");
     }
@@ -83,9 +84,9 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
         }
     }
 
-    const session = await lucia.createSession(existingUser._id, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+    const token = generateSessionToken();
+    const session = await createSession(token, existingUser._id); 
+    setSessionTokenCookie(token, session.expires_at);
     redirect("/");
 }
 

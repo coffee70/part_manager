@@ -18,7 +18,7 @@ export default function CreateComment() {
 
     const { id, collection } = useURLMetadata();
 
-    const { data: user } = useUser();
+    const user = useUser();
 
     const queryClient = useQueryClient();
 
@@ -38,7 +38,7 @@ export default function CreateComment() {
                 collection,
                 comment: {
                     text: value,
-                    userId: user.id
+                    userId: user._id
                 }
             })
         }

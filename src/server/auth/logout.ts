@@ -1,20 +1,20 @@
 'use server'
-import { lucia, validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { invalidateSession } from "@/lib/session";
+import { getCurrentSession } from "./get_current_session";
+import { deleteSessionTokenCookie } from "@/lib/cookies";
 
 export async function logout(): Promise<ActionResult> {
-	const { session } = await validateRequest();
+	const { session } = await getCurrentSession();
 	if (!session) {
 		return {
 			error: "Unauthorized"
 		};
 	}
 
-	await lucia.invalidateSession(session.id);
+	await invalidateSession(session._id);
 
-	const sessionCookie = lucia.createBlankSessionCookie();
-	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+	deleteSessionTokenCookie();
 	redirect("/login");
 }
 

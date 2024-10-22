@@ -4,7 +4,7 @@ import client from "@/lib/mongo/db";
 import { Create, User, UserDoc } from "@/types/collections";
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
-import { generateIdFromEntropySize } from "lucia";
+import { generateUserId } from "@/lib/session";
 
 
 type Input = {
@@ -35,7 +35,7 @@ export async function createUser(input: Input) {
 		outputLen: 32,
 		parallelism: 1
 	});
-    const userId = generateIdFromEntropySize(10); // 16 characters long
+    const userId = generateUserId();
 
     const db = client.db('test');
     const users = db.collection<UserDoc>('users');

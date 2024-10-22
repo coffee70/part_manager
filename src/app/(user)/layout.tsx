@@ -1,7 +1,7 @@
 import React from "react";
-import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import SideNavigation from "@/components/navigations/side_nav/main";
+import { getCurrentSession } from "@/server/auth/get_current_session";
 
 type Props = Readonly<{
   children: React.ReactNode;
@@ -9,7 +9,7 @@ type Props = Readonly<{
 
 export default async function Layout({ children }: Props) {
 
-  const { user } = await validateRequest();
+  const { user } = await getCurrentSession();
   if (!user) {
     redirect("/login");
   }

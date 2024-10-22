@@ -1,7 +1,7 @@
-import { validateRequest } from "@/lib/auth";
+import { getCurrentSession } from "@/server/auth/get_current_session";
 
 export default async function Page() {
-    const { user } = await validateRequest();
+    const { user } = await getCurrentSession();
     return user ? (
         <div>
             <h1>Welcome {user.username}</h1>
