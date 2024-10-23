@@ -1,4 +1,4 @@
-import { NavBase, NavContent, NavLogo, NavDivider, NavHeader, NavItem, SubNav, SubNavItem } from "@/components/ui/side_nav";
+import { NavBase, NavContent, NavDivider, NavHeader, NavItem, SubNav, SubNavItem } from "@/components/ui/side_nav";
 import {
     AlignLeftIcon,
     Building2Icon,
@@ -10,12 +10,13 @@ import {
     UserIcon
 } from "lucide-react";
 import Profile from "./profile";
+import Logo from "@/components/ui/logo";
 
 export default function SideNavigation() {
     return (
         <NavBase>
             <NavHeader>
-                <NavLogo />
+                <Logo />
             </NavHeader>
             <NavDivider />
             <NavContent>

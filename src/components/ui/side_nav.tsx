@@ -1,14 +1,7 @@
 'use client'
 import React from 'react';
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleIcon } from "lucide-react";
-import { Jost } from "next/font/google"
-import { Badge } from './badge';
-
-const jost = Jost({
-    subsets: ["latin"],
-    weight: ["700"],
-})
+import { ChevronDownIcon, ChevronUpIcon, CircleIcon } from "lucide-react";
 
 type NavBaseProps = {
     children: React.ReactNode
@@ -31,18 +24,6 @@ function NavHeader({ children }: NavHeaderProps) {
     return (
         <div className="w-full px-4 pt-4 pb-2">
             {children}
-        </div>
-    )
-}
-
-function NavLogo() {
-    return (
-        <div className='flex items-center space-x-3'>
-            <div className='w-8 h-8 bg-black rounded-md text-white'>
-                <ChevronsUpIcon strokeWidth={3} size={32} />
-            </div>
-            <span className={cn(jost.className, 'text-4xl')}>Aentx.</span>
-            <Badge label="BETA" color='black' className='px-2'/>
         </div>
     )
 }
@@ -176,7 +157,6 @@ function NavDivider({ bottom }: NavDividerProps) {
 export {
     NavBase,
     NavHeader,
-    NavLogo,
     NavContent,
     NavFooter,
     NavItem,
