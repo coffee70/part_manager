@@ -1,13 +1,13 @@
 'use server'
 import { z } from 'zod';
 import client from '@/lib/mongo/db';
-import { Customer, CustomerDoc, CustomerOrder, priorities } from '@/types/collections';
-import { ObjectId } from 'mongodb';
+import { CustomerDoc, CustomerOrder, CustomerOrderSortKeys, Priority } from '@/types/collections';
+import { Document, ObjectId } from 'mongodb';
 
 // schemas
 const UpdatedAt = z.object({
-    to: z.coerce.date(),
-    from: z.coerce.date(),
+    to: z.coerce.date().optional(),
+    from: z.coerce.date().optional(),
 });
 
 export async function getCustomerOrders({
@@ -15,55 +15,15 @@ export async function getCustomerOrders({
 }: {
     searchParams: { [key: string]: string | string[] | undefined }
 }) {
-
-    // build whereObject
-    // pull out statusId
-    let statusIdJson = searchParams.statusId;
-    if (Array.isArray(statusIdJson)) {
-        throw new Error("statusId must be a json string");
-    }
-
-    let statusIds: ObjectId[] = [];
-
-    if (statusIdJson) {
-        statusIds = JSON.parse(statusIdJson);
-
-        const validation = z.array(z.string()).safeParse(statusIds);
-        if (!validation.success) {
-            throw new Error("statusId is not a valid array of numbers");
-        } else {
-            statusIds = validation.data.map(id => new ObjectId(id));
-        }
-    }
-
     // pull out updatedAt
-    // Assuming searchParams is an object where updatedAt is one of the properties
-    // and UpdatedAt is a Zod schema for validation
-
-    // Extract updatedAt from searchParams
-    let updatedAtJson = searchParams.updatedAt;
-
-    // Check if updatedAtJson is an array, throw an error if true
+    const updatedAtJson = searchParams.updatedAt;
     if (Array.isArray(updatedAtJson)) {
         throw new Error("updatedAt must be a json string");
     }
-
-    // Initialize a variable to hold the parsed updatedAt object
-    let updatedAt;
-
-    // Parse updatedAtJson into an object if it's not undefined
-    if (updatedAtJson) {
-        updatedAt = JSON.parse(updatedAtJson);
-
-        // Validate the parsed updatedAt object with the UpdatedAt Zod schema
-        const validation = UpdatedAt.safeParse(updatedAt);
-        if (!validation.success) {
-            // If validation fails, throw an error
-            throw new Error("updatedAt is not a valid date");
-        } else {
-            // If validation succeeds, updatedAt contains the parsed object
-            updatedAt = validation.data;
-        }
+    const updatedAtParsed = updatedAtJson ? JSON.parse(updatedAtJson) : undefined;
+    const { data: updatedAt, error: updatedAtError } = UpdatedAt.optional().safeParse(updatedAtParsed);
+    if (updatedAtError) {
+        throw new Error("updatedAt must be a valid date range");
     }
 
     // pull out search
@@ -72,53 +32,55 @@ export async function getCustomerOrders({
         throw new Error("search must be a string");
     }
 
-    // build orderByObject
-    // get sort_by
-    let sortBy = searchParams.sortBy;
-    if (sortBy) {
-        let validation = z.enum(['number', 'updatedAt']).safeParse(sortBy);
-        if (!validation.success) {
-            throw new Error("sortBy must be either 'number' or 'updatedAt'");
-        }
-        sortBy = validation.data;
+
+    // pull out priority
+    const { data: priority, error: priorityError } = z.custom<Priority>().optional().safeParse(searchParams.priority);
+    if (priorityError) {
+        throw new Error("priority must be a valid priority");
     }
+
+    const { data: sortBy, error: sortByError } = z.enum(CustomerOrderSortKeys).optional().safeParse(searchParams.sort_by);
+    if (sortByError) {
+        throw new Error("sortBy must be either 'number', 'updatedAt', or 'priority'");
+    }
+
     // get sort_order
-    let sortOrder = searchParams.sortOrder;
-    if (sortOrder) {
-        let validation = z.enum(['asc', 'desc']).safeParse(sortOrder);
-        if (!validation.success) {
-            throw new Error("sortOrder must be either 'asc' or 'desc'");
-        }
-        sortOrder = validation.data;
+    const { data: sortOrder, error: sortOrderError } = z.enum(['asc', 'desc']).optional().safeParse(searchParams.sort_order);
+    if (sortOrderError) {
+        throw new Error("sortOrder must be either 'asc' or 'desc'");
     }
 
     const db = client.db('test');
     const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders');
     const customersCollection = db.collection<CustomerDoc>('customers');
 
+    // filters
     const matchStage: any = {};
-
-    // Add statusId condition if it's not empty
-    if (statusIds && statusIds.length > 0) {
-        matchStage.statusId = { $in: statusIds };
-    }
-
-    // Add updatedAt condition if it's defined
     if (updatedAt) {
         matchStage.updatedAt = {
             $gte: updatedAt.from,
             $lte: updatedAt.to
         };
     }
-
-    // Add $text search condition if search is defined
     if (search) {
         matchStage.$text = { $search: search };
     }
+    if (priority) {
+        matchStage.priority = priority;
+    }
 
-    const customerOrders = await customerOrdersCollection.find(matchStage).toArray();
+    // sort
+    const sortStage: any = {};
+    if (sortBy) {
+        sortStage[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    }
 
-    return await Promise.all(customerOrders.map(async order => {
+    const customerOrders = await customerOrdersCollection
+        .find(matchStage)
+        .sort(sortStage)
+        .toArray();
+
+    const res = await Promise.all(customerOrders.map(async order => {
         const customer = await customersCollection.findOne({ _id: new ObjectId(order.customerId) });
 
         if (!customer) {
@@ -134,4 +96,6 @@ export async function getCustomerOrders({
             priority: order.priority,
         };
     }));
+
+    return res;
 }
