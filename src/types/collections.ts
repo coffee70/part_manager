@@ -71,6 +71,8 @@ export type CustomerOrder = {
     notes: string;
 } & Valuable
 
+export const CustomerOrderSortKeys = ['number', 'priority', 'updatedAt'] as const;
+
 export type CustomerOrderDoc = {
     _id: ObjectId;
     customerId: ObjectId;

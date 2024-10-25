@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
 import { useSearchParams } from "next/navigation";
 import { useRouterHelpers } from "@/lib/search_params";
-import useSort from "@/hooks/sort.hook";
 import { convertSearchParams } from "@/lib/search_params";
 import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
 import SearchInput from "@/components/list/filters/search_input";
@@ -19,6 +18,7 @@ import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
 import NewCustomerOrder from "./new_customer_order";
 import Priority from "../list/priority/priority";
+import { CustomerOrderSortKeys } from "@/types/collections";
 
 export default function TableContainer() {
 
@@ -42,15 +42,6 @@ export default function TableContainer() {
         pushSearchParams({ search: e.target.value.length > 0 ? e.target.value : undefined })
     }
 
-    const { sort, setSort } = useSort({
-        number: {
-            label: 'Number',
-        },
-        updatedAt: {
-            label: 'Updated At',
-        }
-    })
-
     if (isPending) return <TableSkeleton />
 
     if (isError) return <div>Error...</div>
@@ -62,7 +53,7 @@ export default function TableContainer() {
                     <NewCustomerOrder />
                     <SearchInput value={search} onChange={handleSearchChange} />
                     <Filter />
-                    <Sort sort={sort} setSort={setSort} />
+                    <Sort keys={CustomerOrderSortKeys}/>
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>
