@@ -62,9 +62,11 @@ export async function getCustomerOrders({
             $lte: updatedAt.to
         };
     }
+
     if (search) {
-        matchStage.number = search;
+        matchStage.number = { $regex: search, $options: 'i' }; // 'i' option makes the search case-insensitive
     }
+
     if (priority) {
         matchStage.priority = priority;
     }
