@@ -63,7 +63,7 @@ export async function getCustomerOrders({
         };
     }
     if (search) {
-        matchStage.$text = { $search: search };
+        matchStage.number = search;
     }
     if (priority) {
         matchStage.priority = priority;

@@ -36,12 +36,6 @@ export default function TableContainer() {
         queryFn: () => getCustomerOrders({ searchParams }),
     })
 
-    // filter and sort
-    const search = readOnlySearchParams.get('search') || ''
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        pushSearchParams({ search: e.target.value.length > 0 ? e.target.value : undefined })
-    }
-
     if (isPending) return <TableSkeleton />
 
     if (isError) return <div>Error...</div>
@@ -51,7 +45,7 @@ export default function TableContainer() {
             <FilterToolbar>
                 <FilterToolbarRow>
                     <NewCustomerOrder />
-                    <SearchInput value={search} onChange={handleSearchChange} />
+                    <SearchInput />
                     <Filter />
                     <Sort keys={CustomerOrderSortKeys}/>
                 </FilterToolbarRow>
