@@ -1,36 +1,27 @@
+'use client'
 import React from "react";
 import { FilterIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import { DataAction } from "../../ui/data_action";
-import { DateRange } from "react-day-picker";
-import StatusFilter from "./filter_status";
-import DateFilter from "./filter_date";
+// import StatusFilter from "./filter_status";
+import DateRangeFilter from "./filter_date_range";
+import PriorityFilter from "./filter_priority";
+import { useSearchParams } from "next/navigation";
 
-type Filters = {
-    updatedAt: {
-        value: DateRange;
-    };
-    statusId: {
-        value: string[];
-    };
-}
 
-type Props<T extends Filters> = {
-    filters: T;
-    setFilters: (key: keyof T, value: string) => void;
-}
+export default function Filter() {
 
-export default function Filter<T extends Filters>({ filters, setFilters }: Props<T>) {
+    const searchParams = useSearchParams();
 
-    const enabled = 
-    filters.updatedAt.value.from !== undefined 
-    || filters.updatedAt.value.to !== undefined 
-    || filters.statusId.value.length > 0;
+    const enabled = {
+        updatedAt: searchParams.has('updatedAt'),
+        priority: searchParams.has('priority')
+    }
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <DataAction enabled={enabled} label='Filters'>
+                <DataAction enabled={enabled.priority || enabled.updatedAt} label='Filters'>
                     <FilterIcon width={24} height={24} />
                 </DataAction>
             </DropdownMenuTrigger>
@@ -40,18 +31,26 @@ export default function Filter<T extends Filters>({ filters, setFilters }: Props
                         <DropdownMenuSubTrigger>Date Range</DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DateFilter value={filters.updatedAt.value} onChange={(value) => setFilters('updatedAt', JSON.stringify(value))}/>
+                                <DateRangeFilter paramKey='updatedAt' />
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
                     <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+                        <DropdownMenuSubTrigger>Priority</DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <StatusFilter value={filters.statusId.value} onChange={(value) => setFilters('statusId',JSON.stringify(value))}/>
+                                <PriorityFilter />
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
+                    {/* <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+                        <DropdownMenuPortal>
+                            <DropdownMenuSubContent>
+                                <StatusFilter />
+                            </DropdownMenuSubContent>
+                        </DropdownMenuPortal>
+                    </DropdownMenuSub> */}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>

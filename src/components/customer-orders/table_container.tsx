@@ -5,7 +5,6 @@ import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders"
 import { useSearchParams } from "next/navigation";
 import { useRouterHelpers } from "@/lib/search_params";
 import useSort from "@/hooks/sort.hook";
-import useFilter from "@/hooks/filter.hook";
 import { convertSearchParams } from "@/lib/search_params";
 import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
 import SearchInput from "@/components/list/filters/search_input";
@@ -43,15 +42,6 @@ export default function TableContainer() {
         pushSearchParams({ search: e.target.value.length > 0 ? e.target.value : undefined })
     }
 
-    const { filters, setFilters } = useFilter({
-        updatedAt: {
-            value: { to: undefined, from: undefined },
-        },
-        statusId: {
-            value: []
-        }
-    })
-
     const { sort, setSort } = useSort({
         number: {
             label: 'Number',
@@ -71,7 +61,7 @@ export default function TableContainer() {
                 <FilterToolbarRow>
                     <NewCustomerOrder />
                     <SearchInput value={search} onChange={handleSearchChange} />
-                    <Filter filters={filters} setFilters={setFilters} />
+                    <Filter />
                     <Sort sort={sort} setSort={setSort} />
                 </FilterToolbarRow>
             </FilterToolbar>
@@ -89,7 +79,7 @@ export default function TableContainer() {
                                 {/* <StatusBadge label={order.status.label} color={order.status.color} /> */}
                             </TableCell>
                             <TableCell>
-                                <People name={'PLACEHOLDER'} at={order.updatedAt} iconPosition="right" />
+                                <People name={'PLACEHOLDER'} at={undefined} iconPosition="right" />
                             </TableCell>
                             <TableCell>
                                 <DropdownMenu>
