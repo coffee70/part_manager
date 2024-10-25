@@ -34,12 +34,6 @@ export default function SideNavigation() {
                     <SubNavItem label="Parts" />
                     <SubNavItem label="Serials" bottom />
                 </SubNav>
-                <SubNav label="Workflow" icon={<RouteIcon />}>
-                    <SubNavItem label="Customer Orders" top />
-                    <SubNavItem label="Shop Orders" />
-                    <SubNavItem label="Parts" />
-                    <SubNavItem label="Serials" bottom />
-                </SubNav>
                 <NavItem label='Users' icon={<UserIcon />} />
             </NavContent>
             <NavDivider bottom />
