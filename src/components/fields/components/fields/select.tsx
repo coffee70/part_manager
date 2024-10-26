@@ -53,7 +53,7 @@ export default function SelectField({ field }: Props) {
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
             <form className={cn(
-                "group relative flex items-center justify-between border border-transparent pl-1",
+                "group relative flex items-center justify-between border border-transparent pl-1 w-full",
                 isError ? "border-red-500" :
                     isPending ? "border-foreground" :
                         isEditing ? "border-foreground" : "hover:border-foreground",
@@ -68,7 +68,7 @@ export default function SelectField({ field }: Props) {
                     multiple={field.multiple}
                     creative={field.creative}
                 />
-                <div className="flex flex-col">
+                <div className="flex flex-col h-full">
                     {isError ? (
                         <Error message={error.message} />
                     ) : isPending ? (

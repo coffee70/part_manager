@@ -205,15 +205,11 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     return (
         <ClickAwayListener onClickAway={onClickAway}>
-            <div className='w-full'>
-                <div ref={setPositionRef} className='flex items-center w-full'>
-                    {multiple && Array.isArray(value) && value.length > 0 && (
-                        <div className="flex items-center space-x-0.5 pl-1">
-                            {value.map((v) => (
-                                <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
-                            ))}
-                        </div>
-                    )}
+            <div>
+                <div ref={setPositionRef} className='inline-flex items-center flex-wrap'>
+                    {multiple && Array.isArray(value) && value.length > 0 && value.map((v) => (
+                        <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
+                    ))}
                     <Input
                         {...getReferenceProps({
                             className: "px-1",
@@ -234,7 +230,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                     >
                         <div
                             {...getFloatingProps({
-                                className: 'bg-white border border-foreground shadow-md overflow-y-auto p-1 space-y-1',
+                                className: 'bg-white border border-foreground shadow-md overflow-y-auto p-1 space-y-1 z-10',
                                 ref: refs.setFloating,
                                 style: {
                                     ...floatingStyles,
