@@ -23,7 +23,7 @@ export async function updateFieldValue(input: Input) {
     const db = client.db('test')
     const collection = db.collection<Valuable>(sectionCollection)
 
-    const update = await collection.updateOne(
+    await collection.updateOne(
         { 
             _id: new ObjectId(modelId) 
         }, 
