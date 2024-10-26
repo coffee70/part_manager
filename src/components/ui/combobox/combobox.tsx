@@ -49,7 +49,7 @@ type ComboboxProps = {
     creative?: boolean;
     multiple?: boolean;
     value?: string | string[];
-    onChange?: (value: string | string[] | undefined) => void;
+    onChange?: (value?: string | string[]) => void;
 }
 
 export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>((props, ref) => {
@@ -129,14 +129,20 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     );
 
     const onSelect = (selected: string) => {
-        if (multiple && Array.isArray(value)) {
-            if (value.includes(selected)) {
-                _onChange && _onChange(value.filter((v) => v !== selected))
+        if (multiple) {
+            if (Array.isArray(value)) {
+                if (value.includes(selected)) {
+                    _onChange && _onChange(value.filter((v) => v !== selected))
+                }
+                else if (creative || options.some((option) => option === selected)) {
+                    _onChange && _onChange([...value, selected])
+                }
+                setInput("")
             }
-            else if (creative || options.some((option) => option === selected)) {
-                _onChange && _onChange([...value, selected])
+            else if (value === undefined) {
+                _onChange && _onChange([selected])
+                setInput("")
             }
-            setInput("")
         }
         else if (!multiple) {
             if (creative || options.some((option) => option === selected)) {

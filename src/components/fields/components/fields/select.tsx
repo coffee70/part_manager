@@ -23,11 +23,11 @@ type Props = {
 export default function SelectField({ field }: Props) {
     const { inputRef, isEditing, setIsEditing } = useIsEditing();
 
-    const [value, setValue] = React.useState(field.multiple ? field.value : field.value?.[0]);
+    const [value, setValue] = React.useState(field.value);
 
     React.useEffect(() => {
-        setValue(field.multiple ? field.value : field.value?.[0])
-    }, [field.value])
+        setValue(field.value);
+    }, [field.value]);
 
     const { collection, id } = useURLMetadata();
 

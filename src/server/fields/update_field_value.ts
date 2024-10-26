@@ -8,7 +8,7 @@ type Input = {
     modelId: string | null;
     fieldId: string;
     sectionCollection: SectionCollection;
-    value: string | string[] | undefined;
+    value?: string | string[];
 }
 
 export async function updateFieldValue(input: Input) {

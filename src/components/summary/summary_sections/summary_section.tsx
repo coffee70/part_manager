@@ -1,5 +1,3 @@
-'use client'
-import React from 'react';
 import ParagraphField from "@/components/fields/components/fields/paragraph";
 import SelectField from "@/components/fields/components/fields/select";
 import InputField from '@/components/fields/components/fields/input_field';
