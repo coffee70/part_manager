@@ -6,25 +6,24 @@ import Error from '@/components/ui/fields/error'
 import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
-import { Textarea } from '@/components/ui/textarea'
 import { useURLMetadata } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateFieldValue } from '@/server/fields/update_field_value'
 import { collectionKeys } from '@/lib/query_keys'
-import { Field } from '@/types/collections'
+import { Input } from '@/components/ui/input'
+import { updateTitle } from '@/server/title/update_title'
 
 function useIsEditing() {
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+    const inputRef = React.useRef<HTMLInputElement>(null);
     const [isEditing, setIsEditing] = React.useState(false);
 
     React.useEffect(() => {
         if (isEditing) {
-            textareaRef.current?.focus()
+            inputRef.current?.focus()
         }
     }, [isEditing])
 
     React.useEffect(() => {
-        const _textareaRef = textareaRef.current;
+        const _textareaRef = inputRef.current;
         _textareaRef?.addEventListener('focus', () => setIsEditing(true))
 
         return () => {
@@ -33,46 +32,53 @@ function useIsEditing() {
     })
 
     return {
-        textareaRef,
+        inputRef,
         isEditing,
         setIsEditing,
     }
 }
 
 type Props = {
-    field: Field & {
-        value?: string | string[];
-    };
+    initialValue?: string;
+    titleKey: string;
 }
-export default function ParagraphField({ field }: Props) {
 
-    const [value, setValue] = React.useState(field.value);
+export default function Title({ initialValue, titleKey }: Props) {
 
+    /** 
+     * updating using the form will not cause the notes
+     * to re-render with the new initialValue so we need to
+     * update the value when the initialValue changes
+     */
+    // TODO: find a better way to handle this
     React.useEffect(() => {
-        setValue(field.value)
-    }, [field.value])
+        setValue(initialValue ?? '')
+    }, [initialValue])
+
+    const [value, setValue] = React.useState(initialValue ?? '');
 
     const { id, collection } = useURLMetadata();
 
-    const { isEditing, setIsEditing, textareaRef } = useIsEditing();
+    const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
     const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
-        mutationFn: updateFieldValue,
+        mutationFn: updateTitle,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection)})
         }
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId: id,
-            fieldId: field._id,
-            sectionCollection: collection,
-            value
-        });
+            id,
+            collection,
+            key: titleKey,
+            title: value
+        })
     }
 
     return (
@@ -85,8 +91,9 @@ export default function ParagraphField({ field }: Props) {
             )}
                 onSubmit={handleSubmit}
             >
-                <Textarea
-                    ref={textareaRef}
+                <Input
+                    ref={inputRef}
+                    className='text-3xl font-bold'
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />

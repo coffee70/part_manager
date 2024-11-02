@@ -2,10 +2,10 @@
 import React from 'react';
 import { ClickAwayListener } from "@mui/base";
 import { cn } from "@/lib/utils";
-import Error from "./error";
-import Loading from "./loading";
-import Editing from "./editing";
-import NotEditing from "./not_editing";
+import Error from '@/components/ui/fields/error'
+import Loading from '@/components/ui/fields/loading'
+import Editing from '@/components/ui/fields/editing'
+import NotEditing from '@/components/ui/fields/not_editing'
 import { useIsEditing } from "./is_editing.hook";
 import { Combobox } from "@/components/ui/combobox/combobox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

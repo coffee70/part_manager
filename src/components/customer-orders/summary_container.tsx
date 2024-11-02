@@ -3,7 +3,7 @@ import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
 import SummaryLayout from "@/layouts/summary_layout";
-import SummaryTitle from "@/components/summary/summary_title";
+import SummaryTitle from "@/components/summary/summary_title/summary_title";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
 import Priority from "@/components/summary/summary_actions/priority/priority";
 import Status from "@/components/summary/summary_actions/status/status";
@@ -34,9 +34,13 @@ export default function SummaryContainer() {
 
     return (
         <SummaryLayout>
-            <SummaryTitle title={data.number} items={[{ label: data.customer.name }]} />
+            <SummaryTitle
+                title={data.number}
+                titleKey='number'
+                items={[{ label: data.customer.name }]}
+            />
             <SummaryToolbar>
-                <EditCustomerOrder customerOrder={data}/>
+                <EditCustomerOrder customerOrder={data} />
                 <Priority priority={data.priority} />
                 {/* <Status /> */}
             </SummaryToolbar>
