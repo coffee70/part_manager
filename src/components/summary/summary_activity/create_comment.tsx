@@ -5,7 +5,7 @@ import ActionButtons from './action_buttons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createComment } from '@/server/comments/create_comment';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
-import { commentKeys } from '@/lib/query_keys';
+import { collectionKeys, commentKeys } from '@/lib/query_keys';
 import { useUser } from '@/hooks/user.hook';
 import { ClickAwayListener } from '@mui/base';
 
@@ -26,6 +26,8 @@ export default function CreateComment() {
         mutationFn: createComment,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, id) })
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
             setValue("");
             setShowActions(false);
         }

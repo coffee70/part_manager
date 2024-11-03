@@ -4,6 +4,7 @@ import { Commentable, SectionCollection } from "@/types/collections";
 import { validators } from "../validators/validators";
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     _id: string | null;
@@ -12,6 +13,9 @@ type Input = {
 }
 
 export async function deleteComment(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { _id, collection: _collection, commentId } = validators.input<Input>(input);
 
     if (!_id) {
@@ -23,6 +27,16 @@ export async function deleteComment(input: Input) {
 
     await collection.updateOne(
         { _id: new ObjectId(_id) },
-        { $pull: { comments: { _id: new ObjectId(commentId) } } }
+        {
+            $pull: {
+                comments: {
+                    _id: new ObjectId(commentId)
+                }
+            },
+            $set: {
+                updatedAt: new Date(),
+                updatedById: user._id
+            }
+        },
     );
 }

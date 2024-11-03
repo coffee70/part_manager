@@ -7,7 +7,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTrigger } from '@radix-ui/react-dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateComment } from '@/server/comments/update_comment';
-import { commentKeys } from '@/lib/query_keys';
+import { collectionKeys, commentKeys } from '@/lib/query_keys';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 
 type Props = {
@@ -34,6 +34,8 @@ export default function UpdateComment({ comment, children }: Props) {
         mutationFn: updateComment,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, id) });
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
             setOpen(false);
         }
     })

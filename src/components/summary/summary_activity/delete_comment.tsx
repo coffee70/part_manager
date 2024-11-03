@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useConfirm } from "@/hooks/confirm.hook"
 import { useURLMetadata } from "@/hooks/url_metadata.hook";
-import { commentKeys } from "@/lib/query_keys";
+import { collectionKeys, commentKeys } from "@/lib/query_keys";
 import { deleteComment } from "@/server/comments/delete_comment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
@@ -44,6 +44,8 @@ export default function DeleteComment({ id, children }: Props) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, _id) });
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
         }
     })
 

@@ -64,7 +64,7 @@ export default function TableContainer() {
                                 {/* <StatusBadge label={order.status.label} color={order.status.color} /> */}
                             </TableCell>
                             <TableCell>
-                                <People name={'PLACEHOLDER'} at={undefined} iconPosition="right" />
+                                <People name={order.updatedBy} at={order.updatedAt} iconPosition="right" />
                             </TableCell>
                             <TableCell>
                                 <DropdownMenu>

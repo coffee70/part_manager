@@ -75,11 +75,15 @@ export const CustomerOrderSortKeys = ['number', 'priority', 'updatedAt'] as cons
 
 export type CustomerOrderDoc = {
     _id: ObjectId;
-    customerId: ObjectId;
+    customerId: string;
     number: string;
     priority: Priority;
     notes: string;
-}
+    updatedAt: Date;
+    updatedById: string;
+} 
+& Valuable
+& CommentableDoc
 
 export interface Attachable {
     attachments: {
@@ -162,7 +166,7 @@ export type CommentDoc = {
     updatedAt: Date;
 }
 
-export interface Commentable {
+export interface CommentableDoc {
     comments: CommentDoc[];
 }
 

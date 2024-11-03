@@ -3,6 +3,7 @@ import { Commentable, CommentDoc, Create, SectionCollection } from '@/types/coll
 import { validators } from '../validators/validators';
 import client from '@/lib/mongo/db';
 import { ObjectId } from 'mongodb';
+import { getCurrentSession } from '../auth/get_current_session';
 
 type Input = {
     id: string | null;
@@ -11,6 +12,9 @@ type Input = {
 }
 
 export async function createComment(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { id, collection: _collection, comment } = validators.input<Input>(input);
 
     if (!id) {
@@ -26,6 +30,10 @@ export async function createComment(input: Input) {
                 updatedAt: new Date(),
                 ...comment,
             }
+        },
+        $set: {
+            updatedAt: new Date(),
+            updatedById: user._id
         }
     });
 }

@@ -4,6 +4,7 @@ import { Commentable, SectionCollection } from "@/types/collections";
 import { validators } from "../validators/validators";
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     modelId: string | null;
@@ -13,6 +14,9 @@ type Input = {
 }
 
 export async function updateComment(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { modelId, collection: _collection, commentId, text } = validators.input<Input>(input);
 
     if (!modelId) {
@@ -21,5 +25,14 @@ export async function updateComment(input: Input) {
 
     const db = client.db('test');
     const collection = db.collection<Commentable>(_collection)
-    await collection.updateOne({ _id: new ObjectId(modelId), 'comments._id': new ObjectId(commentId) }, { $set: { 'comments.$.text': text } })
+    await collection.updateOne({
+        _id: new ObjectId(modelId),
+        'comments._id': new ObjectId(commentId)
+    }, {
+        $set: {
+            'comments.$.text': text,
+            updatedAt: new Date(),
+            updatedById: user._id
+        }
+    })
 }

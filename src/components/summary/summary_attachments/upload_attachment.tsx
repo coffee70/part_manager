@@ -32,8 +32,9 @@ export default function UploadAttachment({ inputRef }: Props) {
     const { mutate } = useMutation({
         mutationFn: createAttachment,
         onSuccess: () => {
-            console.log('Attachment created');
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(attachmentCollection, id) }); // Invalidate queries to refresh data
+            queryClient.invalidateQueries({ queryKey: collectionKeys.id(attachmentCollection, id) });
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(attachmentCollection) });
         }
     })
 

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 type IconPosition = 'left' | 'right';
 
 type Props = {
-    name: string;
+    name?: string;
     at?: Date;
     iconPosition: IconPosition;
 }

@@ -1,7 +1,7 @@
 'use server'
 import { z } from 'zod';
 import client from '@/lib/mongo/db';
-import { CustomerDoc, CustomerOrder, CustomerOrderSortKeys, Priority } from '@/types/collections';
+import { CustomerDoc, CustomerOrder, CustomerOrderSortKeys, Priority, UserDoc } from '@/types/collections';
 import { Document, ObjectId } from 'mongodb';
 
 // schemas
@@ -53,6 +53,7 @@ export async function getCustomerOrders({
     const db = client.db('test');
     const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders');
     const customersCollection = db.collection<CustomerDoc>('customers');
+    const usersCollection = db.collection<UserDoc>('users');
 
     // filters
     const matchStage: any = {};
@@ -84,6 +85,7 @@ export async function getCustomerOrders({
 
     const res = await Promise.all(customerOrders.map(async order => {
         const customer = await customersCollection.findOne({ _id: new ObjectId(order.customerId) });
+        const updatedBy = await usersCollection.findOne({ _id: order.updatedById });
 
         if (!customer) {
             throw new Error(`Customer with id ${order.customerId} not found`);
@@ -96,6 +98,8 @@ export async function getCustomerOrders({
             },
             number: order.number,
             priority: order.priority,
+            updatedAt: order.updatedAt,
+            updatedBy: updatedBy ? updatedBy.name : undefined
         };
     }));
 

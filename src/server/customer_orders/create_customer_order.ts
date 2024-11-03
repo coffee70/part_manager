@@ -1,19 +1,25 @@
 'use server'
 import client from "@/lib/mongo/db"
-import { Create, CustomerOrder } from "@/types/collections"
+import { Create, CustomerOrder, CustomerOrderDoc } from "@/types/collections"
 import { validators } from "../validators/validators";
-import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
+import { WithoutId } from "mongodb";
 
 type Input = {
     customerOrder: Omit<Create<CustomerOrder>, 'customerId'> & { customerName: string | undefined };
 }
 
 export async function createCustomerOrder(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) {
+        throw new Error('Unauthorized')
+    }
+
     const { customerOrder } = validators.input<Input>(input)
 
     const db = client.db('test')
     const customersCollection = db.collection('customers')
-    const customerOrdersCollection = db.collection('customerOrders')
+    const customerOrdersCollection = db.collection<WithoutId<CustomerOrderDoc>>('customerOrders')
 
     let customerId: string;
     if (customerOrder.customerName === undefined) {
@@ -35,5 +41,7 @@ export async function createCustomerOrder(input: Input) {
         values: customerOrder.values,
         customerId: customerId,
         comments: [],
+        updatedAt: new Date(),
+        updatedById: user._id
     })
 }

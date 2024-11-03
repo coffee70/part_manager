@@ -3,6 +3,7 @@ import client from "@/lib/mongo/db"
 import { ObjectId } from "mongodb"
 import { Valuable, SectionCollection } from "@/types/collections"
 import { z } from "zod"
+import { getCurrentSession } from "../auth/get_current_session"
 
 type Input = {
     modelId: string | null;
@@ -12,6 +13,9 @@ type Input = {
 }
 
 export async function updateFieldValue(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized')
+
     const { data, success, error } = z.custom<Input>().safeParse(input)
     if (!success) {
         throw new Error(error.message)
@@ -29,7 +33,9 @@ export async function updateFieldValue(input: Input) {
         }, 
         { 
             $set: { 
-                [`values.${fieldId}`]: value
+                [`values.${fieldId}`]: value,
+                updatedAt: new Date(),
+                updatedById: user._id
             }
         }
     );

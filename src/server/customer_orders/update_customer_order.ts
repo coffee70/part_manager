@@ -3,12 +3,18 @@ import { CustomerOrder } from "@/types/collections";
 import { validators } from "../validators/validators";
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     customerOrder: Omit<CustomerOrder, 'customerId'> & { customerName: string | undefined };
 }
 
 export async function updateCustomerOrder(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) {
+        throw new Error('Unauthorized');
+    }
+
     const { customerOrder } = validators.input<Input>(input);
 
     const db = client.db('test');
@@ -38,6 +44,8 @@ export async function updateCustomerOrder(input: Input) {
                 notes: customerOrder.notes,
                 values: customerOrder.values,
                 customerId: customerId,
+                updatedAt: new Date(),
+                updatedById: user._id
             }
         });
 }

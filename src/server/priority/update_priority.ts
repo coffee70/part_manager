@@ -3,6 +3,7 @@ import { Priority, SectionCollection } from "@/types/collections";
 import { validators } from "../validators/validators";
 import client from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     id: string | null;
@@ -11,6 +12,9 @@ type Input = {
 }
 
 export async function updatePriority(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { id, collection: _collection, priority } = validators.input<Input>(input);
 
     if (!id) throw new Error('id is required');
@@ -18,5 +22,13 @@ export async function updatePriority(input: Input) {
     const db = client.db('test');
     const collection = db.collection(_collection);
 
-    await collection.updateOne({ _id: new ObjectId(id) }, { $set: { priority } });
+    await collection.updateOne({
+        _id: new ObjectId(id)
+    }, {
+        $set: {
+            priority,
+            updatedAt: new Date(),
+            updatedById: user._id
+        }
+    });
 }

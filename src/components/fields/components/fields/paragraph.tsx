@@ -62,6 +62,8 @@ export default function ParagraphField({ field }: Props) {
         mutationFn: updateFieldValue,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
         }
     })
 

@@ -1,7 +1,8 @@
 'use server'
 import client from "@/lib/mongo/db";
-import { Attachable, AttachmentCollection } from "@/types/collections";
+import { AttachableDoc, AttachmentCollection } from "@/types/collections";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 export async function createAttachment({
     file,
@@ -12,12 +13,15 @@ export async function createAttachment({
     collection: AttachmentCollection;
     modelId: string | null;
 }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized')
+
     if (!modelId) {
         throw new Error('No model id provided')
     }
     const _id = new ObjectId(modelId)
     const db = client.db('test')
-    const attachable = db.collection<Attachable>(collection)
+    const attachable = db.collection<AttachableDoc>(collection)
     const attachmentId = new ObjectId()
     attachable.updateOne(
         {
@@ -29,6 +33,10 @@ export async function createAttachment({
                     _id: attachmentId,
                     filename: file.name
                 }
+            },
+            $set: {
+                updatedAt: new Date(),
+                updatedById: user._id
             }
         }
     )

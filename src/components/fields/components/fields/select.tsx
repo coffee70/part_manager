@@ -31,12 +31,14 @@ export default function SelectField({ field }: Props) {
 
     const { collection, id } = useURLMetadata();
 
-    const queryclient = useQueryClient();
+    const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateFieldValue,
         onSuccess: () => {
-            queryclient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) });
+            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) });
+            // updates the table view to show the updated at date change
+            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
         }
     })
 
