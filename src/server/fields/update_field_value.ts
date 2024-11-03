@@ -1,5 +1,5 @@
 'use server'
-import client from "@/lib/mongo/db"
+import { db } from "@/lib/mongo/db"
 import { ObjectId } from "mongodb"
 import { Valuable, SectionCollection } from "@/types/collections"
 import { z } from "zod"
@@ -24,7 +24,6 @@ export async function updateFieldValue(input: Input) {
     if (!modelId) throw new Error('Cannot update field value without a model id')
     if (!value) return
 
-    const db = client.db('test')
     const collection = db.collection<Valuable>(sectionCollection)
 
     await collection.updateOne(

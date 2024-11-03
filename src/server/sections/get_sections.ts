@@ -1,8 +1,7 @@
 'use server'
-import client from "@/lib/mongo/db"
+import { db } from "@/lib/mongo/db"
 import { Field, Section, SectionCollection } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
-import { z } from "zod";
 import { validators } from "../validators/validators";
 
 type Output = Array<Section & {
@@ -17,7 +16,7 @@ type Input = {
 export async function getSections(input: Input) {
 
     const { collection } = validators.input<Input>(input);
-    const db = client.db('test')
+    
     const sectionsCollection = db.collection<Section>('sections')
     const sections = await sectionsCollection.find({ collection }).toArray()
 

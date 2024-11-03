@@ -1,5 +1,5 @@
 'use server'
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
 import { CustomerOrderDoc, CustomerDoc, AttachableDoc, Priority } from "@/types/collections";
 import { redirect } from "next/navigation";
@@ -30,7 +30,6 @@ type Input = {
 
 export async function getCustomerOrder({ _id }: Input): Promise<Output> {
 
-    const db = client.db('test')
     const customerOrdersCollection = db.collection<CustomerOrderDoc & AttachableDoc>('customerOrders')
     const customersCollection = db.collection<CustomerDoc>('customers')
 

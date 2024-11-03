@@ -1,7 +1,6 @@
 'use server'
-import client from "@/lib/mongo/db"
+import { db } from "@/lib/mongo/db"
 import { ObjectId } from "mongodb"
-import { Field, Section } from "@/types/collections"
 import { z } from "zod"
 
 type Input = {
@@ -14,7 +13,7 @@ export async function deleteSection(input: Input) {
         throw new Error(error.message)
     }
     const { _id } = data
-    const db = client.db('test')
+    
     const sections = db.collection('sections')
     const fields = db.collection('fields')
     await fields.deleteMany({ sectionId: _id })

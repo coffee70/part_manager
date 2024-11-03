@@ -1,9 +1,8 @@
 import { SessionDoc, UserDoc } from "@/types/collections";
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
-import client from "./mongo/db";
+import { db } from "@/lib/mongo/db";
 
-const db = client.db("test");
 const users = db.collection<UserDoc>("users");
 const sessions = db.collection<SessionDoc>("sessions");
 

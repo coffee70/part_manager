@@ -1,8 +1,8 @@
 'use server'
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { AttachableDoc, AttachmentCollection } from "@/types/collections";
 import { ObjectId } from "mongodb";
-import { getCurrentSession } from "../auth/get_current_session";
+import { getCurrentSession } from "@/server/auth/get_current_session";
 
 export async function createAttachment({
     file,
@@ -20,7 +20,7 @@ export async function createAttachment({
         throw new Error('No model id provided')
     }
     const _id = new ObjectId(modelId)
-    const db = client.db('test')
+    
     const attachable = db.collection<AttachableDoc>(collection)
     const attachmentId = new ObjectId()
     attachable.updateOne(

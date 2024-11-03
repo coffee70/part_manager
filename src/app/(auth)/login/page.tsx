@@ -1,7 +1,7 @@
 import { Form } from "@/components/auth/form";
 import { verify } from "@node-rs/argon2";
 import { redirect } from "next/navigation";
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PasswordInput } from "@/components/ui/password_input";

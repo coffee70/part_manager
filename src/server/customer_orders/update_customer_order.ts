@@ -1,7 +1,7 @@
 'use server'
 import { CustomerOrder } from "@/types/collections";
 import { validators } from "../validators/validators";
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
 
@@ -17,7 +17,6 @@ export async function updateCustomerOrder(input: Input) {
 
     const { customerOrder } = validators.input<Input>(input);
 
-    const db = client.db('test');
     const customersCollection = db.collection('customers');
     const customerOrdersCollection = db.collection('customerOrders');
 

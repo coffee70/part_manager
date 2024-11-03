@@ -1,7 +1,7 @@
 'use server'
 import { Priority, SectionCollection } from "@/types/collections";
 import { validators } from "../validators/validators";
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
 
@@ -19,7 +19,6 @@ export async function updatePriority(input: Input) {
 
     if (!id) throw new Error('id is required');
 
-    const db = client.db('test');
     const collection = db.collection(_collection);
 
     await collection.updateOne({

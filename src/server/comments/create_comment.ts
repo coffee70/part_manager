@@ -1,7 +1,7 @@
 'use server'
-import { Commentable, CommentDoc, Create, SectionCollection } from '@/types/collections'
+import { db } from '@/lib/mongo/db';
+import { CommentableDoc, CommentDoc, Create, SectionCollection } from '@/types/collections'
 import { validators } from '../validators/validators';
-import client from '@/lib/mongo/db';
 import { ObjectId } from 'mongodb';
 import { getCurrentSession } from '../auth/get_current_session';
 
@@ -21,8 +21,7 @@ export async function createComment(input: Input) {
         throw new Error('id is required');
     }
 
-    const db = client.db('test');
-    const collection = db.collection<Commentable>(_collection);
+    const collection = db.collection<CommentableDoc>(_collection);
     await collection.updateOne({ _id: new ObjectId(id) }, {
         $push: {
             comments: {

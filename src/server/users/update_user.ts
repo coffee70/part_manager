@@ -1,8 +1,7 @@
 'use server'
-
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { User, UserDoc } from "@/types/collections";
 
 
@@ -24,7 +23,6 @@ export async function updateUser(input: Input) {
         throw new Error("Invalid username");
     }
 
-    const db = client.db('test');
     const users = db.collection<UserDoc>('users');
 
     const userNameChanged = await users.findOne({ _id: user._id, username: { $ne: user.username } }) !== null;

@@ -1,6 +1,5 @@
 'use server'
-
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { Create, User, UserDoc } from "@/types/collections";
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
@@ -37,7 +36,6 @@ export async function createUser(input: Input) {
 	});
     const userId = generateUserId();
 
-    const db = client.db('test');
     const users = db.collection<UserDoc>('users');
 
     const usernameInUse = await users.findOne({ username: user.username }) !== null;

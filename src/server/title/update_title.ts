@@ -1,5 +1,5 @@
 'use server'
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { SectionCollection } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
@@ -18,7 +18,6 @@ export async function updateTitle({ id, collection: _collection, key, title }: I
         throw new Error("No id provided")
     }
     
-    const db = client.db('test')
     const collection = db.collection(_collection)
 
     await collection.updateOne({ 

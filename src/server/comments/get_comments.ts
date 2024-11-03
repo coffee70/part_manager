@@ -1,8 +1,8 @@
 'use server'
-import { Commentable, SectionCollection, UserDoc } from "@/types/collections";
+import { CommentableDoc, SectionCollection, UserDoc } from "@/types/collections";
 import { z } from "zod";
 import { validators } from "../validators/validators";
-import client from "@/lib/mongo/db";
+import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
 
 const OutputSchema = z.object({
@@ -28,8 +28,7 @@ export async function getComments(input: z.infer<typeof InputSchema>) {
         throw new Error("id is required");
     }
 
-    const db = client.db('test');
-    const collection = db.collection<Commentable>(_collection);
+    const collection = db.collection<CommentableDoc>(_collection);
     const document = await collection.findOne({ _id: new ObjectId(id) });
 
     if (!document) {

@@ -1,5 +1,5 @@
 'use server'
-import client from "@/lib/mongo/db"
+import { db } from "@/lib/mongo/db"
 import { Field } from "@/types/collections"
 import { z } from "zod"
 
@@ -13,7 +13,7 @@ export async function getFields(input: Input) {
         throw new Error(error.message)
     }
     const { sectionId } = data
-    const db = client.db('test')
+    
     const fields = db.collection<Field>('fields')
     const result = await fields.find({ sectionId: sectionId }).toArray()
     return result.map(field => ({

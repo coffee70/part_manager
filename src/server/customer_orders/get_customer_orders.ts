@@ -1,5 +1,5 @@
 'use server'
-import client from '@/lib/mongo/db';
+import { db } from '@/lib/mongo/db';
 import { CustomerDoc, CustomerOrderDoc, UserDoc } from '@/types/collections';
 import { ObjectId } from 'mongodb';
 import { getSearchParams, SearchParams } from '@/lib/search_params';
@@ -11,7 +11,6 @@ export async function getCustomerOrders({
 }) {
     const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams)
 
-    const db = client.db('test');
     const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders');
     const customersCollection = db.collection<CustomerDoc>('customers');
     const usersCollection = db.collection<UserDoc>('users');

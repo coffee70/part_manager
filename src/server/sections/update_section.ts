@@ -1,5 +1,5 @@
 'use server'
-import client from "@/lib/mongo/db"
+import { db } from "@/lib/mongo/db"
 import { ObjectId } from "mongodb"
 import { Section } from "@/types/collections"
 import { z } from "zod"
@@ -15,7 +15,7 @@ export async function updateSection(input: Input) {
         throw new Error(error.message)
     }
     const { _id, section } = data
-    const db = client.db('test')
+    
     const sections = db.collection('sections')
     const result = await sections.updateOne(
         {
