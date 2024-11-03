@@ -1,57 +1,18 @@
 'use server'
-import { z } from 'zod';
 import client from '@/lib/mongo/db';
-import { CustomerDoc, CustomerOrder, CustomerOrderSortKeys, Priority, UserDoc } from '@/types/collections';
-import { Document, ObjectId } from 'mongodb';
-
-// schemas
-const UpdatedAt = z.object({
-    to: z.coerce.date().optional(),
-    from: z.coerce.date().optional(),
-});
+import { CustomerDoc, CustomerOrderDoc, UserDoc } from '@/types/collections';
+import { ObjectId } from 'mongodb';
+import { getSearchParams, SearchParams } from '@/lib/search_params';
 
 export async function getCustomerOrders({
     searchParams
-}: {
-    searchParams: { [key: string]: string | string[] | undefined }
+} : {
+    searchParams: SearchParams
 }) {
-    // pull out updatedAt
-    const updatedAtJson = searchParams.updatedAt;
-    if (Array.isArray(updatedAtJson)) {
-        throw new Error("updatedAt must be a json string");
-    }
-    const updatedAtParsed = updatedAtJson ? JSON.parse(updatedAtJson) : undefined;
-    const { data: updatedAt, error: updatedAtError } = UpdatedAt.optional().safeParse(updatedAtParsed);
-    if (updatedAtError) {
-        throw new Error("updatedAt must be a valid date range");
-    }
-
-    // pull out search
-    let search = searchParams.search;
-    if (Array.isArray(search)) {
-        throw new Error("search must be a string");
-    }
-
-
-    // pull out priority
-    const { data: priority, error: priorityError } = z.custom<Priority>().optional().safeParse(searchParams.priority);
-    if (priorityError) {
-        throw new Error("priority must be a valid priority");
-    }
-
-    const { data: sortBy, error: sortByError } = z.enum(CustomerOrderSortKeys).optional().safeParse(searchParams.sort_by);
-    if (sortByError) {
-        throw new Error("sortBy must be either 'number', 'updatedAt', or 'priority'");
-    }
-
-    // get sort_order
-    const { data: sortOrder, error: sortOrderError } = z.enum(['asc', 'desc']).optional().safeParse(searchParams.sort_order);
-    if (sortOrderError) {
-        throw new Error("sortOrder must be either 'asc' or 'desc'");
-    }
+    const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams)
 
     const db = client.db('test');
-    const customerOrdersCollection = db.collection<CustomerOrder>('customerOrders');
+    const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders');
     const customersCollection = db.collection<CustomerDoc>('customers');
     const usersCollection = db.collection<UserDoc>('users');
 

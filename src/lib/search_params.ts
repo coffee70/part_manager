@@ -1,35 +1,66 @@
-'use client'
-import React from "react"
-import { usePathname, useSearchParams, useRouter, ReadonlyURLSearchParams } from "next/navigation"
+import { ReadonlyURLSearchParams } from "next/navigation"
+import { z } from "zod"
+import { CustomerOrderSortKeys, NextServerSearchParams, Priority } from "@/types/collections"
 
-export const useRouterHelpers = () => {
-    const router = useRouter()
-    const pathname = usePathname()
-    const searchParams = useSearchParams()
+const UpdatedAt = z.object({
+    to: z.coerce.date().optional(),
+    from: z.coerce.date().optional(),
+});
 
-    const pushSearchParams = React.useCallback((
-        params: { [key: string]: string | undefined }
-    ) => {
-        const newSearchParams = new URLSearchParams(searchParams)
-        Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined) {
-                newSearchParams.set(key, value)
-            } else {
-                newSearchParams.delete(key)
-            }
-        })
-        const url = `${pathname}?${newSearchParams.toString()}`
-        router.push(url)
-    }, [pathname, searchParams, router])
+export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
-    return { pushSearchParams }
+export const getSearchParams = (searchParams: SearchParams) => {
+    // convert client side ReadOnlySearchParams to server side type
+    let params: NextServerSearchParams;
+    if (searchParams instanceof ReadonlyURLSearchParams) {
+        params = convertSearchParams(searchParams)
+    }
+    else {
+        params = searchParams;
+    }
+
+    // pull out updatedAt
+    const updatedAtJson = params.updatedAt;
+    if (Array.isArray(updatedAtJson)) {
+        throw new Error("updatedAt must be a json string");
+    }
+    const updatedAtParsed = updatedAtJson ? JSON.parse(updatedAtJson) : undefined;
+    const { data: updatedAt, error: updatedAtError } = UpdatedAt.optional().safeParse(updatedAtParsed);
+    if (updatedAtError) {
+        throw new Error("updatedAt must be a valid date range");
+    }
+
+    // pull out search
+    const search = params.search;
+    if (Array.isArray(search)) {
+        throw new Error("search must be a string");
+    }
+
+    // pull out priority
+    const { data: priority, error: priorityError } = z.custom<Priority>().optional().safeParse(params.priority);
+    if (priorityError) {
+        throw new Error("priority must be a valid priority");
+    }
+
+    const { data: sortBy, error: sortByError } = z.enum(CustomerOrderSortKeys).optional().safeParse(params.sort_by);
+    if (sortByError) {
+        throw new Error("sortBy must be either 'number', 'updatedAt', or 'priority'");
+    }
+
+    // get sort_order
+    const { data: sortOrder, error: sortOrderError } = z.enum(['asc', 'desc']).optional().safeParse(params.sort_order);
+    if (sortOrderError) {
+        throw new Error("sortOrder must be either 'asc' or 'desc'");
+    }
+
+    return { updatedAt, search, priority, sortBy, sortOrder }
 }
 
 export const convertSearchParams = (
-    readOnlyURLSearchParams: ReadonlyURLSearchParams
-): { [key: string]: string | string[] | undefined } => (
-    Array.from(readOnlyURLSearchParams.keys()).reduce<{ [key: string]: string | string[] | undefined }>((acc, key) => {
-        const value = readOnlyURLSearchParams.getAll(key);
+    searchParams: ReadonlyURLSearchParams
+): NextServerSearchParams => (
+    Array.from(searchParams.keys()).reduce<NextServerSearchParams>((acc, key) => {
+        const value = searchParams.getAll(key);
         if (value.length === 1) {
             acc[key] = value[0];
         } else {

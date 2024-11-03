@@ -2,9 +2,7 @@
 import DataLayout from "@/layouts/data_layout"
 import { useQuery } from "@tanstack/react-query";
 import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
-import { useSearchParams } from "next/navigation";
-import { useRouterHelpers } from "@/lib/search_params";
-import { convertSearchParams } from "@/lib/search_params";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
 import SearchInput from "@/components/list/filters/search_input";
 import Filter from "@/components/list/filters/filter";
@@ -22,9 +20,15 @@ import { CustomerOrderSortKeys } from "@/types/collections";
 
 export default function TableContainer() {
 
-    const readOnlySearchParams = useSearchParams()
-    const { pushSearchParams } = useRouterHelpers()
-    const searchParams = convertSearchParams(readOnlySearchParams)
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const { replace } = useRouter();
+    
+    const handleClick = (id: string) => {
+        const params = new URLSearchParams(searchParams);
+        params.set('id', id)
+        replace(`${pathname}?${params.toString()}`)
+    }
 
     // queries
     const {
@@ -53,7 +57,7 @@ export default function TableContainer() {
             <Table>
                 <TableBody>
                     {data.map((order) => (
-                        <TableRow key={order._id} onClick={() => pushSearchParams({ id: order._id })}>
+                        <TableRow key={order._id} onClick={() => handleClick(order._id)}>
                             <TableCell className="px-1">
                                 <Priority priority={order.priority} />
                             </TableCell>

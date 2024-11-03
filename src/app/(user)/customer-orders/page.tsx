@@ -5,11 +5,12 @@ import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
 import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
 import { getSections } from "@/server/sections/get_sections";
 import { getComments } from "@/server/comments/get_comments";
+import { NextServerSearchParams } from "@/types/collections";
 
 export default async function Page({
     searchParams
 }: {
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: NextServerSearchParams;
 }) {
     const queryClient = new QueryClient();
 

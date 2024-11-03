@@ -177,3 +177,5 @@ export const roles: Role[] = ['admin', 'user'];
 export type Create<T> = Omit<T, '_id' | 'updatedAt'>
 
 export type Doc<T> = Omit<T, '_id'> & { _id: string };
+
+export type NextServerSearchParams = { [key: string]: string | string[] | undefined }
