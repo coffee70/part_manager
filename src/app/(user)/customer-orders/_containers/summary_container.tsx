@@ -15,8 +15,8 @@ import SummaryActivity from "@/components/summary/summary_activity/summary_activ
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
-import EditCustomerOrder from './edit_customer_order';
-import SummaryError from '../summary/summary_error';
+import EditCustomerOrder from '@/app/(user)/customer-orders/_forms/edit_customer_order';
+import SummaryError from '@/components/summary/summary_error';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();

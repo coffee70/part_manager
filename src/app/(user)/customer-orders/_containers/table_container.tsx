@@ -14,8 +14,8 @@ import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMe
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
-import NewCustomerOrder from "./new_customer_order";
-import Priority from "../list/priority/priority";
+import NewCustomerOrder from "@/app/(user)/customer-orders/_forms/new_customer_order";
+import Priority from "@/components/list/priority/priority";
 import { CustomerOrderSortKeys } from "@/types/collections";
 
 export default function TableContainer() {

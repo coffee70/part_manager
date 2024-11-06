@@ -1,5 +1,5 @@
 'use client'
-import CustomerOrderForm from "@/components/customer-orders/customer_order_form";
+import CustomerOrderForm from "@/app/(user)/customer-orders/_forms/customer_order_form";
 import { DataAction } from "@/components/ui/data_action";
 import { PlusIcon } from "lucide-react";
 import React from "react";

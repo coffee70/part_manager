@@ -4,13 +4,13 @@ import { CustomerOrder, Priority, Values } from "@/types/collections"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { collectionKeys } from '@/lib/query_keys';
 import { getCustomers } from '@/server/customers/get_customers';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
-import Input from '../models/fields/input';
-import Select from '../models/fields/select';
-import Textarea from '../models/fields/textarea';
-import Fields from '../models/fields';
-import { Button } from '../ui/button';
+import Input from '@/components/models/fields/input';
+import Select from '@/components/models/fields/select';
+import Textarea from '@/components/models/fields/textarea';
+import Fields from '@/components/models/fields';
+import { Button } from '@/components/ui/button';
 import { createCustomerOrder } from '@/server/customer_orders/create_customer_order';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
