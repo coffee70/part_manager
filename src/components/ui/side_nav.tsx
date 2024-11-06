@@ -2,6 +2,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon, ChevronUpIcon, CircleIcon } from "lucide-react";
+import Link from 'next/link';
 
 type NavBaseProps = {
     children: React.ReactNode
@@ -54,39 +55,41 @@ function NavFooter({ children }: NavFooterProps) {
 
 type NavItemProps = {
     label: string
+    href: string
     icon?: React.ReactNode
     open?: boolean
 }
 
-function NavItem({ label, icon, open }: NavItemProps) {
+function NavItem({ label, icon, open, href }: NavItemProps) {
     return (
-        <button className='flex items-center h-12 px-4 my-1 hover:bg-hover'>
+        <Link href={href} className='flex items-center h-12 px-4 my-1 hover:bg-hover'>
             <div className='flex items-center space-x-6'>
                 {icon}
                 <span>{label}</span>
             </div>
             {open === true && <ChevronUpIcon className='ml-auto' />}
             {open === false && <ChevronDownIcon className='ml-auto' />}
-        </button>
+        </Link>
     )
 }
 
 type SubNavItemProps = {
     label: string
+    href: string
     top?: boolean
     bottom?: boolean
 }
 
-function SubNavItem({ label, top, bottom }: SubNavItemProps) {
+function SubNavItem({ label, top, bottom, href }: SubNavItemProps) {
     return (
-        <button className="flex items-center space-x-6 h-10 px-4 text-accent-secondary hover:bg-hover">
+        <Link href={href} className="flex items-center space-x-6 h-10 px-4 text-accent-secondary hover:bg-hover">
             <div className="flex flex-col items-center h-full w-6">
                 <div className={cn("grow border", top ? "border-transparent" : "border-accent-foreground")} />
                 <CircleIcon size={8} strokeWidth={3} />
                 <div className={cn("grow border", bottom ? "border-transparent" : "border-accent-foreground")} />
             </div>
             <span>{label}</span>
-        </button>
+        </Link>
     )
 }
 
