@@ -1,17 +1,16 @@
-import { StatusBadge } from "@/components/ui/badge";
 import { More } from "@/components/ui/more";
-import { Item } from "./summary_list";
+import Link from "next/link";
 
 type Props = {
-    item: Item;
+    label: string;
+    href: string;
 }
 
-export default function SummaryListItem({ item }: Props) {
+export default function SummaryListItem({ label, href }: Props) {
     return (
-        <div key={item.id} className='flex items-center justify-between flex-1 py-1 border-t border-foreground'>
-            <div className="text-primary cursor-pointer hover:underline hover:underline-offset-2">{item.label}</div>
+        <div className='flex items-center justify-between flex-1 py-1 border-t border-foreground'>
+            <Link href={href} className="text-primary cursor-pointer hover:underline hover:underline-offset-2">{label}</Link>
             <div className='flex items-center space-x-2'>
-                <StatusBadge color={item.status.color} label={item.status.label} />
                 <More />
             </div>
         </div>

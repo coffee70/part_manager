@@ -223,6 +223,14 @@ export interface CommentableDoc {
     comments: CommentDoc[];
 }
 
+export type LinkableDoc = {
+    links: {
+        _id: ObjectId;
+        modelId: string;
+        model: SectionCollection;
+    }[];
+}
+
 export type Role = 'admin' | 'user'
 
 export const roles: Role[] = ['admin', 'user'];

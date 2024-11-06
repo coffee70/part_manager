@@ -17,3 +17,7 @@ export const userKeys = {
 export const commentKeys = {
     all: (collection: SectionCollection, id?: string | null) => [collection, id, 'comments']
 }
+
+export const linkKeys = {
+    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'links']
+}

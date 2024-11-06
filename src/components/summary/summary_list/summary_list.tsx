@@ -5,41 +5,34 @@ import React from "react";
 import { ComboboxOption } from "./add_item/combobox";
 import { EditProvider } from "./add_item/edit_context";
 import AddItem, { Props as AddItemProps } from "./add_item/add_item";
+import { useQuery } from "@tanstack/react-query";
+import { useURLMetadata } from "@/hooks/url_metadata.hook";
+import { linkKeys } from "@/lib/query_keys";
+import { getLinks } from "@/server/links/get_links";
 
-export type Item = {
-    id: number;
-    label: string;
-    status: {
-        label: string;
-        color: string;
-    };
-}
+export default function SummaryList() {
+    const { id, collection } = useURLMetadata();
 
-type Props<Option> = {
-    title: string;
-    items: Item[];
-} & AddItemProps<Option>
+    const { data: links, isPending, isError } = useQuery({
+        queryKey: linkKeys.all(collection, id),
+        queryFn: () => getLinks({ modelId: id, model: collection }),
+    })
 
-export default function SummaryList<Option extends ComboboxOption>({
-    title,
-    items,
-    value,
-    onChange,
-    label,
-    placeholder,
-    options,
-}: Props<Option>) {
+    if (isPending) return <div>Loading...</div>
+
+    if (isError) return <div>Error...</div>
+
     return (
-        <SummaryBase title={title}>
+        <SummaryBase title='Links'>
             <div className='flex flex-col last:border-b last:border-foreground last:border-dashed'>
-                {items.map(item => <SummaryListItem key={item.id} item={item} />)}
-                <EditProvider>
+                {links.map(link => <SummaryListItem key={link._id} label={link.name} href={link.href} />)}
+                {/* <EditProvider>
                     {options ? (
                         <AddItem label={label} value={value} onChange={onChange} options={options} placeholder={placeholder} />
                     ) : (
                         <AddItem label={label} value={value} onChange={onChange} options={options} placeholder={placeholder} />
                     )}
-                </EditProvider>
+                </EditProvider> */}
             </div>
         </SummaryBase>
     )
