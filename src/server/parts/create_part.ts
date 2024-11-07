@@ -1,8 +1,9 @@
 'use server'
-import { Create, Part } from "@/types/collections";
+import { Create, Part, PartDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/mongo/db";
 import { validators } from "../validators/validators";
+import { WithoutId } from "mongodb";
 
 type Input = {
     part: Create<Part>;
@@ -16,7 +17,7 @@ export async function createPart(input: Input) {
 
     const { part } = validators.input<Input>(input)
 
-    const partsCollection = db.collection('parts')
+    const partsCollection = db.collection<WithoutId<PartDoc>>('parts')
 
     await partsCollection.insertOne({
         number: part.number,

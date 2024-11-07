@@ -1,8 +1,9 @@
 'use server'
-import { Create, ShopOrder } from "@/types/collections"
+import { Create, ShopOrder, ShopOrderDoc } from "@/types/collections"
 import { getCurrentSession } from "../auth/get_current_session";
 import { validators } from "../validators/validators";
 import { db } from "@/lib/mongo/db";
+import { WithoutId } from "mongodb";
 
 type Input = {
     shopOrder: Create<ShopOrder>;
@@ -16,7 +17,7 @@ export async function createShopOrder(input: Input) {
 
     const { shopOrder } = validators.input<Input>(input)
 
-    const shopOrdersCollection = db.collection('shopOrders')
+    const shopOrdersCollection = db.collection<WithoutId<ShopOrderDoc>>('shopOrders')
 
     await shopOrdersCollection.insertOne({
         number: shopOrder.number,
