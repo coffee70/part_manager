@@ -35,6 +35,12 @@ export async function getComments(input: z.infer<typeof InputSchema>) {
         throw new Error("document not found");
     }
 
+    if (!document.comments) {
+        return validators.output<z.infer<typeof OutputSchema>>({
+            comments: [],
+        })
+    }
+
     const userCollection = db.collection<UserDoc>('users');
     const comments = await Promise.all(document.comments.map(async comment => {
         const user = await userCollection.findOne({ _id: comment.userId });
