@@ -30,7 +30,7 @@ export default async function Page({
 
     // prefetch comments
     await queryClient.prefetchQuery({
-        queryKey: commentKeys.all('customerOrders', id),
+        queryKey: commentKeys.all('shopOrders', id),
         queryFn: () => getComments({ collection: 'shopOrders', id }),
     })
 
