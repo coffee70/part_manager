@@ -25,7 +25,7 @@ export type AttachmentCollection =
 export type Priority =
     | 'Lowest'
     | 'Low'
-    | 'Normal'
+    | 'Medium'
     | 'High'
     | 'Highest'
 
@@ -38,17 +38,17 @@ export type PriorityInfo = {
 export const priorities: PriorityInfo[] = [
     {
         label: 'Highest',
-        color: 'red',
+        color: 'darkred',
         Icon: ChevronsUpIcon
     },
     {
         label: 'High',
-        color: 'orange',
+        color: 'red',
         Icon: ChevronUpIcon
     },
     {
-        label: 'Normal',
-        color: 'yellow',
+        label: 'Medium',
+        color: 'orange',
         Icon: CircleMinusIcon
     },
     {
