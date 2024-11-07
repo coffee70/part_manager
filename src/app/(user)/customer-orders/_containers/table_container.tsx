@@ -17,6 +17,8 @@ import { collectionKeys } from "@/lib/query_keys";
 import NewCustomerOrder from "@/app/(user)/customer-orders/_forms/new_customer_order";
 import Priority from "@/components/list/priority/priority";
 import { CustomerOrderSortKeys } from "@/types/collections";
+import DateRangeFilter from "@/components/list/filters/filter_date_range";
+import PriorityFilter from "@/components/list/filters/filter_priority";
 
 export default function TableContainer() {
 
@@ -50,7 +52,10 @@ export default function TableContainer() {
                 <FilterToolbarRow>
                     <NewCustomerOrder />
                     <SearchInput />
-                    <Filter />
+                    <Filter labels={['Updated At', 'Priority']}>
+                        <DateRangeFilter paramKey="updatedAt"/>
+                        <PriorityFilter />
+                    </Filter>
                     <Sort keys={CustomerOrderSortKeys}/>
                 </FilterToolbarRow>
             </FilterToolbar>
