@@ -9,7 +9,7 @@ export async function getCustomerOrders({
 } : {
     searchParams: SearchParams
 }) {
-    const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams)
+    const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams, 'customerOrders');
 
     const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders');
     const customersCollection = db.collection<CustomerDoc>('customers');

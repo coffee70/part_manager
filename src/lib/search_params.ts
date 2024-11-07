@@ -1,6 +1,6 @@
 import { ReadonlyURLSearchParams } from "next/navigation"
 import { z } from "zod"
-import { CustomerOrderSortKeys, NextServerSearchParams, Priority } from "@/types/collections"
+import { NextServerSearchParams, Priority, SectionCollection, sortKeys } from "@/types/collections"
 
 const UpdatedAt = z.object({
     to: z.coerce.date().optional(),
@@ -9,7 +9,7 @@ const UpdatedAt = z.object({
 
 export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
-export const getSearchParams = (searchParams: SearchParams) => {
+export const getSearchParams = (searchParams: SearchParams, collection: SectionCollection) => {
     // convert client side ReadOnlySearchParams to server side type
     let params: NextServerSearchParams;
     if (searchParams instanceof ReadonlyURLSearchParams) {
@@ -42,9 +42,9 @@ export const getSearchParams = (searchParams: SearchParams) => {
         throw new Error("priority must be a valid priority");
     }
 
-    const { data: sortBy, error: sortByError } = z.enum(CustomerOrderSortKeys).optional().safeParse(params.sort_by);
+    const { data: sortBy, error: sortByError } = z.enum(sortKeys[collection]).optional().safeParse(params.sort_by);
     if (sortByError) {
-        throw new Error("sortBy must be either 'number', 'updatedAt', or 'priority'");
+        throw new Error(`sortBy must be one of ${sortKeys[collection].join(', ')}`);
     }
 
     // get sort_order
@@ -53,7 +53,9 @@ export const getSearchParams = (searchParams: SearchParams) => {
         throw new Error("sortOrder must be either 'asc' or 'desc'");
     }
 
-    return { updatedAt, search, priority, sortBy, sortOrder }
+    const ret = { updatedAt, search, priority, sortBy, sortOrder }
+    console.log(ret)
+    return ret;
 }
 
 export const convertSearchParams = (

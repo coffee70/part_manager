@@ -71,7 +71,13 @@ export type CustomerOrder = {
     notes: string;
 } & Valuable
 
-export const CustomerOrderSortKeys = ['number', 'priority', 'updatedAt'] as const;
+export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]> = {
+    customerOrders: ['number', 'priority', 'updatedAt'] as const,
+    shopOrders: ['number', 'priority', 'updatedAt'] as const,
+    parts: ['number', 'priority', 'updatedAt'] as const,
+    serials: ['number', 'priority', 'updatedAt'] as const,
+    customers: ['name', 'updatedAt'] as const,
+}
 
 export type CustomerOrderDoc = {
     _id: ObjectId;
