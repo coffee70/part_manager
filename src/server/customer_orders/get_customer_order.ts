@@ -1,7 +1,7 @@
 'use server'
 import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
-import { CustomerOrderDoc, CustomerDoc, AttachableDoc, Priority } from "@/types/collections";
+import { CustomerOrderDoc, CustomerDoc, Priority } from "@/types/collections";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -30,7 +30,7 @@ type Input = {
 
 export async function getCustomerOrder({ _id }: Input): Promise<Output> {
 
-    const customerOrdersCollection = db.collection<CustomerOrderDoc & AttachableDoc>('customerOrders')
+    const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders')
     const customersCollection = db.collection<CustomerDoc>('customers')
 
     // if no id is provided, redirect to the first customer order so the URL is formed correctly
@@ -69,6 +69,5 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
 
     const serialized = JSON.parse(JSON.stringify(res));
 
-    const parsed = OutputSchema.parse(serialized);
-    return parsed;
+    return OutputSchema.parse(serialized);
 }

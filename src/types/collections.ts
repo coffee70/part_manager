@@ -63,14 +63,6 @@ export const priorities: PriorityInfo[] = [
     },
 ]
 
-export type CustomerOrder = {
-    _id: string;
-    customerId: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-} & Valuable
-
 export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]> = {
     customerOrders: ['number', 'priority', 'updatedAt'] as const,
     shopOrders: ['number', 'priority', 'updatedAt'] as const,
@@ -78,6 +70,14 @@ export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]>
     serials: ['number', 'priority', 'updatedAt'] as const,
     customers: ['name', 'updatedAt'] as const,
 }
+
+export type CustomerOrder = {
+    _id: string;
+    customerId: string;
+    number: string;
+    priority: Priority;
+    notes: string;
+} & Valuable
 
 export type CustomerOrderDoc = {
     _id: ObjectId;
@@ -90,6 +90,26 @@ export type CustomerOrderDoc = {
 } 
 & Valuable
 & CommentableDoc
+& AttachableDoc
+
+export type ShopOrderDoc = {
+    _id: ObjectId;
+    number: string;
+    priority: Priority;
+    notes: string;
+    updatedAt: Date;
+    updatedById: string;
+}
+& Valuable
+& CommentableDoc
+& AttachableDoc
+
+export type ShopOrder = {
+    _id: string;
+    number: string;
+    priority: Priority;
+    notes: string;
+} & Valuable
 
 export interface Attachable {
     attachments: {

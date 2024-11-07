@@ -53,9 +53,7 @@ export const getSearchParams = (searchParams: SearchParams, collection: SectionC
         throw new Error("sortOrder must be either 'asc' or 'desc'");
     }
 
-    const ret = { updatedAt, search, priority, sortBy, sortOrder }
-    console.log(ret)
-    return ret;
+    return { updatedAt, search, priority, sortBy, sortOrder };
 }
 
 export const convertSearchParams = (
