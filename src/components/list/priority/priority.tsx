@@ -1,9 +1,9 @@
-import { priorities, type Priority } from "@/types/collections";
+import { priorityInfo, type Priority } from "@/types/collections";
 
 export default function Priority({ priority }: { priority: Priority }) {
-    const priorityInfo = priorities.find(priorityInfo  => priorityInfo.label === priority)
+    const info = priorityInfo[priority]
     if (!priorityInfo) return null
     return (
-        <div className="w-1 h-14 rounded-full" style={{ backgroundColor: priorityInfo.color }} />
+        <div className="w-1 h-14 rounded-full" style={{ backgroundColor: info.color }} />
     )
 }

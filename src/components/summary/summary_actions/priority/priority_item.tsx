@@ -1,15 +1,15 @@
-import { PriorityInfo } from "@/types/collections";
+import { Priority, priorityInfo } from "@/types/collections";
 
 type Props = {
-    priorityInfo: PriorityInfo;
+    priority: Priority;
 }
 
-export default function PriorityItem({ priorityInfo }: Props) {
-    const { label, color, Icon } = priorityInfo;
+export default function PriorityItem({ priority }: Props) {
+    const { color, Icon } = priorityInfo[priority];
     return (
         <div className='flex items-center space-x-3'>
             <Icon style={{ color: color }} size={20} strokeWidth={2.5}/>
-            <span>{label}</span>
+            <span>{priority}</span>
         </div>
     )
 }

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Priority, ShopOrder, Values } from "@/types/collections"
+import { priorities, Priority, ShopOrder, Values } from "@/types/collections"
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { collectionKeys } from '@/lib/query_keys';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -67,7 +67,7 @@ export default function ShopOrderForm({ shopOrder, children }: Props) {
 
     const [attributeState, setAttributeState] = React.useState<AttributeState>({
         number: '',
-        priority: 'Normal',
+        priority: 'Medium',
         notes: '',
     })
 
@@ -114,7 +114,7 @@ export default function ShopOrderForm({ shopOrder, children }: Props) {
                             <Select
                                 label='Priority'
                                 description='The priority of this order'
-                                options={['Lowest', 'Low', 'Normal', 'High', 'Highest']}
+                                options={[...priorities]}
                                 value={attributeState.priority}
                                 onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
                             />

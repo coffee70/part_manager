@@ -22,46 +22,37 @@ export type AttachmentCollection =
     | 'parts'
     | 'serials'
 
-export type Priority =
-    | 'Lowest'
-    | 'Low'
-    | 'Medium'
-    | 'High'
-    | 'Highest'
+export const priorities = ['Lowest', 'Low', 'Medium', 'High', 'Highest'] as const;
+
+export type Priority = typeof priorities[number];
 
 export type PriorityInfo = {
-    label: Priority;
     color: string;
     Icon: LucideIcon;
 }
 
-export const priorities: PriorityInfo[] = [
-    {
-        label: 'Highest',
-        color: 'darkred',
-        Icon: ChevronsUpIcon
-    },
-    {
-        label: 'High',
-        color: 'red',
-        Icon: ChevronUpIcon
-    },
-    {
-        label: 'Medium',
-        color: 'orange',
-        Icon: CircleMinusIcon
-    },
-    {
-        label: 'Low',
-        color: 'green',
-        Icon: ChevronDownIcon
-    },
-    {
-        label: 'Lowest',
+export const priorityInfo: Record<Priority, PriorityInfo> = {
+    Lowest: {
         color: 'darkgreen',
         Icon: ChevronsDownIcon
     },
-]
+    Low: {
+        color: 'green',
+        Icon: ChevronDownIcon
+    },
+    Medium: {
+        color: 'orange',
+        Icon: CircleMinusIcon
+    },
+    High: {
+        color: 'red',
+        Icon: ChevronUpIcon
+    },
+    Highest: {
+        color: 'darkred',
+        Icon: ChevronsUpIcon
+    }
+} as const;
 
 export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]> = {
     customerOrders: ['number', 'priority', 'updatedAt'] as const,
@@ -120,6 +111,25 @@ export type Part = {
 export type PartDoc = {
     _id: ObjectId;
     number: string;
+    notes: string;
+    updatedAt: Date;
+    updatedById: string;
+}
+& Valuable
+& CommentableDoc
+& AttachableDoc
+
+export type Serial = {
+    _id: string;
+    number: string;
+    priority: Priority;
+    notes: string;
+} & Valuable
+
+export type SerialDoc = {
+    _id: ObjectId;
+    number: string;
+    priority: Priority;
     notes: string;
     updatedAt: Date;
     updatedById: string;

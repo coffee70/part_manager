@@ -13,8 +13,6 @@ export default function Priority({ priority }: { priority: Priority }) {
 
     const { collection, id } = useURLMetadata();
 
-    const priorityInfo = priorities.find(priorityInfo => priorityInfo.label === priority)
-
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
@@ -25,18 +23,16 @@ export default function Priority({ priority }: { priority: Priority }) {
         }
     })
 
-    if (!priorityInfo) return null
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <PriorityButton priorityInfo={priorityInfo} />
+                <PriorityButton priority={priority} />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
-                    {priorities.map((priorityInfo, index) => (
-                        <DropdownMenuItem key={index} onClick={() => mutate({ id, collection, priority: priorityInfo.label })}>
-                            <PriorityItem priorityInfo={priorityInfo} />
+                    {Object.values(priorities).map((info, index) => (
+                        <DropdownMenuItem key={index} onClick={() => mutate({ id, collection, priority: priority })}>
+                            <PriorityItem priority={info} />
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>

@@ -3,13 +3,13 @@ import React from "react";
 import { ButtonProps } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
 import { darken } from "@/lib/colors";
-import { PriorityInfo } from "@/types/collections";
+import { priorityInfo, Priority } from "@/types/collections";
 
 type Props = {
-    priorityInfo: PriorityInfo;
+    priority: Priority;
 }
 
-const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ priorityInfo, ...props }, ref) => {
+const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ priority, ...props }, ref) => {
 
     const [isHovered, setIsHovered] = React.useState(false);
 
@@ -21,17 +21,19 @@ const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ 
       setIsHovered(false);
     };
 
+    const info = priorityInfo[priority];
+
     return (
-        <div ref={ref} className='flex rounded-sm border text-white font-bold' style={{ backgroundColor: priorityInfo.color }}>
+        <div ref={ref} className='flex rounded-sm border text-white font-bold' style={{ backgroundColor: info.color }}>
             <div className='px-2 py-1 rounded-l-sm'>
-                <span>{priorityInfo.label}</span>
+                <span>{priority}</span>
             </div>
             <div className='border-l'></div>
             <button
                 {...props}
                 className='px-1 rounded-r-sm'
                 style={{ 
-                    backgroundColor: isHovered ? darken(priorityInfo.color) : priorityInfo.color,
+                    backgroundColor: isHovered ? darken(info.color) : info.color,
                 }}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
