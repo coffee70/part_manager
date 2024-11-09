@@ -14,9 +14,10 @@ import SummaryActivity from "@/components/summary/summary_activity/summary_activ
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
-import EditShopOrder from '@/app/(user)/shop-orders/_forms/edit_shop_order';
 import SummaryError from '@/components/summary/summary_error';
 import { getShopOrder } from '@/server/shop_orders/get_shop_order';
+import ShopOrderForm from '@/app/(user)/shop-orders/_forms/shop_order_form';
+import Edit from '@/components/summary/summary_actions/edit/edit';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -39,7 +40,9 @@ export default function SummaryContainer() {
                 titleKey='number'
             />
             <SummaryToolbar>
-                <EditShopOrder shopOrder={data} />
+                <ShopOrderForm shopOrder={data}>
+                    <Edit />
+                </ShopOrderForm>
                 <Priority priority={data.priority} />
                 {/* <Status /> */}
             </SummaryToolbar>

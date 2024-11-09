@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "./button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
-type Props = {
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode;
     enabled?: boolean;
     label: string;
@@ -16,7 +16,12 @@ export const DataAction = React.forwardRef<HTMLButtonElement, Props>(({ children
             )}
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button ref={ref} variant='secondary' className="relative rounded-none border border-border h-10 w-10" {...props}>
+                    <Button
+                        ref={ref}
+                        variant='secondary'
+                        className="relative rounded-none border border-border h-10 w-10"
+                        {...props}
+                    >
                         {children}
                     </Button>
                 </TooltipTrigger>

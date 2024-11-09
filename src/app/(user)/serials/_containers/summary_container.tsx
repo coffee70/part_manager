@@ -14,8 +14,9 @@ import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
-import EditSerial from '@/app/(user)/serials/_forms/edit_part';
 import { getSerial } from '@/server/serials/get_serial';
+import SerialForm from '@/app/(user)/serials/_forms/serial_form';
+import Edit from '@/components/summary/summary_actions/edit/edit';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -38,7 +39,9 @@ export default function SummaryContainer() {
                 titleKey='number'
             />
             <SummaryToolbar>
-                <EditSerial serial={data} />
+                <SerialForm serial={data}>
+                    <Edit />
+                </SerialForm>
                 {/* <Status /> */}
             </SummaryToolbar>
             <SummarySections values={data.values} />

@@ -14,18 +14,19 @@ import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMe
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
-import NewCustomerOrder from "@/app/(user)/customer-orders/_forms/new_customer_order";
 import Priority from "@/components/list/priority/priority";
 import { sortKeys } from "@/types/collections";
 import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
+import CustomerOrderForm from '@/app/(user)/customer-orders/_forms/customer_order_form';
+import New from "@/components/list/new/new";
 
 export default function TableContainer() {
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    
+
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('id', id)
@@ -50,13 +51,15 @@ export default function TableContainer() {
         <DataLayout>
             <FilterToolbar>
                 <FilterToolbarRow>
-                    <NewCustomerOrder />
+                    <CustomerOrderForm>
+                        <New />
+                    </CustomerOrderForm>
                     <SearchInput />
                     <Filter labels={['Updated At', 'Priority']}>
-                        <DateRangeFilter paramKey="updatedAt"/>
+                        <DateRangeFilter paramKey="updatedAt" />
                         <PriorityFilter />
                     </Filter>
-                    <Sort keys={sortKeys.customerOrders}/>
+                    <Sort keys={sortKeys.customerOrders} />
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>

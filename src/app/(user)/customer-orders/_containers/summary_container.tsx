@@ -15,8 +15,9 @@ import SummaryActivity from "@/components/summary/summary_activity/summary_activ
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
-import EditCustomerOrder from '@/app/(user)/customer-orders/_forms/edit_customer_order';
 import SummaryError from '@/components/summary/summary_error';
+import CustomerOrderForm from '@/app/(user)/customer-orders/_forms/customer_order_form';
+import Edit from '@/components/summary/summary_actions/edit/edit';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -40,7 +41,9 @@ export default function SummaryContainer() {
                 items={[{ label: data.customer.name }]}
             />
             <SummaryToolbar>
-                <EditCustomerOrder customerOrder={data} />
+                <CustomerOrderForm customerOrder={data}>
+                    <Edit />
+                </CustomerOrderForm>
                 <Priority priority={data.priority} />
                 {/* <Status /> */}
             </SummaryToolbar>

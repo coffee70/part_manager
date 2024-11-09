@@ -1,7 +1,6 @@
 'use client'
 import DataLayout from "@/layouts/data_layout"
 import { useQuery } from "@tanstack/react-query";
-import { getCustomerOrders } from "@/server/customer_orders/get_customer_orders";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
 import SearchInput from "@/components/list/filters/search_input";
@@ -14,19 +13,20 @@ import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMe
 import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
-import NewShopOrder from "@/app/(user)/shop-orders/_forms/new_shop_order";
 import Priority from "@/components/list/priority/priority";
 import { sortKeys } from "@/types/collections";
 import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import { getShopOrders } from "@/server/shop_orders/get_shop_orders";
+import ShopOrderForm from '@/app/(user)/shop-orders/_forms/shop_order_form';
+import New from "@/components/list/new/new";
 
 export default function TableContainer() {
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    
+
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('id', id)
@@ -51,13 +51,15 @@ export default function TableContainer() {
         <DataLayout>
             <FilterToolbar>
                 <FilterToolbarRow>
-                    <NewShopOrder />
+                    <ShopOrderForm>
+                        <New />
+                    </ShopOrderForm>
                     <SearchInput />
                     <Filter labels={['Updated At', 'Priority']}>
-                        <DateRangeFilter paramKey="updatedAt"/>
+                        <DateRangeFilter paramKey="updatedAt" />
                         <PriorityFilter />
                     </Filter>
-                    <Sort keys={sortKeys.shopOrders}/>
+                    <Sort keys={sortKeys.shopOrders} />
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>

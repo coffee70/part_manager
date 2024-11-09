@@ -18,14 +18,16 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import { getSerials } from "@/server/serials/get_serials";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import Priority from "@/components/list/priority/priority";
-import NewSerial from "@/app/(user)/serials/_forms/new_serial";
+import SerialForm from '@/app/(user)/serials/_forms/serial_form';
+import New from "@/components/list/new/new";
+
 
 export default function TableContainer() {
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    
+
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('id', id)
@@ -50,13 +52,15 @@ export default function TableContainer() {
         <DataLayout>
             <FilterToolbar>
                 <FilterToolbarRow>
-                    <NewSerial />
+                    <SerialForm>
+                        <New />
+                    </SerialForm>
                     <SearchInput />
                     <Filter labels={['Updated At', 'Priority']}>
-                        <DateRangeFilter paramKey="updatedAt"/>
+                        <DateRangeFilter paramKey="updatedAt" />
                         <PriorityFilter />
                     </Filter>
-                    <Sort keys={sortKeys.serials}/>
+                    <Sort keys={sortKeys.serials} />
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>

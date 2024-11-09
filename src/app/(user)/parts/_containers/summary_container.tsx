@@ -15,7 +15,8 @@ import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
 import { getPart } from '@/server/parts/get_part';
-import EditPart from '../_forms/edit_part';
+import Edit from '@/components/summary/summary_actions/edit/edit';
+import PartForm from '@/app/(user)/parts/_forms/part_form';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -38,7 +39,9 @@ export default function SummaryContainer() {
                 titleKey='number'
             />
             <SummaryToolbar>
-                <EditPart part={data} />
+                <PartForm part={data}>
+                    <Edit />
+                </PartForm>
                 {/* <Status /> */}
             </SummaryToolbar>
             <SummarySections values={data.values} />

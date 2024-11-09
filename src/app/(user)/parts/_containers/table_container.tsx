@@ -16,14 +16,15 @@ import { collectionKeys } from "@/lib/query_keys";
 import { sortKeys } from "@/types/collections";
 import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import { getParts } from "@/server/parts/get_parts";
-import NewPart from "../_forms/new_part";
+import PartForm from "@/app/(user)/parts/_forms/part_form";
+import New from "@/components/list/new/new";
 
 export default function TableContainer() {
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
-    
+
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
         params.set('id', id)
@@ -48,12 +49,14 @@ export default function TableContainer() {
         <DataLayout>
             <FilterToolbar>
                 <FilterToolbarRow>
-                    <NewPart />
+                    <PartForm>
+                        <New />
+                    </PartForm>
                     <SearchInput />
                     <Filter labels={['Updated At']}>
-                        <DateRangeFilter paramKey="updatedAt"/>
+                        <DateRangeFilter paramKey="updatedAt" />
                     </Filter>
-                    <Sort keys={sortKeys.parts}/>
+                    <Sort keys={sortKeys.parts} />
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>
