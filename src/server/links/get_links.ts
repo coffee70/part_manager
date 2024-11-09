@@ -2,9 +2,10 @@
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/mongo/db";
 import { LinkableDoc } from "@/types/collections";
+import { collectionToUrl } from "@/lib/conversions";
 
 type Input = {
-    modelId: string | null;
+    modelId?: string | null;
     model: string;
 }
 
@@ -20,16 +21,17 @@ export async function getLinks(input: Input) {
     }
 
     const links = await Promise.all(document.links.map(async link => {
-        const collection = db.collection(link.model);
-        const document = await collection.findOne({ _id: new ObjectId(link.modelId) });
-        if (!document) return null;
+        const collection = db.collection<{ number: string }>(link.model);
+        const doc = await collection.findOne({ _id: new ObjectId(link.modelId) });
+        if (!doc) return null;
+
         return {
             _id: link._id.toString(),
-            href: `/${link.model}?id=${link.modelId}`,
-            name: document.name
-        };
-    }));
+            name: doc.number,
+            href: `/${collectionToUrl[link.model]}?id=${link.modelId}`,
+            model: link.model,
+        }
+    }))
 
-    // Filter out null values
     return links.filter(link => link !== null);
 }

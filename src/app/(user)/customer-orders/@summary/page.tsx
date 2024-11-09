@@ -1,10 +1,11 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { collectionKeys, commentKeys, sectionKeys } from "@/lib/query_keys";
+import { collectionKeys, commentKeys, linkKeys, sectionKeys } from "@/lib/query_keys";
 import { getCustomerOrder } from "@/server/customer_orders/get_customer_order";
 import { getSections } from "@/server/sections/get_sections";
 import { getComments } from "@/server/comments/get_comments";
 import { NextServerSearchParams } from "@/types/collections";
 import SummaryContainer from "@/app/(user)/customer-orders/_containers/summary_container";
+import { getLinks } from "@/server/links/get_links";
 
 export default async function Page({
     searchParams
@@ -32,6 +33,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: commentKeys.all('customerOrders', id),
         queryFn: () => getComments({ collection: 'customerOrders', id }),
+    })
+
+    // prefetch links
+    await queryClient.prefetchQuery({
+        queryKey: linkKeys.all('customerOrders', id),
+        queryFn: () => getLinks({ modelId: id, model: 'customerOrders' }),
     })
 
     return (

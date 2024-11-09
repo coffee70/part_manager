@@ -9,12 +9,9 @@ export type FieldType =
     | 'paragraph'
     | 'select'
 
-export type SectionCollection =
-    | 'customerOrders'
-    | 'shopOrders'
-    | 'parts'
-    | 'serials'
-    | 'customers'
+export const sectionCollections = ['customerOrders', 'shopOrders', 'parts', 'serials', 'customers'] as const;
+
+export type SectionCollection = typeof sectionCollections[number];
 
 export type AttachmentCollection =
     | 'customerOrders'
@@ -78,10 +75,10 @@ export type CustomerOrderDoc = {
     notes: string;
     updatedAt: Date;
     updatedById: string;
-} 
-& Valuable
-& CommentableDoc
-& AttachableDoc
+}
+    & Valuable
+    & CommentableDoc
+    & AttachableDoc
 
 export type ShopOrder = {
     _id: string;
@@ -98,9 +95,9 @@ export type ShopOrderDoc = {
     updatedAt: Date;
     updatedById: string;
 }
-& Valuable
-& CommentableDoc
-& AttachableDoc
+    & Valuable
+    & CommentableDoc
+    & AttachableDoc
 
 export type Part = {
     _id: string;
@@ -115,9 +112,9 @@ export type PartDoc = {
     updatedAt: Date;
     updatedById: string;
 }
-& Valuable
-& CommentableDoc
-& AttachableDoc
+    & Valuable
+    & CommentableDoc
+    & AttachableDoc
 
 export type Serial = {
     _id: string;
@@ -134,9 +131,9 @@ export type SerialDoc = {
     updatedAt: Date;
     updatedById: string;
 }
-& Valuable
-& CommentableDoc
-& AttachableDoc
+    & Valuable
+    & CommentableDoc
+    & AttachableDoc
 
 export interface Attachable {
     attachments: {
@@ -226,9 +223,16 @@ export interface CommentableDoc {
 export type LinkableDoc = {
     links: {
         _id: ObjectId;
-        modelId: string;
         model: SectionCollection;
+        modelId: string;
     }[];
+};
+
+// Utility function to get entries with preserved key types
+// this ensures the keys for links are typed as SectionCollection and not string
+// as the Object.entries function would return
+export function typedEntries<T extends {}>(obj: T): [keyof T, T[keyof T]][] {
+    return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
 export type Role = 'admin' | 'user'
