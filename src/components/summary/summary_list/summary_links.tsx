@@ -38,7 +38,7 @@ export default function SummaryLinks() {
                         if (filteredLinks.length === 0) return null
                         return (
                             <div key={collection}>
-                                <div>{collectionToName[collection]}</div>
+                                <div className="text-sm font-bold">{collectionToName[collection]}</div>
                                 <div className='flex flex-col'>
                                     {links?.filter(link => link.model === collection).map(link => (
                                         <SummaryLink

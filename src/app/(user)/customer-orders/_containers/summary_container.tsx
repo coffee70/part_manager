@@ -18,6 +18,7 @@ import { collectionKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
 import CustomerOrderForm from '@/app/(user)/customer-orders/_forms/customer_order_form';
 import Edit from '@/components/summary/summary_actions/edit/edit';
+import { CustomerOrderIcon } from '@/components/ui/icons/icons';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -39,7 +40,9 @@ export default function SummaryContainer() {
                 title={data.number}
                 titleKey='number'
                 items={[{ label: data.customer.name }]}
-            />
+            >
+                <CustomerOrderIcon size={48} />
+            </SummaryTitle>
             <SummaryToolbar>
                 <CustomerOrderForm customerOrder={data}>
                     <Edit />

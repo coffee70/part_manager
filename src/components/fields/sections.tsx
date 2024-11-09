@@ -2,13 +2,13 @@
 import React from 'react';
 import AddSection from './section/add_section';
 import Section from './section';
-import { AppBar } from '../ui/app_bar';
+import { AppBar } from '@/components/ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
-import { PageTitle } from '../ui/page_title';
-import { AlignLeftIcon } from 'lucide-react';
+import { PageTitle } from '@/components/ui/page_title';
+import { FieldIcon } from '@/components/ui/icons/icons';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
@@ -30,7 +30,7 @@ export default function Sections() {
                 <PageTitle
                     title="Fields"
                     subtitle={name}
-                    icon={<AlignLeftIcon strokeWidth={3} size={50} />}
+                    icon={<FieldIcon size={50} />}
                 />
                 <AddSection />
             </AppBar>

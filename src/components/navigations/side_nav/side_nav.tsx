@@ -1,16 +1,7 @@
 import { NavBase, NavContent, NavDivider, NavHeader, NavItem, SubNav, SubNavItem } from "@/components/ui/side_nav";
-import {
-    AlignLeftIcon,
-    Building2Icon,
-    DraftingCompassIcon,
-    FactoryIcon,
-    GalleryHorizontalEndIcon,
-    HammerIcon,
-    RouteIcon,
-    UserIcon
-} from "lucide-react";
 import Profile from "./profile";
 import Logo from "@/components/ui/logo";
+import { CustomerIcon, CustomerOrderIcon, FieldIcon, PartIcon, SerialIcon, ShopOrderIcon, UserIcon } from "@/components/ui/icons/icons";
 
 export default function SideNavigation() {
     return (
@@ -20,15 +11,15 @@ export default function SideNavigation() {
             </NavHeader>
             <NavDivider />
             <NavContent>
-                <NavItem label='Customer Orders' href='/customer-orders' icon={<GalleryHorizontalEndIcon />} />
-                <NavItem label='Shop Orders' href='/shop-orders' icon={<FactoryIcon />} />
-                <NavItem label='Parts' href='/parts' icon={<DraftingCompassIcon />} />
-                <NavItem label='Serials' href='/serials' icon={<HammerIcon />} />
-                <NavItem label='Customers' href='/customers' icon={<Building2Icon />} />
+                <NavItem label='Customer Orders' href='/customer-orders' icon={<CustomerOrderIcon />} />
+                <NavItem label='Shop Orders' href='/shop-orders' icon={<ShopOrderIcon />} />
+                <NavItem label='Parts' href='/parts' icon={<PartIcon />} />
+                <NavItem label='Serials' href='/serials' icon={<SerialIcon />} />
+                <NavItem label='Customers' href='/customers' icon={<CustomerIcon />} />
             </NavContent>
             <NavDivider />
             <NavContent>
-                <SubNav label="Fields" icon={<AlignLeftIcon />}>
+                <SubNav label="Fields" icon={<FieldIcon />}>
                     <SubNavItem label="Customer Orders" href='/fields/customer-orders' top />
                     <SubNavItem label="Shop Orders" href='/fields/shop-orders' />
                     <SubNavItem label="Parts" href='/fields/parts' />

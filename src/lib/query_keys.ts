@@ -19,5 +19,6 @@ export const commentKeys = {
 }
 
 export const linkKeys = {
-    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'links']
+    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'links'],
+    one: (collection: SectionCollection, linkId: string, id?: string | null) => [collection, id, linkId]
 }
