@@ -106,21 +106,21 @@ export default function SerialForm({ serial, children }: Props) {
                         <div className="flex flex-col space-y-1">
                             <Input
                                 label='Number'
-                                description='The shop order number'
+                                description='The serial number'
                                 type='text'
                                 value={attributeState.number}
                                 onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
                             />
                             <Select
                                 label='Priority'
-                                description='The priority of this order'
+                                description='The priority of this serial'
                                 options={[...priorities]}
                                 value={attributeState.priority}
                                 onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
                             />
                             <Textarea
                                 label='Notes'
-                                description='Any notes about this order'
+                                description='Any notes about this serial'
                                 value={attributeState.notes}
                                 onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
                             />

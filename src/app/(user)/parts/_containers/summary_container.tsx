@@ -17,6 +17,7 @@ import SummaryError from '@/components/summary/summary_error';
 import { getPart } from '@/server/parts/get_part';
 import Edit from '@/components/summary/summary_actions/edit/edit';
 import PartForm from '@/app/(user)/parts/_forms/part_form';
+import { PartIcon } from '@/components/ui/icons/icons';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -37,7 +38,9 @@ export default function SummaryContainer() {
             <SummaryTitle
                 title={data.number}
                 titleKey='number'
-            />
+            >
+                <PartIcon size={48} />
+            </SummaryTitle>
             <SummaryToolbar>
                 <PartForm part={data}>
                     <Edit />

@@ -17,6 +17,7 @@ import SummaryError from '@/components/summary/summary_error';
 import { getSerial } from '@/server/serials/get_serial';
 import SerialForm from '@/app/(user)/serials/_forms/serial_form';
 import Edit from '@/components/summary/summary_actions/edit/edit';
+import { SerialIcon } from '@/components/ui/icons/icons';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -37,7 +38,9 @@ export default function SummaryContainer() {
             <SummaryTitle
                 title={data.number}
                 titleKey='number'
-            />
+            >
+                <SerialIcon size={48} />
+            </SummaryTitle>
             <SummaryToolbar>
                 <SerialForm serial={data}>
                     <Edit />

@@ -160,12 +160,19 @@ export type Values = {
 export type Customer = {
     _id: string;
     name: string;
-}
+    notes: string;
+} & Valuable
 
 export type CustomerDoc = {
     _id: ObjectId;
     name: string;
+    notes: string;
+    updatedAt: Date;
+    updatedById: string;
 }
+& Valuable
+& CommentableDoc
+& AttachableDoc
 
 export type Section = {
     _id: string;

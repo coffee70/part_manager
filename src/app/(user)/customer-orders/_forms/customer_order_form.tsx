@@ -39,7 +39,7 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
 
     const { data: customers } = useQuery({
         queryKey: collectionKeys.all('customers'),
-        queryFn: () => getCustomers(),
+        queryFn: () => getCustomers({ searchParams: {} }),
     })
 
     React.useEffect(() => {

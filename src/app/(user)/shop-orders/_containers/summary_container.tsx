@@ -18,6 +18,7 @@ import SummaryError from '@/components/summary/summary_error';
 import { getShopOrder } from '@/server/shop_orders/get_shop_order';
 import ShopOrderForm from '@/app/(user)/shop-orders/_forms/shop_order_form';
 import Edit from '@/components/summary/summary_actions/edit/edit';
+import { ShopOrderIcon } from '@/components/ui/icons/icons';
 
 export default function SummaryContainer() {
     const { id } = useURLMetadata();
@@ -38,7 +39,9 @@ export default function SummaryContainer() {
             <SummaryTitle
                 title={data.number}
                 titleKey='number'
-            />
+            >
+                <ShopOrderIcon size={48} />
+            </SummaryTitle>
             <SummaryToolbar>
                 <ShopOrderForm shopOrder={data}>
                     <Edit />
