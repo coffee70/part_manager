@@ -4,6 +4,7 @@ import { CustomerDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getCurrentSession } from "../auth/get_current_session";
 
 const OutputSchema = z.object({
     _id: z.string(),
@@ -17,6 +18,9 @@ const OutputSchema = z.object({
 }).nullable();
 
 export async function getCustomer({ _id }: { _id?: string | null }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const customersCollection = db.collection<CustomerDoc>('customers');
 
     // if no id is provided, redirect to the first customer so the URL is formed correctly

@@ -14,7 +14,7 @@ type Input = {
 
 export async function updateFieldValue(input: Input) {
     const { user } = await getCurrentSession();
-    if (!user) throw new Error('Unauthorized')
+    if (!user) throw new Error('Unauthorized');
 
     const { data, success, error } = z.custom<Input>().safeParse(input)
     if (!success) {

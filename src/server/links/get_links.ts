@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { db } from "@/lib/mongo/db";
 import { LinkableDoc } from "@/types/collections";
 import { collectionToUrl } from "@/lib/conversions";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     modelId?: string | null;
@@ -10,6 +11,9 @@ type Input = {
 }
 
 export async function getLinks(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { modelId, model } = input;
     if (!modelId) throw new Error('No modelId provided');
 

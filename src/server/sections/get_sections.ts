@@ -3,6 +3,7 @@ import { db } from "@/lib/mongo/db"
 import { Field, Section, SectionCollection } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
 import { validators } from "../validators/validators";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Output = Array<Section & {
     fields: Field[];
@@ -14,6 +15,8 @@ type Input = {
 }
 
 export async function getSections(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
 
     const { collection } = validators.input<Input>(input);
     

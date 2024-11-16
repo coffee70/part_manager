@@ -4,6 +4,7 @@ import { Create, User, UserDoc } from "@/types/collections";
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
 import { generateUserId } from "@/lib/session";
+import { getCurrentSession } from "../auth/get_current_session";
 
 
 type Input = {
@@ -11,6 +12,9 @@ type Input = {
 }
 
 export async function createUser(input: Input) {
+    const { user: currentUser } = await getCurrentSession();
+    if (!currentUser || currentUser.role !== 'admin') throw new Error('Unauthorized');
+
     const { user } = validators.input<Input>(input);
 
     // username must be between 4 ~ 31 characters, and only consists of lowercase letters, 0-9, -, and _

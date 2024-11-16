@@ -3,12 +3,16 @@ import { db } from '@/lib/mongo/db';
 import { CustomerDoc, CustomerOrderDoc, UserDoc } from '@/types/collections';
 import { ObjectId } from 'mongodb';
 import { getSearchParams, SearchParams } from '@/lib/search_params';
+import { getCurrentSession } from '../auth/get_current_session';
 
 export async function getCustomerOrders({
     searchParams
 } : {
     searchParams: SearchParams
 }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams, 'customerOrders');
 
     const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders');

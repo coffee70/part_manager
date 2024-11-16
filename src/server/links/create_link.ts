@@ -4,6 +4,7 @@ import { validators } from "../validators/validators"
 import { ObjectId } from "mongodb"
 import { LinkableDoc, SectionCollection } from "@/types/collections"
 import { collectionToName } from "@/lib/conversions"
+import { getCurrentSession } from "../auth/get_current_session"
 
 type Input = {
     model: SectionCollection;
@@ -13,6 +14,9 @@ type Input = {
 }
 
 export async function createLink(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { model, modelId, linkedModel, linkedModelNumber } = validators.input<Input>(input);
 
     if (!modelId) {

@@ -4,6 +4,7 @@ import { PartDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
 import { z } from "zod"
+import { getCurrentSession } from "../auth/get_current_session";
 
 const OutputSchema = z.object({
     _id: z.string(),
@@ -17,6 +18,9 @@ const OutputSchema = z.object({
 }).nullable();
 
 export async function getPart({ _id }: { _id?: string | null }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const partsCollection = db.collection<PartDoc>('parts');
     
     // if no id is provided, redirect to the first part so the URL is formed correctly

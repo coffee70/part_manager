@@ -12,9 +12,7 @@ type Input = {
 
 export async function createSerial(input: Input) {
     const { user } = await getCurrentSession();
-    if (!user) {
-        throw new Error('Unauthorized')
-    }
+    if (!user) throw new Error('Unauthorized');
 
     const { serial } = validators.input<Input>(input);
 

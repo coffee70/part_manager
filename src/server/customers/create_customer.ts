@@ -11,9 +11,7 @@ type Input = {
 
 export async function createCustomer(input: Input) {
     const { user } = await getCurrentSession()
-    if (!user) {
-        throw new Error('Unauthorized')
-    }
+    if (!user) throw new Error('Unauthorized')
 
     const { customer } = validators.input<Input>(input)
 

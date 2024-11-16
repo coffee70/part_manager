@@ -4,6 +4,7 @@ import { z } from "zod";
 import { validators } from "../validators/validators";
 import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 const OutputSchema = z.object({
     comments: z.array(z.object({
@@ -22,6 +23,9 @@ const InputSchema = z.object({
 })
 
 export async function getComments(input: z.infer<typeof InputSchema>) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { id, collection: _collection } = validators.input<z.infer<typeof InputSchema>>(input);
 
     if (!id) {

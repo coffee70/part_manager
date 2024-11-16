@@ -3,6 +3,7 @@ import { LinkableDoc, SectionCollection } from "@/types/collections";
 import { validators } from "../validators/validators";
 import { db } from "@/lib/mongo/db";
 import { ObjectId } from "mongodb";
+import { getCurrentSession } from "../auth/get_current_session";
 
 type Input = {
     modelId: string | null;
@@ -11,6 +12,9 @@ type Input = {
 }
 
 export async function getLink(input: Input) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { modelId, model, linkId } = validators.input<Input>(input);
 
     console.log(linkId)

@@ -2,12 +2,16 @@
 import { db } from "@/lib/mongo/db";
 import { getSearchParams, SearchParams } from "@/lib/search_params"
 import { PartDoc, UserDoc } from "@/types/collections";
+import { getCurrentSession } from "../auth/get_current_session";
 
 export async function getParts({
     searchParams
 }: {
     searchParams: SearchParams
 }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+    
     const { updatedAt, search, sortBy, sortOrder } = getSearchParams(searchParams, 'parts');
 
     const partsCollection = db.collection<PartDoc>('parts');

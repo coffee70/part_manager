@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { CustomerOrderDoc, CustomerDoc, Priority } from "@/types/collections";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { getCurrentSession } from "../auth/get_current_session";
 
 const OutputSchema = z.object({
     _id: z.string(),
@@ -29,6 +30,8 @@ type Input = {
 }
 
 export async function getCustomerOrder({ _id }: Input): Promise<Output> {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
 
     const customerOrdersCollection = db.collection<CustomerOrderDoc>('customerOrders')
     const customersCollection = db.collection<CustomerDoc>('customers')

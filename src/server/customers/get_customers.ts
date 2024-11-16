@@ -2,12 +2,16 @@
 import { db } from "@/lib/mongo/db"
 import { CustomerDoc, UserDoc } from "@/types/collections"
 import { getSearchParams, SearchParams } from "@/lib/search_params"
+import { getCurrentSession } from "../auth/get_current_session"
 
 export async function getCustomers({
     searchParams
 }: {
     searchParams: SearchParams
 }) {
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error('Unauthorized');
+
     const { updatedAt, search, sortBy, sortOrder } = getSearchParams(searchParams, 'customers');
 
     const customersCollection = db.collection<CustomerDoc>('customers');
