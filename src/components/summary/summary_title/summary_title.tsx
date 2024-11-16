@@ -6,7 +6,7 @@ type Props = {
     titleKey: string;
     items?: {
         label: string
-        href?: string
+        href: string
     }[];
     children: React.ReactNode;
 }

@@ -3,6 +3,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 const BreadcrumbRoot = React.forwardRef<
   HTMLElement,
@@ -107,7 +108,7 @@ BreadcrumbEllipsis.displayName = "BreadcrumbElipssis"
 type BreadcrumbProps = {
   items: {
     label: string
-    href?: string
+    href: string
   }[]
 }
 
@@ -117,7 +118,9 @@ const Breadcrumb = ({ items }: BreadcrumbProps) => (
       {items.map((item, index) => (
         <React.Fragment key={index}>
           <BreadcrumbItem>
-            <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href={item.href}>{item.label}</Link>
+            </BreadcrumbLink> 
           </BreadcrumbItem>
           {index < items.length - 1 && <BreadcrumbSeparator />}
         </React.Fragment>

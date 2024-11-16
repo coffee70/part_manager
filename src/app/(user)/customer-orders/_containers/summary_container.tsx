@@ -34,12 +34,16 @@ export default function SummaryContainer() {
 
     if (!data) return <SummaryError />
 
+    const breadcrumbs = [
+        { label: data.customer.name, href: `/customers?id=${data.customer._id}` }
+    ]
+
     return (
         <SummaryLayout>
             <SummaryTitle
                 title={data.number}
                 titleKey='number'
-                items={[{ label: data.customer.name }]}
+                items={breadcrumbs}
             >
                 <CustomerOrderIcon size={48} />
             </SummaryTitle>
