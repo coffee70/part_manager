@@ -16,7 +16,10 @@ export default function SummaryTitle({ title, titleKey, items, children }: Props
         <div className="flex items-center space-x-4">
             {children}
             <div className="flex flex-col">
-                <Breadcrumb items={items ?? []} />
+                {/** The padding on the breadcrumb matches the built in padding to the Title component */}
+                <div className="pl-1">
+                    <Breadcrumb items={items ?? []} />
+                </div>
                 <Title initialValue={title} titleKey={titleKey} />
             </div>
         </div>
