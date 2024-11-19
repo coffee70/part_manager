@@ -42,3 +42,9 @@ mongo
 
 # drawings
 *.pdf
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
