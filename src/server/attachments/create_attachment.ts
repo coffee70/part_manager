@@ -26,7 +26,7 @@ export async function createAttachment(formData: FormData) {
     
     const attachable = db.collection<AttachableDoc>(collection)
     const attachmentId = new ObjectId()
-    console.log("attachmentId", attachmentId)
+
     attachable.updateOne(
         {
             _id: _id

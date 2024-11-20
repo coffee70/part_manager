@@ -17,8 +17,6 @@ export async function getLink(input: Input) {
 
     const { modelId, model, linkId } = validators.input<Input>(input);
 
-    console.log(linkId)
-
     if (!modelId) throw new Error('Model id is required');
 
     const collection = db.collection<LinkableDoc>(model);
