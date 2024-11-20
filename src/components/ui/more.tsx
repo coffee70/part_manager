@@ -4,7 +4,13 @@ import { MoreHorizontalIcon } from 'lucide-react'
 
 const More = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     <div className='flex items-center justify-center'>
-        <Button {...props} variant="icon" className='bg-transparent' ref={ref}>
+        <Button
+            {...props}
+            ref={ref}
+            variant="icon"
+            className='bg-transparent'
+            name="more"
+        >
             <MoreHorizontalIcon />
         </Button>
     </div>

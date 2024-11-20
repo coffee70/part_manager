@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger
 } from "../../ui/dropdown-menu"
 import Logout from "@/components/auth/logout"
+import { More } from "@/components/ui/more"
 
 
 export default function Profile() {
@@ -25,9 +26,10 @@ export default function Profile() {
             </div>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild className='focus-visible:outline-none'>
-                    <button className='flex flex-col'>
+                    {/* <button className='flex flex-col'>
                         <MoreHorizontalIcon size={20} />
-                    </button>
+                    </button> */}
+                    <More />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className='w-56'>
                     <DropdownMenuGroup>
