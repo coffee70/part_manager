@@ -54,8 +54,7 @@ async function login(_: any, formData: FormData): Promise<ActionResult> {
             error: "Invalid password"
         };
     }
-
-    const db = client.db("test");
+    
     const existingUser = await db.collection<UserDoc>("users").findOne({ username });
     if (!existingUser) {
         // NOTE:
