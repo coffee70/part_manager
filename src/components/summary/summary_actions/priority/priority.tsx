@@ -30,9 +30,9 @@ export default function Priority({ priority }: { priority: Priority }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
-                    {Object.values(priorities).map((info, index) => (
-                        <DropdownMenuItem key={index} onClick={() => mutate({ id, collection, priority: priority })}>
-                            <PriorityItem priority={info} />
+                    {Object.values(priorities).map((p, index) => (
+                        <DropdownMenuItem key={index} onClick={() => mutate({ id, collection, priority: p })}>
+                            <PriorityItem priority={p} />
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuGroup>

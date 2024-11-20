@@ -19,7 +19,7 @@ export type AttachmentCollection =
     | 'parts'
     | 'serials'
 
-export const priorities = ['Lowest', 'Low', 'Medium', 'High', 'Highest'] as const;
+export const priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as const;
 
 export type Priority = typeof priorities[number];
 
