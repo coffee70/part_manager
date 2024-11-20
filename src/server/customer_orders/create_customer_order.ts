@@ -19,12 +19,20 @@ export async function createCustomerOrder(input: Input) {
     const customerOrdersCollection = db.collection<WithoutId<CustomerOrderDoc>>('customerOrders')
 
     let customerId: string;
-    if (customerOrder.customerName === undefined) {
+    if (customerOrder.customerName === undefined || customerOrder.customerName === '') {
         throw new Error('Customer name is required')
     }
     const customer = await customersCollection.findOne({ name: customerOrder.customerName })
     if (!customer) {
-        const { insertedId } = await customersCollection.insertOne({ name: customerOrder.customerName })
+        const { insertedId } = await customersCollection.insertOne({
+            name: customerOrder.customerName,
+            notes: "",
+            values: {},
+            attachments: [],
+            comments: [],
+            updatedAt: new Date(),
+            updatedById: user._id
+        })
         customerId = insertedId.toString()
     }
     else {

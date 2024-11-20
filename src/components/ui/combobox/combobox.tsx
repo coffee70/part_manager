@@ -182,6 +182,12 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         setInput(inputValue);
         setOpen(true);
 
+        // if input changes and in creative mode but not in multiple push inputValue to value
+        if (creative && !multiple) {
+            _onChange && _onChange(inputValue)
+        }
+
+        // if the input is empty and not in creative or multiple mode push undefined to value
         if (!creative && !multiple && inputValue === "") {
             _onChange && _onChange(undefined)
         }
