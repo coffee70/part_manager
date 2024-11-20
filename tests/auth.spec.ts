@@ -7,7 +7,7 @@ test.describe('auth', () => {
         await page.getByLabel('Username').fill('test');
         await page.getByLabel('Password').click();
         await page.getByLabel('Password').fill('Newpassword10!');
-        await page.getByRole('button', { name: 'Continue' }).click();
+        await page.getByRole('button', { name: 'Log in' }).click();
         await expect(page.getByRole('heading')).toContainText('Welcome test');
     })
 
@@ -17,7 +17,7 @@ test.describe('auth', () => {
         await page.getByLabel('Username').fill('test');
         await page.getByLabel('Password').click();
         await page.getByLabel('Password').fill('Newpassword10!');
-        await page.getByRole('button', { name: 'Continue' }).click();
+        await page.getByRole('button', { name: 'Log in' }).click();
         await page.locator('button[name="more"]').click();
         await page.getByRole('button', { name: 'Logout' }).click();
         await expect(page.getByRole('heading')).toContainText('Log in');

@@ -3,6 +3,7 @@ import React from 'react';
 import { logout } from "@/server/auth/logout";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import Loader from '@/components/ui/loader';
 
 export default function Logout() {
     const { mutate, isPending } = useMutation({
@@ -15,10 +16,12 @@ export default function Logout() {
     }
 
     return (
-        <Button
-            className="flex items-center justify-center w-full h-full border bg-white border-red-700 text-red-700 font-bold cursor-pointer hover:bg-red-700 hover:text-white"
-            onClick={handleClick}
-            disabled={isPending}
-        >Logout</Button>
+        <div className='flex'>
+            <Button
+                className="grow border bg-white border-red-700 text-red-700 font-bold hover:bg-red-700 hover:text-white"
+                onClick={handleClick}
+                disabled={isPending}
+            >{isPending ? <Loader /> : "Logout"}</Button>
+        </div>
     )
 }
