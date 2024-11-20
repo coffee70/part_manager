@@ -1,18 +1,21 @@
 'use server'
 import { db } from "@/lib/mongo/db";
-import { AttachableDoc, AttachmentCollection } from "@/types/collections";
+import { AttachableDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "@/server/auth/get_current_session";
+import { z } from "zod";
 
-export async function createAttachment({
-    file,
-    collection,
-    modelId
-}: {
-    file: File;
-    collection: AttachmentCollection;
-    modelId: string | null;
-}) {
+export async function createAttachment(formData: FormData) {
+    const { file, collection, modelId } = z.object({
+        file: z.custom<File>(),
+        collection: z.string(),
+        modelId: z.string()
+    }).parse({
+        file: formData.get('file'),
+        collection: formData.get('collection'),
+        modelId: formData.get('modelId')
+    })
+
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized')
 
@@ -23,6 +26,7 @@ export async function createAttachment({
     
     const attachable = db.collection<AttachableDoc>(collection)
     const attachmentId = new ObjectId()
+    console.log("attachmentId", attachmentId)
     attachable.updateOne(
         {
             _id: _id
