@@ -13,6 +13,7 @@ const OutputSchema = z.object({
     priority: z.custom<Priority>(),
     notes: z.string(),
     attachments: z.array(z.object({
+        _id: z.string(),
         name: z.string(),
         url: z.string()
     })),
@@ -47,6 +48,7 @@ export async function getSerial({ _id }: { _id?: string | null }) {
     const res = {
         ...serial,
         attachments: serial.attachments?.map(attachment => ({
+            _id: attachment._id.toString(),
             name: attachment.filename,
             url: process.env.FILE_GET_URL as string + attachment._id
         })) || []

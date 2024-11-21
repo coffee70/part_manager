@@ -10,8 +10,6 @@ import Sort from "@/components/list/sorting/sort";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
-import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
 import Priority from "@/components/list/priority/priority";
@@ -20,6 +18,7 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import CustomerOrderForm from '@/app/(user)/customer-orders/_forms/customer_order_form';
 import New from "@/components/list/new/new";
+import DeleteModel from "@/components/list/delete_model";
 
 export default function TableContainer() {
 
@@ -79,16 +78,7 @@ export default function TableContainer() {
                                 <People name={order.updatedBy} at={order.updatedAt} iconPosition="right" />
                             </TableCell>
                             <TableCell>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <More />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuGroup>
-                                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <DeleteModel id={order._id} />
                             </TableCell>
                         </TableRow>
                     ))}

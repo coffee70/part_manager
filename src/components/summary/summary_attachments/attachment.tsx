@@ -6,6 +6,7 @@ import PDFPreview from './pdf_preview';
 
 type Props = {
     file: {
+        _id: string;
         name: string;
         url: string;
     };

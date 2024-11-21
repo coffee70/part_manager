@@ -9,8 +9,6 @@ import Sort from "@/components/list/sorting/sort";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
-import { DropdownMenuTrigger, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenu } from "@/components/ui/dropdown-menu";
-import { More } from "@/components/ui/more";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { collectionKeys } from "@/lib/query_keys";
 import { sortKeys } from "@/types/collections";
@@ -18,6 +16,7 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import CustomerForm from '@/app/(user)/customers/_forms/customer_form';
 import New from "@/components/list/new/new";
 import { getCustomers } from "@/server/customers/get_customers";
+import DeleteModel from "@/components/list/delete_model";
 
 export default function TableContainer() {
 
@@ -74,16 +73,7 @@ export default function TableContainer() {
                                 <People name={customer.updatedBy} at={customer.updatedAt} iconPosition="right" />
                             </TableCell>
                             <TableCell>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <More />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuGroup>
-                                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <DeleteModel id={customer._id} />
                             </TableCell>
                         </TableRow>
                     ))}

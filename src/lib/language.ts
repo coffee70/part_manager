@@ -10,3 +10,15 @@ export function labelToCamelCase(label: string): string {
         )
         .replace(/\s+/g, '');
 }
+
+export function pluralToSingular(s: string): string {
+    if (s.endsWith('ies')) {
+        return s.slice(0, -3) + 'y';
+    } else if (s.endsWith('es')) {
+        return s.slice(0, -2);
+    } else if (s.endsWith('s')) {
+        return s.slice(0, -1);
+    } else {
+        return s;
+    }
+}

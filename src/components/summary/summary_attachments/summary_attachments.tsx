@@ -6,6 +6,7 @@ import UploadAttachment from "./upload_attachment";
 
 type Props = {
     files: {
+        _id: string;
         name: string;
         url: string;
     }[];

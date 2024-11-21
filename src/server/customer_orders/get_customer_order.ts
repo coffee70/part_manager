@@ -17,6 +17,7 @@ const OutputSchema = z.object({
         name: z.string()
     }),
     attachments: z.array(z.object({
+        _id: z.string(),
         name: z.string(),
         url: z.string()
     })),
@@ -65,6 +66,7 @@ export async function getCustomerOrder({ _id }: Input): Promise<Output> {
         ...customerOrder,
         customer: customer,
         attachments: customerOrder.attachments?.map((attachment) => ({
+            _id: attachment._id.toString(),
             name: attachment.filename,
             url: process.env.FILE_GET_URL as string + attachment._id
         })) || [],
