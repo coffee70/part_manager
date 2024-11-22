@@ -3,17 +3,13 @@ import React from 'react';
 import { priorities, Priority, ShopOrder, Values } from "@/types/collections"
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { collectionKeys } from '@/lib/query_keys';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import Input from '@/components/models/fields/input';
 import Select from '@/components/models/fields/select';
 import Textarea from '@/components/models/fields/textarea';
 import Fields from '@/components/models/fields';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { createShopOrder } from '@/server/shop_orders/create_shop_order';
 import { updateShopOrder } from '@/server/shop_orders/update_shop_order';
+import ModelForm from '@/components/ui/forms/model_form';
 
 type Props = {
     shopOrder?: ShopOrder;
@@ -83,60 +79,40 @@ export default function ShopOrderForm({ shopOrder, children }: Props) {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="min-w-[650px]">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>
-                        <VisuallyHidden.Root>
-                            {description}
-                        </VisuallyHidden.Root>
-                    </DialogDescription>
-                </DialogHeader>
-                {error && <Alert variant='destructive'>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{error.message}</AlertDescription>
-                </Alert>}
-                <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-                    <div className='max-h-[700px] overflow-y-auto'>
-                        <div className="flex flex-col space-y-1">
-                            <Input
-                                label='Number'
-                                description='The shop order number'
-                                type='text'
-                                value={attributeState.number}
-                                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
-                            />
-                            <Select
-                                label='Priority'
-                                description='The priority of this order'
-                                options={[...priorities]}
-                                value={attributeState.priority}
-                                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
-                            />
-                            <Textarea
-                                label='Notes'
-                                description='Any notes about this order'
-                                value={attributeState.notes}
-                                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
-                            />
-                        </div>
-                        <Fields
-                            fieldState={fieldState}
-                            setFieldState={setFieldState}
-                        />
-                    </div>
-                    <Button
-                        className="w-full"
-                        type='submit'
-                    >Save</Button>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <ModelForm
+            open={open}
+            setOpen={setOpen}
+            title={title}
+            description={description}
+            error={error}
+            trigger={children}
+            handleSubmit={handleSubmit}
+        >
+            <Input
+                label='Number'
+                description='The shop order number'
+                type='text'
+                value={attributeState.number}
+                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
+            />
+            <Select
+                label='Priority'
+                description='The priority of this order'
+                options={[...priorities]}
+                value={attributeState.priority}
+                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
+            />
+            <Textarea
+                label='Notes'
+                description='Any notes about this order'
+                value={attributeState.notes}
+                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
+            />
+            <Fields
+                fieldState={fieldState}
+                setFieldState={setFieldState}
+            />
+        </ModelForm>
     )
 }
 

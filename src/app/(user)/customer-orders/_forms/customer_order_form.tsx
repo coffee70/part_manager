@@ -4,17 +4,13 @@ import { CustomerOrder, priorities, Priority, Values } from "@/types/collections
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { collectionKeys } from '@/lib/query_keys';
 import { getCustomers } from '@/server/customers/get_customers';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import Input from '@/components/models/fields/input';
 import Select from '@/components/models/fields/select';
 import Textarea from '@/components/models/fields/textarea';
 import Fields from '@/components/models/fields';
-import { Button } from '@/components/ui/button';
 import { createCustomerOrder } from '@/server/customer_orders/create_customer_order';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { updateCustomerOrder } from '@/server/customer_orders/update_customer_order';
+import ModelForm from '@/components/ui/forms/model_form';
 
 type Props = {
     customerOrder?: CustomerOrder;
@@ -92,68 +88,48 @@ export default function CustomerOrderForm({ customerOrder, children }: Props) {
     }
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="min-w-[650px]">
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogDescription>
-                        <VisuallyHidden.Root>
-                            {description}
-                        </VisuallyHidden.Root>
-                    </DialogDescription>
-                </DialogHeader>
-                {error && <Alert variant='destructive'>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{error.message}</AlertDescription>
-                </Alert>}
-                <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
-                    <div className='max-h-[700px] overflow-y-auto'>
-                        <div className="flex flex-col space-y-1">
-                            <Input
-                                label='Number'
-                                description='The customer order number'
-                                type='text'
-                                value={attributeState.number}
-                                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
-                            />
-                            <Select
-                                label='Customer'
-                                description='The customer for this order'
-                                options={customers?.map(customer => customer.name) || []}
-                                value={attributeState.customerName}
-                                onChange={(v) => setAttributeState({ ...attributeState, customerName: Array.isArray(v) ? v[0] : v })}
-                                creative
-                            />
-                            <Select
-                                label='Priority'
-                                description='The priority of this order'
-                                options={[...priorities]}
-                                value={attributeState.priority}
-                                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
-                            />
-                            <Textarea
-                                label='Notes'
-                                description='Any notes about this order'
-                                value={attributeState.notes}
-                                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
-                            />
-                        </div>
-                        <Fields
-                            fieldState={fieldState}
-                            setFieldState={setFieldState}
-                        />
-                    </div>
-                    <Button
-                        className="w-full"
-                        type='submit'
-                    >Save</Button>
-                </form>
-            </DialogContent>
-        </Dialog>
+        <ModelForm
+            open={open}
+            setOpen={setOpen}
+            title={title}
+            description={description}
+            error={error}
+            trigger={children}
+            handleSubmit={handleSubmit}
+        >
+            <Input
+                label='Number'
+                description='The customer order number'
+                type='text'
+                value={attributeState.number}
+                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
+            />
+            <Select
+                label='Customer'
+                description='The customer for this order'
+                options={customers?.map(customer => customer.name) || []}
+                value={attributeState.customerName}
+                onChange={(v) => setAttributeState({ ...attributeState, customerName: Array.isArray(v) ? v[0] : v })}
+                creative
+            />
+            <Select
+                label='Priority'
+                description='The priority of this order'
+                options={[...priorities]}
+                value={attributeState.priority}
+                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
+            />
+            <Textarea
+                label='Notes'
+                description='Any notes about this order'
+                value={attributeState.notes}
+                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
+            />
+            <Fields
+                fieldState={fieldState}
+                setFieldState={setFieldState}
+            />
+        </ModelForm>
     )
 }
 
