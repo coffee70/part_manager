@@ -21,7 +21,7 @@ type FieldComponentProps = {
 }
 
 export const FieldComponent = React.forwardRef<HTMLInputElement, FieldComponentProps>((props, ref) => {
-    return <Input className="no-calendar-icon no-clock-icon" ref={ref} {...props} />
+    return <Input className="no-icon" ref={ref} {...props} />
 })
 
 FieldComponent.displayName = 'FieldComponent'
