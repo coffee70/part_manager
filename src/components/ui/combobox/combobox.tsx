@@ -212,7 +212,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     return (
         <ClickAwayListener onClickAway={onClickAway}>
             <div>
-                <div ref={setPositionRef} className='inline-flex items-center flex-wrap'>
+                <div ref={setPositionRef} className='w-full inline-flex items-center flex-wrap'>
                     {multiple && Array.isArray(value) && value.length > 0 && value.map((v) => (
                         <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
                     ))}
