@@ -1,6 +1,5 @@
 import SummaryBase from "../summary_base";
-import DetailBase from "../summary_sections/summary_sections_base";
-import People from "../../ui/people";
+import People from "@/components/ui/people";
 import { PersonAction } from "@/types/types";
 
 type Props = {
@@ -13,9 +12,11 @@ export default function SummaryPeople({ people }: Props) {
             <div className="flex">
                 <div className='flex flex-col space-y-1 text-sm'>
                     {people.map(person => (
-                        <DetailBase key={person.id} label={person.label}>
-                            <People name={person.person.name} iconPosition="left" />
-                        </DetailBase>
+                        <People
+                            key={person.id}
+                            name={person.person.name}
+                            iconPosition="left"
+                        />
                     ))}
                 </div>
             </div>
