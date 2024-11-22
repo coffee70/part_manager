@@ -200,7 +200,11 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     const onClickAway = () => {
         if (!creative) {
-            if (value && !Array.isArray(value) && input !== "") {
+            if (options.includes(input)) {
+                setInput(input)
+                _onChange && _onChange(input)
+            }
+            else if (value && !Array.isArray(value) && input !== "") {
                 setInput(value)
             }
             else {
