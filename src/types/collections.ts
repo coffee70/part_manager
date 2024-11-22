@@ -29,26 +29,26 @@ export type PriorityInfo = {
 }
 
 export const priorityInfo: Record<Priority, PriorityInfo> = {
-    Lowest: {
-        color: 'darkgreen',
-        Icon: ChevronsDownIcon
-    },
-    Low: {
-        color: 'green',
-        Icon: ChevronDownIcon
-    },
-    Medium: {
-        color: 'orange',
-        Icon: CircleMinusIcon
+    Highest: {
+        color: 'darkred',
+        Icon: ChevronsUpIcon
     },
     High: {
         color: 'red',
         Icon: ChevronUpIcon
     },
-    Highest: {
-        color: 'darkred',
-        Icon: ChevronsUpIcon
-    }
+    Medium: {
+        color: 'orange',
+        Icon: CircleMinusIcon
+    },
+    Low: {
+        color: 'green',
+        Icon: ChevronDownIcon
+    },
+    Lowest: {
+        color: 'darkgreen',
+        Icon: ChevronsDownIcon
+    },
 } as const;
 
 export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]> = {

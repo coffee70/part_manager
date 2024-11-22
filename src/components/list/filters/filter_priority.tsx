@@ -3,7 +3,7 @@ import React from "react";
 import { SelectBase, SelectItem } from "@/components/ui/select";
 import StatusIndicator from "@/components/ui/status_indicator";
 import { cn } from "@/lib/utils";
-import { priorities } from "@/types/collections";
+import { priorityInfo } from "@/types/collections";
 import { CheckIcon } from "lucide-react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useURLMetadata } from "@/hooks/url_metadata.hook";
@@ -33,16 +33,16 @@ export default function PriorityFilter() {
 
     return (
         <SelectBase>
-            {priorities.map(priority => (
+            {Object.entries(priorityInfo).map(([label, info]) => (
                 <SelectItem
-                    key={priority.label}
-                    onClick={() => handlePriorityChange(priority.label)}
+                    key={label}
+                    onClick={() => handlePriorityChange(label)}
                 >
                     <div className="flex items-center space-x-3">
-                        <StatusIndicator color={priority.color} />
-                        <span>{priority.label}</span>
+                        <StatusIndicator color={info.color} />
+                        <span>{label}</span>
                     </div>
-                    <CheckIcon className={cn(initialValue === priority.label ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(initialValue === label ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             ))}
         </SelectBase>
