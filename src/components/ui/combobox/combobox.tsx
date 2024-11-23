@@ -181,6 +181,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         const inputValue = e.target.value;
         setInput(inputValue);
         setOpen(true);
+        setActiveIndex(0);
 
         // if input changes and in creative mode but not in multiple push inputValue to value
         if (creative && !multiple) {
@@ -195,19 +196,50 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     const onClick = () => {
         setOpen(true);
-        setActiveIndex(null);
+        setActiveIndex(0);
     }
 
     const onClickAway = () => {
         if (!creative) {
-            if (options.includes(input)) {
-                setInput(input)
+            if (!multiple && !Array.isArray(value)) {
+                // change the value if the input is in the options
+                if (options.includes(input)) {
+                    setInput(input)
+                    _onChange && _onChange(input)
+                }
+                // reset the input if the value is not in the options and value is not undefined
+                else if (value) {
+                    setInput(value)
+                }
+                // reset the input if the value is undefined
+                else {
+                    setInput("")
+                }
+            } else if (multiple && Array.isArray(value)) {
+                // append the input to the value if the input is in the options and not in the value and reset the input
+                if (options.includes(input) && !value.includes(input)) {
+                    _onChange && _onChange([...value, input])
+                    setInput("")
+                }
+                // if the options does not include the input reset the input
+                // if the value already includes the input reset the input
+                else {
+                    setInput("")
+                }
+            }
+        }
+        else {
+            // set the value to a nonempty input
+            if (!multiple && !Array.isArray(value) && input !== "") {
                 _onChange && _onChange(input)
             }
-            else if (value && !Array.isArray(value) && input !== "") {
-                setInput(value)
+            // set the value to an empty input
+            else if (!multiple && !Array.isArray(value) && input === "") {
+                _onChange && _onChange(undefined)
             }
-            else {
+            // append the input to the value if the input is nonempty and reset the input
+            else if (multiple && Array.isArray(value) && input !== "") {
+                _onChange && _onChange([...value, input])
                 setInput("")
             }
         }
