@@ -1,18 +1,24 @@
 'use server'
-import { Create, User, UserDoc } from "@/types/collections";
-import { getCurrentSession } from "@/server/auth/get_current_session";
 import { validators } from "@/server/validators/validators";
+import { Create, User, UserDoc } from "@/types/collections";
 import { hash } from "@node-rs/argon2";
+import { createSession, generateSessionToken, generateUserId } from "@/lib/session";
 import { db } from "@/lib/mongo/db";
-import { generateUserId } from "@/lib/session";
+import { checkNewInstance } from "@/server/auth/check_new_instance";
+import { setSessionTokenCookie } from "@/lib/cookies";
+import { redirect } from "next/navigation";
 
 type Input = {
     user: Create<User>;
 }
 
-export async function createUser(input: Input) {
-    const { user: currentUser } = await getCurrentSession();
-    if (!currentUser || currentUser.role !== 'admin') throw new Error('Unauthorized');
+export async function unauthorized_createUser(input: Input) {
+
+    // only use this function on new instance
+    const isNewInstance = await checkNewInstance();
+    if (!isNewInstance) {
+        throw new Error("Unauthorized");
+    }
 
     const { user } = validators.input<Input>(input);
 
@@ -54,4 +60,9 @@ export async function createUser(input: Input) {
         role: user.role,
         password_hash: passwordHash,
     });
+
+    const token = generateSessionToken();
+    const session = await createSession(token, userId);
+    setSessionTokenCookie(token, session.expires_at);
+    redirect("/");
 }
