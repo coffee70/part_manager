@@ -5,17 +5,42 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { type User } from '@/types/collections';
 import { More } from "@/components/ui/more";
 import UserForm from './user_form';
-import DeleteUser, { useDeleteUser } from './delete_user';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useConfirm } from '@/hooks/confirm.hook';
+import { deleteUser } from '@/server/users/delete_user';
+import { userKeys } from '@/lib/query_keys';
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export default function User({ user }: { user: User }) {
     const [editOpen, setEditOpen] = React.useState(false)
     const [deleteOpen, setDeleteOpen] = React.useState(false)
 
-    const {
-        handleConfirm,
-        handleCancel,
-        mutate
-    } = useDeleteUser({ _id: user._id })
+    const queryClient = useQueryClient()
+
+    const { confirm, handleConfirm, handleCancel } = useConfirm()
+
+    const { mutate, isError, error } = useMutation({
+        mutationFn: async () => {
+            setDeleteOpen(true)
+            const ans = await confirm()
+            if (ans) await deleteUser({ _id: user._id })
+        },
+        onSuccess: () => {
+            setDeleteOpen(false)
+            queryClient.invalidateQueries({ queryKey: userKeys.all })
+        }
+    })
 
     return (
         <>
@@ -32,7 +57,7 @@ export default function User({ user }: { user: User }) {
                         <DropdownMenuContent>
                             <DropdownMenuGroup>
                                 <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => mutate({ setOpen: setDeleteOpen })}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => mutate()}>Delete</DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -45,13 +70,23 @@ export default function User({ user }: { user: User }) {
                 onOpenChange={setEditOpen}
             />
 
-            <DeleteUser
-                _id={user._id}
-                open={deleteOpen}
-                onOpenChange={setDeleteOpen}
-                handleCancel={handleCancel}
-                handleConfirm={handleConfirm}
-            />
+            <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete User</AlertDialogTitle>
+                        <AlertDialogDescription>Are you sure you want to delete this user?</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    {isError && <Alert variant='destructive'>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{error.message}</AlertDescription>
+                    </Alert>}
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
+                        <Button onClick={handleConfirm}>Delete</Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     )
 }
