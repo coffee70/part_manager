@@ -14,6 +14,8 @@ const OutputSchema = z.object({
         user: z.object({
             name: z.string(),
         }),
+        editable: z.boolean(),
+        deletable: z.boolean(),
     }))
 })
 
@@ -23,8 +25,8 @@ const InputSchema = z.object({
 })
 
 export async function getComments(input: z.infer<typeof InputSchema>) {
-    const { user } = await getCurrentSession();
-    if (!user) throw new Error('Unauthorized');
+    const { user: currentUser } = await getCurrentSession();
+    if (!currentUser) throw new Error('Unauthorized');
 
     const { id, collection: _collection } = validators.input<z.infer<typeof InputSchema>>(input);
 
@@ -52,8 +54,10 @@ export async function getComments(input: z.infer<typeof InputSchema>) {
         return {
             ...comment,
             user: {
-                name: user?.name || "Unknown",
-            }
+                name: user?.name || "Inactive",
+            },
+            editable: comment.userId === currentUser._id || currentUser.role === 'admin',
+            deletable: comment.userId === currentUser._id || currentUser.role === 'admin',
         }
     }))
 

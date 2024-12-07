@@ -6,7 +6,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createComment } from '@/server/comments/create_comment';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { collectionKeys, commentKeys } from '@/lib/query_keys';
-import { useUser } from '@/hooks/user.hook';
 import { ClickAwayListener } from '@mui/base';
 
 const PLACEHOLDER = "Add a comment..."
@@ -17,8 +16,6 @@ export default function CreateComment() {
     const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
     const { id, collection } = useURLMetadata();
-
-    const user = useUser();
 
     const queryClient = useQueryClient();
 
@@ -34,16 +31,11 @@ export default function CreateComment() {
     })
 
     const handleSave = () => {
-        if (user) {
-            mutate({
-                id,
-                collection,
-                comment: {
-                    text: value,
-                    userId: user._id
-                }
-            })
-        }
+        mutate({
+            id,
+            collection,
+            text: value
+        })
     }
 
     const handleCancel = () => {

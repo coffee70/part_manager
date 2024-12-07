@@ -9,6 +9,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateComment } from '@/server/comments/update_comment';
 import { collectionKeys, commentKeys } from '@/lib/query_keys';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 type Props = {
     comment: {
@@ -30,7 +32,7 @@ export default function UpdateComment({ comment, children }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate } = useMutation({
+    const { mutate, error, isError } = useMutation({
         mutationFn: updateComment,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, id) });
@@ -57,6 +59,11 @@ export default function UpdateComment({ comment, children }: Props) {
                         <DialogDescription>Edit comment</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
+                {isError && <Alert variant='destructive'>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error.message}</AlertDescription>
+                </Alert>}
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
                     <Textarea
                         className="border border-border p-1"

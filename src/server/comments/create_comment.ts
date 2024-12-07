@@ -8,14 +8,14 @@ import { getCurrentSession } from '../auth/get_current_session';
 type Input = {
     id: string | null;
     collection: SectionCollection;
-    comment: Create<CommentDoc>;
+    text: string;
 }
 
 export async function createComment(input: Input) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, collection: _collection, comment } = validators.input<Input>(input);
+    const { id, collection: _collection, text } = validators.input<Input>(input);
 
     if (!id) {
         throw new Error('id is required');
@@ -26,8 +26,9 @@ export async function createComment(input: Input) {
         $push: {
             comments: {
                 _id: new ObjectId(),
+                text: text,
+                userId: user._id,
                 updatedAt: new Date(),
-                ...comment,
             }
         },
         $set: {

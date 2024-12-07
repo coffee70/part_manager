@@ -23,6 +23,28 @@ export async function updateComment(input: Input) {
     }
 
     const collection = db.collection<CommentableDoc>(_collection)
+
+    // check the user is either an admin or the commenter
+    const commentedModel = await collection.findOne(
+        {
+            _id: new ObjectId(modelId),
+            'comments._id': new ObjectId(commentId),
+        },
+        {
+            projection: {
+                'comments.$': 1
+            }
+        }
+    )
+
+    if (!commentedModel) {
+        throw new Error('Comment not found!');
+    }
+
+    if (commentedModel.comments[0].userId !== user._id && user.role !== 'admin') {
+        throw new Error('You are not authorized to edit this comment!');
+    }
+
     await collection.updateOne({
         _id: new ObjectId(modelId),
         'comments._id': new ObjectId(commentId)

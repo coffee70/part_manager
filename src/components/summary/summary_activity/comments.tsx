@@ -23,19 +23,26 @@ export default function Comments() {
         <>
             <div className="flex flex-col space-y-2">
                 {isPending ? (
-                    <div>Loading...</div>
+                    <div className='border-b border-b-foreground h-14'>Loading...</div>
                 ) : isError || !data ? (
-                    <Alert variant='destructive'>
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>Could not retrieve comments.</AlertDescription>
-                    </Alert>
+                    <>
+                        <Alert variant='destructive'>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>Could not retrieve comments.</AlertDescription>
+                        </Alert>
+                        <div className='border-b border-b-foreground h-3'></div>
+                    </>
                 ) : data.comments.length === 0 ? (
-                    <div>No comments yet</div>
-                ) : data.comments.map(comment => (
-                    <Comment key={comment._id} comment={comment} />
-                ))}
-                <div className='border-b border-b-foreground h-6'></div>
+                    <div className='border-b border-b-foreground h-14'>No comments yet</div>
+                ) : (
+                    <>
+                        {data.comments.map(comment => (
+                            <Comment key={comment._id} comment={comment} />
+                        ))}
+                        <div className='border-b border-b-foreground h-3'></div>
+                    </>
+                )}
                 <CreateComment />
             </div>
         </>
