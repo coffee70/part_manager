@@ -1,3 +1,4 @@
+import React from 'react';
 import ParagraphField from "@/components/fields/components/fields/paragraph";
 import SelectField from "@/components/fields/components/fields/select";
 import InputField from '@/components/fields/components/fields/input_field';
@@ -12,22 +13,21 @@ type SummarySectionProps = {
 export default function SummarySection({ section }: SummarySectionProps) {
 
     return (
-        <div className="flex">
-            <div className='flex flex-col space-y-1 text-sm'>
-                {section.fields.map(field => (
-                    <div key={field._id} className="flex items-center justify-between space-x-2 min-w-80 min-h-9">
-                        <div className='text-muted-foreground text-nowrap'>{`${field.name}:`}</div>
-                        {field.type === 'paragraph' ? (
-                            <ParagraphField field={field} />
-                        ) : field.type === 'select' ? (
-                            <SelectField field={field} />
-                        ) : (
-                            <InputField field={field} />
-                        )}
-
+        <div className='grid grid-cols-[auto_1fr] gap-y-1 gap-x-2 text-sm'>
+            {section.fields.map(field => (
+                <React.Fragment key={field._id}>
+                    <div className='flex items-center'>
+                        <p className='text-muted-foreground whitespace-nowrap'>{`${field.name}:`}</p>
                     </div>
-                ))}
-            </div>
+                    {field.type === 'paragraph' ? (
+                        <ParagraphField field={field} />
+                    ) : field.type === 'select' ? (
+                        <SelectField field={field} />
+                    ) : (
+                        <InputField field={field} />
+                    )}
+                </React.Fragment>
+            ))}
         </div>
     )
 }
