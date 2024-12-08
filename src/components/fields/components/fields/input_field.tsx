@@ -86,9 +86,12 @@ export default function InputField({ field }: Props) {
                     ) : isPending ? (
                         <Loading />
                     ) : isEditing ? (
-                        <Editing />
+                        <Editing aria-label={`Save field ${field.name}`} />
                     ) : (
-                        <NotEditing setIsEditing={setIsEditing} />
+                        <NotEditing
+                            onClick={() => setIsEditing(true)}
+                            aria-label={`Edit field ${field.name}`}
+                        />
                     )}
                 </div>
             </form>

@@ -102,7 +102,7 @@ export default function Notes({ initialValue }: Props) {
                     ) : isEditing ? (
                         <Editing />
                     ) : (
-                        <NotEditing setIsEditing={setIsEditing} />
+                        <NotEditing onClick={() => setIsEditing(true)} />
                     )}
                 </div>
             </form>
