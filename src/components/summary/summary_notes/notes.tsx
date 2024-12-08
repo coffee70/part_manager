@@ -67,6 +67,7 @@ export default function Notes({ initialValue }: Props) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
             queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) })
+            setIsEditing(false);
         }
     })
 

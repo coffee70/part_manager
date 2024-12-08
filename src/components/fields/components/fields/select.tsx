@@ -39,6 +39,7 @@ export default function SelectField({ field }: Props) {
             queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) });
             // updates the table view to show the updated at date change
             queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            setIsEditing(false);
         }
     })
 
