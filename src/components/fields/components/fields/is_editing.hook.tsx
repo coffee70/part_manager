@@ -8,6 +8,7 @@ export function useIsEditing() {
     React.useEffect(() => {
         if (isEditing) {
             inputRef.current?.focus()
+            inputRef.current?.select()
         }
     }, [isEditing])
 

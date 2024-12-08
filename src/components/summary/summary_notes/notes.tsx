@@ -19,6 +19,7 @@ function useIsEditing() {
     React.useEffect(() => {
         if (isEditing) {
             textareaRef.current?.focus()
+            textareaRef.current?.select()
         }
     }, [isEditing])
 

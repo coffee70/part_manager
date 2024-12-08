@@ -197,6 +197,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     const onClick = () => {
         setOpen(true);
         setActiveIndex(0);
+        refs.domReference.current?.focus()
     }
 
     const onClickAway = () => {
@@ -247,23 +248,24 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     return (
         <ClickAwayListener onClickAway={onClickAway}>
-            <div>
-                <div ref={setPositionRef} className='w-full inline-flex items-center flex-wrap'>
-                    {multiple && Array.isArray(value) && value.length > 0 && value.map((v) => (
-                        <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
-                    ))}
-                    <Input
-                        {...getReferenceProps({
-                            className: "px-1",
-                            ref: refs.setReference,
-                            value: input,
-                            onChange,
-                            onKeyDown,
-                            onClick,
-                            "aria-autocomplete": "list",
-                        })}
-                    />
-                </div>
+            <div
+                ref={setPositionRef}
+                className='w-full inline-flex items-center flex-wrap cursor-text'
+                onClick={onClick}
+            >
+                {multiple && Array.isArray(value) && value.length > 0 && value.map((v) => (
+                    <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
+                ))}
+                <Input
+                    {...getReferenceProps({
+                        className: "px-1",
+                        ref: refs.setReference,
+                        value: input,
+                        onChange,
+                        onKeyDown,
+                        "aria-autocomplete": "list",
+                    })}
+                />
                 {open && (
                     <FloatingFocusManager
                         context={context}
