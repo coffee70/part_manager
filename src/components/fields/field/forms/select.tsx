@@ -34,9 +34,14 @@ export default function SelectForm({ field, setOpen, sectionId }: Props) {
         setOpen: setOpen
     });
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate();
+    }
+
     return (
         <form
-            onSubmit={() => mutate()}
+            onSubmit={handleSubmit}
             className='flex flex-col space-y-4'
         >
             <Input

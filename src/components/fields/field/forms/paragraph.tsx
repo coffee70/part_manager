@@ -29,9 +29,14 @@ export default function ParagraphForm({ field, sectionId, setOpen }: Props) {
         setOpen: setOpen
     });
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate();
+    }
+
     return (
         <form
-            onSubmit={() => mutate()}
+            onSubmit={handleSubmit}
             className='flex flex-col space-y-4'
         >
             <Input

@@ -28,8 +28,13 @@ export default function SectionTitle({ _id, name }: Props) {
         }
     })
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate({ _id: _id, section: formState });
+    }
+
     return (
-        <form onSubmit={() => mutate({ _id: _id, section: formState})}>
+        <form onSubmit={handleSubmit}>
             <Field
                 className="text-xl font-bold"
                 value={formState.name}

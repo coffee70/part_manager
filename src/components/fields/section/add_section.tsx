@@ -34,6 +34,11 @@ export default function AddSection() {
         }
     })
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate({ section: formState });
+    }
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -51,7 +56,7 @@ export default function AddSection() {
                 </DialogHeader>
                 <form
                     className='flex flex-col space-y-4'
-                    onSubmit={() => mutate({ section: formState })}
+                    onSubmit={handleSubmit}
                 >
                     <Input
                         value={formState.name}

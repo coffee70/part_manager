@@ -48,6 +48,11 @@ export default function AddLink({ open, onOpenChange }: Props) {
         }
     })
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate(formState);
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="min-w-[650px]">
@@ -59,10 +64,7 @@ export default function AddLink({ open, onOpenChange }: Props) {
                 </DialogHeader>
                 <form
                     className="flex flex-col space-y-6"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        mutate(formState);
-                    }}
+                    onSubmit={handleSubmit}
                 >
                     <div className="flex flex-col space-y-2">
                         {error && <Alert variant='destructive'>
