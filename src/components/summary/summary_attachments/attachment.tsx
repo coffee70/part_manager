@@ -20,7 +20,7 @@ export default function Attachment({ file }: Props) {
             <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
                 <DialogContent>
                     <DialogTitle>{file.name}</DialogTitle>
-                    <PDFViewer url={file.url} />
+                    <PDFViewer url={file.url} name={file.name} />
                 </DialogContent>
             </Dialog>
         </>

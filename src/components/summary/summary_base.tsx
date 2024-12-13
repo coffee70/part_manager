@@ -21,7 +21,7 @@ export default function SummaryBase({ title, action, label, children }: Props) {
                     {open ? <ChevronDownIcon size={20} /> : <ChevronRightIcon size={20} />}
                 </button>
             </div>
-            
+
             {/** Row 1 Column 2 */}
             <div className='flex justify-between items-center'>
                 <span className='font-bold text-lg'>{title}</span>
@@ -31,7 +31,9 @@ export default function SummaryBase({ title, action, label, children }: Props) {
                             <button
                                 type='button'
                                 className='flex items-center justify-center w-6 h-6 rounded-sm hover:bg-foreground'
-                                onClick={action}>
+                                onClick={action}
+                                aria-label={`action_${title}`}
+                            >
                                 <PlusIcon size={20} />
                             </button>
                         </TooltipTrigger>

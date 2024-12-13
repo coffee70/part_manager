@@ -69,7 +69,10 @@ export default function PDFPreview({ file, setOpen }: Props) {
             onMouseLeave={() => setHovered(false)}
             style={{ width }}
         >
-            <div onClick={() => setOpen(true)}>
+            <div
+                onClick={() => setOpen(true)}
+                aria-label={`attachment_preview_${file.name}`}
+            >
                 <Document
                     file={file.url}
                     className='border border-foreground'
@@ -91,6 +94,7 @@ export default function PDFPreview({ file, setOpen }: Props) {
                             disabled={!hovered}
                             className='p-2'
                             onClick={() => mutate()}
+                            aria-label={`delete_attachment_${file.name}`}
                         >
                             <Trash2Icon strokeWidth={1} size={20} />
                         </Button>

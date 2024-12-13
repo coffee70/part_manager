@@ -114,7 +114,7 @@ test('customer order', async ({ page }) => {
   await expect(page.locator('input[type="time"]')).toBeFocused();
   await page.locator('input[type="time"]').fill('23:11');
   await page.getByLabel('Save field Some Time').click();
-  
+
   // check the updated time
   await page.goto('/');
   await page.getByRole('link', { name: 'Customer Orders' }).click();
@@ -263,6 +263,43 @@ test('customer order', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByLabel('Comments')).toContainText('No comments yet');
+
+  // upload a pdf
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByLabel('action_Attachments').click()
+  ]);
+  await fileChooser.setFiles('./playwright/A19464.pdf');
+  await expect(page.getByLabel('attachment_preview_A19464.pdf')).toBeVisible();
+
+  // view the pdf
+  await page.getByLabel('attachment_preview_A19464.pdf').click();
+  await expect(page.getByLabel('attachment_viewer_A19464.pdf')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await expect(page.getByLabel('attachment_viewer_A19464.pdf')).not.toBeVisible();
+
+  // delete the pdf
+  await page.getByLabel('attachment_preview_A19464.pdf').hover();
+  await page.getByLabel('delete_attachment_A19464.pdf').click();
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.locator('canvas')).not.toBeVisible();
+
+  // create link
+  await page.getByRole('link', { name: 'Shop Orders' }).click();
+  await page.getByRole('button').nth(2).click();
+  await page.getByLabel('New Shop Order').locator('input[type="text"]').fill('Shop Order Test');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('link', { name: 'Customer Orders' }).click();
+  await page.getByLabel('action_Links').click();
+  await page.getByRole('combobox').fill('Sho');
+  await page.getByRole('option', { name: 'Shop Orders' }).click();
+  await page.locator('div').filter({ hasText: /^NumberThe number of the model you want to link from\.$/ }).locator('input').click();
+  await page.getByRole('textbox').fill('Shop Order Test');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page.getByRole('link', { name: 'Shop Order Test' })).toBeVisible();
+  await page.getByRole('link', { name: 'Shop Order Test' }).click();
+  await expect(page.getByRole('link', { name: 'O-100'})).toBeVisible();
+  await page.getByRole('link', { name: 'O-100' }).click();
 
   // delete customer order
   await page.goto('/');
