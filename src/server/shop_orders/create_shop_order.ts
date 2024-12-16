@@ -2,7 +2,7 @@
 import { Create, ShopOrder, ShopOrderDoc } from "@/types/collections"
 import { getCurrentSession } from "../auth/get_current_session";
 import { validators } from "../validators/validators";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { WithoutId } from "mongodb";
 
 type Input = {

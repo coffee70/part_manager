@@ -1,5 +1,5 @@
 'use server'
-import { db } from '@/lib/mongo/db';
+import { db } from '@/lib/db';
 import { CustomerDoc, CustomerOrderDoc, UserDoc } from '@/types/collections';
 import { ObjectId } from 'mongodb';
 import { getSearchParams, SearchParams } from '@/lib/search_params';

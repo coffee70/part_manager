@@ -3,7 +3,7 @@ import { Create, User, UserDoc } from "@/types/collections";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { validators } from "@/server/validators/validators";
 import { hash } from "@node-rs/argon2";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { generateUserId } from "@/lib/session";
 
 type Input = {

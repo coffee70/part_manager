@@ -1,5 +1,5 @@
 'use server'
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { UserDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 

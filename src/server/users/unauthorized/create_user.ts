@@ -3,7 +3,7 @@ import { validators } from "@/server/validators/validators";
 import { Create, User, UserDoc } from "@/types/collections";
 import { hash } from "@node-rs/argon2";
 import { createSession, generateSessionToken, generateUserId } from "@/lib/session";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { checkNewInstance } from "@/server/auth/check_new_instance";
 import { setSessionTokenCookie } from "@/lib/cookies";
 import { redirect } from "next/navigation";

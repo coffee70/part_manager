@@ -1,5 +1,5 @@
 'use server'
-import { db } from '@/lib/mongo/db';
+import { db } from '@/lib/db';
 import { CommentableDoc, CommentDoc, Create, SectionCollection } from '@/types/collections'
 import { validators } from '../validators/validators';
 import { ObjectId } from 'mongodb';

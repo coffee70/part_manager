@@ -1,6 +1,6 @@
 'use server'
 
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { Priority, SerialDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";

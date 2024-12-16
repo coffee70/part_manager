@@ -1,5 +1,5 @@
 'use server'
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { validators } from "../validators/validators";
 import { UserDoc } from "@/types/collections";
 import { verify } from "@node-rs/argon2";

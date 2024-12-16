@@ -2,7 +2,7 @@
 import { CommentableDoc, SectionCollection, UserDoc } from "@/types/collections";
 import { z } from "zod";
 import { validators } from "../validators/validators";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
 

@@ -1,5 +1,5 @@
 'use server'
-import { db } from "@/lib/mongo/db"
+import { db } from "@/lib/db"
 import { Field, Section, SectionCollection } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
 import { validators } from "../validators/validators";

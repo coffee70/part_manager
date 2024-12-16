@@ -1,7 +1,7 @@
 'use server'
 import { Create, Part, PartDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { validators } from "../validators/validators";
 import { WithoutId } from "mongodb";
 

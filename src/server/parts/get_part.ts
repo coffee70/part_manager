@@ -1,5 +1,5 @@
 'use server'
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { PartDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";

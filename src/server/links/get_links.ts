@@ -1,6 +1,6 @@
 'use server'
 import { ObjectId } from "mongodb";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { LinkableDoc } from "@/types/collections";
 import { collectionToUrl } from "@/lib/conversions";
 import { getCurrentSession } from "../auth/get_current_session";

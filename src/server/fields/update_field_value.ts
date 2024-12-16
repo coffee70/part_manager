@@ -1,5 +1,5 @@
 'use server'
-import { db } from "@/lib/mongo/db"
+import { db } from "@/lib/db"
 import { ObjectId } from "mongodb"
 import { Valuable, SectionCollection } from "@/types/collections"
 import { z } from "zod"

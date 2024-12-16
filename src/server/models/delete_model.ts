@@ -3,7 +3,7 @@ import { AttachableDoc, LinkableDoc, SectionCollection } from "@/types/collectio
 import { getCurrentSession } from "../auth/get_current_session";
 import { validators } from "../validators/validators";
 import { ObjectId } from "mongodb";
-import { db } from "@/lib/mongo/db";
+import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { collectionToUrl } from "@/lib/conversions";
 import { deleteAttachment } from "../attachments/delete_attachment";
