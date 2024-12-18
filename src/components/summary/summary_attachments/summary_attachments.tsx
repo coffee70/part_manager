@@ -8,7 +8,8 @@ type Props = {
     files: {
         _id: string;
         name: string;
-        url: string;
+        base64: string;
+        type: string;
     }[];
 }
 

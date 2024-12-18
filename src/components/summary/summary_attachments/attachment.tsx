@@ -8,7 +8,8 @@ type Props = {
     file: {
         _id: string;
         name: string;
-        url: string;
+        base64: string;
+        type: string;
     };
 }
 
@@ -20,7 +21,7 @@ export default function Attachment({ file }: Props) {
             <Dialog open={open} onOpenChange={(open) => setOpen(open)}>
                 <DialogContent>
                     <DialogTitle>{file.name}</DialogTitle>
-                    <PDFViewer url={file.url} name={file.name} />
+                    <PDFViewer file={file} />
                 </DialogContent>
             </Dialog>
         </>

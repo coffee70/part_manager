@@ -1,11 +1,11 @@
 'use server'
-
 import { db } from "@/lib/db";
 import { Priority, SerialDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
+import { getAttachment } from "../attachments/get_attachment";
 
 const OutputSchema = z.object({
     _id: z.string(),
@@ -15,7 +15,8 @@ const OutputSchema = z.object({
     attachments: z.array(z.object({
         _id: z.string(),
         name: z.string(),
-        url: z.string()
+        base64: z.string(),
+        type: z.string()
     })),
     values: z.record(z.union([z.string(), z.array(z.string())]))
 }).nullable();
@@ -45,17 +46,26 @@ export async function getSerial({ _id }: { _id?: string | null }) {
         throw new Error(`Serial with id ${_id} not found`);
     }
 
+    const attachments = await Promise.all(
+        serial.attachments?.map(async (attachment) => {
+            const blob = await getAttachment({ _id: attachment._id.toString() });
+            const arrayBuffer = await blob.arrayBuffer();
+            const base64String = Buffer.from(arrayBuffer).toString('base64');
+
+            return {
+                _id: attachment._id.toString(),
+                name: attachment.filename,
+                base64: base64String,
+                type: blob.type
+            };
+        }) || []
+    );
+
     const res = {
         ...serial,
-        attachments: serial.attachments?.map(attachment => ({
-            _id: attachment._id.toString(),
-            name: attachment.filename,
-            url: process.env.FILE_GET_URL as string + attachment._id
-        })) || []
+        _id: serial._id.toString(),
+        attachments,
     }
 
-    const serialized = JSON.parse(JSON.stringify(res));
-
-    return OutputSchema.parse(serialized);
+    return OutputSchema.parse(res);
 }
-    

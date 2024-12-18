@@ -27,7 +27,8 @@ type Props = {
     file: {
         _id: string;
         name: string;
-        url: string
+        base64: string;
+        type: string;
     };
     setOpen: (open: boolean) => void;
 }
@@ -38,6 +39,7 @@ const WIDTH_TOLERANCE = 2;
 export default function PDFPreview({ file, setOpen }: Props) {
     const [hovered, setHovered] = React.useState<boolean>(false)
     const [width, setWidth] = React.useState<number>(0)
+    const [blob, setBlob] = React.useState<Blob | null>(null);
 
     const onLoadSuccess = async (pdf: any) => {
         const page = await pdf.getPage(1);
@@ -63,6 +65,14 @@ export default function PDFPreview({ file, setOpen }: Props) {
         }
     })
 
+    React.useEffect(() => {
+        async function fetchBlob() {
+            const blob = await fetch(`data:${file.type};base64,${file.base64}`).then(res => res.blob());
+            setBlob(blob);
+        }
+        fetchBlob();
+    }, [file])
+
     return (
         <div
             onMouseEnter={() => setHovered(true)}
@@ -74,7 +84,7 @@ export default function PDFPreview({ file, setOpen }: Props) {
                 aria-label={`attachment_preview_${file.name}`}
             >
                 <Document
-                    file={file.url}
+                    file={blob}
                     className='border border-foreground'
                     onLoadSuccess={onLoadSuccess}
                 >
