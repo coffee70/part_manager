@@ -1,5 +1,5 @@
 import { SectionCollection } from "@/types/collections";
-import { AlignLeftIcon, Building2Icon, DraftingCompassIcon, FactoryIcon, GalleryHorizontalEndIcon, HammerIcon, UserIcon as LucideUserIcon } from "lucide-react"
+import { AlignLeftIcon, BoxesIcon, Building2Icon, DraftingCompassIcon, FactoryIcon, GalleryHorizontalEndIcon, HammerIcon, UserIcon as LucideUserIcon } from "lucide-react"
 
 type Props = {
     size?: number;
@@ -41,6 +41,14 @@ export function CustomerIcon({ size }: Props) {
     return (
         <div className="bg-rose-600 p-1 rounded-md text-white">
             <Building2Icon size={size} />
+        </div>
+    )
+}
+
+export function ModelIcon({ size }: Props) {
+    return (
+        <div className="bg-rose-600 p-1 rounded-md text-white">
+            <BoxesIcon size={size} />
         </div>
     )
 }

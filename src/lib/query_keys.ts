@@ -22,3 +22,7 @@ export const linkKeys = {
     all: (collection: SectionCollection, id?: string | null) => [collection, id, 'links'],
     one: (collection: SectionCollection, linkId: string, id?: string | null) => [collection, id, linkId]
 }
+
+export const modelKeys = {
+    all: () => ['models']
+}

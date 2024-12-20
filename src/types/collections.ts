@@ -235,6 +235,26 @@ export type LinkableDoc = {
     }[];
 };
 
+export type ModelDoc = {
+    _id: ObjectId;
+    name: string;
+    attachable: boolean;
+    linkable: boolean;
+    commentable: boolean;
+    color: string;
+    updatedAt: Date;
+    updatedBy: string;
+}
+
+export type Model = {
+    _id: string;
+    name: string;
+    attachable: boolean;
+    linkable: boolean;
+    commentable: boolean;
+    color: string;
+}
+
 // Utility function to get entries with preserved key types
 // this ensures the keys for links are typed as SectionCollection and not string
 // as the Object.entries function would return
@@ -246,7 +266,7 @@ export type Role = 'admin' | 'user'
 
 export const roles: Role[] = ['admin', 'user'];
 
-export type Create<T> = Omit<T, '_id' | 'updatedAt'>
+export type Create<T> = Omit<T, '_id' | 'updatedAt' | 'updatedBy'>;
 
 export type Doc<T> = Omit<T, '_id'> & { _id: string };
 

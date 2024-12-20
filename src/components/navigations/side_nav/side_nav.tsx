@@ -1,7 +1,7 @@
 import { NavBase, NavContent, NavDivider, NavHeader, NavItem, SubNav, SubNavItem } from "@/components/ui/side_nav";
 import Profile from "./profile";
 import Logo from "@/components/ui/logo";
-import { CustomerIcon, CustomerOrderIcon, FieldIcon, PartIcon, SerialIcon, ShopOrderIcon, UserIcon } from "@/components/ui/icons/icons";
+import { CustomerIcon, CustomerOrderIcon, FieldIcon, ModelIcon, PartIcon, SerialIcon, ShopOrderIcon, UserIcon } from "@/components/ui/icons/icons";
 
 export default function SideNavigation() {
     return (
@@ -19,6 +19,7 @@ export default function SideNavigation() {
             </NavContent>
             <NavDivider />
             <NavContent>
+                <NavItem label="Models" href="/models" icon={<ModelIcon />} />
                 <SubNav label="Fields" icon={<FieldIcon />}>
                     <SubNavItem label="Customer Orders" href='/fields/customer-orders' top />
                     <SubNavItem label="Shop Orders" href='/fields/shop-orders' />
