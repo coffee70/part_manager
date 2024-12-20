@@ -1,7 +1,26 @@
+/**
+ * Converts a camelCase string to a readable label format with spaces.
+ * Example: "camelCase" -> "Camel Case"
+ * 
+ * @param camelCase - The camelCase string to convert
+ * @returns The formatted string with spaces between words and first letter capitalized
+ */
 export function camelCaseToLabel(camelCase: string) {
     return camelCase.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
 }
 
+/**
+ * Converts a space-separated label string to camelCase format.
+ * Example: "Label With Spaces" -> "labelWithSpaces"
+ * 
+ * @param label - The space-separated string to convert
+ * @returns The camelCase formatted string with first letter lowercase
+ * 
+ * @example
+ * labelToCamelCase("My Label") // returns "myLabel"
+ * labelToCamelCase("UPPER CASE") // returns "upperCase"
+ * labelToCamelCase("  extra  spaces  ") // returns "extraSpaces"
+ */
 export function labelToCamelCase(label: string): string {
     return label
         .toLowerCase()
@@ -11,6 +30,24 @@ export function labelToCamelCase(label: string): string {
         .replace(/\s+/g, '');
 }
 
+/**
+ * Converts a plural English word to its singular form using common English rules.
+ * 
+ * Rules:
+ * - Words ending in 'ies' -> 'y' (e.g., "cities" -> "city")
+ * - Words ending in 'es' -> remove 'es' (e.g., "boxes" -> "box")
+ * - Words ending in 's' -> remove 's' (e.g., "cars" -> "car")
+ * - Words not ending in above -> unchanged (e.g., "fish" -> "fish")
+ * 
+ * @param s - The plural word to convert
+ * @returns The singular form of the word
+ * 
+ * @example
+ * pluralToSingular("cities") // returns "city"
+ * pluralToSingular("boxes") // returns "box"
+ * pluralToSingular("cars") // returns "car"
+ * pluralToSingular("fish") // returns "fish"
+ */
 export function pluralToSingular(s: string): string {
     if (s.endsWith('ies')) {
         return s.slice(0, -3) + 'y';
