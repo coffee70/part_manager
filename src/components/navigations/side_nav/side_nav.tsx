@@ -1,5 +1,5 @@
 'use client'
-import { NavBase, NavContent, NavDivider, NavHeader, NavItem } from "@/components/ui/side_nav";
+import { ModelItem, NavBase, NavContent, NavDivider, NavHeader, NavItem } from "@/components/ui/side_nav";
 import Profile from "./profile";
 import Logo from "@/components/ui/logo";
 import { FieldIcon, ModelIcon, UserIcon } from "@/components/ui/icons/icons";
@@ -22,7 +22,12 @@ export default function SideNavigation() {
             <NavDivider />
             <NavContent>
                 {models?.map(model => (
-                    <NavItem key={model._id} label={model.name} href={`/instances/${model._id}`} />
+                    <ModelItem
+                        key={model._id}
+                        label={model.name}
+                        href={`/instances/${model._id}`}
+                        color={model.color}
+                    />
                 ))}
             </NavContent>
             <NavDivider />
