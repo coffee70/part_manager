@@ -10,8 +10,9 @@ export const collectionKeys = {
 }
 
 export const userKeys = {
-    all: ['users'],
-    current: ['user']
+    all: () => ['users'],
+    id: (id?: string) => [...userKeys.all(), id],
+    current: () => [...userKeys.all(), 'current']
 }
 
 export const commentKeys = {

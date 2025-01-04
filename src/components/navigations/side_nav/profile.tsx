@@ -7,7 +7,7 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger
-} from "../../ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu"
 import Logout from "@/components/auth/logout"
 import { More } from "@/components/ui/more"
 import { useQuery } from "@tanstack/react-query"
@@ -18,7 +18,7 @@ import { userKeys } from "@/lib/query_keys"
 export default function Profile() {
     
     const { data: user } = useQuery({
-        queryKey: userKeys.current,
+        queryKey: userKeys.current(),
         queryFn: () => getCurrentUser(),
     })
 

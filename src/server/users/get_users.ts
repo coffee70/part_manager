@@ -1,5 +1,4 @@
 'use server'
-
 import { db } from "@/lib/db"
 import { User } from "@/types/collections";
 import { validators } from "../validators/validators";

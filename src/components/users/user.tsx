@@ -2,7 +2,7 @@
 import React from 'react';
 import { TableRow, TableCell } from '@/components/ui/table';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { type User } from '@/types/collections';
+import { Role, type User } from '@/types/collections';
 import { More } from "@/components/ui/more";
 import UserForm from './user_form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -38,7 +38,7 @@ export default function User({ user }: { user: User }) {
         },
         onSuccess: () => {
             setDeleteOpen(false)
-            queryClient.invalidateQueries({ queryKey: userKeys.all })
+            queryClient.invalidateQueries({ queryKey: userKeys.all() })
         }
     })
 

@@ -38,7 +38,7 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
     const { mutate: create, error: createError } = useMutation({
         mutationFn: createUser,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: userKeys.all })
+            queryClient.invalidateQueries({ queryKey: userKeys.all() })
             onOpenChange && onOpenChange(false);
         }
     })
@@ -46,7 +46,7 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
     const { mutate: update, error: updateError } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: userKeys.all })
+            queryClient.invalidateQueries({ queryKey: userKeys.all() })
             onOpenChange && onOpenChange(false);
         }
     })
