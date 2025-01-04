@@ -213,6 +213,9 @@ export interface User {
     username: string;
     title: string;
     role: Role;
+}
+
+export interface Password {
     password: string;
 }
 

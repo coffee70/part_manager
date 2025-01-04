@@ -1,10 +1,15 @@
 'use server'
 import { db } from "@/lib/db"
-import { User } from "@/types/collections";
-import { validators } from "../validators/validators";
 import { getCurrentSession } from "../auth/get_current_session";
+import { z } from "zod";
 
-type Output = Omit<User, 'password_hash'>[];
+const OutputSchema = z.array(z.object({
+    _id: z.string(),
+    name: z.string(),
+    username: z.string(),
+    title: z.string(),
+    role: z.enum(['admin', 'user']),
+}))
 
 export async function getUsers() {
     const { user } = await getCurrentSession();
@@ -13,5 +18,5 @@ export async function getUsers() {
     const users = db.collection('users');
     const result = await users.find().toArray();
     const serialized = JSON.parse(JSON.stringify(result));
-    return validators.output<Output>(serialized);
+    return OutputSchema.parse(serialized);
 }
