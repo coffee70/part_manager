@@ -1,3 +1,4 @@
+'use client'
 import { CircleUserIcon } from "lucide-react"
 import {
     DropdownMenu,
@@ -9,11 +10,17 @@ import {
 } from "../../ui/dropdown-menu"
 import Logout from "@/components/auth/logout"
 import { More } from "@/components/ui/more"
-import { getCurrentSession } from "@/server/auth/get_current_session"
+import { useQuery } from "@tanstack/react-query"
+import { getCurrentUser } from "@/server/auth/get_current_user"
+import { userKeys } from "@/lib/query_keys"
 
 
-export default async function Profile() {
-    const { user } = await getCurrentSession();
+export default function Profile() {
+    
+    const { data: user } = useQuery({
+        queryKey: userKeys.current,
+        queryFn: () => getCurrentUser(),
+    })
 
     return (
         <div className='flex justify-between space-x-1 m-2 bg-neutral-400/30 p-2'>
