@@ -7,9 +7,9 @@ import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
 import { Textarea } from '@/components/ui/textarea'
-import { useURLMetadata } from '@/hooks/url_metadata.hook'
+import { useInstanceURL } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { collectionKeys } from '@/lib/query_keys'
+import { instanceKeys } from '@/lib/query_keys'
 import { updateNotes } from '@/server/notes/update_notes'
 
 function useIsEditing() {
@@ -57,7 +57,7 @@ export default function Notes({ initialValue }: Props) {
 
     const [value, setValue] = React.useState(initialValue ?? '');
 
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, textareaRef } = useIsEditing();
 
@@ -66,8 +66,8 @@ export default function Notes({ initialValue }: Props) {
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateNotes,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
             setIsEditing(false);
         }
     })
@@ -75,8 +75,8 @@ export default function Notes({ initialValue }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            id,
-            collection,
+            modelId,
+            instanceId,
             notes: value
         })
     }

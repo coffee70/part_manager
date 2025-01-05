@@ -1,26 +1,26 @@
 'use server'
 import { db } from "@/lib/db";
-import { SectionCollection } from "@/types/collections";
+import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
+import { z } from "zod";
 
-type Input = {
-    id: string | null;
-    collection: SectionCollection;
-    notes: string;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    notes: z.string(),
+})
 
-export async function updateNotes({ id, collection: _collection, notes }: Input) {
+export async function updateNotes(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    if (!id) {
-        throw new Error('No id provided');
-    }
+    const { modelId, instanceId, notes } = InputSchema.parse(input);
+    if (!instanceId) throw new Error('Instance ID is required');
 
-    const collection = db.collection(_collection);
-    await collection.updateOne({
-        _id: new ObjectId(id)
+    const instanceCollection = db.collection<InstanceDoc>(modelId);
+    await instanceCollection.updateOne({
+        _id: new ObjectId(instanceId)
     }, {
         $set: {
             notes,
