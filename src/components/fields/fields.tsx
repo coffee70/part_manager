@@ -1,12 +1,10 @@
 import { Table, TableBody, TableRow, TableHeader, TableHead } from "@/components/ui/table";
 import FieldInfo from "./field";
-import { type Field } from "@/types/collections";
+import { useSectionContext } from "./section.context";
 
-type Props = {
-    fields: Field[];
-}
-
-export default function Fields({ fields }: Props) {
+export default function Fields() {
+    const { section } = useSectionContext();
+    const { fields } = section;
 
     return (
         <Table>

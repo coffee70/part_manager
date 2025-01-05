@@ -2,42 +2,22 @@
 import React from 'react';
 import DeleteSection from '@/components/fields/section/delete_section';
 import SectionTitle from '@/components/fields/components/section_title';
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "lucide-react";
 import Fields from './fields';
-import type { FieldType, Section, Field } from '@/types/collections';
-import FieldForm from '@/components/fields/field/field_form';
+import type { Section } from '@/types/collections';
+import NewField from './field/new_field';
 
-type Props = {
-    section: Section & { 
-        fields: Field[]; 
-    };
-}
-
-export default function Section({ section }: Props) {
-    const [openNewField, setOpenNewField] = React.useState(false);
-
+export default function Section() {
     return (
         <>
             <div className="flex items-center justify-between">
-                <SectionTitle
-                    _id={section._id}
-                    name={section.name}
-                />
+                <SectionTitle />
                 <div className='flex space-x-3'>
-
-                    <Button variant='secondary' onClick={() => setOpenNewField(true)}>
-                        <div className="flex items-center">
-                            <PlusIcon size={20} className='pr-1' />
-                            <span className="pr-1">New Field</span>
-                        </div>
-                    </Button>
-                    <FieldForm sectionId={section._id} open={openNewField} onOpenChange={setOpenNewField} />
-
-                    <DeleteSection _id={section._id} />
+                    <NewField />
+                    <DeleteSection />
                 </div>
             </div>
-            <Fields fields={section.fields} />
+            <Fields />
         </>
     )
 }
+

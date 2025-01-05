@@ -11,6 +11,7 @@ import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
 import { getModel } from '@/server/models/get_model';
 import ModelSelect from './model_select';
+import { SectionProvider } from './section.context';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
@@ -46,7 +47,9 @@ export default function Sections() {
                     <AddSection />
                 </div>
                 {data.map(section => (
-                    <Section key={section._id} section={section} />
+                    <SectionProvider key={section._id} section={section}>
+                        <Section />
+                    </SectionProvider>
                 ))}
             </div>
         </div>

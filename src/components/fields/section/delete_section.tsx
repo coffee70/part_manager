@@ -19,12 +19,12 @@ import {
 import { useConfirm } from '@/hooks/confirm.hook';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
+import { useSectionContext } from '../section.context';
 
-type Props = {
-    _id: string;
-}
-
-export default function DeleteSection({ _id }: Props) {
+export default function DeleteSection() {
+    const { section } = useSectionContext();
+    const { _id } = section;
+    
     const { collection } = useURLMetadata();
     const queryClient = useQueryClient()
 

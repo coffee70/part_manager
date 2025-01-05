@@ -5,13 +5,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSection } from '@/server/sections/update_section';
 import { sectionKeys } from '@/lib/query_keys';
 import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useSectionContext } from '../section.context';
 
-type Props = {
-    _id: string;
-    name: string;
-}
-
-export default function SectionTitle({ _id, name }: Props) {
+export default function SectionTitle() {
+    const { section } = useSectionContext();
+    const { _id, name } = section;
 
     const { collection } = useURLMetadata();
 
