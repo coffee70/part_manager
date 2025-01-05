@@ -30,6 +30,11 @@ export default async function Page({
         queryFn: () => getModel({ modelId }),
     })
 
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.all(),
+        queryFn: () => getModels(),
+    })
+
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <Sections />

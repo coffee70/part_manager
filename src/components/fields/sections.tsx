@@ -10,6 +10,7 @@ import { modelKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
 import { getModel } from '@/server/models/get_model';
+import ModelSelect from './model_select';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
@@ -38,9 +39,12 @@ export default function Sections() {
                     subtitle={model?.name}
                     icon={<FieldIcon size={50} />}
                 />
-                <AddSection />
             </AppBar>
             <div className="flex-1 p-6 space-y-4 overflow-y-auto">
+                <div className='flex items-center space-x-4'>
+                    <ModelSelect />
+                    <AddSection />
+                </div>
                 {data.map(section => (
                     <Section key={section._id} section={section} />
                 ))}
@@ -48,4 +52,3 @@ export default function Sections() {
         </div>
     );
 }
-
