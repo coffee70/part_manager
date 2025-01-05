@@ -6,11 +6,11 @@ import Error from '@/components/ui/fields/error'
 import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
-import { useURLMetadata } from '@/hooks/url_metadata.hook'
+import { useInstanceURL } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { collectionKeys } from '@/lib/query_keys'
+import { instanceKeys } from '@/lib/query_keys'
 import { Input } from '@/components/ui/input'
-import { updateTitle } from '@/server/title/update_title'
+import { updateNumber } from '@/server/number/update_number'
 
 function useIsEditing() {
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -40,10 +40,9 @@ function useIsEditing() {
 
 type Props = {
     initialValue?: string;
-    titleKey: string;
 }
 
-export default function Title({ initialValue, titleKey }: Props) {
+export default function Number({ initialValue }: Props) {
 
     /** 
      * updating using the form will not cause the notes
@@ -57,17 +56,17 @@ export default function Title({ initialValue, titleKey }: Props) {
 
     const [value, setValue] = React.useState(initialValue ?? '');
 
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
     const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
-        mutationFn: updateTitle,
+        mutationFn: updateNumber,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection)})
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
             setIsEditing(false);
         }
     })
@@ -75,10 +74,9 @@ export default function Title({ initialValue, titleKey }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            id,
-            collection,
-            key: titleKey,
-            title: value
+            modelId,
+            instanceId,
+            number: value
         })
     }
 

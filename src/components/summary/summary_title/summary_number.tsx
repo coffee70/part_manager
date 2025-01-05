@@ -1,16 +1,15 @@
 import { Breadcrumb } from "@/components/ui/breadcrumb"
-import Title from "./title";
+import Number from "./number";
 
 type Props = {
-    title: string;
-    titleKey: string;
+    number: string;
     items?: {
         label: string
         href: string
     }[];
 }
 
-export default function SummaryTitle({ title, titleKey, items }: Props) {
+export default function SummaryNumber({ number, items }: Props) {
     return (
         <div className="flex items-center space-x-4">
             <div className="flex flex-col">
@@ -18,7 +17,7 @@ export default function SummaryTitle({ title, titleKey, items }: Props) {
                 <div className="pl-1">
                     <Breadcrumb items={items ?? []} />
                 </div>
-                <Title initialValue={title} titleKey={titleKey} />
+                <Number initialValue={number} />
             </div>
         </div>
     )

@@ -2,7 +2,6 @@
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 import SummaryLayout from "@/layouts/summary_layout";
-import SummaryTitle from "@/components/summary/summary_title/summary_title";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
 import Priority from "@/components/summary/summary_actions/priority/priority";
 import SummarySections from "@/components/summary/summary_sections/summary_sections";
@@ -15,9 +14,9 @@ import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { instanceKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
 import Edit from '@/components/summary/summary_actions/edit/edit';
-import { CustomerOrderIcon } from '@/components/ui/icons/icons';
 import { getInstance } from '@/server/instances/get_instance';
 import InstanceForm from './instance_form';
+import SummaryNumber from '@/components/summary/summary_title/summary_number';
 
 export default function SummaryContainer() {
     const { modelId, instanceId } = useInstanceURL();
@@ -35,10 +34,7 @@ export default function SummaryContainer() {
 
     return (
         <SummaryLayout>
-            <SummaryTitle
-                title={instance.number}
-                titleKey='number'
-            />
+            <SummaryNumber number={instance.number} />
             <SummaryToolbar>
                 <InstanceForm instance={instance}>
                     <Edit />
