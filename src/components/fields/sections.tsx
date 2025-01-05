@@ -5,21 +5,27 @@ import Section from './section';
 import { AppBar } from '@/components/ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
-import { sectionKeys } from '@/lib/query_keys';
+import { useFieldURL } from '@/hooks/url_metadata.hook';
+import { modelKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
+import { getModel } from '@/server/models/get_model';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const { collection, name } = useURLMetadata();
+    const { modelId } = useFieldURL();
 
     const { data, isError, isPending } = useQuery({
-        queryKey: sectionKeys.all(collection),
-        queryFn: () => getSections({ collection: collection }),
+        queryKey: sectionKeys.all(modelId),
+        queryFn: () => getSections({ modelId }),
     });
+
+    const { data: model } = useQuery({
+        queryKey: modelKeys.id(modelId),
+        queryFn: () => getModel({ modelId }),
+    })
 
     if (isPending) return <Loading />;
     if (isError) return <Error />;
@@ -29,7 +35,7 @@ export default function Sections() {
             <AppBar>
                 <PageTitle
                     title="Fields"
-                    subtitle={name}
+                    subtitle={model?.name}
                     icon={<FieldIcon size={50} />}
                 />
                 <AddSection />

@@ -176,7 +176,7 @@ export type CustomerDoc = {
 
 export type Section = {
     _id: string;
-    collection: SectionCollection;
+    modelId: string;
     name: string;
 }
 

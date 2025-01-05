@@ -11,17 +11,19 @@ type Output = Array<Section & {
 
 
 type Input = {
-    collection: SectionCollection;
+    modelId?: string | null;
 }
 
 export async function getSections(input: Input) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { collection } = validators.input<Input>(input);
+    const { modelId } = validators.input<Input>(input);
+
+    if (!modelId) return []
     
     const sectionsCollection = db.collection<Section>('sections')
-    const sections = await sectionsCollection.find({ collection }).toArray()
+    const sections = await sectionsCollection.find({ modelId }).toArray()
 
     const fields = await Promise.all(sections.map(async section => ({
         ...section,

@@ -1,7 +1,7 @@
 import { SectionCollection } from "@/types/collections";
 
 export const sectionKeys = {
-    all: (collection: SectionCollection) => ['sections', collection],
+    all: (modelId?: string | null) => modelId ? ['sections', modelId] : ['sections'],
 }
 
 export const collectionKeys = {
@@ -25,5 +25,6 @@ export const linkKeys = {
 }
 
 export const modelKeys = {
-    all: () => ['models']
+    all: () => ['models'],
+    id: (id?: string | null) => id ? [...modelKeys.all(), id] : modelKeys.all()
 }

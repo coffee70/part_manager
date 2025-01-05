@@ -18,3 +18,10 @@ export function useURLMetadata() {
 
     return { id, collection, name };
 }
+
+export function useFieldURL() {
+    const searchParams = useSearchParams();
+    const modelId = searchParams.get('modelId');
+
+    return { modelId };
+}
