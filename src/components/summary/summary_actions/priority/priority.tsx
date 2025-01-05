@@ -6,20 +6,19 @@ import PriorityButton from './priority_button'
 import { priorities, type Priority } from '@/types/collections'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePriority } from '@/server/priority/update_priority'
-import { collectionKeys } from '@/lib/query_keys'
-import { useURLMetadata } from '@/hooks/url_metadata.hook'
+import { useInstanceURL, useURLMetadata } from '@/hooks/url_metadata.hook'
+import { instanceKeys } from '@/lib/query_keys'
 
 export default function Priority({ priority }: { priority: Priority }) {
-
-    const { collection, id } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: updatePriority,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
         }
     })
 
@@ -31,7 +30,10 @@ export default function Priority({ priority }: { priority: Priority }) {
             <DropdownMenuContent>
                 <DropdownMenuGroup>
                     {Object.values(priorities).map((p, index) => (
-                        <DropdownMenuItem key={index} onClick={() => mutate({ id, collection, priority: p })}>
+                        <DropdownMenuItem
+                            key={index}
+                            onClick={() => mutate({ modelId, instanceId, priority: p })}
+                        >
                             <PriorityItem priority={p} />
                         </DropdownMenuItem>
                     ))}

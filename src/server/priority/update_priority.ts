@@ -1,28 +1,28 @@
 'use server'
-import { Priority, SectionCollection } from "@/types/collections";
-import { validators } from "../validators/validators";
+import { InstanceDoc, priorities } from "@/types/collections";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
+import { z } from "zod";
 
-type Input = {
-    id: string | null;
-    collection: SectionCollection;
-    priority: Priority;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    priority: z.enum(priorities)
+})
 
-export async function updatePriority(input: Input) {
+export async function updatePriority(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, collection: _collection, priority } = validators.input<Input>(input);
+    const { modelId, instanceId, priority } = InputSchema.parse(input);
 
-    if (!id) throw new Error('id is required');
+    if (!instanceId) throw new Error('instanceId is required');
 
-    const collection = db.collection(_collection);
+    const instanceCollection = db.collection<InstanceDoc>(modelId);
 
-    await collection.updateOne({
-        _id: new ObjectId(id)
+    await instanceCollection.updateOne({
+        _id: new ObjectId(instanceId)
     }, {
         $set: {
             priority,
