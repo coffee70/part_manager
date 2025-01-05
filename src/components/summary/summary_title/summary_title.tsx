@@ -8,13 +8,11 @@ type Props = {
         label: string
         href: string
     }[];
-    children: React.ReactNode;
 }
 
-export default function SummaryTitle({ title, titleKey, items, children }: Props) {
+export default function SummaryTitle({ title, titleKey, items }: Props) {
     return (
         <div className="flex items-center space-x-4">
-            {children}
             <div className="flex flex-col">
                 {/** The padding on the breadcrumb matches the built in padding to the Title component */}
                 <div className="pl-1">

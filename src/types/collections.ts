@@ -9,16 +9,6 @@ export type FieldType =
     | 'paragraph'
     | 'select'
 
-export const sectionCollections = ['customerOrders', 'shopOrders', 'parts', 'serials', 'customers'] as const;
-
-export type SectionCollection = typeof sectionCollections[number];
-
-export type AttachmentCollection =
-    | 'customerOrders'
-    | 'shopOrders'
-    | 'parts'
-    | 'serials'
-
 export const priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as const;
 
 export type Priority = typeof priorities[number];
@@ -51,89 +41,7 @@ export const priorityInfo: Record<Priority, PriorityInfo> = {
     },
 } as const;
 
-export const sortKeys: Record<SectionCollection, readonly [string, ...string[]]> = {
-    customerOrders: ['number', 'priority', 'updatedAt'] as const,
-    shopOrders: ['number', 'priority', 'updatedAt'] as const,
-    parts: ['number', 'updatedAt'] as const,
-    serials: ['number', 'priority', 'updatedAt'] as const,
-    customers: ['name', 'updatedAt'] as const,
-}
-
-export type CustomerOrder = {
-    _id: string;
-    customerId: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-} & Valuable
-
-export type CustomerOrderDoc = {
-    _id: ObjectId;
-    customerId: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-    & Valuable
-    & CommentableDoc
-    & AttachableDoc
-
-export type ShopOrder = {
-    _id: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-} & Valuable
-
-export type ShopOrderDoc = {
-    _id: ObjectId;
-    number: string;
-    priority: Priority;
-    notes: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-    & Valuable
-    & CommentableDoc
-    & AttachableDoc
-
-export type Part = {
-    _id: string;
-    number: string;
-    notes: string;
-} & Valuable
-
-export type PartDoc = {
-    _id: ObjectId;
-    number: string;
-    notes: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-    & Valuable
-    & CommentableDoc
-    & AttachableDoc
-
-export type Serial = {
-    _id: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-} & Valuable
-
-export type SerialDoc = {
-    _id: ObjectId;
-    number: string;
-    priority: Priority;
-    notes: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-    & Valuable
-    & CommentableDoc
-    & AttachableDoc
+export const sortKeys = ['updatedAt', 'priority', 'number'] as const;
 
 export interface Attachable {
     attachments: {
@@ -156,23 +64,6 @@ export interface Valuable {
 export type Values = {
     [key: string]: string | string[] | undefined;
 }
-
-export type Customer = {
-    _id: string;
-    name: string;
-    notes: string;
-} & Valuable
-
-export type CustomerDoc = {
-    _id: ObjectId;
-    name: string;
-    notes: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-& Valuable
-& CommentableDoc
-& AttachableDoc
 
 export type Section = {
     _id: string;
@@ -239,8 +130,8 @@ export interface CommentableDoc {
 export type LinkableDoc = {
     links: {
         _id: ObjectId;
-        model: SectionCollection;
         modelId: string;
+        instanceId: string;
     }[];
 };
 
@@ -263,6 +154,29 @@ export type Model = {
     commentable: boolean;
     color: string;
 }
+
+export type InstanceDoc = {
+    _id: ObjectId;
+    number: string;
+    priority: Priority;
+    notes: string;
+    updatedAt: Date;
+    updatedById: string;
+}
+& Valuable
+& CommentableDoc
+& AttachableDoc
+& LinkableDoc
+
+export type Instance = {
+    _id: string;
+    number: string;
+    priority: Priority;
+    notes: string;
+    updatedAt: Date;
+    updatedById: string;
+}
+& Valuable
 
 // Utility function to get entries with preserved key types
 // this ensures the keys for links are typed as SectionCollection and not string

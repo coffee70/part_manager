@@ -1,5 +1,5 @@
 'use server'
-import { CommentableDoc, SectionCollection, UserDoc } from "@/types/collections";
+import { CommentableDoc, UserDoc } from "@/types/collections";
 import { z } from "zod";
 import { validators } from "../validators/validators";
 import { db } from "@/lib/db";
@@ -8,7 +8,7 @@ import { getCurrentSession } from "../auth/get_current_session";
 
 const OutputSchema = z.object({
     comments: z.array(z.object({
-        _id: z.string(),
+        _id: z.custom<ObjectId>().transform(value => value.toString()),
         text: z.string(),
         updatedAt: z.string(),
         user: z.object({
@@ -20,31 +20,23 @@ const OutputSchema = z.object({
 })
 
 const InputSchema = z.object({
-    id: z.string().nullable().optional(),
-    collection: z.custom<SectionCollection>(),
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
 })
 
 export async function getComments(input: z.infer<typeof InputSchema>) {
     const { user: currentUser } = await getCurrentSession();
     if (!currentUser) throw new Error('Unauthorized');
 
-    const { id, collection: _collection } = validators.input<z.infer<typeof InputSchema>>(input);
-
-    if (!id) {
-        throw new Error("id is required");
-    }
-
-    const collection = db.collection<CommentableDoc>(_collection);
-    const document = await collection.findOne({ _id: new ObjectId(id) });
-
-    if (!document) {
-        throw new Error("document not found");
-    }
+    const { modelId, instanceId } = validators.input<z.infer<typeof InputSchema>>(input);
+    if (!instanceId) throw new Error("id is required");
+    
+    const collection = db.collection<CommentableDoc>(modelId);
+    const document = await collection.findOne({ _id: new ObjectId(instanceId) });
+    if (!document) throw new Error("document not found");
 
     if (!document.comments) {
-        return validators.output<z.infer<typeof OutputSchema>>({
-            comments: [],
-        })
+        return OutputSchema.parse({ comments: [] });
     }
 
     const userCollection = db.collection<UserDoc>('users');
@@ -61,9 +53,5 @@ export async function getComments(input: z.infer<typeof InputSchema>) {
         }
     }))
 
-    const serialized = JSON.parse(JSON.stringify(comments));
-
-    return validators.output<z.infer<typeof OutputSchema>>({
-        comments: serialized,
-    })
+    return OutputSchema.parse({ comments });
 }

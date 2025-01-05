@@ -6,6 +6,7 @@ import { FieldIcon, ModelIcon, UserIcon } from "@/components/ui/icons/icons";
 import { modelKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { getModels } from "@/server/models/get_models";
+import { instanceURL } from "@/lib/url";
 
 export default function SideNavigation() {
 
@@ -25,7 +26,7 @@ export default function SideNavigation() {
                     <ModelItem
                         key={model._id}
                         label={model.name}
-                        href={`/instances/${model._id}`}
+                        href={instanceURL(model._id)}
                         color={model.color}
                     />
                 ))}

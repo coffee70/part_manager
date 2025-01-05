@@ -1,5 +1,5 @@
 'use server'
-import { AttachableDoc, LinkableDoc, SectionCollection } from "@/types/collections";
+import { AttachableDoc, Instance, InstanceDoc, LinkableDoc, SectionCollection } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { validators } from "../validators/validators";
 import { ObjectId } from "mongodb";
@@ -8,27 +8,29 @@ import { redirect } from "next/navigation";
 import { collectionToUrl } from "@/lib/conversions";
 import { deleteAttachment } from "../attachments/delete_attachment";
 import { deleteLink } from "../links/delete_link";
+import { z } from "zod";
+import { instanceURL } from "@/lib/url";
 
-type Input = {
-    id: string | null;
-    urlId: string | null;
-    model: SectionCollection;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    urlInstanceId: z.string().nullable().optional(),
+})
 
 type Potentials = Partial<AttachableDoc & LinkableDoc>;
 
-export async function deleteModel(input: Input) {
+export async function deleteModel(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, urlId, model } = validators.input<Input>(input);
+    const { modelId, instanceId, urlInstanceId } = InputSchema.parse(input);
 
-    if (!id) throw new Error('Invalid ID');
+    if (!instanceId) throw new Error('Instance ID is required');
 
-    const collection = db.collection(model);
+    const instanceCollection = db.collection<InstanceDoc>(modelId);
 
     // get the document
-    const document = await collection.findOne<Potentials>({ _id: new ObjectId(id) });
+    const document = await instanceCollection.findOne<Potentials>({ _id: new ObjectId(instanceId) });
     if (!document) return;
 
     // delete the attachments
@@ -53,9 +55,9 @@ export async function deleteModel(input: Input) {
         }
     }
 
-    await collection.deleteOne({ _id: new ObjectId(id) });
+    await instanceCollection.deleteOne({ _id: new ObjectId(instanceId) });
 
-    if (urlId === id) {
-        redirect(`/${collectionToUrl[model]}`)
+    if (urlInstanceId === instanceId) {
+        redirect(instanceURL(modelId));
     }
 }

@@ -1,15 +1,10 @@
 'use client'
-import {
-    Tabs,
-    TabsList,
-    TabsTrigger,
-    TabsContent,
-} from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import Input from './fields/input';
 import Textarea from './fields/textarea';
 import Select from './fields/select';
 import { Values } from '@/types/collections';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getSections } from '@/server/sections/get_sections';
 import { sectionKeys } from '@/lib/query_keys';
 import { useQuery } from '@tanstack/react-query';
@@ -20,12 +15,12 @@ type Props = {
 }
 
 export default function Fields({ fieldState, setFieldState }: Props) {
-
-    const { collection } = useURLMetadata();
+    
+    const { modelId } = useInstanceURL();
 
     const { data: sections } = useQuery({
-        queryKey: sectionKeys.all(collection),
-        queryFn: () => getSections({ collection }),
+        queryKey: sectionKeys.all(modelId),
+        queryFn: () => getSections({ modelId }),
     })
 
     if (!sections

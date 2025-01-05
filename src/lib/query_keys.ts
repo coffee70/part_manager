@@ -1,12 +1,10 @@
-import { SectionCollection } from "@/types/collections";
-
 export const sectionKeys = {
     all: (modelId?: string | null) => modelId ? ['sections', modelId] : ['sections'],
 }
 
-export const collectionKeys = {
-    all: (collection: SectionCollection) => [collection],
-    id: (collection: SectionCollection, id?: string | null) => [collection, id]
+export const instanceKeys = {
+    all: (modelId: string) => ['instances', modelId],
+    id: (modelId: string, instanceId?: string | null) => [...instanceKeys.all(modelId), instanceId]
 }
 
 export const userKeys = {
@@ -16,12 +14,12 @@ export const userKeys = {
 }
 
 export const commentKeys = {
-    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'comments']
+    all: (modelId: string, instanceId?: string | null) => ['comments', modelId, instanceId],
 }
 
 export const linkKeys = {
-    all: (collection: SectionCollection, id?: string | null) => [collection, id, 'links'],
-    one: (collection: SectionCollection, linkId: string, id?: string | null) => [collection, id, linkId]
+    all: (modelId: string, instanceId?: string | null) => ['links', modelId, instanceId],
+    one: (modelId: string, linkId: string, instanceId?: string | null, ) => [...linkKeys.all(modelId, instanceId), linkId]
 }
 
 export const modelKeys = {

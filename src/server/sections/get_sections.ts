@@ -1,6 +1,6 @@
 'use server'
 import { db } from "@/lib/db"
-import { Field, Section, SectionCollection } from "@/types/collections";
+import { Field, Section } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
 import { validators } from "../validators/validators";
 import { getCurrentSession } from "../auth/get_current_session";
