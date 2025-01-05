@@ -180,6 +180,12 @@ export type Section = {
     name: string;
 }
 
+export type SectionDoc = {
+    _id: ObjectId;
+    modelId: string;
+    name: string;
+}
+
 export type Field = {
     _id: string;
     sectionId: string;

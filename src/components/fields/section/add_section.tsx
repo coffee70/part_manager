@@ -6,22 +6,21 @@ import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
-import { SectionCollection } from '@/types/collections';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 
 type FormState = {
     name: string,
-    collection: SectionCollection,
+    modelId?: string | null,
 }
 
 export default function AddSection() {
-    const { collection } = useURLMetadata();
+    const { modelId } = useFieldURL();
 
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({
         name: '',
-        collection: collection,
+        modelId: modelId,
     })
 
     const queryClient = useQueryClient();
@@ -29,14 +28,14 @@ export default function AddSection() {
     const { mutate } = useMutation({
         mutationFn: createSection,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) });
             setOpen(false);
         }
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate({ section: formState });
+        mutate(formState);
     }
 
     return (
