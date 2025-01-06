@@ -5,31 +5,25 @@ import { ObjectId } from "mongodb";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { z } from "zod";
 
-export async function createAttachment(formData: FormData) {
-    const { file, collection, modelId } = z.object({
-        file: z.custom<File>(),
-        collection: z.string(),
-        modelId: z.string()
-    }).parse({
-        file: formData.get('file'),
-        collection: formData.get('collection'),
-        modelId: formData.get('modelId')
-    })
+const FormDataSchema = z.object({
+    file: z.custom<File>(),
+    modelId: z.string(),
+    instanceId: z.string()
+})
 
+export async function createAttachment(formData: FormData) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized')
 
-    if (!modelId) {
-        throw new Error('No model id provided')
-    }
-    const _id = new ObjectId(modelId)
+    const { file, modelId, instanceId } = FormDataSchema.parse(Object.fromEntries(formData))
+    if (!instanceId) throw new Error('No instanceId provided');
     
-    const attachable = db.collection<AttachableDoc>(collection)
+    const instanceCollection = db.collection<AttachableDoc>(modelId)
     const attachmentId = new ObjectId()
 
-    attachable.updateOne(
+    instanceCollection.updateOne(
         {
-            _id: _id
+            _id: new ObjectId(instanceId)
         },
         {
             $push: {

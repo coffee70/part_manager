@@ -44,10 +44,10 @@ export default function SummaryContainer() {
             </SummaryToolbar>
             <SummarySections values={instance.values} />
             <SummaryNotes initialValue={instance.notes} />
-            <SummaryAttachments files={instance.attachments} />
-            <SummaryLinks />
+            <SummaryAttachments />
+            {/* <SummaryLinks /> */}
             {/* <SummaryPeople people={order.people} />  */}
-            <SummaryActivity />
+            {/* <SummaryActivity /> */}
         </SummaryLayout>
     )
 }

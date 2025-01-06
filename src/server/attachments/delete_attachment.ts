@@ -1,32 +1,31 @@
 'use server'
-import { AttachableDoc, SectionCollection } from "@/types/collections";
+import { AttachableDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
-import { validators } from "../validators/validators";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
+import { z } from "zod";
 
-type Input = {
-    id: string | null;
-    modelId: string | null;
-    model: SectionCollection;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    attachmentId: z.string(),
+})
 
-export async function deleteAttachment(input: Input) {
+export async function deleteAttachment(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, modelId, model } = validators.input<Input>(input);
+    const { modelId, instanceId, attachmentId } = InputSchema.parse(input);
 
-    if (!id) throw new Error('Invalid Attachment ID');
-    if (!modelId) throw new Error('Invalid Model ID');
+    if (!instanceId) throw new Error('instance Id is required');
 
-    const collection = db.collection<AttachableDoc>(model);
+    const instanceCollection = db.collection<AttachableDoc>(modelId);
 
     // attempt to remove attachment in db
-    await collection.updateOne({ _id: new ObjectId(modelId) }, {
+    await instanceCollection.updateOne({ _id: new ObjectId(instanceId) }, {
         $pull: {
             attachments: {
-                _id: new ObjectId(id)
+                _id: new ObjectId(attachmentId)
             }
         },
         $set: {
@@ -36,7 +35,7 @@ export async function deleteAttachment(input: Input) {
     })
 
     // attempt to remove file in file-service
-    await fetch(`${process.env.FILE_DELETE_URL}${id}`, {
+    await fetch(`${process.env.FILE_DELETE_URL}${attachmentId}`, {
         method: 'DELETE'
     })
 }

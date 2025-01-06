@@ -26,3 +26,8 @@ export const modelKeys = {
     all: () => ['models'],
     id: (id?: string | null) => id ? [...modelKeys.all(), id] : modelKeys.all()
 }
+
+export const attachmentKeys = {
+    all: (modelId: string, instanceId?: string | null) => ['attachments', modelId, instanceId],
+    one: (modelId: string, instanceId: string, attachmentId: string) => [...attachmentKeys.all(modelId, instanceId), attachmentId]
+}
