@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input'
 import { useIsEditing } from './is_editing.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateFieldValue } from '@/server/fields/update_field_value'
-import { useURLMetadata } from '@/hooks/url_metadata.hook'
-import { collectionKeys } from '@/lib/query_keys'
+import { useInstanceURL } from '@/hooks/url_metadata.hook'
+import { instanceKeys, sectionKeys } from '@/lib/query_keys'
 
 type FieldComponentProps = {
     type: React.InputHTMLAttributes<HTMLInputElement>['type'];
@@ -39,7 +39,7 @@ export default function InputField({ field }: Props) {
         setValue(field.value ?? '')
     }, [field.value])
 
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
@@ -48,9 +48,9 @@ export default function InputField({ field }: Props) {
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateFieldValue,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setIsEditing(false);
         }
     })
@@ -58,9 +58,9 @@ export default function InputField({ field }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId: id,
+            modelId,
+            instanceId,
             fieldId: field._id,
-            sectionCollection: collection,
             value
         });
     }

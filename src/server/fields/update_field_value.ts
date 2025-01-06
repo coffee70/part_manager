@@ -1,32 +1,28 @@
 'use server'
 import { db } from "@/lib/db"
 import { ObjectId } from "mongodb"
-import { Valuable, SectionCollection } from "@/types/collections"
+import { Valuable } from "@/types/collections"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 
-type Input = {
-    modelId: string | null;
-    fieldId: string;
-    sectionCollection: SectionCollection;
-    value?: string | string[];
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    fieldId: z.string(),
+    value: z.union([z.string(), z.array(z.string())]).optional(),
+})
 
-export async function updateFieldValue(input: Input) {
+export async function updateFieldValue(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { data, success, error } = z.custom<Input>().safeParse(input)
-    if (!success) {
-        throw new Error(error.message)
-    }
-    const { modelId, fieldId, sectionCollection, value } = data
-    if (!modelId) throw new Error('Cannot update field value without a model id')
+    const { modelId, instanceId, fieldId, value } = InputSchema.parse(input)
+    if (!instanceId) throw new Error('Cannot update field value without a model id')
     if (!value) return
 
-    const collection = db.collection<Valuable>(sectionCollection)
+    const instanceCollection = db.collection<Valuable>(modelId)
 
-    await collection.updateOne(
+    await instanceCollection.updateOne(
         { 
             _id: new ObjectId(modelId) 
         }, 

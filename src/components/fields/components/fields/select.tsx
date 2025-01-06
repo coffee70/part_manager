@@ -10,8 +10,8 @@ import { useIsEditing } from "./is_editing.hook";
 import { Combobox } from "@/components/ui/combobox/combobox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateFieldValue } from "@/server/fields/update_field_value";
-import { useURLMetadata } from "@/hooks/url_metadata.hook";
-import { collectionKeys } from '@/lib/query_keys';
+import { useInstanceURL } from "@/hooks/url_metadata.hook";
+import { instanceKeys, sectionKeys } from '@/lib/query_keys';
 import { Field } from '@/types/collections';
 
 type Props = {
@@ -29,16 +29,16 @@ export default function SelectField({ field }: Props) {
         setValue(field.value);
     }, [field.value]);
 
-    const { collection, id } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateFieldValue,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) });
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setIsEditing(false);
         }
     })
@@ -46,9 +46,9 @@ export default function SelectField({ field }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId: id,
+            modelId,
+            instanceId,
             fieldId: field._id,
-            sectionCollection: collection,
             value
         });
     }

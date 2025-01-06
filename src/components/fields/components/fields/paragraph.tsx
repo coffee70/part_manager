@@ -7,10 +7,10 @@ import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
 import { Textarea } from '@/components/ui/textarea'
-import { useURLMetadata } from '@/hooks/url_metadata.hook'
+import { useInstanceURL } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateFieldValue } from '@/server/fields/update_field_value'
-import { collectionKeys } from '@/lib/query_keys'
+import { instanceKeys, sectionKeys } from '@/lib/query_keys'
 import { Field } from '@/types/collections'
 
 function useIsEditing() {
@@ -53,7 +53,7 @@ export default function ParagraphField({ field }: Props) {
         setValue(field.value)
     }, [field.value])
 
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, textareaRef } = useIsEditing();
 
@@ -62,9 +62,9 @@ export default function ParagraphField({ field }: Props) {
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateFieldValue,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: collectionKeys.id(collection, id) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setIsEditing(false);
         }
     })
@@ -72,9 +72,9 @@ export default function ParagraphField({ field }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId: id,
+            modelId,
+            instanceId,
             fieldId: field._id,
-            sectionCollection: collection,
             value
         });
     }
