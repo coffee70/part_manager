@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { priorityInfo } from "@/types/collections";
 import { CheckIcon } from "lucide-react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useURLMetadata } from "@/hooks/url_metadata.hook";
+import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useQueryClient } from "@tanstack/react-query";
-import { collectionKeys } from "@/lib/query_keys";
+import { instanceKeys } from "@/lib/query_keys";
 
 export default function PriorityFilter() {
     const searchParams = useSearchParams();
@@ -17,7 +17,7 @@ export default function PriorityFilter() {
 
     const initialValue = searchParams.get('priority');
 
-    const { collection } = useURLMetadata();
+    const { modelId } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const handlePriorityChange = (label: string) => {
@@ -27,7 +27,7 @@ export default function PriorityFilter() {
         } else {
             params.set('priority', label);
         }
-        queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
         replace(`${pathname}?${params.toString()}`);
     }
 

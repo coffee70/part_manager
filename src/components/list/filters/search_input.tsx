@@ -4,16 +4,16 @@ import { Search, X } from "lucide-react"
 import { Input } from "../../ui/input";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
-import { useURLMetadata } from "@/hooks/url_metadata.hook";
+import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useQueryClient } from "@tanstack/react-query";
-import { collectionKeys } from "@/lib/query_keys";
+import { instanceKeys } from "@/lib/query_keys";
 
 const SearchInput = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const { collection } = useURLMetadata();
+  const { modelId } = useInstanceURL();
   const queryClient = useQueryClient();
 
   const initialValue = searchParams.get('search') || '';
@@ -24,7 +24,7 @@ const SearchInput = () => {
   const handleClear = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
-    queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+    queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
     replace(`${pathname}?${params.toString()}`);
     setValue('');
     if (inputRef.current) {
@@ -39,7 +39,7 @@ const SearchInput = () => {
     } else {
       params.delete('search');
     }
-    queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+    queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 

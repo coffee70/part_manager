@@ -2,9 +2,9 @@
 import { Calendar } from "../../ui/calendar";
 import { type DateRange } from 'react-day-picker';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { useQueryClient } from '@tanstack/react-query';
-import { collectionKeys } from '@/lib/query_keys';
+import { instanceKeys } from '@/lib/query_keys';
 
 type Props = {
     paramKey: string;
@@ -22,7 +22,7 @@ export default function DateRangeFilter({ paramKey }: Props) {
         to: initParam?.to ? new Date(initParam.to) : undefined,
     }
     
-    const { collection } = useURLMetadata();
+    const { modelId } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const onChange = (value: DateRange | undefined) => {
@@ -32,7 +32,7 @@ export default function DateRangeFilter({ paramKey }: Props) {
         } else {
             params.delete(paramKey);
         }
-        queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
         replace(`${pathname}?${params.toString()}`);
     }
 

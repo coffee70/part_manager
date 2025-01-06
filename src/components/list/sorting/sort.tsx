@@ -6,9 +6,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/compon
 import { SelectBase, SelectItem } from "@/components/ui/select";
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { camelCaseToLabel } from '@/lib/language';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { useQueryClient } from '@tanstack/react-query';
-import { collectionKeys } from '@/lib/query_keys';
+import { instanceKeys } from '@/lib/query_keys';
 
 type Props = {
     keys: readonly string[];
@@ -19,7 +19,7 @@ export default function Sort({ keys }: Props) {
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const { collection } = useURLMetadata();
+    const { modelId } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const sort_by = searchParams.get('sort_by');
@@ -45,7 +45,7 @@ export default function Sort({ keys }: Props) {
             params.set('sort_by', key);
             params.set('sort_order', 'asc');
         }
-        queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
         replace(`${pathname}?${params.toString()}`);
     }
 
