@@ -17,6 +17,7 @@ export async function updateFieldValue(input: z.input<typeof InputSchema>) {
     if (!user) throw new Error('Unauthorized');
 
     const { modelId, instanceId, fieldId, value } = InputSchema.parse(input)
+
     if (!instanceId) throw new Error('Cannot update field value without a model id')
     if (!value) return
 
@@ -24,7 +25,7 @@ export async function updateFieldValue(input: z.input<typeof InputSchema>) {
 
     await instanceCollection.updateOne(
         { 
-            _id: new ObjectId(modelId) 
+            _id: new ObjectId(instanceId) 
         }, 
         { 
             $set: { 
