@@ -7,7 +7,7 @@ type Props = {
         user: {
             name: string;
         };
-        updatedAt: string;
+        updatedAt: Date;
         text: string;
         editable: boolean;
         deletable: boolean;
