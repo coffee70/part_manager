@@ -6,7 +6,7 @@ import PriorityButton from './priority_button'
 import { priorities, type Priority } from '@/types/collections'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updatePriority } from '@/server/priority/update_priority'
-import { useInstanceURL, useURLMetadata } from '@/hooks/url_metadata.hook'
+import { useInstanceURL } from '@/hooks/url_metadata.hook'
 import { instanceKeys } from '@/lib/query_keys'
 
 export default function Priority({ priority }: { priority: Priority }) {
