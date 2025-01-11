@@ -13,6 +13,8 @@ import { sectionKeys } from "@/lib/query_keys"
 import { useFieldURL } from "@/hooks/url_metadata.hook"
 import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { deleteField } from "@/server/fields/delete_field"
+import { Button } from "@/components/ui/button"
+import Loader from "@/components/ui/loader"
 
 type Props = {
     _id: string
@@ -26,7 +28,7 @@ export default function DeleteField({ _id, open, onOpenChange }: Props) {
 
     const queryClient = useQueryClient()
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: () => deleteField({ _id }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
@@ -42,7 +44,12 @@ export default function DeleteField({ _id, open, onOpenChange }: Props) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => mutate()}>Delete</AlertDialogAction>
+                    <Button
+                        disabled={isPending}
+                        onClick={() => mutate()}
+                    >
+                        {isPending ? <Loader /> : 'Delete'}
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

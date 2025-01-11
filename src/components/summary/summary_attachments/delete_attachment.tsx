@@ -16,6 +16,7 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog';
 import { attachmentKeys, instanceKeys } from '@/lib/query_keys';
+import Loader from '@/components/ui/loader';
 
 type Props = {
     file: {
@@ -31,7 +32,8 @@ export default function DeleteAttachment({ file, hovered }: Props) {
     const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
-    const { mutate } = useMutation({
+
+    const { mutate, isPending } = useMutation({
         mutationFn: () => deleteAttachment({ modelId, instanceId, attachmentId: file._id }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: attachmentKeys.all(modelId, instanceId) });
@@ -60,7 +62,12 @@ export default function DeleteAttachment({ file, hovered }: Props) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <Button onClick={() => mutate()}>Delete</Button>
+                    <Button 
+                    onClick={() => mutate()}
+                    disabled={isPending}
+                    >
+                        {isPending ? <Loader /> : 'Delete'}
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

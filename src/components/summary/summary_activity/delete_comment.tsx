@@ -65,7 +65,9 @@ export default function DeleteComment({ id }: Props) {
                     <Button
                         onClick={() => mutate()}
                         disabled={isPending}
-                    >{isPending ? <Loader /> : "Delete"}</Button>
+                    >
+                        {isPending ? <Loader /> : "Delete"}
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

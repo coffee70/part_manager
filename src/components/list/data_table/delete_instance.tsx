@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { getModel } from '@/server/models/get_model';
+import Loader from '@/components/ui/loader';
 
 type Props = {
     id: string;
@@ -29,7 +30,7 @@ export default function DeleteInstance({ id: instanceId }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: () => deleteModel({ modelId, instanceId, urlInstanceId }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
@@ -51,7 +52,12 @@ export default function DeleteInstance({ id: instanceId }: Props) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <Button onClick={() => mutate()}>Delete</Button>
+                        <Button
+                            onClick={() => mutate()}
+                            disabled={isPending}
+                        >
+                            {isPending ? <Loader /> : 'Delete'}
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

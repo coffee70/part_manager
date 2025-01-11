@@ -6,7 +6,6 @@ import { Role, type User } from '@/types/collections';
 import { More } from "@/components/ui/more";
 import UserForm from './user_form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useConfirm } from '@/hooks/confirm.hook';
 import { deleteUser } from '@/server/users/delete_user';
 import { userKeys } from '@/lib/query_keys';
 import {
@@ -21,6 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import Loader from '../ui/loader';
 
 export default function User({ user }: { user: User }) {
     const [editOpen, setEditOpen] = React.useState(false)
@@ -28,14 +28,8 @@ export default function User({ user }: { user: User }) {
 
     const queryClient = useQueryClient()
 
-    const { confirm, handleConfirm, handleCancel } = useConfirm()
-
-    const { mutate, isError, error } = useMutation({
-        mutationFn: async () => {
-            setDeleteOpen(true)
-            const ans = await confirm()
-            if (ans) await deleteUser({ _id: user._id })
-        },
+    const { mutate, isError, error, isPending } = useMutation({
+        mutationFn: () => deleteUser({ _id: user._id }),
         onSuccess: () => {
             setDeleteOpen(false)
             queryClient.invalidateQueries({ queryKey: userKeys.all() })
@@ -57,7 +51,7 @@ export default function User({ user }: { user: User }) {
                         <DropdownMenuContent>
                             <DropdownMenuGroup>
                                 <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => mutate()}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
                             </DropdownMenuGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -82,8 +76,13 @@ export default function User({ user }: { user: User }) {
                         <AlertDescription>{error.message}</AlertDescription>
                     </Alert>}
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-                        <Button onClick={handleConfirm}>Delete</Button>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <Button
+                            onClick={() => mutate()}
+                            disabled={isPending}
+                        >
+                            {isPending ? <Loader /> : 'Delete'}
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

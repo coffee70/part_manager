@@ -18,6 +18,7 @@ import {
 import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { useSectionContext } from '../section.context';
+import Loader from '@/components/ui/loader';
 
 export default function DeleteSection() {
     const { section } = useSectionContext();
@@ -26,7 +27,7 @@ export default function DeleteSection() {
     const { modelId } = useFieldURL();
     const queryClient = useQueryClient()
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: () => deleteSection({ _id }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
@@ -58,7 +59,12 @@ export default function DeleteSection() {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <Button onClick={() => mutate()}>Delete</Button>
+                    <Button
+                        onClick={() => mutate()}
+                        disabled={isPending}
+                    >
+                        {isPending ? <Loader /> : 'Delete'}
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
