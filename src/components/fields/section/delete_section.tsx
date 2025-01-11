@@ -14,29 +14,22 @@ import {
     AlertDialogTitle,
     AlertDialogFooter,
     AlertDialogCancel,
-    AlertDialogAction
-} from '../../ui/alert-dialog';
-import { useConfirm } from '@/hooks/confirm.hook';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+} from '@/components/ui/alert-dialog';
+import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { useSectionContext } from '../section.context';
 
 export default function DeleteSection() {
     const { section } = useSectionContext();
     const { _id } = section;
-    
-    const { collection } = useURLMetadata();
+
+    const { modelId } = useFieldURL();
     const queryClient = useQueryClient()
 
-    const { confirm, handleConfirm, handleCancel } = useConfirm()
-
     const { mutate } = useMutation({
-        mutationFn: async () => {
-            const ans = await confirm()
-            if (ans) await deleteSection({ _id })
-        },
+        mutationFn: () => deleteSection({ _id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(collection) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
         }
     })
 
@@ -45,11 +38,7 @@ export default function DeleteSection() {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <AlertDialogTrigger asChild>
-                        <Button
-                            variant='icon'
-                            size='icon'
-                            onClick={() => mutate()}
-                        >
+                        <Button variant='icon' size='icon'>
                             <div className="flex items-center">
                                 <Trash2Icon size={16} />
                             </div>
@@ -68,8 +57,8 @@ export default function DeleteSection() {
                     <AlertDialogDescription>Are you sure you want to delete this section?</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirm}>Delete</AlertDialogAction>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button onClick={() => mutate()}>Delete</Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

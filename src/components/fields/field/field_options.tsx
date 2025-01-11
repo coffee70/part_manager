@@ -10,7 +10,7 @@ import {
 import { More } from "@/components/ui/more";
 import FieldForm from './field_form';
 import { FieldType } from '@/types/collections';
-import DeleteField, { useDeleteField } from './delete_field';
+import DeleteField from './delete_field';
 
 type Props = {
     field: {
@@ -30,12 +30,6 @@ export default function FieldOptions({ field }: Props) {
     const [deleteOpen, setDeleteOpen] = React.useState(false)
     const [editOpen, setEditOpen] = React.useState(false)
 
-    const {
-        handleConfirm,
-        handleCancel,
-        mutate
-     } = useDeleteField({ _id: field._id })
-
     return (
         <>
             <DropdownMenu>
@@ -44,7 +38,7 @@ export default function FieldOptions({ field }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => mutate({ setOpen: setDeleteOpen })}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
@@ -54,8 +48,6 @@ export default function FieldOptions({ field }: Props) {
                 _id={field._id}
                 open={deleteOpen}
                 onOpenChange={setDeleteOpen}
-                handleCancel={handleCancel}
-                handleConfirm={handleConfirm}
             />
 
             <FieldForm

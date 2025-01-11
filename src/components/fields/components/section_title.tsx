@@ -4,14 +4,14 @@ import Field from "@/components/ui/field";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSection } from '@/server/sections/update_section';
 import { sectionKeys } from '@/lib/query_keys';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { useSectionContext } from '../section.context';
 
 export default function SectionTitle() {
     const { section } = useSectionContext();
     const { _id, name } = section;
 
-    const { collection } = useURLMetadata();
+    const { modelId } = useFieldURL();
 
     const [formState, setFormState] = React.useState({
         name: name,
@@ -22,7 +22,7 @@ export default function SectionTitle() {
     const { mutate, isPending } = useMutation({
         mutationFn: updateSection,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(collection) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
         }
     })
 
