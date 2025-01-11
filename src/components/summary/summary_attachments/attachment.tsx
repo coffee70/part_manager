@@ -1,24 +1,9 @@
 'use client'
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent } from '@/components/ui/dialog';
-import { Trash2Icon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { useInstanceURL } from '@/hooks/url_metadata.hook';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteAttachment } from '@/server/attachments/delete_attachment';
-import {
-    AlertDialog,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
-import { attachmentKeys, instanceKeys } from '@/lib/query_keys';
 import { Document, Thumbnail, pdfjs } from 'react-pdf';
+import DeleteAttachment from './delete_attachment';
+import AttachmentViewer from './attachment_viewer';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -35,8 +20,7 @@ const SCALE = 0.25;
 const WIDTH_TOLERANCE = 2;
 
 export default function Attachment({ file }: Props) {
-    const [openPreview, setOpenPreview] = React.useState<boolean>(false)
-    const [openDelete, setOpenDelete] = React.useState<boolean>(false)
+    const [open, setOpen] = React.useState<boolean>(false)
 
     const [hovered, setHovered] = React.useState<boolean>(false)
     const [width, setWidth] = React.useState<number>(0)
@@ -48,20 +32,6 @@ export default function Attachment({ file }: Props) {
         setWidth(viewport.width + WIDTH_TOLERANCE);
     }
 
-    const { modelId, instanceId } = useInstanceURL();
-
-    const queryClient = useQueryClient();
-
-    const { mutate } = useMutation({
-        mutationFn: () => deleteAttachment({ modelId, instanceId, attachmentId: file._id }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: attachmentKeys.all(modelId, instanceId) });
-            // updates the table view to show the updated at change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
-            setOpenDelete(false);
-        }
-    })
-
     React.useEffect(() => {
         async function fetchBlob() {
             const blob = await fetch(`data:${file.type};base64,${file.base64}`).then(res => res.blob());
@@ -70,13 +40,6 @@ export default function Attachment({ file }: Props) {
         fetchBlob();
     }, [file])
 
-    React.useEffect(() => {
-        async function fetchBlob() {
-            const blob = await fetch(`data:${file.type};base64,${file.base64}`).then(res => res.blob());
-            setBlob(blob);
-        }
-        fetchBlob();
-    }, [file])
     return (
         <>
             <div
@@ -85,7 +48,7 @@ export default function Attachment({ file }: Props) {
                 style={{ width }}
             >
                 <div
-                    onClick={() => setOpenPreview(true)}
+                    onClick={() => setOpen(true)}
                     aria-label={`attachment_preview_${file.name}`}
                 >
                     <Document
@@ -96,49 +59,16 @@ export default function Attachment({ file }: Props) {
                         <Thumbnail
                             scale={0.25}
                             pageNumber={1}
-                            onItemClick={() => setOpenPreview(true)}
+                            onItemClick={() => setOpen(true)}
                         />
                     </Document>
                 </div>
                 <div className={cn('flex items-center justify-between bg-foreground', !hovered ? 'invisible' : '')}>
                     <div className='text-sm p-2 overflow-hidden whitespace-nowrap text-ellipsis'>{file.name}</div>
-                    <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
-                        <AlertDialogTrigger asChild>
-                            <Button
-                                variant='icon'
-                                disabled={!hovered}
-                                className='p-2'
-                                aria-label={`delete_attachment_${file.name}`}
-                            >
-                                <Trash2Icon strokeWidth={1} size={20} />
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Attachment</AlertDialogTitle>
-                                <AlertDialogDescription>Are you sure you want to delete this attachment?</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <Button onClick={() => mutate()}>Delete</Button>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    <DeleteAttachment file={file} hovered={hovered} />
                 </div>
             </div>
-            <Dialog open={openPreview} onOpenChange={setOpenPreview}>
-                <DialogContent>
-                    <DialogTitle>{file.name}</DialogTitle>
-                    <div
-                        className='border border-border'
-                        aria-label={`attachment_viewer_${file.name}`}
-                    >
-                        <Document file={blob}>
-                            <Thumbnail pageNumber={1} />
-                        </Document>
-                    </div>
-                </DialogContent>
-            </Dialog>
+            <AttachmentViewer file={file} open={open} setOpen={setOpen} />
         </>
     )
 }
