@@ -1,4 +1,3 @@
-import { SectionCollection } from "@/types/collections";
 import { AlignLeftIcon, BoxesIcon, Building2Icon, DraftingCompassIcon, FactoryIcon, GalleryHorizontalEndIcon, HammerIcon, UserIcon as LucideUserIcon } from "lucide-react"
 
 type Props = {
@@ -67,21 +66,4 @@ export function UserIcon({ size }: Props) {
             <LucideUserIcon size={size} />
         </div>
     )
-}
-
-export function CollectionIcon({ size, collection }: { size?: number, collection: SectionCollection }) {
-    switch (collection) {
-        case 'customerOrders':
-            return <CustomerOrderIcon size={size} />
-        case 'shopOrders':
-            return <ShopOrderIcon size={size} />
-        case 'parts':
-            return <PartIcon size={size} />
-        case 'serials':
-            return <SerialIcon size={size} />
-        case 'customers':
-            return <CustomerIcon size={size} />
-        default:
-            return null
-    }
 }
