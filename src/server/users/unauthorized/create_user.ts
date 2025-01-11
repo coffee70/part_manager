@@ -9,7 +9,7 @@ import { setSessionTokenCookie } from "@/lib/cookies";
 import { redirect } from "next/navigation";
 
 type Input = {
-    user: Create<User>;
+    user: Create<User> & { password: string };
 }
 
 export async function unauthorized_createUser(input: Input) {
