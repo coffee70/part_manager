@@ -3,17 +3,16 @@ import React from "react";
 import Input from "@/components/models/fields/input";
 import Select from "@/components/models/fields/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useURLMetadata } from "@/hooks/url_metadata.hook";
-import { collectionToName, nameToCollection } from "@/lib/conversions";
-import { SectionCollection, sectionCollections } from "@/types/collections";
+import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLink } from "@/server/links/create_link";
-import { linkKeys } from "@/lib/query_keys";
+import { linkKeys, modelKeys } from "@/lib/query_keys";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { getModels } from "@/server/models/get_models";
 
 type Props = {
     open: boolean;
@@ -21,29 +20,34 @@ type Props = {
 }
 
 type FormState = {
-    model: SectionCollection;
-    modelId: string | null;
-    linkedModel: SectionCollection;
-    linkedModelNumber: string;
+    modelId: string;
+    instanceId?: string | null;
+    linkedModelId: string;
+    linkedInstanceNumber: string;
 }
 
 export default function AddLink({ open, onOpenChange }: Props) {
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
+
+    const { data: models = [] } = useQuery({
+        queryKey: modelKeys.all(),
+        queryFn: () => getModels(),
+    })
 
     const [formState, setFormState] = React.useState<FormState>({
-        model: collection,
-        modelId: id,
-        linkedModel: sectionCollections[0],
-        linkedModelNumber: '',
+        modelId,
+        instanceId,
+        linkedModelId: models[0]._id,
+        linkedInstanceNumber: '',
     })
 
     const queryClient = useQueryClient();
 
     const { mutate, error } = useMutation({
         mutationFn: createLink,
-        onSuccess: ({ linkedDocumentId }) => {
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(collection, id) })
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(formState.linkedModel, linkedDocumentId) })
+        onSuccess: ({ linkedModelId, linkedInstanceId }) => {
+            queryClient.invalidateQueries({ queryKey: linkKeys.all(modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: linkKeys.all(linkedModelId, linkedInstanceId) })
             onOpenChange(false);
         }
     })
@@ -52,6 +56,11 @@ export default function AddLink({ open, onOpenChange }: Props) {
         e.preventDefault();
         mutate(formState);
     }
+
+    const modelsMap = models.reduce<Record<string, string>>((acc, model) => {
+        acc[model.name] = model._id;
+        return acc;
+    }, {});
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -75,16 +84,16 @@ export default function AddLink({ open, onOpenChange }: Props) {
                         <Select
                             label="Model"
                             description="The model you want to link from."
-                            options={[...sectionCollections.map(collection => collectionToName[collection])]}
-                            value={nameToCollection[formState.linkedModel]}
-                            onChange={(v) => setFormState({ ...formState, linkedModel: nameToCollection[v as string] })}
+                            options={models.map(model => model.name)}
+                            value={modelsMap[formState.linkedModelId]}
+                            onChange={(v) => setFormState({ ...formState, linkedModelId: modelsMap[v as string] })}
                             creative
                         />
                         <Input
                             label="Number"
                             description="The number of the model you want to link from."
-                            value={formState.linkedModelNumber}
-                            onChange={(e) => setFormState({ ...formState, linkedModelNumber: e.target.value })}
+                            value={formState.linkedInstanceNumber}
+                            onChange={(e) => setFormState({ ...formState, linkedInstanceNumber: e.target.value })}
                         />
                     </div>
                     <Button

@@ -1,110 +1,81 @@
 'use server'
 import { db } from "@/lib/db"
-import { validators } from "../validators/validators"
 import { ObjectId } from "mongodb"
-import { LinkableDoc, SectionCollection } from "@/types/collections"
-import { collectionToName } from "@/lib/conversions"
+import { InstanceDoc, LinkableDoc } from "@/types/collections"
 import { getCurrentSession } from "../auth/get_current_session"
+import { z } from "zod"
 
-type Input = {
-    model: SectionCollection;
-    modelId: string | null;
-    linkedModel: SectionCollection;
-    linkedModelNumber: string;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    linkedModelId: z.string(),
+    linkedInstanceNumber: z.string(),
+})
 
-export async function createLink(input: Input) {
+export async function createLink(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { model, modelId, linkedModel, linkedModelNumber } = validators.input<Input>(input);
+    const { modelId, instanceId, linkedModelId, linkedInstanceNumber } = InputSchema.parse(input);
+    if (!instanceId) throw new Error('No instance ID provided');
 
-    if (!modelId) {
-        throw new Error(`No modelId provided`);
-    }
-
-    const linkedCollection = db.collection<LinkableDoc & { number: string }>(linkedModel);
+    const linkedCollection = db.collection<LinkableDoc & InstanceDoc>(linkedModelId);
 
     // get the id of the linked model
-    const linkedDocument = await linkedCollection.findOne({ number: linkedModelNumber });
+    const linkedDocument = await linkedCollection.findOne({ number: linkedInstanceNumber });
     // if the linked model doesn't exist, throw an error
     if (!linkedDocument) {
-        throw new Error(`No ${collectionToName[linkedModel]} found with number ${linkedModelNumber}`);
+        throw new Error(`Linked model was not found!`);
     }
-    const linkedDocumentId = linkedDocument._id.toString();
+    const linkedInstanceId = linkedDocument._id.toString();
 
     // prevent self linking
-    if (modelId === linkedDocumentId && model === linkedModel) {
-        throw new Error(`Cannot self link ${collectionToName[model]}!`);
-    }
-
-    // check if the link already exists on the source model
-    if (await linkExists({ id: new ObjectId(modelId), model, linkId: linkedDocumentId, linkModel: linkedModel })) {
-        // confirm that the link exists on the other model, otherwise create it
-        if (!await linkExists({ id: new ObjectId(linkedDocumentId), model: linkedModel, linkId: modelId, linkModel: model })) {
-            await link({ id: new ObjectId(linkedDocumentId), model: linkedModel, linkId: modelId, linkModel: model });
-        }
-        return { linkedDocumentId: linkedDocumentId }
-    }
-
-    // check if the link already exists on the target model
-    if (await linkExists({ id: new ObjectId(linkedDocumentId), model: linkedModel, linkId: modelId, linkModel: model })) {
-        // confirm that the link exists on the other model, otherwise create it
-        if (!await linkExists({ id: new ObjectId(modelId), model, linkId: linkedDocumentId, linkModel: linkedModel })) {
-            await link({ id: new ObjectId(modelId), model, linkId: linkedDocumentId, linkModel: linkedModel });
-        }
-        return { linkedDocumentId: linkedDocumentId }
+    if (instanceId === linkedInstanceId && modelId === linkedModelId) {
+        throw new Error(`Cannot self link!`);
     }
 
     // create the link on both models
-    await link({ id: new ObjectId(modelId), model, linkId: linkedDocumentId, linkModel: linkedModel });
-    await link({ id: new ObjectId(linkedDocumentId), model: linkedModel, linkId: modelId, linkModel: model });
+    await link({
+        sourceModelId: modelId,
+        sourceInstanceId: instanceId,
+        targetModelId: linkedModelId,
+        targetInstanceId: linkedInstanceId
+    });
+    await link({
+        sourceModelId: linkedModelId,
+        sourceInstanceId: linkedInstanceId,
+        targetModelId: modelId,
+        targetInstanceId: instanceId
+    });
 
-    return { linkedDocumentId }
-
-}
-
-async function linkExists({
-    id,
-    model,
-    linkId,
-    linkModel
-}: {
-    id: ObjectId;
-    model: SectionCollection;
-    linkId: string;
-    linkModel: SectionCollection;
-}) {
-    const collection = db.collection<LinkableDoc>(model);
-
-    const document = await collection.findOne({ _id: id });
-    if (!document || !document.links) {
-        return false;
-    }
-
-    return document.links.some(link => link.model === linkModel && link.modelId === linkId);
+    return { linkedModelId, linkedInstanceId };
 }
 
 async function link({
-    id,
-    model,
-    linkId,
-    linkModel
+    sourceModelId,
+    sourceInstanceId,
+    targetModelId,
+    targetInstanceId
 }: {
-    id: ObjectId;
-    model: SectionCollection;
-    linkId: string;
-    linkModel: SectionCollection;
+    sourceModelId: string;
+    sourceInstanceId: string;
+    targetModelId: string;
+    targetInstanceId: string;
 }) {
-    const collection = db.collection<LinkableDoc>(model);
+    const sourceCollection = db.collection<LinkableDoc>(sourceModelId);
 
-    await collection.updateOne({ _id: id }, {
-        $addToSet: {
-            links: {
-                _id: new ObjectId(),
-                model: linkModel,
-                modelId: linkId
+    const sourceInstance = await sourceCollection.findOne({ _id: new ObjectId(sourceInstanceId) });
+    if (!sourceInstance
+        || !sourceInstance.links
+        || !sourceInstance.links.some(link => link.modelId === targetModelId && link.instanceId === targetInstanceId)) {
+        await sourceCollection.updateOne({ _id: new ObjectId(sourceInstanceId) }, {
+            $addToSet: {
+                links: {
+                    _id: new ObjectId(),
+                    modelId: targetModelId,
+                    instanceId: targetInstanceId
+                }
             }
-        }
-    });
+        });
+    }
 }

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Instance, priorities, Priority, Values } from "@/types/collections"
+import { priorities, Priority, Values } from "@/types/collections"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { instanceKeys, modelKeys } from '@/lib/query_keys';
 import Input from '@/components/models/fields/input';
@@ -13,7 +13,12 @@ import { getModel } from '@/server/models/get_model';
 import { upsertInstance } from '@/server/instances/upsert_instance';
 
 type Props = {
-    instance?: Instance;
+    instance?: {
+        number: string;
+        priority: Priority;
+        notes: string;
+        values: Values;
+    };
     children: React.ReactNode;
 }
 

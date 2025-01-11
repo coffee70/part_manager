@@ -7,7 +7,7 @@ import Priority from "@/components/summary/summary_actions/priority/priority";
 import SummarySections from "@/components/summary/summary_sections/summary_sections";
 import SummaryNotes from "@/components/summary/summary_notes/summary_notes";
 import SummaryAttachments from "@/components/summary/summary_attachments/summary_attachments";
-import SummaryLinks from "@/components/summary/summary_list/summary_links";
+import SummaryLinks from "@/components/summary/summary_links/summary_links";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
@@ -45,7 +45,7 @@ export default function SummaryContainer() {
             <SummarySections values={instance.values} />
             <SummaryNotes initialValue={instance.notes} />
             <SummaryAttachments />
-            {/* <SummaryLinks /> */}
+            <SummaryLinks />
             {/* <SummaryPeople people={order.people} />  */}
             {/* <SummaryActivity /> */}
         </SummaryLayout>

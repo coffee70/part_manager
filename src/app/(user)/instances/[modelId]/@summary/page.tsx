@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { attachmentKeys, commentKeys, instanceKeys, linkKeys, sectionKeys } from "@/lib/query_keys";
+import { attachmentKeys, commentKeys, instanceKeys, linkKeys, modelKeys, sectionKeys } from "@/lib/query_keys";
 import { getSections } from "@/server/sections/get_sections";
 import { getComments } from "@/server/comments/get_comments";
 import { NextServerSearchParams } from "@/types/collections";
@@ -11,6 +11,7 @@ import { getInstances } from "@/server/instances/get_instances";
 import { instanceURL } from "@/lib/url";
 import SummaryError from "@/components/summary/summary_error";
 import { getAttachments } from "@/server/attachments/get_attachments";
+import { getModels } from "@/server/models/get_models";
 
 export default async function Page({
     params,
@@ -49,6 +50,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: linkKeys.all(modelId, instanceId),
         queryFn: () => getLinks({ modelId, instanceId }),
+    })
+
+    // prefetch models for links
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.all(),
+        queryFn: () => getModels(),
     })
 
     // prefetch attachments

@@ -4,11 +4,19 @@ import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
-import { InstanceDoc } from "@/types/collections";
+import { InstanceDoc, priorities } from "@/types/collections";
 
 const InputSchema = z.object({
     modelId: z.string(),
     instanceId: z.string().nullable().optional(),
+})
+
+const OutputSchema = z.object({
+    _id: z.custom<ObjectId>().transform(value => value.toString()),
+    number: z.string(),
+    priority: z.enum(priorities),
+    notes: z.string(),
+    values: z.record(z.string()),
 })
 
 export async function getInstance(input: z.input<typeof InputSchema>) {
@@ -23,8 +31,5 @@ export async function getInstance(input: z.input<typeof InputSchema>) {
 
     if (!instance) throw new Error('Instance not found');
 
-    return {
-        ...instance,
-        _id: instance._id.toString(),
-    };
+    return OutputSchema.parse(instance);
 }
