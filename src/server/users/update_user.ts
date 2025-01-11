@@ -7,7 +7,7 @@ import { getCurrentSession } from "../auth/get_current_session";
 
 
 type Input = {
-    user: User;
+    user: User & { password: string };
 }
 
 export async function updateUser(input: Input) {
