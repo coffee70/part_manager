@@ -1,33 +1,30 @@
 'use server'
-import { CommentableDoc, SectionCollection } from "@/types/collections";
-import { validators } from "../validators/validators";
+import { CommentableDoc } from "@/types/collections";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
+import { z } from "zod";
 
-type Input = {
-    modelId: string | null;
-    collection: SectionCollection;
-    commentId: string;
-    text: string;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable().optional(),
+    commentId: z.string(),
+    text: z.string(),
+})
 
-export async function updateComment(input: Input) {
+export async function updateComment(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, collection: _collection, commentId, text } = validators.input<Input>(input);
+    const { modelId, instanceId, commentId, text } = InputSchema.parse(input);
+    if (!instanceId) throw new Error('Instance ID is required');
 
-    if (!modelId) {
-        throw new Error('id is required');
-    }
-
-    const collection = db.collection<CommentableDoc>(_collection)
+    const collection = db.collection<CommentableDoc>(modelId)
 
     // check the user is either an admin or the commenter
     const commentedModel = await collection.findOne(
         {
-            _id: new ObjectId(modelId),
+            _id: new ObjectId(instanceId),
             'comments._id': new ObjectId(commentId),
         },
         {
@@ -46,7 +43,7 @@ export async function updateComment(input: Input) {
     }
 
     await collection.updateOne({
-        _id: new ObjectId(modelId),
+        _id: new ObjectId(instanceId),
         'comments._id': new ObjectId(commentId)
     }, {
         $set: {

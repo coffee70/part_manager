@@ -47,7 +47,7 @@ export default function SummaryContainer() {
             <SummaryAttachments />
             <SummaryLinks />
             {/* <SummaryPeople people={order.people} />  */}
-            {/* <SummaryActivity /> */}
+            <SummaryActivity />
         </SummaryLayout>
     )
 }

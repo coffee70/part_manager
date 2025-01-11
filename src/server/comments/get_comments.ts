@@ -10,7 +10,7 @@ const OutputSchema = z.object({
     comments: z.array(z.object({
         _id: z.custom<ObjectId>().transform(value => value.toString()),
         text: z.string(),
-        updatedAt: z.string(),
+        updatedAt: z.date(),
         user: z.object({
             name: z.string(),
         }),

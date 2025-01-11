@@ -4,8 +4,8 @@ import { Textarea } from "@/components/ui/textarea";
 import ActionButtons from './action_buttons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createComment } from '@/server/comments/create_comment';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
-import { collectionKeys, commentKeys } from '@/lib/query_keys';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
+import { commentKeys, instanceKeys } from '@/lib/query_keys';
 import { ClickAwayListener } from '@mui/base';
 
 const PLACEHOLDER = "Add a comment..."
@@ -15,16 +15,16 @@ export default function CreateComment() {
     const [value, setValue] = React.useState("");
     const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
-    const { id, collection } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: createComment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, id) })
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setValue("");
             setShowActions(false);
         }
@@ -32,8 +32,8 @@ export default function CreateComment() {
 
     const handleSave = () => {
         mutate({
-            id,
-            collection,
+            modelId,
+            instanceId,
             text: value
         })
     }

@@ -1,28 +1,25 @@
 'use server'
 import { db } from '@/lib/db';
-import { CommentableDoc, CommentDoc, Create, SectionCollection } from '@/types/collections'
-import { validators } from '../validators/validators';
+import { CommentableDoc } from '@/types/collections'
 import { ObjectId } from 'mongodb';
 import { getCurrentSession } from '../auth/get_current_session';
+import { z } from 'zod';
 
-type Input = {
-    id: string | null;
-    collection: SectionCollection;
-    text: string;
-}
+const InputSchema = z.object({
+    modelId: z.string(),
+    instanceId: z.string().nullable(),
+    text: z.string(),
+})
 
-export async function createComment(input: Input) {
+export async function createComment(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, collection: _collection, text } = validators.input<Input>(input);
+    const { modelId, instanceId, text } = InputSchema.parse(input);
+    if (!instanceId) throw new Error('Instance ID is required');
 
-    if (!id) {
-        throw new Error('id is required');
-    }
-
-    const collection = db.collection<CommentableDoc>(_collection);
-    await collection.updateOne({ _id: new ObjectId(id) }, {
+    const collection = db.collection<CommentableDoc>(modelId);
+    await collection.updateOne({ _id: new ObjectId(instanceId) }, {
         $push: {
             comments: {
                 _id: new ObjectId(),

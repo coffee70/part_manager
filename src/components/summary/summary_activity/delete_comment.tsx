@@ -9,53 +9,46 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useConfirm } from "@/hooks/confirm.hook"
-import { useURLMetadata } from "@/hooks/url_metadata.hook";
-import { collectionKeys, commentKeys } from "@/lib/query_keys";
+import { useInstanceURL } from "@/hooks/url_metadata.hook";
+import { commentKeys, instanceKeys } from "@/lib/query_keys";
 import { deleteComment } from "@/server/comments/delete_comment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, TrashIcon } from "lucide-react";
+import Loader from '@/components/ui/loader';
 
 type Props = {
     id: string;
-    children: React.ReactNode;
 }
 
-export default function DeleteComment({ id, children }: Props) {
+export default function DeleteComment({ id }: Props) {
     const [open, setOpen] = React.useState(false);
-
-    const { collection, id: _id } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
-    const { confirm, handleConfirm, handleCancel } = useConfirm();
-
-    const onOpenChange = (open: boolean) => {
-        setOpen(open);
-        if (open) mutate();
-    }
-
-    const { mutate, error, isError } = useMutation({
-        mutationFn: async () => {
-            setOpen(true);
-            const ans = await confirm();
-            if (ans) await deleteComment({ _id: _id, collection, commentId: id });
-        },
+    const { mutate, error, isError, isPending } = useMutation({
+        mutationFn: () => deleteComment({ modelId, instanceId, commentId: id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, _id) });
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setOpen(false);
         }
     })
 
     return (
-        <AlertDialog open={open} onOpenChange={onOpenChange}>
+        <AlertDialog open={open} onOpenChange={setOpen}>
             <AlertDialogTrigger asChild>
-                {children}
+                <button
+                    type='button'
+                    className='flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary'
+                >
+                    <TrashIcon className='h-3 w-3' />
+                    <span>Delete</span>
+                </button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
@@ -68,8 +61,11 @@ export default function DeleteComment({ id, children }: Props) {
                     <AlertDescription>{error.message}</AlertDescription>
                 </Alert>}
                 <AlertDialogFooter>
-                    <AlertDialogCancel onClick={handleCancel}>Cancel</AlertDialogCancel>
-                    <Button onClick={handleConfirm}>Delete</Button>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button
+                        onClick={() => mutate()}
+                        disabled={isPending}
+                    >{isPending ? <Loader /> : "Delete"}</Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

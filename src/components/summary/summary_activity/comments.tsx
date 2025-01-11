@@ -3,7 +3,7 @@ import React from 'react';
 import CreateComment from './create_comment';
 import { useQuery } from '@tanstack/react-query';
 import { commentKeys } from '@/lib/query_keys';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getComments } from '@/server/comments/get_comments';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
@@ -12,11 +12,11 @@ import Comment from './comment';
 
 export default function Comments() {
 
-    const { collection, id } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const { data, isPending, isError } = useQuery({
-        queryKey: commentKeys.all(collection, id),
-        queryFn: () => getComments({ collection, id }),
+        queryKey: commentKeys.all(modelId, instanceId),
+        queryFn: () => getComments({ modelId, instanceId }),
     })
 
     return (

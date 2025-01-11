@@ -7,10 +7,10 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { DialogTrigger } from '@radix-ui/react-dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateComment } from '@/server/comments/update_comment';
-import { collectionKeys, commentKeys } from '@/lib/query_keys';
-import { useURLMetadata } from '@/hooks/url_metadata.hook';
+import { commentKeys, instanceKeys } from '@/lib/query_keys';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, PencilIcon } from "lucide-react";
 
 type Props = {
     comment: {
@@ -21,36 +21,41 @@ type Props = {
         updatedAt: string;
         text: string;
     };
-    children: React.ReactNode;
 }
 
-export default function UpdateComment({ comment, children }: Props) {
+export default function UpdateComment({ comment }: Props) {
     const [value, setValue] = React.useState(comment.text);
     const [open, setOpen] = React.useState(false);
 
-    const { collection, id } = useURLMetadata();
+    const { modelId, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate, error, isError } = useMutation({
         mutationFn: updateComment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(collection, id) });
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: collectionKeys.all(collection) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
             setOpen(false);
         }
     })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate({ modelId: id, collection, commentId: comment._id, text: value });
+        mutate({ modelId, instanceId, commentId: comment._id, text: value });
     }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                {children}
+                <button
+                    type='button'
+                    className='flex items-center space-x-1 text-sm text-muted-foreground hover:text-primary'
+                >
+                    <PencilIcon className='h-3 w-3' />
+                    <span>Edit</span>
+                </button>
             </DialogTrigger>
             <DialogContent className="min-w-[450px]">
                 <DialogHeader>
