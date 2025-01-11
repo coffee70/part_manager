@@ -1,11 +1,10 @@
 'use server'
-import { AttachableDoc, Instance, InstanceDoc, LinkableDoc, SectionCollection } from "@/types/collections";
+import { AttachableDoc, Instance, InstanceDoc, LinkableDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { validators } from "../validators/validators";
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { collectionToUrl } from "@/lib/conversions";
 import { deleteAttachment } from "../attachments/delete_attachment";
 import { deleteLink } from "../links/delete_link";
 import { z } from "zod";
@@ -37,9 +36,9 @@ export async function deleteModel(input: z.input<typeof InputSchema>) {
     if (document.attachments) {
         for (const attachment of document.attachments) {
             await deleteAttachment({
-                id: attachment._id.toString(),
-                modelId: id,
-                model: model
+                modelId, 
+                instanceId, 
+                attachmentId: attachment._id.toString()
             })
         }
     }
@@ -48,9 +47,9 @@ export async function deleteModel(input: z.input<typeof InputSchema>) {
     if (document.links) {
         for (const link of document.links) {
             await deleteLink({
-                linkId: link._id.toString(),
-                modelId: id,
-                model: model
+                modelId,
+                instanceId, 
+                linkId: link._id.toString()
             })
         }
     }
