@@ -7,7 +7,7 @@ import { ObjectId, WithoutId } from "mongodb";
 
 const InputSchema = z.object({
     modelId: z.string(),
-    instanceId: z.string().nullable().optional(),
+    instanceId: z.string().optional(),
     instance: z.object({
         number: z.string(),
         priority: z.enum(priorities),

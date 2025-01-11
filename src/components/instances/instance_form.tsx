@@ -14,6 +14,7 @@ import { upsertInstance } from '@/server/instances/upsert_instance';
 
 type Props = {
     instance?: {
+        _id: string;
         number: string;
         priority: Priority;
         notes: string;
@@ -72,7 +73,11 @@ export default function InstanceForm({ instance, children }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate({ modelId, instanceId, instance: { ...attributeState, values: fieldState } })
+        mutate({
+            modelId,
+            instanceId: instance?._id,
+            instance: { ...attributeState, values: fieldState }
+        })
     }
 
     return (
