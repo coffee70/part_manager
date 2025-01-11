@@ -8,7 +8,7 @@ import { getSearchParams, SearchParams } from "@/lib/search_params";
 
 const InputSchema = z.object({
     modelId: z.string(),
-    searchParams: z.custom<SearchParams>(),
+    searchParams: z.custom<SearchParams>().optional(),
 })
 
 const OutputSchema = z.array(z.object({

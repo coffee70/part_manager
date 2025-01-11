@@ -9,11 +9,14 @@ const UpdatedAt = z.object({
 
 export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
-export const getSearchParams = (searchParams: SearchParams) => {
+export const getSearchParams = (searchParams?: SearchParams) => {
     // convert client side ReadOnlySearchParams to server side type
     let params: NextServerSearchParams;
     if (searchParams instanceof ReadonlyURLSearchParams) {
         params = convertSearchParams(searchParams)
+    }
+    else if (searchParams === undefined) {
+        params = {};
     }
     else {
         params = searchParams;

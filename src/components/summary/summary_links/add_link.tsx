@@ -1,6 +1,5 @@
 'use client'
 import React from "react";
-import Input from "@/components/models/fields/input";
 import Select from "@/components/models/fields/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
@@ -9,19 +8,15 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLink } from "@/server/links/create_link";
-import { linkKeys, modelKeys } from "@/lib/query_keys";
+import { instanceKeys, linkKeys, modelKeys } from "@/lib/query_keys";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { getModels } from "@/server/models/get_models";
+import { getInstances } from "@/server/instances/get_instances";
 
 type Props = {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-}
-
-type FormState = {
-    linkedModelId: string;
-    linkedInstanceNumber: string;
 }
 
 export default function AddLink({ open, onOpenChange }: Props) {
@@ -32,10 +27,24 @@ export default function AddLink({ open, onOpenChange }: Props) {
         queryFn: () => getModels(),
     })
 
-    const [formState, setFormState] = React.useState<FormState>({
-        linkedModelId: models[0]._id,
-        linkedInstanceNumber: '',
+    const nameToId = models.reduce<Record<string, string>>((acc, model) => {
+        acc[model.name] = model._id;
+        return acc;
+    }, {});
+
+    const idToName = models.reduce<Record<string, string>>((acc, model) => {
+        acc[model._id] = model.name;
+        return acc;
+    }, {});
+
+    const [linkedModelId, setLinkedModelId] = React.useState(models[0]?._id || '');
+
+    const { data: instances = [] } = useQuery({
+        queryKey: instanceKeys.all(linkedModelId),
+        queryFn: () => getInstances({ modelId: linkedModelId }),
     })
+
+    const [linkedInstanceNumber, setLinkedInstanceNumber] = React.useState(instances[0]?.number || '');
 
     const queryClient = useQueryClient();
 
@@ -50,13 +59,13 @@ export default function AddLink({ open, onOpenChange }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate({ modelId, instanceId, ...formState });
+        mutate({ 
+            modelId, 
+            instanceId,
+            linkedModelId,
+            linkedInstanceNumber,
+        });
     }
-
-    const modelsMap = models.reduce<Record<string, string>>((acc, model) => {
-        acc[model.name] = model._id;
-        return acc;
-    }, {});
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -81,15 +90,15 @@ export default function AddLink({ open, onOpenChange }: Props) {
                             label="Model"
                             description="The model you want to link from."
                             options={models.map(model => model.name)}
-                            value={modelsMap[formState.linkedModelId]}
-                            onChange={(v) => setFormState({ ...formState, linkedModelId: modelsMap[v as string] })}
-                            creative
+                            value={idToName[linkedModelId]}
+                            onChange={(v) => setLinkedModelId(nameToId[v as string])}
                         />
-                        <Input
+                        <Select
                             label="Number"
                             description="The number of the model you want to link from."
-                            value={formState.linkedInstanceNumber}
-                            onChange={(e) => setFormState({ ...formState, linkedInstanceNumber: e.target.value })}
+                            options={instances.map(instance => instance.number)}
+                            value={linkedInstanceNumber}
+                            onChange={(v) => setLinkedInstanceNumber(v as string)}
                         />
                     </div>
                     <Button
