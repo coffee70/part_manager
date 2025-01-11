@@ -32,7 +32,7 @@ export default function SummaryLink({ link }: Props) {
     })
 
     return (
-        <div className='flex items-center justify-between flex-1 pl-2 border-b border-foreground'>
+        <div className='group flex items-center justify-between flex-1 pl-2 border-b border-foreground'>
             <div className="flex items-center space-x-2">
                 <div className="flex items-center justify-center h-8">
                     <div
@@ -48,7 +48,7 @@ export default function SummaryLink({ link }: Props) {
             <div className='flex items-center space-x-2'>
                 <button
                     type="button"
-                    className="flex items-center justify-center w-6 h-6 rounded-sm hover:bg-foreground"
+                    className="hidden group-hover:flex items-center justify-center w-6 h-6 rounded-sm hover:bg-foreground"
                     onClick={() => mutate()}
                 >
                     <XIcon size={20} />
