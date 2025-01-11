@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { generateUserId } from "@/lib/session";
 
 type Input = {
-    user: Create<User>;
+    user: Create<User> & { password: string };
 }
 
 export async function createUser(input: Input) {
