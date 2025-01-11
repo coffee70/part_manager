@@ -20,8 +20,6 @@ type Props = {
 }
 
 type FormState = {
-    modelId: string;
-    instanceId?: string | null;
     linkedModelId: string;
     linkedInstanceNumber: string;
 }
@@ -35,8 +33,6 @@ export default function AddLink({ open, onOpenChange }: Props) {
     })
 
     const [formState, setFormState] = React.useState<FormState>({
-        modelId,
-        instanceId,
         linkedModelId: models[0]._id,
         linkedInstanceNumber: '',
     })
@@ -54,7 +50,7 @@ export default function AddLink({ open, onOpenChange }: Props) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate(formState);
+        mutate({ modelId, instanceId, ...formState });
     }
 
     const modelsMap = models.reduce<Record<string, string>>((acc, model) => {
