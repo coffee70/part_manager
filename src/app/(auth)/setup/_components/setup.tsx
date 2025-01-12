@@ -3,12 +3,13 @@ import React from "react";
 import { Role } from "@/types/collections";
 import { useMutation } from "@tanstack/react-query";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, InfoIcon, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password_input";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 import { unauthorized_createUser } from "@/server/users/unauthorized/create_user";
+import { PasswordRequirements, UsernameRequirements } from "@/components/ui/requirements";
 
 type FormState = {
     name: string;
@@ -56,7 +57,7 @@ export default function Setup() {
                         onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                     />
                     <br />
-                    <label className="text-sm" htmlFor="username">Username</label>
+                    <UsernameRequirements />
                     <Input
                         className="border border-gray-300 shadow-sm rounded-md p-1"
                         name="username"
@@ -74,9 +75,9 @@ export default function Setup() {
                         onChange={(e) => setFormState({ ...formState, title: e.target.value })}
                     />
                     <br />
-                    <label className="text-sm" htmlFor="password">Password</label>
+                    <PasswordRequirements />
                     <PasswordInput
-                        containerClassName="border border-gray-300 shadow-sm rounded-md p-1"
+                        containerClassName="grow border border-gray-300 shadow-sm rounded-md p-1"
                         name="password"
                         id="password"
                         value={formState.password}

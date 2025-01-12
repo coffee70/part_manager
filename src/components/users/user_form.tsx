@@ -13,6 +13,7 @@ import { updateUser } from '@/server/users/update_user';
 import PasswordInput from './fields/password_input';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { PasswordRequirements, UsernameRequirements } from '../ui/requirements';
 
 type Props = {
     open?: boolean;
@@ -86,8 +87,9 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
                             value={formState.name}
                             onChange={e => setFormState({ ...formState, name: e.target.value })}
                         />
+                        <UsernameRequirements />
                         <Input
-                            label='Username'
+                            id='username'
                             value={formState.username}
                             onChange={e => setFormState({ ...formState, username: e.target.value })}
                         />
@@ -102,8 +104,9 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
                             value={formState.role}
                             onChange={v => setFormState({ ...formState, role: v as Role })}
                         />
+                        <PasswordRequirements />
                         <PasswordInput
-                            label='Password'
+                            id='password'
                             value={formState.password}
                             onChange={e => setFormState({ ...formState, password: e.target.value })}
                         />
