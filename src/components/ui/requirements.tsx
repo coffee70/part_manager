@@ -40,11 +40,15 @@ export function UsernameRequirements() {
     )
 }
 
-export function PasswordRequirements() {
+type PasswordRequirementsProps = {
+    label?: string;
+}
+
+export function PasswordRequirements({ label }: PasswordRequirementsProps) {
     return (
         <FieldRequirements
             htmlFor="password"
-            label="Password"
+            label={label || "Password"}
             requirements={[
                 'Passwords must be between 6 and 255 characters.',
             ]}
