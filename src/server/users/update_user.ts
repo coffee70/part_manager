@@ -2,7 +2,7 @@
 import { validators } from "../validators/validators";
 import { hash } from "@node-rs/argon2";
 import { db } from "@/lib/db";
-import { User, UserDoc } from "@/types/collections";
+import { ServerActionState, User, UserDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 
 
@@ -10,9 +10,9 @@ type Input = {
     user: User & { password: string };
 }
 
-export async function updateUser(input: Input) {
+export async function updateUser(input: Input): Promise<ServerActionState> {
     const { user: currentUser } = await getCurrentSession();
-    if (!currentUser || currentUser.role !== 'admin') throw new Error('Unauthorized');
+    if (!currentUser || currentUser.role !== 'admin') return { success: false, error: 'Unauthorized' };
 
     const { user } = validators.input<Input>(input);
 
@@ -24,7 +24,7 @@ export async function updateUser(input: Input) {
         user.username.length > 31 ||
         !/^[a-z0-9_-]+$/.test(user.username)
     ) {
-        throw new Error("Invalid username");
+        return { success: false, error: "Invalid username" };
     }
 
     const users = db.collection<UserDoc>('users');
@@ -33,13 +33,13 @@ export async function updateUser(input: Input) {
     if (userNameChanged) {
         const usernameInUse = await users.findOne({ username: user.username }) !== null;
         if (usernameInUse) {
-            throw new Error("Username already in use");
+            return { success: false, error: "Username already in use" };
         }
     }
 
     if (user.password.length > 0) {
         if (user.password.length < 6 || user.password.length > 255) {
-            throw new Error("Invalid password");
+            return { success: false, error: "Invalid password" };
         }
 
         const passwordHash = await hash(user.password, {
@@ -61,4 +61,6 @@ export async function updateUser(input: Input) {
             role: user.role,
         }
     });
+
+    return { success: true };
 }

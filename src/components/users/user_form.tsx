@@ -36,23 +36,27 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
 
     const queryClient = useQueryClient();
 
-    const { mutate: create, error: createError } = useMutation({
+    const { mutate: create, data: createState } = useMutation({
         mutationFn: createUser,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: userKeys.all() })
-            onOpenChange && onOpenChange(false);
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: userKeys.all() })
+                onOpenChange && onOpenChange(false);
+            }
         }
     })
 
-    const { mutate: update, error: updateError } = useMutation({
+    const { mutate: update, data: updateState } = useMutation({
         mutationFn: updateUser,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: userKeys.all() })
-            onOpenChange && onOpenChange(false);
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: userKeys.all() })
+                onOpenChange && onOpenChange(false);
+            }
         }
     })
 
-    const error = createError || updateError;
+    const data = createState || updateState;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,10 +79,10 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
                         <DialogDescription>{description}</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
-                {error && <Alert variant='destructive'>
+                {data?.success === false && <Alert variant='destructive'>
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{error.message}</AlertDescription>
+                    <AlertDescription>{data.error}</AlertDescription>
                 </Alert>}
                 <form onSubmit={handleSubmit} className='flex flex-col space-y-6'>
                     <div className='flex flex-col space-y-1'>

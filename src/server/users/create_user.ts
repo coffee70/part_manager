@@ -1,5 +1,5 @@
 'use server'
-import { Create, User, UserDoc } from "@/types/collections";
+import { Create, ServerActionState, User, UserDoc } from "@/types/collections";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { validators } from "@/server/validators/validators";
 import { hash } from "@node-rs/argon2";
@@ -10,9 +10,9 @@ type Input = {
     user: Create<User> & { password: string };
 }
 
-export async function createUser(input: Input) {
+export async function createUser(input: Input): Promise<ServerActionState> {
     const { user: currentUser } = await getCurrentSession();
-    if (!currentUser || currentUser.role !== 'admin') throw new Error('Unauthorized');
+    if (!currentUser || currentUser.role !== 'admin') return { success: false, error: 'Unauthorized' };
 
     const { user } = validators.input<Input>(input);
 
@@ -24,10 +24,10 @@ export async function createUser(input: Input) {
         user.username.length > 31 ||
         !/^[a-z0-9_-]+$/.test(user.username)
     ) {
-        throw new Error("Invalid username");
+        return { success: false, error: "Invalid username" };
     }
     if (typeof user.password !== "string" || user.password.length < 6 || user.password.length > 255) {
-        throw new Error("Password should be between 6 and 255 characters");
+        return { success: false, error: "Invalid password" };
     }
 
     const passwordHash = await hash(user.password, {
@@ -43,7 +43,7 @@ export async function createUser(input: Input) {
 
     const usernameInUse = await users.findOne({ username: user.username }) !== null;
     if (usernameInUse) {
-        throw new Error("Username already in use");
+        return { success: false, error: "Username already in use" };
     }
 
     await users.insertOne({
@@ -54,4 +54,6 @@ export async function createUser(input: Input) {
         role: user.role,
         password_hash: passwordHash,
     });
+
+    return { success: true };
 }
