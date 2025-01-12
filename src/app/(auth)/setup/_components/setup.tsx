@@ -29,7 +29,7 @@ export default function Setup() {
         password: "",
     })
 
-    const { mutate, isPending, isError, error } = useMutation({
+    const { mutate, isPending, data } = useMutation({
         mutationFn: unauthorized_createUser,
     })
 
@@ -43,10 +43,10 @@ export default function Setup() {
             <div className="flex flex-col space-y-4 shadow-md rounded-md border border-gray-200 p-4 w-1/4">
                 <h1 className="font-bold text-xl">Create Admin Account</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col w-full">
-                    {isError && <Alert variant='destructive'>
+                    {data?.success === false && <Alert variant='destructive'>
                         <AlertCircle className="h-4 w-4" />
                         <AlertTitle>Error</AlertTitle>
-                        <AlertDescription>{error.message}</AlertDescription>
+                        <AlertDescription>{data.error}</AlertDescription>
                     </Alert>}
                     <label className="text-sm" htmlFor="name">Name</label>
                     <Input
