@@ -10,6 +10,8 @@ import { getCurrentUser } from '@/server/auth/get_current_user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { editProfile } from '@/server/auth/edit_profile';
 import Loader from '@/components/ui/loader';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 type Props = {
     open: boolean;
@@ -32,13 +34,18 @@ export default function EditProfile({ open, onOpenChange }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending, error, isError } = useMutation({
         mutationFn: () => editProfile(formState),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.current() });
             onOpenChange(false);
         }
     })
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        mutate();
+    }
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -51,8 +58,13 @@ export default function EditProfile({ open, onOpenChange }: Props) {
                         </DialogDescription>
                     </VisuallyHidden.Root>
                 </DialogHeader>
-                <form onSubmit={() => mutate()} className='flex flex-col space-y-6'>
+                <form onSubmit={handleSubmit} className='flex flex-col space-y-6'>
                     <div className='flex flex-col space-y-1'>
+                        {isError && <Alert variant='destructive'>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{error.message}</AlertDescription>
+                        </Alert>}
                         <Input
                             label="Name"
                             value={formState.name}
@@ -70,7 +82,7 @@ export default function EditProfile({ open, onOpenChange }: Props) {
                             onChange={e => setFormState({ ...formState, title: e.target.value })}
                         />
                     </div>
-                    <Button type='submit'>
+                    <Button type='submit' disabled={isPending}>
                         {isPending ? <Loader /> : "Save"}
                     </Button>
                 </form>
