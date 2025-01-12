@@ -194,3 +194,10 @@ export type Create<T> = Omit<T, '_id' | 'updatedAt' | 'updatedBy'>;
 export type Doc<T> = Omit<T, '_id'> & { _id: string };
 
 export type NextServerSearchParams = { [key: string]: string | string[] | undefined }
+
+export type ServerActionState = {
+    success: true;
+} | {
+    success: false;
+    error: string;
+}
