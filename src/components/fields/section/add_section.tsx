@@ -2,12 +2,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../../ui/dialog';
-import { Input } from '../../ui/input';
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
 import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { Input } from '@/components/ui/fields/dialogs/input';
 
 type FormState = {
     name: string,
@@ -25,11 +27,13 @@ export default function AddSection() {
 
     const queryClient = useQueryClient();
 
-    const { mutate } = useMutation({
+    const { mutate, data } = useMutation({
         mutationFn: createSection,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) });
-            setOpen(false);
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) });
+                setOpen(false);
+            }
         }
     })
 
@@ -54,15 +58,24 @@ export default function AddSection() {
                     <DialogDescription>Add a new data section.</DialogDescription>
                 </DialogHeader>
                 <form
-                    className='flex flex-col space-y-4'
+                    className='flex flex-col space-y-6'
                     onSubmit={handleSubmit}
                 >
-                    <Input
-                        value={formState.name}
-                        onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
-                        placeholder='Section Name'
-                        className='border border-muted-foreground p-1'
-                    />
+                    <div className='flex flex-col space-y-1'>
+                        {data?.success === false && <Alert variant='destructive'>
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>{data.error}</AlertDescription>
+                        </Alert>}
+                        <Input
+                            id='name'
+                            label='Section Name'
+                            value={formState.name}
+                            onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                            error={data?.fieldErrors?.name}
+                            description='The name of the section.'
+                        />
+                    </div>
                     <Button
                         className="w-full"
                         type='submit'
@@ -72,3 +85,4 @@ export default function AddSection() {
         </Dialog>
     )
 }
+
