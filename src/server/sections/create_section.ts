@@ -7,7 +7,7 @@ import { WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 
 const InputSchema = z.object({
-    name: z.string().min(1, { message: 'Section name is required' }),
+    name: z.string().min(1, { message: 'Section name is required.' }),
     modelId: z.string().nullable().optional(),
 })
 

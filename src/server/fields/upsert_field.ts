@@ -8,8 +8,8 @@ import { ObjectId, WithoutId } from "mongodb";
 
 const InputSchema = z.object({
     _id: z.string().optional(),
-    name: z.string().min(1, { message: 'Field name is required' }),
-    sectionId: z.string().min(1, { message: 'Section ID is required' }),
+    name: z.string().min(1, { message: 'Field name is required.' }),
+    sectionId: z.string().min(1, { message: 'Section ID is required.' }),
     type: z.enum(fieldtypes),
     description: z.string(),
     multiple: z.boolean().optional(),
