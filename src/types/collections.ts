@@ -1,13 +1,9 @@
 import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
 
-export type FieldType =
-    | 'text'
-    | 'number'
-    | 'date'
-    | 'time'
-    | 'paragraph'
-    | 'select'
+export const fieldtypes = ['text', 'number', 'date', 'time', 'paragraph', 'select'] as const;
+
+export type FieldType = typeof fieldtypes[number];
 
 export const priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as const;
 
@@ -79,6 +75,18 @@ export type SectionDoc = {
 
 export type Field = {
     _id: string;
+    sectionId: string;
+    type: FieldType;
+    name: string;
+    description: string;
+    options?: string[];
+    multiple?: boolean;
+    creative?: boolean;
+    default?: string;
+}
+
+export type FieldDoc = {
+    _id: ObjectId;
     sectionId: string;
     type: FieldType;
     name: string;
