@@ -1,19 +1,19 @@
 import React from 'react';
-import { Textarea as BaseTextarea } from '@/components/ui/textarea';
+import { PasswordInput as BasePasswordInput } from '@/components/ui/password_input';
 import { cn } from "@/lib/utils";
 
 type Props = {
-    label?: string;
+    label?: React.ReactNode;
     error?: React.ReactNode;
     description?: string;
-} & React.TextareaHTMLAttributes<HTMLTextAreaElement>
+} & React.InputHTMLAttributes<HTMLInputElement>
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, Props>((props, ref) => {
+const PasswordInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => {
     const { label, error, description, className } = props;
     return (
         <div className="flex flex-col space-y-0.5">
             {label && <label className='text-sm' htmlFor={props.id}>{label}</label>}
-            <BaseTextarea ref={ref} {...props} className={cn(
+            <BasePasswordInput ref={ref} {...props} containerClassName={cn(
                 'border border-accent-foreground shadow-sm rounded-md p-1 no-icon',
                 error ? 'border-destructive' : '',
                 className
@@ -24,6 +24,6 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, Props>((props, ref) => {
     )
 })
 
-Textarea.displayName = 'Input';
+PasswordInput.displayName = 'Input';
 
-export { Textarea };
+export { PasswordInput };

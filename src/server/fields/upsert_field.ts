@@ -16,7 +16,16 @@ const InputSchema = z.object({
     creative: z.boolean().optional(),
     default: z.string().optional(),
     options: z.array(z.string()).optional(),
-})
+}).refine(data => {
+    if (data.type === 'select') {
+        if (data.options) return data.options.length > 0;
+        else return false;
+    }
+    else return true;
+}, {
+    message: 'Select fields must have options.',
+    path: ['options']
+});
 
 export async function upsertField(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();

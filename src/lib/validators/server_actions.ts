@@ -17,7 +17,7 @@ type ValidateActionReturnType<T = undefined, E = undefined> = {
 
 export function validate<T extends z.ZodType>(
     schema: T,
-    data: z.infer<T>
+    data: z.input<T>
 ): ValidateActionReturnType<z.infer<T>, z.inferFlattenedErrors<T>['fieldErrors']> {
     const result = schema.safeParse(data)
     

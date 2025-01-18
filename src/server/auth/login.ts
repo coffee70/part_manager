@@ -7,6 +7,8 @@ import { createSession, generateSessionToken } from "@/lib/session";
 import { setSessionTokenCookie } from "@/lib/cookies";
 import { redirect } from "next/navigation";
 
+const AUTH_ERROR_MESSAGE = "Incorrect username or password.";
+
 type Input = {
     username: string;
     password: string;
@@ -21,10 +23,10 @@ export async function login(input: Input): Promise<ServerActionState> {
         username.length > 31 ||
         !/^[a-z0-9_-]+$/.test(username)
     ) {
-        return { success: false, error: "Invalid username" };
+        return { success: false, error: AUTH_ERROR_MESSAGE };
     }
     if (typeof password !== "string" || password.length < 6 || password.length > 255) {
-        return { success: false, error: "Invalid password" };
+        return { success: false, error: AUTH_ERROR_MESSAGE };
     }
     
     const existingUser = await db.collection<UserDoc>("users").findOne({ username });
@@ -38,7 +40,7 @@ export async function login(input: Input): Promise<ServerActionState> {
         // Since protecting against this is non-trivial,
         // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
         // If usernames are public, you may outright tell the user that the username is invalid.
-        return { success: false, error: "Incorrect username or password" };
+        return { success: false, error: AUTH_ERROR_MESSAGE };
     }
 
     const validPassword = await verify(existingUser.password_hash, password, {
@@ -48,7 +50,7 @@ export async function login(input: Input): Promise<ServerActionState> {
         parallelism: 1
     });
     if (!validPassword) {
-        return { success: false, error: "Incorrect username or password" };
+        return { success: false, error: AUTH_ERROR_MESSAGE };
     }
 
     const token = generateSessionToken();

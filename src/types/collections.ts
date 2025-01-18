@@ -193,9 +193,9 @@ export function typedEntries<T extends {}>(obj: T): [keyof T, T[keyof T]][] {
     return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
 
-export type Role = 'admin' | 'user'
+export const roles = ['admin', 'user'] as const;
 
-export const roles: Role[] = ['admin', 'user'];
+export type Role = typeof roles[number]
 
 export type Create<T> = Omit<T, '_id' | 'updatedAt' | 'updatedBy'>;
 

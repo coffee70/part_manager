@@ -1,11 +1,11 @@
 'use client'
 import React from 'react';
 import ButtonGroup from "@/components/ui/button_group";
-import TagInput from "@/components/ui/tag_input";
 import { FieldFormState } from '../field_form';
 import { upsertField } from '@/server/fields/upsert_field';
 import { Input } from '@/components/ui/fields/dialogs/input';
 import { Textarea } from '@/components/ui/fields/dialogs/textarea';
+import TagInput from '@/components/ui/fields/dialogs/tag_input';
 
 type Props = {
     formState: FieldFormState;
@@ -42,15 +42,13 @@ export default function SelectForm({ formState, setFormState, data }: Props) {
                 onChange={(newValue) => setFormState(prev => ({ ...prev, creative: newValue === 'Creative' }))}
                 labels={['Restricted', 'Creative']}
             />
-            <div className="flex flex-col">
-                <span>Options</span>
-                <TagInput
-                    className='border border-muted-foreground p-1'
-                    placeholder="Type an option and press enter"
-                    value={formState.options}
-                    onChange={(options) => setFormState(prev => ({ ...prev, options: options }))}
-                />
-            </div>
+            <TagInput
+                label='Options'
+                placeholder="Type an option and press Enter..."
+                value={formState.options}
+                onChange={(options) => setFormState(prev => ({ ...prev, options }))}
+                error={data?.fieldErrors?.options}
+            />
         </>
     )
 }
