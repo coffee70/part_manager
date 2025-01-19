@@ -17,16 +17,7 @@ export default async function Page() {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col w-full h-full">
-                <AppBar>
-                    <PageTitle
-                        icon={<UserIcon size={50} />}
-                        title="Users"
-                    />
-                    <CreateUser />
-                </AppBar>
-                <Users />
-            </div>
+            <Users />
         </HydrationBoundary>
     )
 }

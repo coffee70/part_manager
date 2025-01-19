@@ -4,6 +4,10 @@ import { userKeys } from "@/lib/query_keys";
 import { getUsers } from "@/server/users/get_users";
 import { useQuery } from "@tanstack/react-query";
 import User from './user';
+import { AppBar } from "@/components/ui/app_bar";
+import { PageTitle } from "@/components/ui/page_title";
+import { UserIcon } from "@/components/ui/icons/icons";
+import CreateUser from "./create_user";
 
 export default function Users() {
 
@@ -17,23 +21,32 @@ export default function Users() {
     if (!users) return <div>Error...</div>
 
     return (
-        <div className="p-6 overflow-y-auto">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Username</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {users.map(user => (
-                        <User key={user._id} user={user} />
-                    ))}
-                </TableBody>
-            </Table>
+        <div className="flex flex-col w-full h-full">
+            <AppBar>
+                <PageTitle
+                    icon={<UserIcon size={50} />}
+                    title="Users"
+                />
+                <CreateUser />
+            </AppBar>
+            <div className="p-6 overflow-y-auto">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Title</TableHead>
+                            <TableHead>Username</TableHead>
+                            <TableHead>Role</TableHead>
+                            <TableHead></TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {users.map(user => (
+                            <User key={user._id} user={user} />
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
         </div>
     )
 }
