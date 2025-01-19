@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
 import { PasswordRequirements, UsernameRequirements } from "@/components/ui/requirements";
 import { upsertUser } from "@/server/users/upsert_user";
-import { Input } from "@/components/ui/fields/dialogs/input";
-import { PasswordInput } from "@/components/ui/fields/dialogs/password_input";
+import { Input } from "@/components/ui/fields/input";
+import { PasswordInput } from "@/components/ui/fields/password_input";
 
 type FormState = {
     name: string;

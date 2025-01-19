@@ -3,9 +3,9 @@ import React from 'react';
 import ButtonGroup from "@/components/ui/button_group";
 import { FieldFormState } from '../field_form';
 import { upsertField } from '@/server/fields/upsert_field';
-import { Input } from '@/components/ui/fields/dialogs/input';
-import { Textarea } from '@/components/ui/fields/dialogs/textarea';
-import TagInput from '@/components/ui/fields/dialogs/tag_input';
+import { Input } from '@/components/ui/fields/input';
+import { Textarea } from '@/components/ui/fields/textarea';
+import TagInput from '@/components/ui/fields/tag_input';
 
 type Props = {
     formState: FieldFormState;

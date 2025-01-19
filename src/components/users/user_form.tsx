@@ -3,15 +3,15 @@ import React from 'react';
 import { Role, roles, User } from "@/types/collections";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import Select from '@/components/ui/fields/dialogs/select';
+import Select from '@/components/ui/fields/select';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userKeys } from '@/lib/query_keys';
-import { PasswordInput } from '@/components/ui/fields/dialogs/password_input';
+import { PasswordInput } from '@/components/ui/fields/password_input';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { PasswordRequirements, UsernameRequirements } from '../ui/requirements';
-import { Input } from '@/components/ui/fields/dialogs/input';
+import { Input } from '@/components/ui/fields/input';
 import { upsertUser } from '@/server/users/upsert_user';
 
 type Props = {

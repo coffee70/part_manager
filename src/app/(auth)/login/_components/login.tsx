@@ -6,8 +6,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/ui/loader";
-import { Input } from "@/components/ui/fields/dialogs/input";
-import { PasswordInput } from "@/components/ui/fields/dialogs/password_input";
+import { Input } from "@/components/ui/fields/input";
+import { PasswordInput } from "@/components/ui/fields/password_input";
 
 export default function Login() {
 

@@ -9,7 +9,7 @@ import { useFieldURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { Input } from '@/components/ui/fields/dialogs/input';
+import { Input } from '@/components/ui/fields/input';
 
 type FormState = {
     name: string,
