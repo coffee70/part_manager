@@ -7,8 +7,10 @@ import { modelKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { getModels } from "@/server/models/get_models";
 import { instanceURL } from "@/lib/url";
+import { useURL } from "@/hooks/url_metadata.hook";
 
 export default function SideNavigation() {
+    const { modelId } = useURL();
 
     const { data: models } = useQuery({
         queryKey: modelKeys.all(),
@@ -28,6 +30,7 @@ export default function SideNavigation() {
                         label={model.name}
                         href={instanceURL(model._id)}
                         color={model.color}
+                        selected={model._id === modelId}
                     />
                 ))}
             </NavContent>

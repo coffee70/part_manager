@@ -77,14 +77,18 @@ type ModelItemProps = {
     label: string
     href: string
     color: string
+    selected?: boolean
 }
 
-export function ModelItem({ label, href, color }: ModelItemProps) {
+export function ModelItem({ label, href, color, selected }: ModelItemProps) {
     return (
         <Link href={href} className='group flex items-center h-12 px-4 my-1 hover:bg-hover'>
             <div className='flex items-center space-x-6'>
                 <div className='flex items-center justify-center w-8 h-8'>
-                    <div className="w-6 h-6 rounded-full ring-offset-2 ring-offset-foreground group-hover:ring-2"
+                    <div className={cn(
+                        "w-6 h-6 rounded-full ring-offset-2 ring-offset-foreground group-hover:ring-2",
+                        selected ? "ring-2" : ""
+                    )}
                         style={{
                             backgroundColor: color,
                             '--tw-ring-color': color,

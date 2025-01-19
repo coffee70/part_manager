@@ -16,3 +16,8 @@ export function useInstanceURL() {
 
     return { modelId, instanceId };
 }
+
+export function useURL() {
+    const modelId = usePathname()?.split('/').pop();
+    return { modelId };
+}

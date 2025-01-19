@@ -12,6 +12,7 @@ import { instanceURL } from "@/lib/url";
 import SummaryError from "@/components/summary/summary_error";
 import { getAttachments } from "@/server/attachments/get_attachments";
 import { getModels } from "@/server/models/get_models";
+import { getModel } from "@/server/models/get_model";
 
 export default async function Page({
     params,
@@ -38,6 +39,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: sectionKeys.all(modelId),
         queryFn: () => getSections({ modelId }),
+    })
+
+    // prefetch model
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.id(modelId),
+        queryFn: () => getModel({ modelId }),
     })
 
     // prefetch comments
