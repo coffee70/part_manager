@@ -23,7 +23,9 @@ export default function Select({ label, description, className, error, ...props 
             )}>
                 <Combobox {...props} />
             </div>
-            {error && <p className='text-xs text-destructive'>{error}</p>}
+            {error && <span className='text-xs text-destructive'>
+                {Array.isArray(error) ? error.map((e, i) => <div key={i}>{e}</div>) : error}
+            </span>}
             {description && <p className='text-xs text-muted-foreground'>{description}</p>}
         </div>
     )

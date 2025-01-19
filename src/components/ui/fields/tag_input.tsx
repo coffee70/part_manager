@@ -20,7 +20,9 @@ export default function TagInput(props: Props) {
                 )}
                 {...other}
             />
-            {error && <span className='text-xs text-destructive'>{error}</span>}
+            {error && <span className='text-xs text-destructive'>
+                {Array.isArray(error) ? error.map((e, i) => <div key={i}>{e}</div>) : error}
+            </span>}
             {description && <span className="text-xs text-muted-foreground">{description}</span>}
         </div>
     )

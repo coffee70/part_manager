@@ -1,6 +1,5 @@
 'use client'
 import React from 'react';
-import Input from "@/components/models/fields/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
@@ -12,6 +11,7 @@ import { editProfile } from '@/server/auth/edit_profile';
 import Loader from '@/components/ui/loader';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { Input } from '@/components/ui/fields/input';
 
 type Props = {
     open: boolean;
@@ -34,17 +34,21 @@ export default function EditProfile({ open, onOpenChange }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate, isPending, error, isError } = useMutation({
-        mutationFn: () => editProfile(formState),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: userKeys.current() });
-            onOpenChange(false);
+    const { mutate, isPending, data } = useMutation({
+        mutationFn: editProfile,
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: userKeys.current() });
+                // revalidate users table if you are an admin on the users page
+                queryClient.invalidateQueries({ queryKey: userKeys.all() })
+                onOpenChange(false);
+            }
         }
     })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate();
+        mutate(formState);
     }
 
     return (
@@ -60,26 +64,28 @@ export default function EditProfile({ open, onOpenChange }: Props) {
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className='flex flex-col space-y-6'>
                     <div className='flex flex-col space-y-1'>
-                        {isError && <Alert variant='destructive'>
+                        {data?.success === false && <Alert variant='destructive'>
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{error.message}</AlertDescription>
+                            <AlertDescription>{data.error}</AlertDescription>
                         </Alert>}
                         <Input
                             label="Name"
                             value={formState.name}
                             onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                            error={data?.fieldErrors?.name}
                         />
-                        <UsernameRequirements />
                         <Input
-                            id='username'
+                            label={<UsernameRequirements />}
                             value={formState.username}
                             onChange={e => setFormState({ ...formState, username: e.target.value })}
+                            error={data?.fieldErrors?.username}
                         />
                         <Input
                             label='Title'
                             value={formState.title}
                             onChange={e => setFormState({ ...formState, title: e.target.value })}
+                            error={data?.fieldErrors?.title}
                         />
                     </div>
                     <Button type='submit' disabled={isPending}>

@@ -35,3 +35,23 @@ export function validate<T extends z.ZodType>(
         data: result.data
     }
 }
+
+export async function validateAsync<T extends z.ZodType>(
+    schema: T,
+    data: z.input<T>
+): Promise<ValidateActionReturnType<z.infer<T>, z.inferFlattenedErrors<T>['fieldErrors']>> {
+    const result = await schema.safeParseAsync(data)
+    
+    if (!result.success) {
+        return {
+            success: false,
+            fieldErrors: result.error.flatten().fieldErrors,
+            error: "Some fields need your attention!"
+        }
+    }
+    
+    return {
+        success: true,
+        data: result.data
+    }
+}
