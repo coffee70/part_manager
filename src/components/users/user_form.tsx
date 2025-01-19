@@ -25,19 +25,19 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
     const title = user ? 'Edit User' : 'New User';
     const description = user ? 'Edit the user details' : 'Create a new user';
 
-    const initialFormState = {
+    const initialFormState = React.useCallback(() => ({
         name: user?.name || '',
         username: user?.username || '',
         title: user?.title || '',
         role: user?.role || 'user',
         password: '',
-    }
+    }), [user])
 
     const [formState, setFormState] = React.useState(initialFormState);
 
     React.useEffect(() => {
         setFormState(initialFormState);
-    }, [user])
+    }, [user, initialFormState])
 
     const queryClient = useQueryClient();
 
