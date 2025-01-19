@@ -26,7 +26,6 @@ export default function EditProfile({ open, onOpenChange }: Props) {
     })
 
     const [formState, setFormState] = React.useState({
-        _id: user?._id,
         name: user?.name || '',
         username: user?.username || '',
         title: user?.title || '',
