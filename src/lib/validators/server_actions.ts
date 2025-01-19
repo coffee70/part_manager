@@ -1,9 +1,10 @@
 import { z } from "zod"
 
-export type ActionState<T extends z.ZodType> = {
+export type ActionState<T extends z.ZodType, S extends z.ZodType = z.ZodUndefined> = {
     success: boolean;
     error?: string;
     fieldErrors?: z.inferFlattenedErrors<T>['fieldErrors'];
+    data?: z.infer<S>;
 }
 
 type ValidateActionReturnType<T = undefined, E = undefined> = {

@@ -1,6 +1,5 @@
 'use client'
 import React from "react";
-import Select from "@/components/models/fields/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -13,6 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { getModels } from "@/server/models/get_models";
 import { getInstances } from "@/server/instances/get_instances";
+import Select from "@/components/ui/fields/select";
 
 type Props = {
     open: boolean;
@@ -48,19 +48,21 @@ export default function AddLink({ open, onOpenChange }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate, error } = useMutation({
+    const { mutate, data } = useMutation({
         mutationFn: createLink,
-        onSuccess: ({ linkedModelId, linkedInstanceId }) => {
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(linkedModelId, linkedInstanceId) })
-            onOpenChange(false);
+        onSuccess: ({ success, data }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: linkKeys.all(modelId, instanceId) })
+                if (data) queryClient.invalidateQueries({ queryKey: linkKeys.all(data.linkedModelId, data.linkedInstanceId) })
+                onOpenChange(false);
+            }
         }
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate({ 
-            modelId, 
+        mutate({
+            modelId,
             instanceId,
             linkedModelId,
             linkedInstanceNumber,
@@ -81,10 +83,10 @@ export default function AddLink({ open, onOpenChange }: Props) {
                     onSubmit={handleSubmit}
                 >
                     <div className="flex flex-col space-y-2">
-                        {error && <Alert variant='destructive'>
+                        {data?.success === false && <Alert variant='destructive'>
                             <AlertCircle className="h-4 w-4" />
                             <AlertTitle>Error</AlertTitle>
-                            <AlertDescription>{error.message}</AlertDescription>
+                            <AlertDescription>{data.error}</AlertDescription>
                         </Alert>}
                         <Select
                             label="Model"

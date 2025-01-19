@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb"
 import { InstanceDoc, LinkableDoc } from "@/types/collections"
 import { getCurrentSession } from "../auth/get_current_session"
 import { z } from "zod"
+import { ActionState } from "@/lib/validators/server_actions"
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -12,26 +13,36 @@ const InputSchema = z.object({
     linkedInstanceNumber: z.string(),
 })
 
-export async function createLink(input: z.input<typeof InputSchema>) {
+const OutputSchema = z.object({
+    linkedModelId: z.string(),
+    linkedInstanceId: z.string(),
+})
+
+export async function createLink(
+    input: z.input<typeof InputSchema>
+): Promise<ActionState<
+    typeof InputSchema,
+    typeof OutputSchema
+>> {
     const { user } = await getCurrentSession();
-    if (!user) throw new Error('Unauthorized');
+    if (!user) return { success: false, error: 'Unauthorized!' };
 
     const { modelId, instanceId, linkedModelId, linkedInstanceNumber } = InputSchema.parse(input);
-    if (!instanceId) throw new Error('No instance ID provided');
+    if (!instanceId) return { success: false, error: 'Instance ID is required!' };
 
     const linkedCollection = db.collection<LinkableDoc & InstanceDoc>(linkedModelId);
 
     // get the id of the linked model
     const linkedDocument = await linkedCollection.findOne({ number: linkedInstanceNumber });
-    // if the linked model doesn't exist, throw an error
+    // if the linked model doesn't exist, return an error
     if (!linkedDocument) {
-        throw new Error(`Linked model was not found!`);
+        return { success: false, error: "Linked instance not found!" };
     }
     const linkedInstanceId = linkedDocument._id.toString();
 
     // prevent self linking
     if (instanceId === linkedInstanceId && modelId === linkedModelId) {
-        throw new Error(`Cannot self link!`);
+        return { success: false, error: "Cannot link an instance to itself!" };
     }
 
     // create the link on both models
@@ -48,7 +59,7 @@ export async function createLink(input: z.input<typeof InputSchema>) {
         targetInstanceId: instanceId
     });
 
-    return { linkedModelId, linkedInstanceId };
+    return { success: true, data: { linkedModelId, linkedInstanceId } };
 }
 
 async function link({
