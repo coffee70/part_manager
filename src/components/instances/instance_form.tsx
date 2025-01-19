@@ -1,16 +1,20 @@
 'use client'
 import React from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { priorities, Priority, Values } from "@/types/collections"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { instanceKeys, modelKeys } from '@/lib/query_keys';
-import Input from '@/components/models/fields/input';
-import Select from '@/components/models/fields/select';
-import Textarea from '@/components/models/fields/textarea';
 import Fields from '@/components/models/fields';
-import ModelForm from '@/components/ui/forms/model_form';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getModel } from '@/server/models/get_model';
 import { upsertInstance } from '@/server/instances/upsert_instance';
+import { Input } from '@/components/ui/fields/input';
+import Select from '@/components/ui/fields/select';
+import { Textarea } from '@/components/ui/fields/textarea';
 
 type Props = {
     instance?: {
@@ -55,11 +59,13 @@ export default function InstanceForm({ instance, children }: Props) {
         }
     }, [instance])
 
-    const { mutate, error } = useMutation({
+    const { mutate, data } = useMutation({
         mutationFn: upsertInstance,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
-            setOpen(false)
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+                setOpen(false)
+            }
         }
     })
 
@@ -76,44 +82,66 @@ export default function InstanceForm({ instance, children }: Props) {
         mutate({
             modelId,
             instanceId: instance?._id,
-            instance: { ...attributeState, values: fieldState }
+            values: fieldState,
+            ...attributeState
         })
     }
 
     return (
-        <ModelForm
-            open={open}
-            setOpen={setOpen}
-            title={title}
-            description={description}
-            error={error}
-            trigger={children}
-            handleSubmit={handleSubmit}
-        >
-            <Input
-                label='Number'
-                description='The customer order number'
-                type='text'
-                value={attributeState.number}
-                onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
-            />
-            <Select
-                label='Priority'
-                description='The priority of this order'
-                options={[...priorities]}
-                value={attributeState.priority}
-                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
-            />
-            <Textarea
-                label='Notes'
-                description='Any notes about this order'
-                value={attributeState.notes}
-                onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
-            />
-            <Fields
-                fieldState={fieldState}
-                setFieldState={setFieldState}
-            />
-        </ModelForm>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            <DialogContent className="min-w-[650px]">
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>
+                        <VisuallyHidden.Root>
+                            {description}
+                        </VisuallyHidden.Root>
+                    </DialogDescription>
+                </DialogHeader>
+                {data?.success === false && <Alert variant='destructive'>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{data.error}</AlertDescription>
+                </Alert>}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className='max-h-[70vh] overflow-y-auto space-y-1'>
+                        <Input
+                            label='Number'
+                            description='The customer order number'
+                            type='text'
+                            value={attributeState.number}
+                            onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
+                            error={data?.fieldErrors?.number}
+                        />
+                        <Select
+                            label='Priority'
+                            description='The priority of this order'
+                            options={[...priorities]}
+                            value={attributeState.priority}
+                            onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
+                            error={data?.fieldErrors?.priority}
+                        />
+                        <Textarea
+                            label='Notes'
+                            description='Any notes about this order'
+                            value={attributeState.notes}
+                            onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
+                            error={data?.fieldErrors?.notes}
+                        />
+                        <Fields
+                            fieldState={fieldState}
+                            setFieldState={setFieldState}
+                        />
+                    </div>
+                    <Button
+                        className="w-full"
+                        type='submit'
+                    >Save</Button>
+                </form>
+            </DialogContent>
+        </Dialog>
     )
 }

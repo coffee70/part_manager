@@ -4,23 +4,24 @@ import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
 import { InstanceDoc, priorities } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
+import { ActionState, validate } from "@/lib/validators/server_actions";
 
 const InputSchema = z.object({
     modelId: z.string(),
     instanceId: z.string().optional(),
-    instance: z.object({
-        number: z.string(),
-        priority: z.enum(priorities),
-        notes: z.string(),
-        values: z.record(z.string(), z.union([z.string(), z.array(z.string()), z.undefined()])),
-    }),
+    number: z.string().min(1, { message: 'Number is required.' }),
+    priority: z.enum(priorities),
+    notes: z.string(),
+    values: z.record(z.string(), z.union([z.string(), z.array(z.string()), z.undefined()])),
 })
 
-export async function upsertInstance(input: z.input<typeof InputSchema>) {
+export async function upsertInstance(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, instanceId, instance } = InputSchema.parse(input);
+    const validation = validate(InputSchema, input);
+    if (!validation.success) return validation;
+    const { modelId, instanceId, ...instance } = validation.data;
 
     const instanceCollection = db.collection<WithoutId<InstanceDoc>>(modelId);
 
@@ -36,4 +37,6 @@ export async function upsertInstance(input: z.input<typeof InputSchema>) {
             updatedById: user._id,
         });
     }
+
+    return { success: true };
 }

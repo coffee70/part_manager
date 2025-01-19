@@ -1,13 +1,13 @@
 'use client'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import Input from './fields/input';
-import Textarea from './fields/textarea';
-import Select from './fields/select';
 import { Values } from '@/types/collections';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getSections } from '@/server/sections/get_sections';
 import { sectionKeys } from '@/lib/query_keys';
 import { useQuery } from '@tanstack/react-query';
+import Select from '@/components/ui/fields/select';
+import { Textarea } from '@/components/ui/fields/textarea';
+import { Input } from '@/components/ui/fields/input';
 
 type Props = {
     fieldState: Values;
