@@ -7,7 +7,7 @@ type Props = {
     requirements: string[];
 }
 
-export function FieldRequirements({ htmlFor, label, requirements }: Props) {
+function FieldRequirements({ htmlFor, label, requirements }: Props) {
     return (
         <Tooltip>
             <TooltipTrigger asChild>
