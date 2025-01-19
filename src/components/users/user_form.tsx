@@ -35,6 +35,10 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
 
     const [formState, setFormState] = React.useState(initialFormState);
 
+    React.useEffect(() => {
+        setFormState(initialFormState);
+    }, [user])
+
     const queryClient = useQueryClient();
 
     const { mutate, data } = useMutation({
