@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSection } from '@/server/sections/update_section';
 import { sectionKeys } from '@/lib/query_keys';
 import { useFieldURL } from '@/hooks/url_metadata.hook';
-import { useSectionContext } from '../section.context';
+import { useSectionContext } from './section.context';
 
 export default function SectionTitle() {
     const { section } = useSectionContext();

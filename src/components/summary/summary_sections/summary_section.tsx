@@ -1,7 +1,7 @@
 import React from 'react';
-import ParagraphField from "@/components/fields/components/fields/paragraph";
-import SelectField from "@/components/fields/components/fields/select";
-import InputField from '@/components/fields/components/fields/input_field';
+import ParagraphField from "@/components/summary/summary_sections/fields/paragraph_field";
+import SelectField from "@/components/summary/summary_sections/fields/select_field";
+import InputField from '@/components/summary/summary_sections/fields/input_field';
 import { Field, Section } from '@/types/collections';
 
 type SummarySectionProps = {
