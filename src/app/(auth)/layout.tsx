@@ -15,11 +15,13 @@ export default async function Layout({ children }: Props) {
   }
 
   return (
-    <main className="h-screen">
-      <div className="flex w-full bg-foreground p-4">
+    <main className="h-screen flex flex-col">
+      <div className="w-full bg-foreground p-4">
         <Logo />
       </div>
-      {children}
+      <div className="flex-1 flex items-center justify-center">
+        {children}
+      </div>
     </main>
   )
 }
