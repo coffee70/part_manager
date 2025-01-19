@@ -1,17 +1,16 @@
 'use client'
 import React from "react"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
-import Input from "@/components/models/fields/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
-import { PlusIcon } from "lucide-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createModel } from "@/server/models/create_model"
 import { modelKeys } from "@/lib/query_keys"
 import { Model } from "@/types/collections"
-import { updateModel } from "@/server/models/update_model"
+import { Input } from "@/components/ui/fields/input"
+import { upsertModel } from "@/server/models/upsert_model"
+import Loader from "../ui/loader"
 
 const colors = [
     'hsl(0, 85%, 65%)',    // bright red
@@ -48,6 +47,7 @@ type Props = {
 
 export default function ModelForm({ model, open, setOpen }: Props) {
     const [formState, setFormState] = React.useState({
+        _id: model?._id,
         name: model?.name || '',
         color: model?.color || colors[0],
         attachable: model?.attachable || false,
@@ -57,29 +57,19 @@ export default function ModelForm({ model, open, setOpen }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate: create } = useMutation({
-        mutationFn: createModel,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: modelKeys.all() });
-            setOpen(false);
-        }
-    })
-
-    const { mutate: update } = useMutation({
-        mutationFn: updateModel,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: modelKeys.all() });
-            setOpen(false);
+    const { mutate, data, isPending } = useMutation({
+        mutationFn: upsertModel,
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: modelKeys.all() });
+                setOpen(false);
+            }
         }
     })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (model) {
-            update({ _id: model._id, model: { ...model, ...formState } });
-        } else {
-            create({ model: formState });
-        }
+        mutate(formState);
     }
 
     return (
@@ -102,8 +92,8 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                         description="The name of the model."
                         value={formState.name}
                         onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
+                        error={data?.fieldErrors?.name}
                     />
-
                     <div className="space-y-3">
                         <div className="space-y-2">
                             <div className="border-b border-b-secondary"></div>
@@ -128,7 +118,6 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                             onChange={(commentable) => setFormState(prev => ({ ...prev, commentable: commentable }))}
                         />
                     </div>
-
                     <div className="space-y-3">
                         <div className="border-b border-b-secondary"></div>
                         <div className="text-sm text-accent-secondary font-bold">Color</div>
@@ -143,8 +132,10 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                             ))}
                         </div>
                     </div>
-
-                    <Button type="submit">Create</Button>
+                    <Button
+                        type="submit"
+                        disabled={isPending}
+                    >{isPending ? <Loader /> : "Save"}</Button>
                 </form>
             </DialogContent>
         </Dialog>
