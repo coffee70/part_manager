@@ -53,9 +53,34 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const instanceCollection = db.collection<InstanceDoc>(modelId);
     const usersCollection = db.collection<UserDoc>('users');
 
+    const pipeline: any[] = [{ $match: matchStage }];
+
+    if (sortBy === 'priority') {
+        pipeline.push(
+            {
+                $addFields: {
+                    priorityOrder: {
+                        $indexOfArray: [priorities, '$priority']
+                    }
+                }
+            },
+            {
+                $sort: { priorityOrder: sortOrder === 'asc' ? 1 : -1 }
+            },
+            {
+                $project: {
+                    priorityOrder: 0
+                }
+            }
+        );
+    } else if (sortBy) {
+        pipeline.push({
+            $sort: { [sortBy]: sortOrder === 'asc' ? 1 : -1 }
+        });
+    }
+
     const instances = await instanceCollection
-        .find(matchStage)
-        .sort(sortStage)
+        .aggregate(pipeline)
         .toArray();
 
     const res = await Promise.all(instances.map(async instance => {
