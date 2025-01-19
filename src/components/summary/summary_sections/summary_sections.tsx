@@ -26,18 +26,18 @@ export default function SummarySections({ values }: SummarySectionsProps) {
 
     return (
         <SummaryBase title='Details'>
-            <Tabs defaultValue={sections[0].name}>
+            <Tabs defaultValue={sections[0]._id}>
                 <TabsList>
                     {mergedSections.map(section => (
                         <TabsTrigger
                             key={section._id}
-                            value={section.name}>
+                            value={section._id}>
                             {section.name}
                         </TabsTrigger>
                     ))}
                 </TabsList>
                 {mergedSections.map(section => (
-                    <TabsContent key={section._id} value={section.name}>
+                    <TabsContent key={section._id} value={section._id}>
                         <SummarySection section={section} />
                     </TabsContent>
                 ))}

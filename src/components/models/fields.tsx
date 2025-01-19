@@ -28,18 +28,18 @@ export default function Fields({ fieldState, setFieldState }: Props) {
         || sections.filter(section => section.fields.length > 0).length === 0) return null;
 
     return (
-        <Tabs defaultValue={sections[0].name}>
+        <Tabs defaultValue={sections[0]._id}>
             <TabsList>
                 {sections.map(section => (
                     <TabsTrigger
                         key={section._id}
-                        value={section.name}>
+                        value={section._id}>
                         {section.name}
                     </TabsTrigger>
                 ))}
             </TabsList>
             {sections.map(section => (
-                <TabsContent key={section._id} value={section.name}>
+                <TabsContent key={section._id} value={section._id}>
                     <div className="flex flex-col space-y-1">
                         {section.fields.map(field => (
                             <div key={field._id}>
