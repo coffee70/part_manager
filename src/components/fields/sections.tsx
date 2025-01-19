@@ -40,12 +40,12 @@ export default function Sections() {
                     subtitle={model?.name}
                     icon={<FieldIcon size={50} />}
                 />
-            </AppBar>
-            <div className="flex-1 p-6 space-y-4 overflow-y-auto">
                 <div className='flex items-center space-x-4'>
                     <ModelSelect />
                     <AddSection />
                 </div>
+            </AppBar>
+            <div className="flex-1 p-6 space-y-4 overflow-y-auto">
                 {data.map(section => (
                     <SectionProvider key={section._id} section={section}>
                         <Section />
