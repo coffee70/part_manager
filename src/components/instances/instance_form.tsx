@@ -34,7 +34,7 @@ type AttributeState = {
 }
 
 export default function InstanceForm({ instance, children }: Props) {
-    const { modelId, instanceId } = useInstanceURL();
+    const { modelId } = useInstanceURL();
 
     const { data: model } = useQuery({
         queryKey: modelKeys.id(modelId),
