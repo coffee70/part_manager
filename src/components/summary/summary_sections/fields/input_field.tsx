@@ -14,18 +14,6 @@ import { updateFieldValue } from '@/server/fields/update_field_value'
 import { useInstanceURL } from '@/hooks/url_metadata.hook'
 import { instanceKeys, sectionKeys } from '@/lib/query_keys'
 
-type FieldComponentProps = {
-    type: React.InputHTMLAttributes<HTMLInputElement>['type'];
-    value?: React.InputHTMLAttributes<HTMLInputElement>['value'];
-    onChange?: React.InputHTMLAttributes<HTMLInputElement>['onChange'];
-}
-
-export const FieldComponent = React.forwardRef<HTMLInputElement, FieldComponentProps>((props, ref) => {
-    return <Input className="no-icon" ref={ref} {...props} />
-})
-
-FieldComponent.displayName = 'FieldComponent'
-
 type Props = {
     field: Field & {
         value?: string | string[];
@@ -75,8 +63,9 @@ export default function InputField({ field }: Props) {
             )}
                 onSubmit={handleSubmit}
             >
-                <FieldComponent
+                <Input
                     ref={inputRef}
+                    className='no-icon'
                     type={field.type}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
