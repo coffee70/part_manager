@@ -11,6 +11,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { instanceKeys } from '@/lib/query_keys'
 import { Input } from '@/components/ui/input'
 import { updateNumber } from '@/server/number/update_number'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { TriangleAlertIcon } from 'lucide-react';
 
 function useIsEditing() {
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -62,12 +64,14 @@ export default function Number({ initialValue }: Props) {
 
     const queryClient = useQueryClient();
 
-    const { mutate, isError, isPending, error } = useMutation({
+    const { mutate, isPending, data } = useMutation({
         mutationFn: updateNumber,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
-            setIsEditing(false);
+        onSuccess: ({ success }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+                setIsEditing(false);
+            }
         }
     })
 
@@ -83,8 +87,8 @@ export default function Number({ initialValue }: Props) {
     return (
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
             <form className={cn(
-                "group relative flex justify-between border border-transparent pl-1",
-                isError ? "border-red-500" :
+                "group relative flex space-x-1 justify-between border border-transparent pl-1",
+                data?.success === false ? "border-red-500" :
                     isPending ? "border-foreground" :
                         isEditing ? "border-foreground" : "hover:border-foreground",
             )}
@@ -96,13 +100,21 @@ export default function Number({ initialValue }: Props) {
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />
+                {data?.success === false && <Tooltip>
+                    <TooltipTrigger>
+                        <TriangleAlertIcon className='text-destructive' size={22} />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <div className="bg-destructive p-2 rounded-md">
+                            <p className='text-white text-xs font-bold'>{data?.fieldErrors?.number}</p>
+                        </div>
+                    </TooltipContent>
+                </Tooltip>}
                 <div className="flex flex-col">
-                    {error ? (
-                        <Error message={error.message} />
-                    ) : isPending ? (
+                    {isPending ? (
                         <Loading />
-                    ) : isEditing ? (
-                        <Editing />
+                    ) : isEditing || data?.success === false ? (
+                        <Editing error={data?.success === false} />
                     ) : (
                         <NotEditing onClick={() => setIsEditing(true)} />
                     )}
