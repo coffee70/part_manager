@@ -4,7 +4,7 @@ import { CheckIcon } from "lucide-react";
 import { cn } from '@/lib/utils';
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-    error: boolean;
+    error?: boolean;
 }
 
 const Editing = React.forwardRef<HTMLButtonElement, Props>(
