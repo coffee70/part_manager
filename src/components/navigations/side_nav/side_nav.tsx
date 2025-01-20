@@ -22,7 +22,7 @@ export default function SideNavigation() {
             <NavHeader>
                 <Logo />
             </NavHeader>
-            <NavDivider />
+            {models && models.length > 0 && <NavDivider />}
             <NavContent>
                 {models?.map(model => (
                     <ModelItem
