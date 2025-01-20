@@ -62,7 +62,7 @@ type NavItemProps = {
 
 function NavItem({ label, icon, open, href }: NavItemProps) {
     return (
-        <Link href={href} className='flex items-center h-12 px-4 my-1 hover:bg-hover'>
+        <Link href={href} className='group flex items-center h-12 px-4 my-1 hover:bg-hover'>
             <div className='flex items-center space-x-6'>
                 {icon}
                 <span>{label}</span>

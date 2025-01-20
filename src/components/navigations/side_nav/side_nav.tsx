@@ -10,7 +10,7 @@ import { instanceURL } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
 
 export default function SideNavigation() {
-    const { modelId } = useURL();
+    const { tailSegment } = useURL();
 
     const { data: models } = useQuery({
         queryKey: modelKeys.all(),
@@ -30,15 +30,27 @@ export default function SideNavigation() {
                         label={model.name}
                         href={instanceURL(model._id)}
                         color={model.color}
-                        selected={model._id === modelId}
+                        selected={model._id === tailSegment}
                     />
                 ))}
             </NavContent>
             <NavDivider />
             <NavContent>
-                <NavItem label="Models" href="/models" icon={<ModelIcon />} />
-                <NavItem label="Fields" href="/fields" icon={<FieldIcon />} />
-                <NavItem label='Users' href='/users' icon={<UserIcon />} />
+                <NavItem
+                    label="Models"
+                    href="/models"
+                    icon={<ModelIcon selected={tailSegment === 'models'} />}
+                />
+                <NavItem
+                    label="Fields"
+                    href="/fields"
+                    icon={<FieldIcon selected={tailSegment === 'fields'} />}
+                />
+                <NavItem
+                    label='Users'
+                    href='/users'
+                    icon={<UserIcon selected={tailSegment === 'users'} />}
+                />
             </NavContent>
             <NavDivider bottom />
             <NavContent>

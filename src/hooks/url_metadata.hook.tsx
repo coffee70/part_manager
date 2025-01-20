@@ -18,6 +18,6 @@ export function useInstanceURL() {
 }
 
 export function useURL() {
-    const modelId = usePathname()?.split('/').pop();
-    return { modelId };
+    const tailSegment = usePathname()?.split('/').pop();
+    return { tailSegment };
 }
