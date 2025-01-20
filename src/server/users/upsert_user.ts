@@ -3,10 +3,12 @@ import { roles, UserDoc } from "@/types/collections";
 import { checkNewInstance } from "@/server/auth/check_new_instance";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { z } from "zod";
-import { ActionState, validate } from "@/lib/validators/server_actions";
+import { ActionState, validateAsync } from "@/lib/validators/server_actions";
 import { hash } from "@node-rs/argon2";
 import { db } from "@/lib/db";
-import { generateUserId } from "@/lib/session";
+import { createSession, generateSessionToken, generateUserId } from "@/lib/session";
+import { redirect } from "next/navigation";
+import { setSessionTokenCookie } from "@/lib/cookies";
 
 const InputSchema = z.object({
     _id: z.string().optional(),
@@ -27,22 +29,28 @@ const InputSchema = z.object({
     !data._id || data.password.length > 0
         ? data.password.length > 6
         : true,
-    { 
+    {
         message: "Password must be greater than 6 characters.",
         path: ["password"]
     }
-);
+).refine(async data => {
+    const existingUsername = await db.collection<UserDoc>('users').findOne({ username: data.username, _id: { $ne: data._id } });
+    return existingUsername === null;
+}, {
+    message: 'Username already in use.',
+    path: ['username']
+})
 
 export async function upsertUser(
     input: z.input<typeof InputSchema>
-): Promise<ActionState<typeof InputSchema>> {
+): Promise<ActionState<typeof InputSchema> | void> {
     const isNewInstance = await checkNewInstance();
     if (!isNewInstance) {
         const { user: currentUser } = await getCurrentSession();
         if (!currentUser || currentUser.role !== 'admin') return { success: false, error: 'Unauthorized' };
     }
 
-    const validation = validate(InputSchema, input)
+    const validation = await validateAsync(InputSchema, input)
     if (!validation.success) return validation
 
     const { _id, ...user } = validation.data
@@ -62,13 +70,6 @@ export async function upsertUser(
     }
 
     if (_id) {
-        const userNameChanged = await users.findOne({ _id, username: { $ne: user.username } }) !== null;
-        if (userNameChanged) {
-            const usernameInUse = await users.findOne({ username: user.username }) !== null;
-            if (usernameInUse) {
-                return { success: false, error: "Username already in use" };
-            }
-        }
         await users.updateOne({ _id }, {
             $set: {
                 name: user.name,
@@ -78,10 +79,6 @@ export async function upsertUser(
             }
         })
     } else {
-        const usernameInUse = await users.findOne({ username: user.username }) !== null;
-        if (usernameInUse) {
-            return { success: false, error: "Username already in use" };
-        }
         const userId = generateUserId();
         await users.insertOne({
             _id: userId,
@@ -91,6 +88,12 @@ export async function upsertUser(
             role: user.role,
             password_hash: passwordHash,
         })
+        if (isNewInstance) {
+            const token = generateSessionToken();
+            const session = await createSession(token, userId);
+            setSessionTokenCookie(token, session.expires_at);
+            redirect('/')
+        }
     }
 
     return { success: true }

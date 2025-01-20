@@ -43,8 +43,8 @@ export default function UserForm({ user, open, onOpenChange, children }: Props) 
 
     const { mutate, data } = useMutation({
         mutationFn: upsertUser,
-        onSuccess: ({ success }) => {
-            if (success) {
+        onSuccess: (result) => {
+            if (result?.success) {
                 queryClient.invalidateQueries({ queryKey: userKeys.all() })
                 setFormState(initialFormState);
                 onOpenChange && onOpenChange(false);
