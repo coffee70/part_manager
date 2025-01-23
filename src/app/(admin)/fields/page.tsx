@@ -6,6 +6,7 @@ import { NextServerSearchParams } from "@/types/collections";
 import { getModels } from "@/server/models/get_models";
 import { redirect } from "next/navigation";
 import { getModel } from "@/server/models/get_model";
+import SectionError from "@/components/fields/section_error";
 
 export default async function Page({
     searchParams
@@ -15,6 +16,7 @@ export default async function Page({
     const modelId = searchParams.modelId;
     if (!modelId || Array.isArray(modelId)) {
         const models = await getModels();
+        if (models.length === 0) return <SectionError />;
         redirect(`/fields?modelId=${models[0]._id}`);
     }
 
