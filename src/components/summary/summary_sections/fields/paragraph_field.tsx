@@ -12,33 +12,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { updateFieldValue } from '@/server/fields/update_field_value'
 import { instanceKeys, sectionKeys } from '@/lib/query_keys'
 import { Field } from '@/types/collections'
-
-function useIsEditing() {
-    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-    const [isEditing, setIsEditing] = React.useState(false);
-
-    React.useEffect(() => {
-        if (isEditing) {
-            textareaRef.current?.focus()
-            textareaRef.current?.select()
-        }
-    }, [isEditing])
-
-    React.useEffect(() => {
-        const _textareaRef = textareaRef.current;
-        _textareaRef?.addEventListener('focus', () => setIsEditing(true))
-
-        return () => {
-            _textareaRef?.removeEventListener('focus', () => setIsEditing(false))
-        }
-    })
-
-    return {
-        textareaRef,
-        isEditing,
-        setIsEditing,
-    }
-}
+import { getFormClassName } from './field_helpers'
 
 type Props = {
     field: Field & {
@@ -46,16 +20,23 @@ type Props = {
     };
 }
 export default function ParagraphField({ field }: Props) {
-
     const [value, setValue] = React.useState(field.value);
 
     React.useEffect(() => {
-        setValue(field.value)
+        setValue(field.value ?? '')
     }, [field.value])
 
     const { modelId, instanceId } = useInstanceURL();
 
-    const { isEditing, setIsEditing, textareaRef } = useIsEditing();
+    const submitRef = React.useRef<HTMLButtonElement>(null);
+    const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+    const [isEditing, setIsEditing] = React.useState(false);
+
+    React.useEffect(() => {
+        const textarea = textareaRef.current;
+        if (isEditing) textarea?.focus();
+        else textarea?.blur();
+    }, [isEditing]);
 
     const queryClient = useQueryClient();
 
@@ -79,37 +60,43 @@ export default function ParagraphField({ field }: Props) {
         });
     }
 
+    const handleBlur = (e: React.FocusEvent, target: HTMLElement | null) => {
+        if (e.relatedTarget !== target) {
+            setIsEditing(false);
+        }
+    }
+
     return (
-        <ClickAwayListener onClickAway={() => setIsEditing(false)}>
-            <form className={cn(
-                "group relative flex justify-between border border-transparent pl-1",
-                isError ? "border-red-500" :
-                    isPending ? "border-foreground" :
-                        isEditing ? "border-foreground" : "hover:border-foreground",
-            )}
-                onSubmit={handleSubmit}
-            >
-                <Textarea
-                    id={field.name}
-                    ref={textareaRef}
-                    value={value}
-                    onChange={(e) => setValue(e.target.value)}
-                />
-                <div className="flex flex-col">
-                    {error ? (
-                        <Error message={error.message} />
-                    ) : isPending ? (
-                        <Loading />
-                    ) : isEditing ? (
-                        <Editing aria-label={`Save field ${field.name}`} />
-                    ) : (
-                        <NotEditing
-                            onClick={() => setIsEditing(true)}
-                            aria-label={`Edit field ${field.name}`}
-                        />
-                    )}
-                </div>
-            </form>
-        </ClickAwayListener>
+        <form
+            className={getFormClassName(isError, isPending, isEditing)}
+            onSubmit={handleSubmit}
+        >
+            <Textarea
+                id={field.name}
+                ref={textareaRef}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onFocus={() => setIsEditing(true)}
+                onBlur={(e) => handleBlur(e, submitRef.current)}
+            />
+            <div className="flex flex-col">
+                {isError ? (
+                    <Error message={error.message} />
+                ) : isPending ? (
+                    <Loading />
+                ) : isEditing ? (
+                    <Editing
+                        ref={submitRef}
+                        onBlur={(e) => handleBlur(e, textareaRef.current)}
+                        aria-label={`Save field ${field.name}`}
+                    />
+                ) : (
+                    <NotEditing
+                        onClick={() => setIsEditing(true)}
+                        aria-label={`Edit field ${field.name}`}
+                    />
+                )}
+            </div>
+        </form>
     )
 }

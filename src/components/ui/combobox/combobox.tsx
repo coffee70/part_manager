@@ -51,6 +51,8 @@ type ComboboxProps = {
     multiple?: boolean;
     value?: string | string[];
     onChange?: (value?: string | string[]) => void;
+    onFocus?: (e: React.FocusEvent) => void;
+    onBlur?: (e: React.FocusEvent) => void;
 }
 
 export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>((props, ref) => {
@@ -62,6 +64,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         creative,
         value,
         onChange: _onChange,
+        onFocus,
+        onBlur
     } = props;
 
     const initalValue = React.useCallback(() => {
@@ -167,8 +171,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         }
 
         if (e.key === "Enter") {
-            e.preventDefault()
             if (activeIndex !== null && filteredOptions[activeIndex]) {
+                e.preventDefault()
                 onSelect(filteredOptions[activeIndex])
                 setActiveIndex(null)
             }
@@ -271,6 +275,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                         value: input,
                         onChange,
                         onKeyDown,
+                        onFocus,
+                        onBlur,
                         "aria-autocomplete": "list",
                     })}
                 />

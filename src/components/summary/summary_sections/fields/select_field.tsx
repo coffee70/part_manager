@@ -13,6 +13,7 @@ import { updateFieldValue } from "@/server/fields/update_field_value";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { instanceKeys, sectionKeys } from '@/lib/query_keys';
 import { Field } from '@/types/collections';
+import { getFormClassName } from './field_helpers';
 
 type Props = {
     field: Field & {
@@ -21,8 +22,6 @@ type Props = {
 }
 
 export default function SelectField({ field }: Props) {
-    const { inputRef, isEditing, setIsEditing } = useIsEditing();
-
     const [value, setValue] = React.useState(field.value);
 
     React.useEffect(() => {
@@ -30,6 +29,16 @@ export default function SelectField({ field }: Props) {
     }, [field.value]);
 
     const { modelId, instanceId } = useInstanceURL();
+
+    const submitRef = React.useRef<HTMLButtonElement>(null);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [isEditing, setIsEditing] = React.useState(false);
+
+    React.useEffect(() => {
+        const input = inputRef.current;
+        if (isEditing) input?.focus();
+        else input?.blur();
+    }, [isEditing]);
 
     const queryClient = useQueryClient();
 
@@ -53,40 +62,45 @@ export default function SelectField({ field }: Props) {
         });
     }
 
+    const handleBlur = (e: React.FocusEvent, target: HTMLElement | null) => {
+        if (e.relatedTarget !== target) {
+            setIsEditing(false);
+        }
+    }
+
     return (
-        <ClickAwayListener onClickAway={() => setIsEditing(false)}>
-            <form className={cn(
-                "group relative flex items-center justify-between border border-transparent pl-1 w-full",
-                isError ? "border-red-500" :
-                    isPending ? "border-foreground" :
-                        isEditing ? "border-foreground" : "hover:border-foreground",
-            )}
-                onSubmit={handleSubmit}
-            >
-                <Combobox
-                    id={field.name}
-                    ref={inputRef}
-                    options={field.options || []}
-                    value={value}
-                    onChange={(v) => setValue(v)}
-                    multiple={field.multiple}
-                    creative={field.creative}
-                />
-                <div className="flex flex-col h-full">
-                    {isError ? (
-                        <Error message={error.message} />
-                    ) : isPending ? (
-                        <Loading />
-                    ) : isEditing ? (
-                        <Editing aria-label={`Save field ${field.name}`} />
-                    ) : (
-                        <NotEditing
-                            onClick={() => setIsEditing(true)}
-                            aria-label={`Edit field ${field.name}`}
-                        />
-                    )}
-                </div>
-            </form>
-        </ClickAwayListener>
+        <form
+            className={getFormClassName(isError, isPending, isEditing)}
+            onSubmit={handleSubmit}
+        >
+            <Combobox
+                id={field.name}
+                ref={inputRef}
+                options={field.options || []}
+                value={value}
+                onChange={(v) => setValue(v)}
+                multiple={field.multiple}
+                creative={field.creative}
+                onFocus={() => setIsEditing(true)}
+                onBlur={(e) => handleBlur(e, submitRef.current)}
+            />
+            <div className="flex flex-col h-full">
+                {isError ? (
+                    <Error message={error.message} />
+                ) : isPending ? (
+                    <Loading />
+                ) : isEditing ? (
+                    <Editing
+                        ref={submitRef}
+                        onBlur={(e) => handleBlur(e, submitRef.current)}
+                        aria-label={`Save field ${field.name}`} />
+                ) : (
+                    <NotEditing
+                        onClick={() => setIsEditing(true)}
+                        aria-label={`Edit field ${field.name}`}
+                    />
+                )}
+            </div>
+        </form>
     );
 }
