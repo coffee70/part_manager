@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { InstanceDoc, priorities } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
+import { redirect } from "next/navigation";
+import { instanceURL } from "@/lib/url";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -15,7 +17,11 @@ const InputSchema = z.object({
     values: z.record(z.string(), z.union([z.string(), z.array(z.string()), z.undefined()])),
 })
 
-export async function upsertInstance(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema>> {
+const OutputSchema = z.object({
+    redirect: z.string().optional(),
+})
+
+export async function upsertInstance(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema, typeof OutputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
@@ -25,10 +31,12 @@ export async function upsertInstance(input: z.input<typeof InputSchema>): Promis
 
     const instanceCollection = db.collection<WithoutId<InstanceDoc>>(modelId);
 
+    let redirectInstanceId;
+
     if (instanceId) {
         await instanceCollection.updateOne({ _id: new ObjectId(instanceId) }, { $set: instance });
     } else {
-        await instanceCollection.insertOne({
+        const { insertedId } = await instanceCollection.insertOne({
             ...instance,
             links: [],
             comments: [],
@@ -36,7 +44,17 @@ export async function upsertInstance(input: z.input<typeof InputSchema>): Promis
             updatedAt: new Date(),
             updatedById: user._id,
         });
+
+        redirectInstanceId = insertedId.toString();
     }
 
-    return { success: true };
+    return {
+        success: true,
+        data: {
+            redirect:
+                redirectInstanceId
+                    ? instanceURL(modelId, redirectInstanceId)
+                    : undefined
+        }
+    };
 }

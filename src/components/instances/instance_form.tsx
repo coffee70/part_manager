@@ -15,6 +15,7 @@ import { upsertInstance } from '@/server/instances/upsert_instance';
 import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
 import { Textarea } from '@/components/ui/fields/textarea';
+import { useRouter } from 'next/navigation';
 
 type Props = {
     instance?: {
@@ -34,6 +35,7 @@ type AttributeState = {
 }
 
 export default function InstanceForm({ instance, children }: Props) {
+    const router = useRouter();
     const { modelId } = useInstanceURL();
 
     const { data: model } = useQuery({
@@ -61,8 +63,9 @@ export default function InstanceForm({ instance, children }: Props) {
 
     const { mutate, data } = useMutation({
         mutationFn: upsertInstance,
-        onSuccess: ({ success }) => {
+        onSuccess: ({ success, data }) => {
             if (success) {
+                if (data?.redirect) router.push(data.redirect)
                 queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
                 setOpen(false)
             }
@@ -110,7 +113,7 @@ export default function InstanceForm({ instance, children }: Props) {
                     <div className='max-h-[70vh] overflow-y-auto space-y-1'>
                         <Input
                             label='Number'
-                            description='The customer order number'
+                            description='The number to identify this instance'
                             type='text'
                             value={attributeState.number}
                             onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
@@ -118,7 +121,7 @@ export default function InstanceForm({ instance, children }: Props) {
                         />
                         <Select
                             label='Priority'
-                            description='The priority of this order'
+                            description='The priority of this instance'
                             options={[...priorities]}
                             value={attributeState.priority}
                             onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
@@ -126,7 +129,7 @@ export default function InstanceForm({ instance, children }: Props) {
                         />
                         <Textarea
                             label='Notes'
-                            description='Any notes about this order'
+                            description='Any notes about this instance'
                             value={attributeState.notes}
                             onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
                             error={data?.fieldErrors?.notes}
