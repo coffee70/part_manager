@@ -80,6 +80,7 @@ export default function SectionName() {
                 onSubmit={handleSubmit}
             >
                 <Input
+                    id='section-name'
                     ref={inputRef}
                     className='text-2xl font-bold'
                     value={formState.name}
