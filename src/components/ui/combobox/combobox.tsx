@@ -64,14 +64,19 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         onChange: _onChange,
     } = props;
 
-    const initalValue = () => {
+    const initalValue = React.useCallback(() => {
         if (value && !Array.isArray(value)) {
             return value
         }
         else return ""
-    }
+    }, [value])
 
     const [input, setInput] = React.useState(initalValue);
+
+    // update input value when props change
+    React.useEffect(() => {
+        setInput(initalValue)
+    }, [initalValue])
 
     // floating logic
     const [open, setOpen] = React.useState(false);
