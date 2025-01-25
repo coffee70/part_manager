@@ -64,6 +64,7 @@ export default function SelectField({ field }: Props) {
                 onSubmit={handleSubmit}
             >
                 <Combobox
+                    id={field.name}
                     ref={inputRef}
                     options={field.options || []}
                     value={value}

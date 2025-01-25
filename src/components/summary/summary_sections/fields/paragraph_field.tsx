@@ -90,6 +90,7 @@ export default function ParagraphField({ field }: Props) {
                 onSubmit={handleSubmit}
             >
                 <Textarea
+                    id={field.name}
                     ref={textareaRef}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}

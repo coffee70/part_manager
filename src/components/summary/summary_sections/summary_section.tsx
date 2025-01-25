@@ -17,7 +17,12 @@ export default function SummarySection({ section }: SummarySectionProps) {
             {section.fields.map(field => (
                 <React.Fragment key={field._id}>
                     <div className='flex items-center'>
-                        <p className='text-muted-foreground whitespace-nowrap'>{`${field.name}:`}</p>
+                        <label
+                            className='text-muted-foreground whitespace-nowrap'
+                            htmlFor={field.name}
+                        >
+                            {`${field.name}:`}
+                        </label>
                     </div>
                     {field.type === 'paragraph' ? (
                         <ParagraphField field={field} />

@@ -45,6 +45,7 @@ const Item = React.forwardRef<
 Item.displayName = 'Item';
 
 type ComboboxProps = {
+    id?: string;
     options: string[];
     creative?: boolean;
     multiple?: boolean;
@@ -55,6 +56,7 @@ type ComboboxProps = {
 export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>((props, ref) => {
 
     const {
+        id,
         options,
         multiple,
         creative,
@@ -258,6 +260,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 ))}
                 <Input
                     {...getReferenceProps({
+                        id: id,
                         className: "px-1",
                         ref: refs.setReference,
                         value: input,

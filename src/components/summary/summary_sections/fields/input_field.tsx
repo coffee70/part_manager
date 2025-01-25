@@ -64,6 +64,7 @@ export default function InputField({ field }: Props) {
                 onSubmit={handleSubmit}
             >
                 <Input
+                    id={field.name}
                     ref={inputRef}
                     className='no-icon'
                     type={field.type}
