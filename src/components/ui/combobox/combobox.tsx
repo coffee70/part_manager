@@ -135,27 +135,30 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
 
     // select logic
-    const filteredOptions = !input ? options : options.filter((option) =>
-        option.toLowerCase().startsWith(input.toLowerCase())
-    );
+    const filteredOptions = !input
+        ? options
+        : options.filter((option) =>
+            option.toLowerCase().includes(input.toLowerCase())
+        );
 
     const onSelect = (selected: string) => {
-        if (multiple) {
-            if (Array.isArray(value)) {
+        if (multiple && Array.isArray(value)) {
+            if (creative) {
+                if (!value.includes(selected)) {
+                    _onChange && _onChange([...value, selected]);
+                }
+                else {
+                    _onChange && _onChange(value.filter((v) => v !== selected));
+                }
+            } else {
                 if (value.includes(selected)) {
-                    _onChange && _onChange(value.filter((v) => v !== selected))
+                    _onChange && _onChange(value.filter((v) => v !== selected));
+                } else if (options.some((option) => option === selected)) {
+                    _onChange && _onChange([...value, selected]);
                 }
-                else if (creative || options.some((option) => option === selected)) {
-                    _onChange && _onChange([...value, selected])
-                }
-                setInput("")
             }
-            else if (value === undefined) {
-                _onChange && _onChange([selected])
-                setInput("")
-            }
-        }
-        else if (!multiple) {
+            setInput("");
+        } else if (!multiple) {
             if (creative || options.some((option) => option === selected)) {
                 setInput(selected)
                 _onChange && _onChange(selected)
@@ -166,17 +169,21 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Escape") {
+            setOpen(false);
+        }
+
         if (e.key === "Backspace" && multiple && Array.isArray(value) && value.length > 0 && input === "") {
             _onChange && _onChange(value.slice(0, value.length - 1))
         }
 
         if (e.key === "Enter") {
+            e.preventDefault();
             if (activeIndex !== null && filteredOptions[activeIndex]) {
-                e.preventDefault()
                 onSelect(filteredOptions[activeIndex])
                 setActiveIndex(null)
             }
-            else if (creative) {
+            else if (creative && input !== "") {
                 onSelect(input)
             }
         }
@@ -192,7 +199,6 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         const inputValue = e.target.value;
         setInput(inputValue);
         setOpen(true);
-        setActiveIndex(0);
 
         // if input changes and in creative mode but not in multiple push inputValue to value
         if (creative && !multiple) {
@@ -207,7 +213,6 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     const onClick = () => {
         setOpen(true);
-        setActiveIndex(0);
         refs.domReference.current?.focus()
     }
 
@@ -250,9 +255,11 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 _onChange && _onChange(undefined)
             }
             // append the input to the value if the input is nonempty and reset the input
-            else if (multiple && Array.isArray(value) && input !== "") {
-                _onChange && _onChange([...value, input])
-                setInput("")
+            else if (multiple && Array.isArray(value) && input.trim() !== "") {
+                if (!value.includes(input)) {
+                    _onChange && _onChange([...value, input]);
+                }
+                setInput("");
             }
         }
     }
@@ -275,7 +282,10 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                         value: input,
                         onChange,
                         onKeyDown,
-                        onFocus,
+                        onFocus: (e) => {
+                            onFocus?.(e);
+                            setOpen(true);
+                        },
                         onBlur,
                         "aria-autocomplete": "list",
                     })}

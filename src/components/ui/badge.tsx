@@ -3,7 +3,7 @@ import { XIcon } from "lucide-react"
 
 type BadgeProps = {
   label: string;
-  color: string;
+  color?: string;
   appendIcon?: React.ReactNode;
   className?: string;
 }
@@ -26,7 +26,7 @@ type StatusBadgeProps = {
 }
 
 export function StatusBadge({ label, color }: StatusBadgeProps) {
-  return <Badge label={label.toUpperCase()} color={color} className="px-2"/>
+  return <Badge label={label.toUpperCase()} color={color} className="px-2" />
 }
 
 type ComboboxBadgeProps = {
@@ -36,13 +36,17 @@ type ComboboxBadgeProps = {
 
 export function ComboboxBadge({ label, onRemove }: ComboboxBadgeProps) {
   return <Badge
-      label={label}
-      color='grey'
-      className="px-1 my-1 mx-0.5"
-      appendIcon={
-          <button onClick={onRemove} className="pl-0.5">
-              <XIcon size={16} />
-          </button>
-      }
+    label={label}
+    className="mr-1 my-0.5 pl-1.5 bg-foreground text-text text-sm font-normal"
+    appendIcon={
+      <button
+        onClick={onRemove}
+        className="ml-0.5 p-1.5 rounded-sm hover:bg-destructive-foreground hover:text-destructive">
+        <XIcon
+          size={12}
+          strokeWidth={2.5}
+        />
+      </button>
+    }
   />
 }

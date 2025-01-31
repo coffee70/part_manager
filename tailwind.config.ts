@@ -1,3 +1,4 @@
+import { text } from "stream/consumers"
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -29,6 +30,7 @@ const config = {
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
+          secondary: "var(--primary-secondary)",
         },
         secondary: {
           DEFAULT: "var(--secondary)",
@@ -37,6 +39,7 @@ const config = {
         destructive: {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
+          text: "var(--destructive-text)",
         },
         muted: {
           DEFAULT: "var(--muted)",
