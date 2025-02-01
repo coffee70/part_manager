@@ -2,6 +2,7 @@ import { Combobox } from "@/components/ui/combobox/combobox"
 import { cn } from "@/lib/utils";
 
 type Props = {
+    id?: string;
     label: string;
     description?: string;
     className?: string;
@@ -16,7 +17,7 @@ type Props = {
 export default function Select({ label, description, className, error, ...props }: Props) {
     return (
         <div className="flex flex-col space-y-0.5">
-            <span className="text-sm">{label}</span>
+            <label className="text-sm" htmlFor={props.id}>{label}</label>
             <div className={cn(
                 "border border-accent-foreground shadow-sm rounded-md p-1",
                 error ? "border-destructive" : "",

@@ -45,6 +45,7 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                             <div key={field._id}>
                                 {field.type === 'select' ? (
                                     <Select
+                                        id={`dialog-field-${field.name}`}
                                         label={field.name}
                                         description={field.description}
                                         multiple={field.multiple}
@@ -58,6 +59,7 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                     />
                                 ) : field.type === 'paragraph' ? (
                                     <Textarea
+                                        id={`dialog-field-${field.name}`}
                                         label={field.name}
                                         description={field.description}
                                         value={fieldState[field._id] || ''}
@@ -68,6 +70,7 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                     />
                                 ) : (
                                     <Input
+                                        id={`dialog-field-${field.name}`}
                                         label={field.name}
                                         description={field.description}
                                         type={field.type}

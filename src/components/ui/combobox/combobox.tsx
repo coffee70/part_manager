@@ -163,9 +163,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 setInput(selected)
                 _onChange && _onChange(selected)
             }
-            setOpen(false)
         }
-        refs.domReference.current?.focus()
     }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -186,6 +184,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
             else if (creative && input !== "") {
                 onSelect(input)
             }
+            setOpen(open => !open)
         }
     }
 
@@ -212,7 +211,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     }
 
     const onClick = () => {
-        setOpen(true);
+        setOpen(open => !open);
         refs.domReference.current?.focus()
     }
 
@@ -276,19 +275,16 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 ))}
                 <Input
                     {...getReferenceProps({
-                        id: id,
                         className: "px-1",
                         ref: refs.setReference,
                         value: input,
                         onChange,
                         onKeyDown,
-                        onFocus: (e) => {
-                            onFocus?.(e);
-                            setOpen(true);
-                        },
+                        onFocus,
                         onBlur,
                         "aria-autocomplete": "list",
                     })}
+                    id={id} // added id explicitly to ensure it appears on the input element
                 />
                 {open && (
                     <FloatingFocusManager

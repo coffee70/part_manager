@@ -112,6 +112,7 @@ export default function InstanceForm({ instance, children }: Props) {
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className='max-h-[70vh] overflow-y-auto space-y-1'>
                         <Input
+                            id='number'
                             label='Number'
                             description='The number to identify this instance'
                             type='text'
@@ -120,6 +121,7 @@ export default function InstanceForm({ instance, children }: Props) {
                             error={data?.fieldErrors?.number}
                         />
                         <Select
+                            id='priority'
                             label='Priority'
                             description='The priority of this instance'
                             options={[...priorities]}
@@ -128,6 +130,7 @@ export default function InstanceForm({ instance, children }: Props) {
                             error={data?.fieldErrors?.priority}
                         />
                         <Textarea
+                            id='notes'
                             label='Notes'
                             description='Any notes about this instance'
                             value={attributeState.notes}
