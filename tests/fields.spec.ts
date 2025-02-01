@@ -185,6 +185,7 @@ test("test fields", async ({ page }) => {
   // confirm after reload the field changes persist
   await page.goto('/');
   await page.getByRole('link', { name: 'Something' }).click();
+  await page.getByRole('cell', { name: 'S-200' }).click();
   await expect(page.getByLabel('Text Field Edited:')).toHaveValue('something');
   await expect(page.getByLabel('Number Field Edited:')).toHaveValue('30');
   await expect(page.getByLabel('Date Field Edited:')).toHaveValue('1212-12-12');
