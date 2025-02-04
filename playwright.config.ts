@@ -12,6 +12,9 @@ import path from 'path';
 // Storage state
 export const STORAGE_STATE = path.join(__dirname, 'playwright/.auth/user.json');
 
+// Attachment directory
+export const ATTACHMENT_DIR = path.join(__dirname, 'playwright/.attachments');
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */

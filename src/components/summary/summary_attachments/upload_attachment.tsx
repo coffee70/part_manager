@@ -36,6 +36,7 @@ export default function UploadAttachment({ inputRef }: Props) {
 
     return (
         <input
+            id="upload-attachment-input"
             ref={inputRef}
             type="file"
             className="hidden"

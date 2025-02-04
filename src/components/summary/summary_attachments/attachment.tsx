@@ -5,7 +5,24 @@ import { Document, Thumbnail, pdfjs } from 'react-pdf';
 import DeleteAttachment from './delete_attachment';
 import AttachmentViewer from './attachment_viewer';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+/**
+ * This one works in Playwright Chromium browser and when running npm run build.
+ */
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+
+/**
+ * This will not work in Playwright Chromium browser due to unpkg.com not sending the
+ * correct CORS headers.
+ */
+// pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+/** 
+ * This will give a webpack error when running npm run build!!
+ */
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//     'pdfjs-dist/build/pdf.worker.min.mjs',
+//     import.meta.url,
+// ).toString();
 
 type Props = {
     file: {

@@ -1,12 +1,30 @@
 'use client'
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogTitle, DialogContent, DialogDescription } from '@/components/ui/dialog';
 import { Document, Thumbnail, pdfjs } from 'react-pdf';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import DownloadAttachment from './download_attachment';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+/**
+ * This one works in Playwright Chromium browser and when running npm run build.
+ */
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+
+/**
+ * This will not work in Playwright Chromium browser due to unpkg.com not sending the
+ * correct CORS headers.
+ */
+// pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+/** 
+ * This will give a webpack error when running npm run build!!
+ */
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//     'pdfjs-dist/build/pdf.worker.min.mjs',
+//     import.meta.url,
+// ).toString();
 
 type Props = {
     file: {
@@ -65,6 +83,11 @@ export default function AttachmentViewer({ file, open, setOpen }: Props) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>
                 <DialogTitle>{file.name}</DialogTitle>
+                <DialogDescription>
+                    <VisuallyHidden.Root>
+                        Viewer for {file.name}
+                    </VisuallyHidden.Root>
+                </DialogDescription>
                 <div
                     className='relative border border-border'
                     aria-label={`attachment_viewer_${file.name}`}
