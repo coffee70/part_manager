@@ -92,6 +92,7 @@ export default function Notes({ initialValue }: Props) {
                 onSubmit={handleSubmit}
             >
                 <Textarea
+                    id='summary-notes'
                     ref={textareaRef}
                     value={value}
                     onChange={(e) => setValue(e.target.value)}

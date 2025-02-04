@@ -130,7 +130,7 @@ export default function InstanceForm({ instance, children }: Props) {
                             error={data?.fieldErrors?.priority}
                         />
                         <Textarea
-                            id='notes'
+                            id='dialog-notes'
                             label='Notes'
                             description='Any notes about this instance'
                             value={attributeState.notes}

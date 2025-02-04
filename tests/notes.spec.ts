@@ -12,7 +12,7 @@ test('test notes', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // check notes in summary
-    await expect(page.getByText('Some notes')).toHaveValue('Some notes');
+    await expect(page.locator('#summary-notes')).toHaveValue('Some notes');
 
     // edit notes in dialog
     await page.getByRole('button', { name: 'Edit' }).click();
@@ -21,19 +21,19 @@ test('test notes', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // check updated notes in summary
-    await expect(page.getByText('Some notes dialog edited')).toHaveValue('Some notes dialog edited');
+    await expect(page.locator('#summary-notes')).toHaveValue('Some notes dialog edited');
 
     // update notes in summary
-    await page.getByText('Some notes dialog edited').click();
-    await page.getByText('Some notes dialog edited').fill('Some notes summary edited');
+    await page.locator('#summary-notes').click();
+    await page.locator('#summary-notes').fill('Some notes summary edited');
     await page.locator('form').filter({ hasText: 'Some notes summary edited' }).getByRole('button').click();
 
     // check notes in summary
-    await expect(page.getByText('Some notes summary edited')).toHaveValue('Some notes summary edited');
+    await expect(page.locator('#summary-notes')).toHaveValue('Some notes summary edited');
     
     // reload page and check if notes in summary
     await page.goto('/')
     await page.getByRole('link', { name: 'Something' }).click();
     await page.getByRole('cell', { name: 'Notes Test' }).click();
-    await expect(page.getByText('Some notes summary edited')).toHaveValue('Some notes summary edited');
+    await expect(page.locator('#summary-notes')).toHaveValue('Some notes summary edited');
 });
