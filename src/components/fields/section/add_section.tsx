@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/fields/input';
 
 type FormState = {
     name: string,
-    modelId?: string | null,
 }
 
 export default function AddSection() {
@@ -22,7 +21,6 @@ export default function AddSection() {
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({
         name: '',
-        modelId: modelId,
     })
 
     const queryClient = useQueryClient();
@@ -39,7 +37,7 @@ export default function AddSection() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate(formState);
+        mutate({ ...formState, modelId });
     }
 
     return (
