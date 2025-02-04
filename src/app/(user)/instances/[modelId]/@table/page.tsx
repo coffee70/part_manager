@@ -1,8 +1,10 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { NextServerSearchParams } from "@/types/collections";
 import TableContainer from "@/components/instances/table_container";
-import { instanceKeys } from "@/lib/query_keys";
+import { instanceKeys, modelKeys, sectionKeys } from "@/lib/query_keys";
 import { getInstances } from "@/server/instances/get_instances";
+import { getModel } from "@/server/models/get_model";
+import { getSections } from "@/server/sections/get_sections";
 
 export default async function Page({
     params,
@@ -17,6 +19,16 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: instanceKeys.all(modelId),
         queryFn: () => getInstances({ modelId, searchParams }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.id(modelId),
+        queryFn: () => getModel({ modelId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: sectionKeys.all(modelId),
+        queryFn: () => getSections({ modelId }),
     })
 
     return (

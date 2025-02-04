@@ -16,10 +16,11 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
-import { instanceKeys } from "@/lib/query_keys";
+import { instanceKeys, modelKeys } from "@/lib/query_keys";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
+import { getModel } from "@/server/models/get_model";
 
 export default function TableContainer() {
 
@@ -34,6 +35,11 @@ export default function TableContainer() {
         params.set('id', id)
         replace(`${pathname}?${params.toString()}`)
     }
+
+    const { data: model } = useQuery({
+        queryKey: modelKeys.id(modelId),
+        queryFn: () => getModel({ modelId }),
+    })
 
     const { data, isError, isPending } = useQuery({
         queryKey: instanceKeys.all(modelId),
