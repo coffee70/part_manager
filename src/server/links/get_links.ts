@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc, LinkableDoc, ModelDoc } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { z } from "zod";
+import { isLinkable } from "../models/is_linkable";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -24,6 +25,10 @@ export async function getLinks(input: z.input<typeof InputSchema>) {
 
     const { modelId, instanceId } = input;
     if (!instanceId) throw new Error('No instance ID provided');
+
+    if (!await isLinkable({ modelId })) {
+        return [];
+    } 
 
     const instanceCollection = db.collection<LinkableDoc>(modelId);
     const document = await instanceCollection.findOne({ _id: new ObjectId(instanceId) });

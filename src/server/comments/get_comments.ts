@@ -5,6 +5,7 @@ import { validators } from "../validators/validators";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "../auth/get_current_session";
+import { isCommentable } from "../models/is_commentable";
 
 const OutputSchema = z.object({
     comments: z.array(z.object({
@@ -30,6 +31,10 @@ export async function getComments(input: z.infer<typeof InputSchema>) {
 
     const { modelId, instanceId } = validators.input<z.infer<typeof InputSchema>>(input);
     if (!instanceId) throw new Error("id is required");
+
+    if (!await isCommentable({ modelId })) {
+        return OutputSchema.parse({ comments: [] });
+    }
     
     const collection = db.collection<CommentableDoc>(modelId);
     const document = await collection.findOne({ _id: new ObjectId(instanceId) });

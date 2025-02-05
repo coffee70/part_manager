@@ -4,6 +4,7 @@ import { AttachableDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { z } from "zod";
+import { isAttachable } from "../models/is_attachable";
 
 const FormDataSchema = z.object({
     file: z.custom<File>(),
@@ -17,6 +18,10 @@ export async function createAttachment(formData: FormData) {
 
     const { file, modelId, instanceId } = FormDataSchema.parse(Object.fromEntries(formData))
     if (!instanceId) throw new Error('No instanceId provided');
+
+    if (!await isAttachable({ modelId })) {
+        throw new Error('Model is not attachable')
+    }
     
     const instanceCollection = db.collection<AttachableDoc>(modelId)
     const attachmentId = new ObjectId()

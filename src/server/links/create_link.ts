@@ -5,6 +5,7 @@ import { InstanceDoc, LinkableDoc } from "@/types/collections"
 import { getCurrentSession } from "../auth/get_current_session"
 import { z } from "zod"
 import { ActionState } from "@/lib/validators/server_actions"
+import { isLinkable } from "../models/is_linkable"
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -29,6 +30,10 @@ export async function createLink(
 
     const { modelId, instanceId, linkedModelId, linkedInstanceNumber } = InputSchema.parse(input);
     if (!instanceId) return { success: false, error: 'Instance ID is required!' };
+
+    if (!await isLinkable({ modelId })) {
+        throw new Error('Model is not linkable!');
+    }
 
     const linkedCollection = db.collection<LinkableDoc & InstanceDoc>(linkedModelId);
 

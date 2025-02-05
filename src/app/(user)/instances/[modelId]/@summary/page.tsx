@@ -13,6 +13,9 @@ import SummaryError from "@/components/summary/summary_error";
 import { getAttachments } from "@/server/attachments/get_attachments";
 import { getModels } from "@/server/models/get_models";
 import { getModel } from "@/server/models/get_model";
+import { isAttachable } from "@/server/models/is_attachable";
+import { isLinkable } from "@/server/models/is_linkable";
+import { isCommentable } from "@/server/models/is_commentable";
 
 export default async function Page({
     params,
@@ -69,6 +72,21 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: attachmentKeys.all(modelId, instanceId),
         queryFn: () => getAttachments({ modelId, instanceId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.attachable(modelId),
+        queryFn: () => isAttachable({ modelId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.linkable(modelId),
+        queryFn: () => isLinkable({ modelId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.commentable(modelId),
+        queryFn: () => isCommentable({ modelId }),
     })
 
     return (

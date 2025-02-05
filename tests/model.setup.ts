@@ -10,6 +10,57 @@ test("model setup", async ({ page }) => {
     await page.getByLabel('Create Model').getByText('Comments').click();
     await page.locator('div:nth-child(16)').click();
     await page.getByRole('button', { name: 'Save' }).click();
+
+    // create a Test instance
+    await page.getByRole('link', { name: 'Test' }).click();
+    await page.locator('#create-instance-Test').click();
+    await page.getByLabel('Number').fill('T-100');
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // check that instance is attachable, linkable, commentable
+    await expect(page.getByText('Attachments')).toBeVisible();
+    await expect(page.getByText('Links')).toBeVisible();
+    await expect(page.getByText('Activity')).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Comments' })).toBeVisible();
+    await expect(page.getByText('No comments yet')).toBeVisible();
+    await expect(page.getByLabel('action_Attachments')).toBeVisible();
+    await expect(page.getByLabel('action_Links')).toBeVisible();
+
+    // take away attachable, linkable, commentable
+    await page.getByRole('link', { name: 'Models' }).click();
+    await page.getByRole('row', { name: 'Test' }).getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Edit' }).click();
+    await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
+    await page.getByLabel('Create Model').getByText('Links').click();
+    await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // check that instance is not attachable, linkable, commentable
+    await page.getByRole('link', { name: 'Test' }).click();
+    await expect(page.getByText('Attachments')).not.toBeVisible();
+    await expect(page.getByText('Links')).not.toBeVisible();
+    await expect(page.getByText('Activity')).not.toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Comments' })).not.toBeVisible();
+    await expect(page.getByText('No comments yet')).not.toBeVisible();
+    await expect(page.getByLabel('action_Attachments')).not.toBeVisible();
+    await expect(page.getByLabel('action_Links')).not.toBeVisible();
+
+    // delete the instance
+    await page.getByRole('row', { name: 'T-100 Today by Test Admin' }).getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Delete' }).click();
+    await page.getByRole('button', { name: 'Delete' }).click();
+
+    // return the models page
+    await page.getByRole('link', { name: 'Models' }).click();
+
+    // add back attachable, linkable, commentable
+    await page.getByRole('row', { name: 'Test' }).getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Edit' }).click();
+    await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
+    await page.getByLabel('Create Model').getByText('Links').click();
+    await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
     await expect(page.getByRole('table')).toMatchAriaSnapshot(`
         - table:
           - rowgroup:

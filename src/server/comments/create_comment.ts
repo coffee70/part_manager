@@ -4,6 +4,7 @@ import { CommentableDoc } from '@/types/collections'
 import { ObjectId } from 'mongodb';
 import { getCurrentSession } from '../auth/get_current_session';
 import { z } from 'zod';
+import { isCommentable } from '../models/is_commentable';
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -17,6 +18,10 @@ export async function createComment(input: z.input<typeof InputSchema>) {
 
     const { modelId, instanceId, text } = InputSchema.parse(input);
     if (!instanceId) throw new Error('Instance ID is required');
+
+    if (!await isCommentable({ modelId })) {
+        throw new Error('Model is not commentable');
+    }
 
     const collection = db.collection<CommentableDoc>(modelId);
     await collection.updateOne({ _id: new ObjectId(instanceId) }, {

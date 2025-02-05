@@ -24,7 +24,11 @@ export const linkKeys = {
 
 export const modelKeys = {
     all: () => ['models'],
-    id: (id?: string | null) => id ? [...modelKeys.all(), id] : modelKeys.all()
+    id: (id?: string | null) => id ? [...modelKeys.all(), id] : modelKeys.all(),
+    attachable: (id?: string | null) => [...modelKeys.id(id), 'attachable'],
+    linkable: (id?: string | null) => [...modelKeys.id(id), 'linkable'],
+    commentable: (id?: string | null) => [...modelKeys.id(id), 'commentable'],
+
 }
 
 export const attachmentKeys = {

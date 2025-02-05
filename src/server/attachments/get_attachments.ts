@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { AttachableDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getAttachment } from "./get_attachment";
+import { isAttachable } from "../models/is_attachable";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -24,6 +25,10 @@ export async function getAttachments(input: z.input<typeof InputSchema>) {
 
     const { modelId, instanceId } = InputSchema.parse(input);
     if (!instanceId) throw new Error('instance Id is required');
+
+    if (!await isAttachable({ modelId })) {
+        return [];
+    }
 
     const instanceCollection = db.collection<AttachableDoc>(modelId);
     const instance = await instanceCollection.findOne({ _id: new ObjectId(instanceId) });
