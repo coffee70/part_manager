@@ -28,7 +28,7 @@ export default function ModelSelect() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant='secondary' className='justify-between space-x-2 min-w-44'>
+                <Button id='model-select' variant='secondary' className='justify-between space-x-2 min-w-44'>
                     <div className='flex items-center space-x-2'>
                         <div className='w-4 h-4 rounded-full' style={{ backgroundColor: model?.color }} />
                         <span>{model?.name}</span>

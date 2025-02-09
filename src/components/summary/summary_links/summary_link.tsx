@@ -32,7 +32,7 @@ export default function SummaryLink({ link }: Props) {
     })
 
     return (
-        <div className='group flex items-center justify-between flex-1 pl-2 border-b border-foreground'>
+        <div id={`link-${link.number}`} className='group flex items-center justify-between flex-1 pl-2 border-b border-foreground'>
             <div className="flex items-center space-x-2">
                 <div className="flex items-center justify-center h-8">
                     <div
@@ -47,6 +47,7 @@ export default function SummaryLink({ link }: Props) {
             </div>
             <div className='flex items-center space-x-2'>
                 <button
+                    id={`delete-link-${link.number}`}
                     type="button"
                     className="hidden group-hover:flex items-center justify-center w-6 h-6 rounded-sm hover:bg-foreground"
                     onClick={() => mutate()}

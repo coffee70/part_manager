@@ -55,7 +55,7 @@ export default function TableContainer() {
             <FilterToolbar>
                 <FilterToolbarRow>
                     <InstanceForm>
-                        <New />
+                        <New id={`create-instance-${model?.name}`} />
                     </InstanceForm>
                     <SearchInput />
                     <Filter labels={['Updated At', 'Priority']}>

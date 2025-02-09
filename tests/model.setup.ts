@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test("model setup", async ({ page }) => {
+test("base model setup", async ({ page }) => {
     await page.goto('/');
     await page.getByRole('link', { name: 'Models' }).click();
     await page.getByRole('button', { name: 'New Model' }).click();
@@ -115,9 +115,19 @@ test("model setup", async ({ page }) => {
                   - img
         `);
 
+    // put back attachable, linkable, commentable
+    await page.getByRole('row', { name: 'Something' }).getByRole('button').click();
+    await page.getByRole('menuitem', { name: 'Edit' }).click();
+    await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
+    await page.getByLabel('Create Model').getByText('Links').click();
+    await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
     // create fields
     await page.goto('/');
     await page.getByRole('link', { name: 'Fields' }).click();
+    await page.locator('#model-select').click();
+    await page.getByRole('menuitem', { name: 'Something' }).click();
     await page.getByRole('button', { name: 'New Section' }).click();
     await page.getByLabel('Section Name').fill('Basic');
     await page.getByRole('button', { name: 'Save' }).click();
@@ -603,3 +613,22 @@ test("model setup", async ({ page }) => {
                 - img
       `);
 })
+
+test('target link model setup', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Models' }).click();
+  await page.getByRole('button', { name: 'New Model' }).click();
+  await page.getByRole('textbox').fill('Target Link');
+  await page.getByRole('img').nth(1).click();
+  await page.locator('div:nth-child(24)').click();
+  await page.getByRole('button', { name: 'Save' }).click();
+});
+
+test('non linkable model setup', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Models' }).click();
+  await page.getByRole('button', { name: 'New Model' }).click();
+  await page.getByRole('textbox').fill('Non Linkable');
+  await page.locator('div:nth-child(20)').click();
+  await page.getByRole('button', { name: 'Save' }).click();
+});
