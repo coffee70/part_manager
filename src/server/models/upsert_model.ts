@@ -12,6 +12,7 @@ const InputSchema = z.object({
     attachable: z.boolean(),
     linkable: z.boolean(),
     commentable: z.boolean(),
+    priority: z.boolean(),
     color: z.string(),
 })
 

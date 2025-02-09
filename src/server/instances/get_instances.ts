@@ -14,7 +14,7 @@ const InputSchema = z.object({
 const OutputSchema = z.array(z.object({
     _id: z.string(),
     number: z.string(),
-    priority: z.enum(priorities),
+    priority: z.enum(priorities).catch('Medium'),
     updatedAt: z.date(),
     updatedBy: z.string(),
 }))

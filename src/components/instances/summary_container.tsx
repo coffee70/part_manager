@@ -20,6 +20,7 @@ import SummaryNumber from '@/components/summary/summary_title/summary_number';
 import { isAttachable } from '@/server/models/is_attachable';
 import { isLinkable } from '@/server/models/is_linkable';
 import { isCommentable } from '@/server/models/is_commentable';
+import { hasPriority } from '@/server/models/has_priority';
 
 export default function SummaryContainer() {
     const { modelId, instanceId } = useInstanceURL();
@@ -44,6 +45,11 @@ export default function SummaryContainer() {
         queryFn: () => isCommentable({ modelId }),
     })
 
+    const { data: priority } = useQuery({
+        queryKey: modelKeys.hasPriority(modelId),
+        queryFn: () => hasPriority({ modelId }),
+    })
+
     if (isPending) return <SummarySkeleton />
 
     if (isError) return <SummaryError />
@@ -57,7 +63,7 @@ export default function SummaryContainer() {
                 <InstanceForm instance={instance}>
                     <Edit />
                 </InstanceForm>
-                <Priority priority={instance.priority} />
+                {priority && <Priority priority={instance.priority} />}
             </SummaryToolbar>
             <SummarySections values={instance.values} />
             <SummaryNotes initialValue={instance.notes} />

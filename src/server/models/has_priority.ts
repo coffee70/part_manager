@@ -10,7 +10,7 @@ const InputSchema = z.object({
     modelId: z.string(),
 })
 
-export async function isLinkable(
+export async function hasPriority(
     input: z.input<typeof InputSchema>
 ): Promise<boolean> {
     const { user } = await getCurrentSession();
@@ -26,5 +26,5 @@ export async function isLinkable(
 
     if (!model) throw new Error('Model not found.');
 
-    return model.linkable;
+    return model.priority;
 }

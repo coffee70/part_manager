@@ -69,9 +69,9 @@ export default function TableContainer() {
                 <TableBody>
                     {data.map((order) => (
                         <TableRow key={order._id} onClick={() => handleClick(order._id)}>
-                            <TableCell className="px-1">
+                            {model?.priority && <TableCell className="px-1">
                                 <Priority priority={order.priority} />
-                            </TableCell>
+                            </TableCell>}
                             <TableCell>
                                 <Label label={order.number} />
                             </TableCell>

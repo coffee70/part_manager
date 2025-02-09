@@ -16,6 +16,7 @@ import { getModel } from "@/server/models/get_model";
 import { isAttachable } from "@/server/models/is_attachable";
 import { isLinkable } from "@/server/models/is_linkable";
 import { isCommentable } from "@/server/models/is_commentable";
+import { hasPriority } from "@/server/models/has_priority";
 
 export default async function Page({
     params,
@@ -87,6 +88,11 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: modelKeys.commentable(modelId),
         queryFn: () => isCommentable({ modelId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: modelKeys.hasPriority(modelId),
+        queryFn: () => hasPriority({ modelId }),
     })
 
     return (

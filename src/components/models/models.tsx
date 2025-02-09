@@ -38,6 +38,7 @@ export default function Models() {
                             <TableHead>Attachments</TableHead>
                             <TableHead>Links</TableHead>
                             <TableHead>Comments</TableHead>
+                            <TableHead>Priority</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -60,6 +61,11 @@ export default function Models() {
                                 </TableCell>
                                 <TableCell>
                                     {model.commentable && (
+                                        <CheckIcon size={20} />
+                                    )}
+                                </TableCell>
+                                <TableCell>
+                                    {model.priority && (
                                         <CheckIcon size={20} />
                                     )}
                                 </TableCell>

@@ -14,7 +14,7 @@ const InputSchema = z.object({
 const OutputSchema = z.object({
     _id: z.custom<ObjectId>().transform(value => value.toString()),
     number: z.string(),
-    priority: z.enum(priorities),
+    priority: z.enum(priorities).catch('Medium'),
     notes: z.string(),
     values: z.record(z.string(), z.union([z.string(), z.array(z.string())]).optional()),
 })

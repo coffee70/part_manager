@@ -53,6 +53,7 @@ export default function ModelForm({ model, open, setOpen }: Props) {
         attachable: model?.attachable || false,
         linkable: model?.linkable || false,
         commentable: model?.commentable || false,
+        priority: model?.priority || false,
     });
 
     const queryClient = useQueryClient();
@@ -116,6 +117,12 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                             description="A user can comment on this model."
                             value={formState.commentable}
                             onChange={(commentable) => setFormState(prev => ({ ...prev, commentable: commentable }))}
+                        />
+                        <Checkbox
+                            label="Priority"
+                            description="A priority is associated with this model."
+                            value={formState.priority}
+                            onChange={(priority) => setFormState(prev => ({ ...prev, priority: priority }))}
                         />
                     </div>
                     <div className="space-y-3">

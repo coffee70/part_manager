@@ -8,6 +8,7 @@ test("base model setup", async ({ page }) => {
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
     await page.locator('div:nth-child(16)').click();
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -17,7 +18,7 @@ test("base model setup", async ({ page }) => {
     await page.getByLabel('Number').fill('T-100');
     await page.getByRole('button', { name: 'Save' }).click();
 
-    // check that instance is attachable, linkable, commentable
+    // check that instance is attachable, linkable, commentable, has priority
     await expect(page.getByText('Attachments')).toBeVisible();
     await expect(page.getByText('Links')).toBeVisible();
     await expect(page.getByText('Activity')).toBeVisible();
@@ -25,6 +26,11 @@ test("base model setup", async ({ page }) => {
     await expect(page.getByText('No comments yet')).toBeVisible();
     await expect(page.getByLabel('action_Attachments')).toBeVisible();
     await expect(page.getByLabel('action_Links')).toBeVisible();
+    await expect(page.locator('#priority-button')).toBeVisible();
+    await expect(page.locator('#priority-button')).toHaveText('Medium');
+
+    // check priority indicator on table container
+    await expect(page.locator('#priority-table-indicator')).toBeVisible();
 
     // take away attachable, linkable, commentable
     await page.getByRole('link', { name: 'Models' }).click();
@@ -33,6 +39,7 @@ test("base model setup", async ({ page }) => {
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click()
     await page.getByRole('button', { name: 'Save' }).click();
 
     // check that instance is not attachable, linkable, commentable
@@ -44,6 +51,10 @@ test("base model setup", async ({ page }) => {
     await expect(page.getByText('No comments yet')).not.toBeVisible();
     await expect(page.getByLabel('action_Attachments')).not.toBeVisible();
     await expect(page.getByLabel('action_Links')).not.toBeVisible();
+    await expect(page.locator('#priority-button')).not.toBeVisible();
+
+    // check priority indicator on table container
+    await expect(page.locator('#priority-table-indicator')).not.toBeVisible();
 
     // delete the instance
     await page.getByRole('row', { name: 'T-100 Today by Test Admin' }).getByRole('button').click();
@@ -59,22 +70,26 @@ test("base model setup", async ({ page }) => {
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
     await page.getByRole('button', { name: 'Save' }).click();
 
     await expect(page.getByRole('table')).toMatchAriaSnapshot(`
         - table:
           - rowgroup:
-            - row "Color Name Attachments Links Comments":
+            - row "Color Name Attachments Links Comments Priority":
               - cell "Color"
               - cell "Name"
               - cell "Attachments"
               - cell "Links"
               - cell "Comments"
+              - cell "Priority"
               - cell
           - rowgroup:
             - row "Test":
               - cell
               - cell "Test"
+              - cell:
+                - img
               - cell:
                 - img
               - cell:
@@ -91,17 +106,19 @@ test("base model setup", async ({ page }) => {
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
     await page.locator('div:nth-child(11)').click();
     await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByRole('table')).toMatchAriaSnapshot(`
         - table:
           - rowgroup:
-            - row "Color Name Attachments Links Comments":
+            - row "Color Name Attachments Links Comments Priority":
               - cell "Color"
               - cell "Name"
               - cell "Attachments"
               - cell "Links"
               - cell "Comments"
+              - cell "Priority"
               - cell
           - rowgroup:
             - row "Something":
@@ -110,17 +127,19 @@ test("base model setup", async ({ page }) => {
               - cell
               - cell
               - cell
+              - cell
               - cell:
                 - button:
                   - img
         `);
 
-    // put back attachable, linkable, commentable
+    // put back attachable, linkable, commentable, and priority
     await page.getByRole('row', { name: 'Something' }).getByRole('button').click();
     await page.getByRole('menuitem', { name: 'Edit' }).click();
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByLabel('Create Model').getByText('Comments').click();
+    await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
     await page.getByRole('button', { name: 'Save' }).click();
 
     // create fields

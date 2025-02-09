@@ -149,6 +149,7 @@ export type ModelDoc = {
     attachable: boolean;
     linkable: boolean;
     commentable: boolean;
+    priority: boolean;
     color: string;
     updatedAt: Date;
     updatedBy: string;
@@ -160,6 +161,7 @@ export type Model = {
     attachable: boolean;
     linkable: boolean;
     commentable: boolean;
+    priority: boolean;
     color: string;
 }
 

@@ -1,3 +1,5 @@
+import { hasPriority } from "@/server/models/has_priority"
+
 export const sectionKeys = {
     all: (modelId?: string | null) => modelId ? ['sections', modelId] : ['sections'],
 }
@@ -28,6 +30,7 @@ export const modelKeys = {
     attachable: (id?: string | null) => [...modelKeys.id(id), 'attachable'],
     linkable: (id?: string | null) => [...modelKeys.id(id), 'linkable'],
     commentable: (id?: string | null) => [...modelKeys.id(id), 'commentable'],
+    hasPriority: (id?: string | null) => [...modelKeys.id(id), 'hasPriority'],
 
 }
 

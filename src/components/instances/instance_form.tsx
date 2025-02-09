@@ -120,7 +120,7 @@ export default function InstanceForm({ instance, children }: Props) {
                             onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
                             error={data?.fieldErrors?.number}
                         />
-                        <Select
+                        {model?.priority && <Select
                             id='priority'
                             label='Priority'
                             description='The priority of this instance'
@@ -128,7 +128,7 @@ export default function InstanceForm({ instance, children }: Props) {
                             value={attributeState.priority}
                             onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
                             error={data?.fieldErrors?.priority}
-                        />
+                        />}
                         <Textarea
                             id='dialog-notes'
                             label='Notes'
