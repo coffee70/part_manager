@@ -47,12 +47,6 @@ export default defineConfig({
       teardown: 'teardown',
     },
     {
-      name: 'model setup',
-      testMatch: 'model.setup.ts',
-      use: { storageState: STORAGE_STATE },
-      dependencies: ['auth setup'],
-    },
-    {
       name: 'teardown',
       testMatch: 'global.teardown.ts',
       use: { storageState: STORAGE_STATE },
@@ -63,7 +57,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         storageState: STORAGE_STATE,
       },
-      dependencies: ['model setup'],
+      dependencies: ['auth setup'],
     },
 
     // {

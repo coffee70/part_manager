@@ -7,13 +7,16 @@ import { createComment } from '@/server/comments/create_comment';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { commentKeys, instanceKeys } from '@/lib/query_keys';
 import { ClickAwayListener } from '@mui/base';
+import { useMoreContext } from '../summary_actions/more/more_context';
 
 const PLACEHOLDER = "Add a comment..."
 
 export default function CreateComment() {
     const [showActions, setShowActions] = React.useState(false);
     const [value, setValue] = React.useState("");
-    const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+    const {
+        commentsTextAreaRef: textareaRef
+    } = useMoreContext();
 
     const { modelId, instanceId } = useInstanceURL();
 
@@ -47,6 +50,7 @@ export default function CreateComment() {
     }
 
     const handleFocus = () => {
+        console.log('focusing');
         setShowActions(true);
     }
 

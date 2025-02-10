@@ -7,11 +7,14 @@ import { useQuery } from '@tanstack/react-query';
 import { attachmentKeys } from '@/lib/query_keys';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getAttachments } from '@/server/attachments/get_attachments';
+import { useMoreContext } from '../summary_actions/more/more_context';
 
 export default function SummaryAttachments() {
     const { modelId, instanceId } = useInstanceURL();
 
-    const inputRef = React.useRef<HTMLInputElement>(null);
+    const {
+        attachmentsInputRef: inputRef,
+    } = useMoreContext();
 
     const handleUpload = () => {
         inputRef.current?.click();

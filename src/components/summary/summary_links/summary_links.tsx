@@ -8,11 +8,15 @@ import { linkKeys, modelKeys } from "@/lib/query_keys";
 import { getLinks } from "@/server/links/get_links";
 import AddLink from "./add_link";
 import { getModels } from "@/server/models/get_models";
+import { useMoreContext } from "../summary_actions/more/more_context";
 
 export default function SummaryLinks() {
     const { modelId, instanceId } = useInstanceURL();
 
-    const [open, setOpen] = React.useState(false);
+    const {
+        linkOpen: open,
+        setLinkOpen: setOpen
+    } = useMoreContext();
 
     const {
         data: links,

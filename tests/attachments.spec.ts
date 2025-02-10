@@ -4,7 +4,17 @@ import path from 'path';
 
 test('test attachments', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('link', { name: 'Something' }).click();
+    
+    // create model
+    await page.getByRole('link', { name: 'Models', exact: true }).click();
+    await page.getByRole('button', { name: 'New Model' }).click();
+    await page.getByRole('textbox').fill('Attachments Test');
+    await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
+    await page.locator('div:nth-child(16)').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // go to instances
+    await page.getByRole('link', { name: 'Attachments Test' }).click();
 
     // create instance
     await page.locator('.relative > .inline-flex').first().click();

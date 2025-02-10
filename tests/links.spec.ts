@@ -3,6 +3,22 @@ import { test, expect } from '@playwright/test';
 test('links', async ({ page }) => {
     await page.goto('/')
 
+    // create model
+    await page.getByRole('link', { name: 'Models', exact: true }).click();
+    await page.getByRole('button', { name: 'New Model' }).click();
+    await page.getByRole('textbox').fill('Links Model');
+    await page.getByLabel('Create Model').getByText('Links').click();
+    await page.locator('div:nth-child(16)').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    // create target link model
+    await page.getByRole('button', { name: 'New Model' }).click();
+    await page.getByRole('textbox').fill('Target Link');
+    await page.getByLabel('Create Model').getByText('Links').click();
+    await page.getByRole('img').nth(1).click();
+    await page.locator('div:nth-child(24)').click();
+    await page.getByRole('button', { name: 'Save' }).click();
+
     // create linkable instance
     await page.getByRole('link', { name: 'Target Link' }).click();
     await page.locator('[id="create-instance-Target\\ Link"]').click();
@@ -10,8 +26,8 @@ test('links', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // create instance
-    await page.getByRole('link', { name: 'Something' }).click();
-    await page.locator('#create-instance-Something').click();
+    await page.getByRole('link', { name: 'Links Model' }).click();
+    await page.locator('[id="create-instance-Links\\ Model"]').click();
     await page.getByLabel('Number', { exact: true }).fill('Links Test');
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -30,6 +46,7 @@ test('links', async ({ page }) => {
 
     // go to target link model and expect source instance to be linked
     await page.getByRole('link', { name: 'TL-100' }).click();
+    await page.getByRole('link', { name: 'Links Test' }).waitFor({ timeout: 10000 });
     await expect(page.getByRole('link', { name: 'Links Test' })).toBeVisible();
 
     // go back to source instance and expect link to be visible
@@ -39,10 +56,7 @@ test('links', async ({ page }) => {
     // delete link
     await page.locator('#link-TL-100').hover();
     await page.locator('#delete-link-TL-100').click();
-});
 
-
-test('multiple links in sequence', async ({ page }) => {
     await page.goto('/')
     // create multiple linkable instances
     await page.getByRole('link', { name: 'Target Link' }).click();
@@ -68,8 +82,8 @@ test('multiple links in sequence', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // create source instance
-    await page.getByRole('link', { name: 'Something' }).click();
-    await page.locator('#create-instance-Something').click();
+    await page.getByRole('link', { name: 'Links Model' }).click();
+    await page.locator('[id="create-instance-Links\\ Model"]').click();
     await page.getByLabel('Number', { exact: true }).fill('Multiple Links Test');
     await page.getByRole('button', { name: 'Save' }).click();
 

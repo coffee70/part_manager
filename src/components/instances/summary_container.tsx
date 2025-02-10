@@ -21,6 +21,8 @@ import { isAttachable } from '@/server/models/is_attachable';
 import { isLinkable } from '@/server/models/is_linkable';
 import { isCommentable } from '@/server/models/is_commentable';
 import { hasPriority } from '@/server/models/has_priority';
+import More from '../summary/summary_actions/more/more';
+import { MoreProvider } from '../summary/summary_actions/more/more_context';
 
 export default function SummaryContainer() {
     const { modelId, instanceId } = useInstanceURL();
@@ -57,19 +59,22 @@ export default function SummaryContainer() {
     if (!instance) return <SummaryError />
 
     return (
-        <SummaryLayout>
-            <SummaryNumber number={instance.number} />
-            <SummaryToolbar>
-                <InstanceForm instance={instance}>
-                    <Edit />
-                </InstanceForm>
-                {priority && <Priority priority={instance.priority} />}
-            </SummaryToolbar>
-            <SummarySections values={instance.values} />
-            <SummaryNotes initialValue={instance.notes} />
-            {attachable && <SummaryAttachments />}
-            {linkable && <SummaryLinks />}
-            {commentable && <SummaryActivity />}
-        </SummaryLayout>
+        <MoreProvider>
+            <SummaryLayout>
+                <SummaryNumber number={instance.number} />
+                <SummaryToolbar>
+                    <InstanceForm instance={instance}>
+                        <Edit />
+                    </InstanceForm>
+                    <More />
+                    {priority && <Priority priority={instance.priority} />}
+                </SummaryToolbar>
+                <SummarySections values={instance.values} />
+                <SummaryNotes initialValue={instance.notes} />
+                {attachable && <SummaryAttachments />}
+                {linkable && <SummaryLinks />}
+                {commentable && <SummaryActivity />}
+            </SummaryLayout>
+        </MoreProvider>
     )
 }
