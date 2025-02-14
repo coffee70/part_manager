@@ -1,37 +1,44 @@
 'use client'
-import { BuilderProvider, useBuilderContext } from "@/components/route_builder/builder.context";
+import { useBuilderContext } from "@/components/route_builder/builder.context";
 import React from "react"
 import Node, { NodeType } from "./node";
-import { PlusIcon, XIcon } from "lucide-react";
 import Toolbar from "./toolbar";
+
+export const STAGE_BORDER_WIDTH = 2;
 
 export default function Stage() {
     const nodeRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-    const [nodes, setNodes] = React.useState<NodeType[]>([]);
-    const { addingNodes } = useBuilderContext();
-    const { edges, containerRef } = useBuilderContext();
-
-    const onClick = (e: React.MouseEvent) => {
-        const container = containerRef.current;
-        if (!container) return;
-        if (addingNodes) {
-            setNodes((prev) => {
-                const newNode = {
-                    id: `node-${prev.length + 1}`,
-                    x: e.clientX - container.getBoundingClientRect().left,
-                    y: e.clientY - container.getBoundingClientRect().top,
-                }
-                return [...prev, newNode]
-            });
+    const [nodes, setNodes] = React.useState<NodeType[]>([
+        {
+            id: "node-1",
+            x: 0,
+            y: 0,
+        },
+        {
+            id: "node-2",
+            x: 0,
+            y: 0,
+        },
+        {
+            id: "node-3",
+            x: 0,
+            y: 0,
+        },
+        {
+            id: "node-4",
+            x: 0,
+            y: 0,
         }
-    }
-        
+    ]);
+    const { edges, containerRef } = useBuilderContext();
 
     return (
         <div
             ref={containerRef}
-            onClick={onClick}
-            className="relative m-6 border-dashed border-gray-600 rounded-md h-[700px]"
+            className="relative m-6 border-dashed border-gray-600 rounded-md h-[720px]"
+            style={{
+                borderWidth: `${STAGE_BORDER_WIDTH}px`,
+            }}
         >
             {nodes.map((node, index) => (
                 <Node

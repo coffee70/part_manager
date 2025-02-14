@@ -20,7 +20,6 @@ export default function Connector({
 }) {
     const [selected, setSelected] = React.useState(false);
     const { 
-        addingNodes,
         addingEdges,
         setAddingEdges,
         setEndpoint,
@@ -46,7 +45,7 @@ export default function Connector({
                 left && "-mr-2 ml-2",
                 right && "-ml-2 mr-2",
                 selected && "ring-2 ring-black ring-offset-1",
-                (addingNodes || !hovered) && !addingEdges && "invisible disabled",
+                !hovered && !addingEdges && "invisible disabled",
             )}
             onClick={handleClick}
         >

@@ -8,8 +8,6 @@ type Endpoint = {
 }
 
 type BuilderContextType = {
-    addingNodes: boolean;
-    setAddingNodes: (addingNodes: boolean) => void;
     addingEdges: boolean;
     setAddingEdges: (addingEdges: boolean) => void;
     resizeObserver: ResizeObserver;
@@ -38,11 +36,6 @@ export function BuilderProvider({ children }: Props) {
     const { edges, setEdges, updateEdges } = useEdges(containerRef);
 
     const [addingEdges, setAddingEdges] = React.useState(false);
-    const [addingNodes, setAddingNodes] = React.useState(false);
-
-    React.useEffect(() => {
-        console.log(addingNodes)
-    }, [addingNodes])
 
     const [endpoint, _setEndpoint] = React.useState<Endpoint>();
 
@@ -87,8 +80,6 @@ export function BuilderProvider({ children }: Props) {
 
 
     const value = {
-        addingNodes,
-        setAddingNodes,
         addingEdges,
         setAddingEdges,
         resizeObserver,

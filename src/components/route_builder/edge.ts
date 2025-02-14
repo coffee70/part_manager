@@ -1,5 +1,6 @@
 'use client'
 import React from 'react';
+import { STAGE_BORDER_WIDTH } from './stage';
 
 export type GetControlWithCurvatureParams = {
     pos: Position;
@@ -95,13 +96,13 @@ const calculatePath = (
     }
 
     const sourceOrigin = {
-        x: sourceRect.x + sourceRect.width - containerRect.x,
-        y: sourceRect.y + (sourceRect.height / 2) - containerRect.y,
+        x: sourceRect.x + sourceRect.width - containerRect.x - STAGE_BORDER_WIDTH,
+        y: sourceRect.y + (sourceRect.height / 2) - containerRect.y - STAGE_BORDER_WIDTH,
     }
 
     const targetOrigin = {
-        x: targetRect.x - containerRect.x,
-        y: targetRect.y + (targetRect.height / 2) - containerRect.y,
+        x: targetRect.x - containerRect.x - STAGE_BORDER_WIDTH,
+        y: targetRect.y + (targetRect.height / 2) - containerRect.y - STAGE_BORDER_WIDTH,
     }
 
     const [sourceControlX, sourceControlY] = getControlWithCurvature({

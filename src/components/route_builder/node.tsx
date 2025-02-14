@@ -27,8 +27,6 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>((props, ref) => {
         return internalRef.current;
     });
 
-    const { addingNodes } = useBuilderContext();
-
     useDragger({
         containerRef,
         draggableRef: internalRef,
@@ -61,13 +59,10 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>((props, ref) => {
         <div
             ref={internalRef}
             id={node.id}
-            className={cn(
-                "absolute flex items-center h-8 border border-blue-500 rounded-md cursor-grab select-none",
-                addingNodes && "cursor-pointer",
-            )}
+            className="absolute flex items-center h-8 border border-blue-500 rounded-md cursor-grab select-none"
             style={{
-                left: node.x - 40,
-                top: node.y - 20,
+                left: node.x,
+                top: node.y,
             }}
         >
             <Connector

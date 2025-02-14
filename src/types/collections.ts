@@ -9,6 +9,10 @@ export const priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as cons
 
 export type Priority = typeof priorities[number];
 
+export const stepTypes = ['To-do', 'In-progress', 'Done'] as const;
+
+export type StepType = typeof stepTypes[number];
+
 export type PriorityInfo = {
     color: string;
     Icon: LucideIcon;
