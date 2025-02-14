@@ -2,7 +2,7 @@
 import { ModelItem, NavBase, NavContent, NavDivider, NavHeader, NavItem } from "@/components/ui/side_nav";
 import Profile from "./profile";
 import Logo from "@/components/ui/logo";
-import { FieldIcon, ModelIcon, UserIcon } from "@/components/ui/icons/icons";
+import { FieldIcon, ModelIcon, RouteIcon, UserIcon } from "@/components/ui/icons/icons";
 import { modelKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { getModels } from "@/server/models/get_models";
@@ -45,6 +45,11 @@ export default function SideNavigation() {
                     label="Fields"
                     href="/fields"
                     icon={<FieldIcon selected={tailSegment === 'fields'} />}
+                />
+                <NavItem
+                    label="Routes"
+                    href="/routes"
+                    icon={<RouteIcon selected={tailSegment === 'routes'} />}
                 />
                 <NavItem
                     label='Users'

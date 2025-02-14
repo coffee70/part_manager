@@ -1,5 +1,10 @@
 import { cn } from "@/lib/utils";
-import { AlignLeftIcon, BoxesIcon, Building2Icon, DraftingCompassIcon, FactoryIcon, GalleryHorizontalEndIcon, HammerIcon, UserIcon as LucideUserIcon } from "lucide-react"
+import {
+    AlignLeftIcon,
+    BoxesIcon,
+    UserIcon as LucideUserIcon,
+    RouteIcon as LucideRouteIcon
+} from "lucide-react"
 
 type Props = {
     size?: number;
@@ -28,6 +33,19 @@ export function FieldIcon({ size, selected }: Props) {
             )}
         >
             <AlignLeftIcon size={size} />
+        </div>
+    )
+}
+
+export function RouteIcon({ size, selected }: Props) {
+    return (
+        <div
+            className={cn(
+                "bg-violet-600 p-1 rounded-md text-white ring-violet-600 ring-offset-2 ring-offset-foreground group-hover:ring-2",
+                selected ? "ring-2" : ""
+            )}
+        >
+            <LucideRouteIcon size={size} />
         </div>
     )
 }
