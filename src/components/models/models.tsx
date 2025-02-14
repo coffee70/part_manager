@@ -8,7 +8,6 @@ import { ModelIcon } from "@/components/ui/icons/icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CreateModel from "./create_model";
 import { CheckIcon } from "lucide-react";
-import { More } from "../ui/more";
 import ModelOptions from "./model_options";
 
 export default function Models() {
