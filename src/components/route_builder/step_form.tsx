@@ -15,18 +15,34 @@ type FormState = {
 }
 
 type Props = {
+    open?: boolean;
+    setOpen?: (open: boolean) => void;
     step?: Node;
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
-export default function StepForm({ step, children }: Props) {
-    const [open, setOpen] = React.useState(false);
+export default function StepForm({ step, open, setOpen, children }: Props) {
+    const [_open, _setOpen] = React.useState(false);
+    const isControlled = open !== undefined;
+    const currentOpen = isControlled ? open : _open;
+
+    React.useEffect(() => {
+        if (isControlled) return;
+        _setOpen(false);
+    }, [isControlled, open]);
+
     const { addNode, updateNode } = useBuilderContext();
 
-    const [formState, setFormState] = React.useState<FormState>({
+    React.useEffect(() => {
+        setFormState(initialState)
+    }, [step]);
+
+    const initialState = React.useCallback(() => ({
         name: step ? step.name : '',
         type: step ? step.type : 'To-do',
-    });
+    }), [step]);
+
+    const [formState, setFormState] = React.useState<FormState>(initialState);
 
     const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,22 +56,27 @@ export default function StepForm({ step, children }: Props) {
                 id: crypto.randomUUID(),
                 x: 0,
                 y: 0,
-                edges: [],
                 ...formState,
             });
         }
-        setOpen(false);
-        setFormState({
-            name: '',
-            type: 'To-do',
-        });
+        handleOpenChange(false);
+        setFormState(initialState);
     }, [formState, step, addNode, updateNode]);
+
+    const handleOpenChange = (newOpen: boolean) => {
+        if (!isControlled) {
+            _setOpen(newOpen);
+        }
+        if (setOpen) {
+            setOpen(newOpen);
+        }
+    };
 
     const title = step ? `Edit step: ${step.name}` : 'Create a new step';
     const description = step ? `Edit the step ${step.name}` : 'Create a new step for your route';
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={currentOpen} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>

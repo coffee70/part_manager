@@ -8,7 +8,10 @@ export function useRoute({
 }: {
     containerRef: React.RefObject<HTMLDivElement>;
 }) {
-    const [route, setRoute] = React.useState<Route>([]);
+    const [route, setRoute] = React.useState<Route>({
+        nodes: [],
+        edges: [],
+    });
 
     const nodeRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
@@ -16,92 +19,122 @@ export function useRoute({
     const [isAddingEdges, setIsAddingEdges] = React.useState(false);
 
     const addNode = React.useCallback((node: Node) => {
-        setRoute((prevRoute) => [...prevRoute, node]);
+        setRoute((prevRoute) => {
+            const updatedRoute = {
+                ...prevRoute,
+                nodes: [...prevRoute.nodes, node],
+            };
+            return updatedRoute;
+        });
         setIsEditing(true);
     }, []);
 
     const removeNode = React.useCallback((id: string) => {
-        setRoute((prevRoute) => prevRoute.filter(node => node.id !== id));
+        setRoute((prevRoute) => {
+            const updatedRoute = {
+                ...prevRoute,
+                nodes: prevRoute.nodes.filter(node => node.id !== id),
+                edges: prevRoute.edges.filter(edge => edge.sourceId !== id && edge.targetId !== id),
+            };
+            return updatedRoute;
+        });
         setIsEditing(true);
     }, []);
 
     const updateNode = React.useCallback((updatedNode: Node) => {
-        setRoute((prevRoute) => prevRoute.map(node => node.id === updatedNode.id ? updatedNode : node));
+        setRoute((prevRoute) => {
+            const updatedRoute = {
+                ...prevRoute,
+                nodes: prevRoute.nodes.map(node => {
+                    if (node.id === updatedNode.id) {
+                        return {
+                            ...node,
+                            ...updatedNode,
+                        };
+                    }
+                    return node;
+                }),
+            };
+            return updatedRoute;
+        });
         setIsEditing(true);
     }, []);
 
     const addEdge = React.useCallback((
-        sourceId: string, 
+        sourceId: string,
         sourcePosition: Position,
         targetId: string,
         targetPosition: Position,
     ) => {
+        const path = calculatePath(
+            containerRef,
+            sourceId,
+            sourcePosition,
+            targetId,
+            targetPosition,
+        );
         setRoute((prevRoute) => {
-            const updatedRoute = prevRoute.map(node => {
-                if (node.id === sourceId) {
-                    return {
-                        ...node,
-                        edges: [
-                            ...node.edges, 
-                            { 
-                                sourcePosition, 
-                                targetId,
-                                targetPosition,
-                                path: calculatePath(
-                                    containerRef,
-                                    node.id,
-                                    sourcePosition,
-                                    targetId,
-                                    targetPosition,
-                                ),
-                            }
-                        ],
-                    };
-                }
-                return node;
-            });
+            const updatedRoute = {
+                ...prevRoute,
+                edges: [
+                    ...prevRoute.edges,
+                    {
+                        sourceId,
+                        sourcePosition,
+                        targetId,
+                        targetPosition,
+                        path,
+                    },
+                ],
+            };
             return updatedRoute;
         });
         setIsEditing(true);
     }, []);
 
-    const updateEdges = React.useCallback((target: Element) => {
+    const updateEdges = (target: Element) => {
         const nodeId = target.getAttribute('id');
-        setRoute(prevRoute => {
-            const updatedRoute = prevRoute.map(node => {
-                if (node.id === nodeId) {
-                    return {
-                        ...node,
-                        edges: node.edges.map(edge => {
-                            const path = calculatePath(
-                                containerRef,
-                                node.id,
-                                edge.sourcePosition,
-                                edge.targetId,
-                                edge.targetPosition,
-                            );
-                            return { ...edge, path };
-                        }),
-                    };
-                }
-                return node;
-            })
+        setRoute((prevRoute) => {
+            const node = prevRoute.nodes.find(node => node.id === nodeId);
+            if (node === undefined) return prevRoute;
+            const edges = prevRoute.edges.filter(edge => edge.sourceId === nodeId || edge.targetId === nodeId);
+            const updatedEdges = edges.map(edge => {
+                const sourceNode = prevRoute.nodes.find(node => node.id === edge.sourceId);
+                const targetNode = prevRoute.nodes.find(node => node.id === edge.targetId);
+                if (!sourceNode || !targetNode) return edge;
+                const path = calculatePath(
+                    containerRef,
+                    sourceNode.id,
+                    edge.sourcePosition,
+                    targetNode.id,
+                    edge.targetPosition,
+                );
+                return {
+                    ...edge,
+                    path,
+                };
+            });
+            const updatedRoute = {
+                ...prevRoute,
+                edges: prevRoute.edges.map(edge => {
+                    const updatedEdge = updatedEdges.find(updatedEdge => updatedEdge.sourceId === edge.sourceId && updatedEdge.targetId === edge.targetId);
+                    if (updatedEdge) {
+                        return updatedEdge;
+                    }
+                    return edge;
+                }),
+            };
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    }
 
     const removeEdge = React.useCallback((sourceId: string, targetId: string) => {
         setRoute((prevRoute) => {
-            const updatedRoute = prevRoute.map(node => {
-                if (node.id === sourceId) {
-                    return {
-                        ...node,
-                        edges: node.edges.filter(edge => edge.targetId !== targetId),
-                    };
-                }
-                return node;
-            });
+            const updatedRoute = {
+                ...prevRoute,
+                edges: prevRoute.edges.filter(edge => edge.sourceId !== sourceId || edge.targetId !== targetId),
+            };
             return updatedRoute;
         });
         setIsEditing(true);
@@ -131,7 +164,7 @@ export function useRoute({
             setIsEditing(true);
             setIsAddingEdges(false);
         }
-    },[endpoint, addEdge]);
+    }, [endpoint, addEdge]);
 
     return {
         route,

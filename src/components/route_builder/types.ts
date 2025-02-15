@@ -13,6 +13,7 @@ export enum Position {
 }
 
 export type Edge = {
+    sourceId: string;
     sourcePosition: Position;
     targetId: string;
     targetPosition: Position;
@@ -25,8 +26,10 @@ export type Node = {
     type: StepType;
     x: number;
     y: number;
-    edges: Edge[];
 }
 
-export type Route = Array<Node>;
+export type Route = {
+    nodes: Node[];
+    edges: Edge[];
+};
 

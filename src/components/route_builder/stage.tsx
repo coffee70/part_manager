@@ -21,25 +21,35 @@ export default function Stage() {
                 borderWidth: `${STAGE_BORDER_WIDTH}px`,
             }}
         >
-            {route.map((node, index) => (
+            {route.nodes.map((node, index) => (
                 <Node
                     key={node.id}
                     node={node}
-                    containerRef={containerRef}
                     ref={(el) => { nodeRefs.current[index] = el }}
                 />
             ))}
             <svg className="absolute z-0 overflow-visible pointer-events-none" width="100%" height="100%">
-                {route.flatMap(node =>
-                    node.edges.map(edge => (
+                <defs>
+                    {route.edges.map((edge, index) => (
                         <path
-                            key={`${node.id}-${edge.targetId}`}
+                            key={index}
+                            id={`edge-${edge.sourceId}-${edge.targetId}`}
                             d={edge.path}
+                            fill="none"
                             stroke="black"
-                            fill="transparent"
+                            strokeWidth="2"
                         />
-                    ))
-                )}
+                    ))}
+                </defs>
+                {route.edges.map((edge, index) => (
+                    <use
+                        key={index}
+                        href={`#edge-${edge.sourceId}-${edge.targetId}`}
+                        fill="none"
+                        stroke="black"
+                        strokeWidth="2"
+                    />
+                ))}
             </svg>
             <Toolbar />
         </div >
