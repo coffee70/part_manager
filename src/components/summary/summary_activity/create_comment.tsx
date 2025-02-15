@@ -50,7 +50,6 @@ export default function CreateComment() {
     }
 
     const handleFocus = () => {
-        console.log('focusing');
         setShowActions(true);
     }
 
