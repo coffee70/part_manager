@@ -3,40 +3,38 @@ import React from "react"
 import { useBuilderContext } from "@/components/route_builder/builder.context";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
-import { Position } from "./edge";
+import { Position } from "./types";
 
 export default function Connector({
     nodeId,
     left,
     right,
-    hovered,
+    isHovered,
     position,
 }: {
     nodeId: string;
     left?: boolean;
     right?: boolean;
-    hovered?: boolean;
+    isHovered?: boolean;
     position: Position;
 }) {
     const [selected, setSelected] = React.useState(false);
-    const { 
-        addingEdges,
-        setAddingEdges,
-        setEndpoint,
-     } = useBuilderContext();
+    const {
+        isAddingEdges,
+        addEndpoint,
+    } = useBuilderContext();
 
-    const handleClick = () => {
-        setAddingEdges(!addingEdges);
-        setSelected(() => !addingEdges ? !selected : false);
-        setEndpoint({
+    const handleClick = React.useCallback(() => {
+        setSelected(() => !isAddingEdges ? !selected : false);
+        addEndpoint({
             id: nodeId,
             position: position
         });
-    }
+    }, [nodeId, position, selected, isAddingEdges]);
 
     React.useEffect(() => {
-        if (!addingEdges) setSelected(false);
-    }, [addingEdges])
+        if (!isAddingEdges) setSelected(false);
+    }, [isAddingEdges])
 
     return (
         <button
@@ -45,11 +43,11 @@ export default function Connector({
                 left && "-mr-2 ml-2",
                 right && "-ml-2 mr-2",
                 selected && "ring-2 ring-black ring-offset-1",
-                !hovered && !addingEdges && "invisible disabled",
+                !isHovered && !isAddingEdges && "invisible disabled",
             )}
             onClick={handleClick}
         >
-            {(!addingEdges || (addingEdges && !selected)) && <PlusIcon size={16} />}
+            {(!isAddingEdges || (isAddingEdges && !selected)) && <PlusIcon size={16} />}
         </button>
     )
 }

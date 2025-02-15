@@ -1,7 +1,6 @@
 'use client'
 import React from "react";
-import { PlusIcon, TrashIcon, XIcon } from "lucide-react";
-import { useBuilderContext } from "./builder.context";
+import { PlusIcon } from "lucide-react";
 import StepForm from "./step_form";
 
 export default function Toolbar() {

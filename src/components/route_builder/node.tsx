@@ -4,8 +4,7 @@ import { useConnectorHover } from "@/components/route_builder/connector_hover.ho
 import useDragger from "@/components/route_builder/draggable.hook";
 import React, { useImperativeHandle } from "react"
 import Connector from "./handle";
-import { Position } from "./edge";
-import { cn } from "@/lib/utils";
+import { Position } from "./types";
 
 export type NodeType = {
     id: string;
@@ -36,13 +35,27 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>((props, ref) => {
         position: activePosition,
     } = useConnectorHover({ draggableRef: internalRef });
 
-    const { resizeObserver, mutationObserver } = useBuilderContext();
+    const { updateEdges } = useBuilderContext();
 
     React.useEffect(() => {
         if (!internalRef.current) throw new Error("draggableRef is not assigned");
         if (!containerRef.current) throw new Error("containerRef is not assigned");
 
         const element = internalRef.current;
+
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                updateEdges(entry.target);
+            }
+        });
+    
+        const mutationObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'attributes') {
+                    updateEdges(mutation.target as Element);
+                }
+            }
+        });
 
         resizeObserver.observe(element);
         mutationObserver.observe(element, {
@@ -53,7 +66,7 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>((props, ref) => {
             resizeObserver.unobserve(element);
             mutationObserver.disconnect();
         }
-    })
+    }, [containerRef, internalRef, updateEdges]);
 
     return (
         <div
@@ -68,14 +81,14 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>((props, ref) => {
             <Connector
                 nodeId={node.id}
                 right
-                hovered={activePosition === Position.Left}
+                isHovered={activePosition === Position.Left}
                 position={Position.Left}
             />
             <span>Status</span>
             <Connector
                 nodeId={node.id}
                 left
-                hovered={activePosition === Position.Right}
+                isHovered={activePosition === Position.Right}
                 position={Position.Right}
             />
         </div>

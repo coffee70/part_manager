@@ -1,5 +1,6 @@
 'use client'
 import React from 'react';
+import { Position } from './types';
 import { STAGE_BORDER_WIDTH } from './stage';
 
 export type GetControlWithCurvatureParams = {
@@ -11,21 +12,6 @@ export type GetControlWithCurvatureParams = {
     c?: number;
 };
 
-export enum Position {
-    Left = 'left',
-    Top = 'top',
-    Right = 'right',
-    Bottom = 'bottom',
-}
-
-export type Edge = {
-    id: string;
-    sourceId: string;
-    sourcePosition: Position;
-    targetId: string;
-    targetPosition: Position;
-    path: string;
-}
 
 function calculateControlOffset(distance: number, curvature: number): number {
     if (distance >= 0) {
@@ -48,33 +34,7 @@ function getControlWithCurvature({ pos, x1, y1, x2, y2, c = 0.25 }: GetControlWi
     }
 }
 
-export const useEdges = (containerRef: React.RefObject<HTMLDivElement>) => {
-    const [edges, setEdges] = React.useState<Edge[]>([]);
-
-    const updateEdges = React.useCallback((target: Element) => {
-        const nodeId = target.getAttribute('id');
-        // find all edges that use the nodeId as source or target
-        const edgesToUpdate = edges.filter(edge => edge.sourceId === nodeId || edge.targetId === nodeId);
-        edgesToUpdate.forEach(edge => {
-            const path = calculatePath(
-                containerRef,
-                edge.sourceId,
-                edge.sourcePosition,
-                edge.targetId,
-                edge.targetPosition,
-            );
-            setEdges(prevEdges => prevEdges.map(e => e.id === edge.id ? { ...e, path } : e));
-        });
-    }, [edges, containerRef]);
-
-    return {
-        edges,
-        setEdges,
-        updateEdges,
-    }
-}
-
-const calculatePath = (
+export const calculatePath = (
     containerRef: React.RefObject<HTMLDivElement>,
     sourceId: string,
     sourcePosition: Position,

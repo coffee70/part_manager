@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { Position } from "./edge";
+import { Position } from "./types";
 
 export function useConnectorHover({ draggableRef }: { draggableRef: React.RefObject<HTMLDivElement> }) {
     const [position, setPosition] = React.useState<Position | null>(null);

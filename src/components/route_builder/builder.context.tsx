@@ -1,20 +1,17 @@
 'use client'
 import React from 'react';
-import { Position, Edge, useEdges } from './edge';
-
-type Endpoint = {
-    id: string;
-    position: Position;
-}
+import { useRoute } from './route.hook';
+import { Endpoint, Route, Node } from './types';
 
 type BuilderContextType = {
-    addingEdges: boolean;
-    setAddingEdges: (addingEdges: boolean) => void;
-    resizeObserver: ResizeObserver;
-    mutationObserver: MutationObserver;
-    edges: Edge[];
-    setEndpoint: (endpoint: Endpoint) => void;
+    isAddingEdges: boolean;
     containerRef: React.RefObject<HTMLDivElement>;
+    nodeRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
+    route: Route;
+    addEndpoint: ({ id, position, }: Endpoint) => void
+    addNode: (node: Node) => void
+    updateNode: (updatedNode: Node) => void
+    updateEdges: (target: Element) => void
 }
 
 const BuilderContext = React.createContext<BuilderContextType | null>(null);
@@ -33,60 +30,29 @@ type Props = {
 
 export function BuilderProvider({ children }: Props) {
     const containerRef = React.useRef<HTMLDivElement>(null);
-    const { edges, setEdges, updateEdges } = useEdges(containerRef);
-
-    const [addingEdges, setAddingEdges] = React.useState(false);
-
-    const [endpoint, _setEndpoint] = React.useState<Endpoint>();
-
-    const resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-            updateEdges(entry.target);
-        }
-    });
-
-    const mutationObserver = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            if (mutation.type === 'attributes') {
-                updateEdges(mutation.target as Element);
-            }
-        }
-    });
-
-    const setEndpoint = ({
-        id,
-        position,
-    }: Endpoint) => {
-        if (endpoint === undefined) {
-            _setEndpoint({
-                id,
-                position,
-            });
-        }
-        else {
-            const newEdge: Edge = {
-                id: `${endpoint.id}-${id}`,
-                sourceId: endpoint.id,
-                sourcePosition: endpoint.position,
-                targetId: id,
-                targetPosition: position,
-                path: '',
-            }
-            setEdges((prevEdges) => [...prevEdges, newEdge]);
-            _setEndpoint(undefined);
-            setAddingEdges(false);
-        }
-    }
-
+    const {
+        route,
+        isEditing,
+        isAddingEdges,
+        nodeRefs,
+        addNode,
+        removeNode,
+        updateNode,
+        addEdge,
+        addEndpoint,
+        updateEdges,
+        removeEdge,
+    } = useRoute({ containerRef });
 
     const value = {
-        addingEdges,
-        setAddingEdges,
-        resizeObserver,
-        mutationObserver,
-        edges,
-        setEndpoint,
+        isAddingEdges,
         containerRef,
+        nodeRefs,
+        route,
+        addEndpoint,
+        addNode,
+        updateNode,
+        updateEdges,
     }
 
     return (
