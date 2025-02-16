@@ -9,6 +9,7 @@ type BuilderContextType = {
     nodeRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
     route: Route;
     addEndpoint: ({ id, position, }: Endpoint) => void
+    resetEndpoint: () => void
     addNode: (node: Node) => void
     updateNode: (updatedNode: Node) => void
     updateEdges: (target: Element) => void
@@ -40,6 +41,7 @@ export function BuilderProvider({ children }: Props) {
         updateNode,
         addEdge,
         addEndpoint,
+        resetEndpoint,
         updateEdges,
         removeEdge,
     } = useRoute({ containerRef });
@@ -50,6 +52,7 @@ export function BuilderProvider({ children }: Props) {
         nodeRefs,
         route,
         addEndpoint,
+        resetEndpoint,
         addNode,
         updateNode,
         updateEdges,

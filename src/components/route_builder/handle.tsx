@@ -2,52 +2,95 @@
 import React from "react"
 import { useBuilderContext } from "@/components/route_builder/builder.context";
 import { cn } from "@/lib/utils";
-import { PlusIcon } from "lucide-react";
+import { ArrowBigDownIcon, ArrowBigLeftIcon, ArrowBigRightIcon, ArrowBigUpIcon, CirclePlusIcon } from "lucide-react";
 import { Position } from "./types";
+import { useHoverField } from "./hover_field.hook";
 
-export default function Connector({
-    nodeId,
-    left,
-    right,
-    isHovered,
+const getIcon = ({
     position,
+    isAddingEdges,
+    isSelected,
+}: {
+    position: Position;
+    isAddingEdges?: boolean;
+    isSelected?: boolean;
+}) => {
+    if (isAddingEdges && !isSelected) {
+        return <CirclePlusIcon className="text-gray-800 fill-gray-300" />;
+    }
+    switch (position) {
+        case Position.Left:
+            return <ArrowBigLeftIcon className="text-gray-600 fill-gray-600" />;
+        case Position.Right:
+            return <ArrowBigRightIcon className="text-gray-600 fill-gray-600" />;
+        case Position.Top:
+            return <ArrowBigUpIcon className="text-gray-600 fill-gray-600" />;
+        case Position.Bottom:
+            return <ArrowBigDownIcon className="text-gray-600 fill-gray-600" />;
+        default:
+            return null;
+    }
+};
+
+export const OFFSET = 30;
+
+export default function Handle({
+    nodeId,
+    position,
+    nodeRef,
+    isNodeHovered
 }: {
     nodeId: string;
-    left?: boolean;
-    right?: boolean;
-    isHovered?: boolean;
     position: Position;
+    nodeRef: React.RefObject<HTMLDivElement>;
+    isNodeHovered?: boolean;
 }) {
-    const [selected, setSelected] = React.useState(false);
+    const handleRef = React.useRef<HTMLButtonElement>(null);
+    const [isHovered, setIsHovered] = React.useState(false);
+    const [isSelected, setIsSelected] = React.useState(false);
     const {
         isAddingEdges,
         addEndpoint,
     } = useBuilderContext();
 
-    const handleClick = React.useCallback(() => {
-        setSelected(() => !isAddingEdges ? !selected : false);
+    const handleClick = React.useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsSelected(() => !isAddingEdges ? !isSelected : false);
         addEndpoint({
             id: nodeId,
             position: position
         });
-    }, [nodeId, position, selected, isAddingEdges]);
+    }, [nodeId, position, isSelected, isAddingEdges, addEndpoint]);
 
     React.useEffect(() => {
-        if (!isAddingEdges) setSelected(false);
+        if (!isAddingEdges) setIsSelected(false);
     }, [isAddingEdges])
+
+    useHoverField({
+        nodeId,
+        position,
+        nodeRef,
+        handleRef
+    })
 
     return (
         <button
+            ref={handleRef}
             className={cn(
-                "h-4 w-4 bg-black text-white rounded-full",
-                left && "-mr-2 ml-2",
-                right && "-ml-2 mr-2",
-                selected && "ring-2 ring-black ring-offset-1",
-                !isHovered && !isAddingEdges && "invisible disabled",
+                "absolute",
+                (isHovered || isAddingEdges || isSelected) && "opacity-100",
+                isNodeHovered && !isHovered && !isAddingEdges && "opacity-60",
+                !isNodeHovered && !isHovered && !isAddingEdges && "invisible disabled",
             )}
             onClick={handleClick}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            {(!isAddingEdges || (isAddingEdges && !selected)) && <PlusIcon size={16} />}
+            {getIcon({
+                position,
+                isAddingEdges,
+                isSelected
+            })}
         </button>
     )
 }

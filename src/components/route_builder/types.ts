@@ -13,6 +13,7 @@ export enum Position {
 }
 
 export type Edge = {
+    id: string;
     sourceId: string;
     sourcePosition: Position;
     targetId: string;

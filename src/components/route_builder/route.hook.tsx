@@ -13,6 +13,10 @@ export function useRoute({
         edges: [],
     });
 
+    React.useEffect(() => {
+        console.log("Route", route);
+    }, [route]);
+
     const nodeRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
@@ -66,6 +70,10 @@ export function useRoute({
         targetId: string,
         targetPosition: Position,
     ) => {
+        // you can't add an edge from a node
+        // to itself in the same position
+        if (sourceId === targetId && sourcePosition === targetPosition) return;
+
         const path = calculatePath(
             containerRef,
             sourceId,
@@ -73,12 +81,14 @@ export function useRoute({
             targetId,
             targetPosition,
         );
+
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
                 edges: [
                     ...prevRoute.edges,
                     {
+                        id: crypto.randomUUID(),
                         sourceId,
                         sourcePosition,
                         targetId,
@@ -90,7 +100,7 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    }, [containerRef]);
 
     const updateEdges = (target: Element) => {
         const nodeId = target.getAttribute('id');
@@ -117,7 +127,7 @@ export function useRoute({
             const updatedRoute = {
                 ...prevRoute,
                 edges: prevRoute.edges.map(edge => {
-                    const updatedEdge = updatedEdges.find(updatedEdge => updatedEdge.sourceId === edge.sourceId && updatedEdge.targetId === edge.targetId);
+                    const updatedEdge = updatedEdges.find(updatedEdge => updatedEdge.id === edge.id);
                     if (updatedEdge) {
                         return updatedEdge;
                     }
@@ -129,11 +139,11 @@ export function useRoute({
         setIsEditing(true);
     }
 
-    const removeEdge = React.useCallback((sourceId: string, targetId: string) => {
+    const removeEdge = React.useCallback((id: string) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
-                edges: prevRoute.edges.filter(edge => edge.sourceId !== sourceId || edge.targetId !== targetId),
+                edges: prevRoute.edges.filter(edge => edge.id !== id),
             };
             return updatedRoute;
         });
@@ -141,6 +151,10 @@ export function useRoute({
     }, []);
 
     const [endpoint, setEndpoint] = React.useState<Endpoint>();
+
+    React.useEffect(() => {
+        console.log("Endpoints", endpoint);
+    }, [endpoint]);
 
     const addEndpoint = React.useCallback(({
         id,
@@ -166,6 +180,11 @@ export function useRoute({
         }
     }, [endpoint, addEdge]);
 
+    const resetEndpoint = React.useCallback(() => {
+        setEndpoint(undefined);
+        setIsAddingEdges(false);
+    }, []);
+
     return {
         route,
         isEditing,
@@ -176,6 +195,7 @@ export function useRoute({
         updateNode,
         addEdge,
         addEndpoint,
+        resetEndpoint,
         updateEdges,
         removeEdge,
     }

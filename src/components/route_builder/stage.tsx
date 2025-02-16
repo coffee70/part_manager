@@ -11,7 +11,12 @@ export default function Stage() {
         route,
         containerRef,
         nodeRefs,
+        resetEndpoint,
     } = useBuilderContext();
+
+    const onClick = React.useCallback(() => {
+        resetEndpoint();
+    }, [resetEndpoint]);
 
     return (
         <div
@@ -20,6 +25,7 @@ export default function Stage() {
             style={{
                 borderWidth: `${STAGE_BORDER_WIDTH}px`,
             }}
+            onClick={onClick}
         >
             {route.nodes.map((node, index) => (
                 <Node
@@ -33,7 +39,7 @@ export default function Stage() {
                     {route.edges.map((edge, index) => (
                         <path
                             key={index}
-                            id={`edge-${edge.sourceId}-${edge.targetId}`}
+                            id={edge.id}
                             d={edge.path}
                             fill="none"
                             stroke="black"
@@ -44,7 +50,7 @@ export default function Stage() {
                 {route.edges.map((edge, index) => (
                     <use
                         key={index}
-                        href={`#edge-${edge.sourceId}-${edge.targetId}`}
+                        href={`#${edge.id}`}
                         fill="none"
                         stroke="black"
                         strokeWidth="2"
