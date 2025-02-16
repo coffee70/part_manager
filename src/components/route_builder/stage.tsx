@@ -37,7 +37,6 @@ function useStage() {
     };
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-        console.log("key pressed", e.key);
         if (e.key === "Escape") {
             resetEndpoint();
             setSelectedNode(null);
