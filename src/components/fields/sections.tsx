@@ -10,8 +10,9 @@ import { modelKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
 import { getModel } from '@/server/models/get_model';
-import ModelSelect from './model_select';
 import { SectionProvider } from './section.context';
+import ModelSelect from '@/components/ui/model_select';
+import { fieldURL } from '@/lib/url';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
@@ -41,7 +42,7 @@ export default function Sections() {
                     icon={<FieldIcon size={50} />}
                 />
                 <div className='flex items-center space-x-4'>
-                    <ModelSelect />
+                    <ModelSelect urlSetter={fieldURL} />
                     <AddSection />
                 </div>
             </AppBar>

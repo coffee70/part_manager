@@ -3,6 +3,8 @@ import { AppBar } from "@/components/ui/app_bar";
 import { PageTitle } from "@/components/ui/page_title";
 import { RouteIcon } from "@/components/ui/icons/icons";
 import { RouteBuilder } from "../route_builder/builder";
+import ModelSelect from "../ui/model_select";
+import { routeURL } from "@/lib/url";
 
 export default function Routes() {
     return (
@@ -12,6 +14,7 @@ export default function Routes() {
                     title="Routes"
                     icon={<RouteIcon size={50} />}
                 />
+                <ModelSelect urlSetter={routeURL} />
             </AppBar>
             <div className="flex-1 p-6 overflow-y-auto">
                 <RouteBuilder />

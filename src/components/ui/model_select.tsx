@@ -4,13 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { modelKeys } from '@/lib/query_keys';
 import { getModel } from '@/server/models/get_model';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getModels } from '@/server/models/get_models';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import { ChevronDownIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { URLSetter } from '@/lib/url';
 
-export default function ModelSelect() {
+export default function ModelSelect({
+    urlSetter
+}: {
+    urlSetter: URLSetter;
+}) {
     const { modelId } = useAdminURL();
 
     const { data: model } = useQuery({
@@ -42,7 +47,7 @@ export default function ModelSelect() {
                         <DropdownMenuItem
                             key={model._id}
                             className='flex items-center space-x-2'
-                            onClick={() => router.push(`/fields?modelId=${model._id}`)}
+                            onClick={() => router.push(urlSetter(model._id))}
                         >
                             <div className='w-4 h-4 rounded-full' style={{ backgroundColor: model.color }} />
                             <span>{model.name}</span>
