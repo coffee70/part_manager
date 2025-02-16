@@ -6,6 +6,7 @@ import Toolbar from "./toolbar";
 import Background from "./background";
 import Edges from "./edges";
 import Nodes from "./nodes";
+import Notifications from "./notifications";
 
 export const STAGE_BORDER_WIDTH = 2;
 
@@ -14,6 +15,7 @@ export default function Stage() {
 
     return (
         <div {...getStageProps()}>
+            <Notifications />
             <Nodes />
             <Edges />
             <Background />

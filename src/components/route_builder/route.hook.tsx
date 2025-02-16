@@ -177,11 +177,27 @@ export function useRoute({
         setIsAddingEdges(false);
     }, []);
 
+    const [saveSuccess, setSaveSuccess] = React.useState(false);
+
+    React.useEffect(() => {
+        if (saveSuccess) {
+            const timer = setTimeout(() => {
+                setSaveSuccess(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [saveSuccess]);    
+
+    const saveRoute = () => {
+        setSaveSuccess(true);
+    }
+
     return {
         route,
         isEditing,
         isAddingEdges,
         nodeRefs,
+        saveSuccess,
         addNode,
         removeNode,
         updateNode,
@@ -190,5 +206,6 @@ export function useRoute({
         resetEndpoint,
         updateEdges,
         removeEdge,
+        saveRoute,
     }
 }
