@@ -11,18 +11,19 @@ type Item = {
 type BuilderContextType = {
     isAddingEdges: boolean;
     containerRef: React.RefObject<HTMLDivElement>;
-    nodeRefs: React.MutableRefObject<(HTMLDivElement | null)[]>
+    nodeRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
     route: Route;
-    addEndpoint: ({ id, position, }: Endpoint) => void
-    resetEndpoint: () => void
-    addNode: (node: Node) => void
-    updateNode: (updatedNode: Node) => void
-    updateEdges: (target: Element) => void
-    setSelectedNode: (node: Node | null) => void
-    setSelectedEdge: (edge: Edge | null) => void
-    isNodeSelected: (node: Node) => boolean
-    isEdgeSelected: (edge: Edge) => boolean
-    removeSelectedItem: () => void
+    addEndpoint: ({ id, position, }: Endpoint) => void;
+    resetEndpoint: () => void;
+    addNode: (node: Node) => void;
+    updateNode: (updatedNode: Node) => void;
+    updateEdges: (target: Element) => void;
+    setSelectedNode: (node: Node | null) => void;
+    setSelectedEdge: (edge: Edge | null) => void;
+    isNodeSelected: (node: Node) => boolean;
+    isEdgeSelected: (edge: Edge) => boolean;
+    isItemSelected: () => boolean;
+    removeSelectedItem: () => void;
 }
 
 const BuilderContext = React.createContext<BuilderContextType | null>(null);
@@ -83,6 +84,10 @@ export function BuilderProvider({ children }: Props) {
         return selectedItem?.type === 'edge' && selectedItem.id === edge.id;
     }
 
+    const isItemSelected = () => {
+        return selectedItem !== null;
+    }
+
     const removeSelectedItem = () => {
         if (!selectedItem) return;
         if (selectedItem.type === 'node') {
@@ -108,6 +113,7 @@ export function BuilderProvider({ children }: Props) {
         setSelectedEdge,
         isNodeSelected,
         isEdgeSelected,
+        isItemSelected,
         removeSelectedItem,
     }
 
