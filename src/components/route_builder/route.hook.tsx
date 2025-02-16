@@ -13,10 +13,6 @@ export function useRoute({
         edges: [],
     });
 
-    React.useEffect(() => {
-        console.log("Route", route);
-    }, [route]);
-
     const nodeRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
@@ -151,10 +147,6 @@ export function useRoute({
     }, []);
 
     const [endpoint, setEndpoint] = React.useState<Endpoint>();
-
-    React.useEffect(() => {
-        console.log("Endpoints", endpoint);
-    }, [endpoint]);
 
     const addEndpoint = React.useCallback(({
         id,
