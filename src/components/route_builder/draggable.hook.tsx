@@ -8,7 +8,7 @@ type Props = {
 
 function useDragger({ containerRef, draggableRef }: Props) {
     const isClicked = React.useRef<boolean>(false);
-    const isDragging = React.useRef<boolean>(false);
+    const [isDragging, setIsDragging] = React.useState(false);
 
     const coords = React.useRef<{
         startX: number,
@@ -34,7 +34,7 @@ function useDragger({ containerRef, draggableRef }: Props) {
 
         const onMouseUp = (e: MouseEvent) => {
             isClicked.current = false;
-            isDragging.current = false;
+            setIsDragging(false);
 
             if (!draggableRef.current) return;
 
@@ -46,7 +46,7 @@ function useDragger({ containerRef, draggableRef }: Props) {
             if (!isClicked.current) return;
             if (!draggableRef.current) return;
 
-            isDragging.current = true;
+            setIsDragging(true);
 
             const nextX = e.clientX - coords.current.startX + coords.current.lastX;
             const nextY = e.clientY - coords.current.startY + coords.current.lastY;
@@ -71,7 +71,7 @@ function useDragger({ containerRef, draggableRef }: Props) {
         }
     }, [containerRef, draggableRef])
 
-    return { isDragging: isDragging.current };
+    return { isDragging };
 
 }
 

@@ -5,7 +5,7 @@ import { Edge } from "./types";
 export default function Edges() {
     const { route } = useBuilderContext();
     return (
-        <svg className="absolute z-0 overflow-visible pointer-events-none" width="100%" height="100%">
+        <svg className="z-0 absolute overflow-visible" width="100%" height="100%">
             <defs>
                 {route.edges.map((edge, index) => (
                     <Definition key={index} edge={edge} />
@@ -19,32 +19,47 @@ export default function Edges() {
 }
 
 function Definition({ edge }: { edge: Edge }) {
+
     return (
         <path
             id={edge.id}
             d={edge.path}
-            fill="none"
-            stroke="#9ca3af"
-            strokeWidth="2"
         />
     )
 }
 
 function Use({ edge }: { edge: Edge }) {
-    const { setSelectedEdge } = useBuilderContext();
+    const { setSelectedEdge, isEdgeSelected } = useBuilderContext();
 
-    const onClick = (e: React.MouseEvent<SVGUseElement>) => {
+    const onClick = (e: React.MouseEvent) => {
+        console.log("edge clicked", edge);
         e.stopPropagation();
-        setSelectedEdge(edge);
+        if (!isEdgeSelected(edge)) {
+            setSelectedEdge(edge);
+        }
+        else {
+            setSelectedEdge(null);
+        }
     }
 
     return (
-        <use
-            href={`#${edge.id}`}
-            fill="none"
-            stroke="black"
-            strokeWidth="2"
-            onClick={onClick}
-        />
+        <>
+            {/* Visible element */}
+            <use
+                className="z-20 cursor-pointer pointer-events-auto"
+                href={`#${edge.id}`}
+                fill="none"
+                stroke={isEdgeSelected(edge) ? "black" : "gray"}
+                strokeWidth={isEdgeSelected(edge) ? 3 : 2}
+            />
+            {/* Invisible click area */}
+            <use
+                className="z-30 cursor-pointer pointer-events-auto"
+                href={`#${edge.id}`}
+                fill="transparent"
+                strokeWidth="6"
+                onClick={onClick}
+            />
+        </>
     )
 }

@@ -26,10 +26,14 @@ function useStage() {
     const {
         containerRef,
         resetEndpoint,
+        setSelectedNode,
+        setSelectedEdge,
     } = useBuilderContext();
 
     const onClick = () => {
         resetEndpoint();
+        setSelectedNode(null);
+        setSelectedEdge(null);
     };
 
     const getStageProps = () => ({

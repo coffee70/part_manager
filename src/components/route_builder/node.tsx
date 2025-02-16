@@ -19,10 +19,13 @@ type Variants = {
     selected: {
         [key in SelectedType]: string;
     }
+    dragging: {
+        [key in 'true' | 'false']: string;
+    }
 }
 
 const nodeVariants = cva<Variants>(
-    "absolute flex items-center justify-center h-8 min-w-24 rounded-md text-xs font-bold cursor-grab select-none",
+    "absolute z-10 flex items-center justify-center h-8 min-w-24 rounded-md text-xs font-bold select-none",
     {
         variants: {
             variant: {
@@ -35,6 +38,10 @@ const nodeVariants = cva<Variants>(
                 "In-progress": "ring-2 ring-blue-600",
                 "Done": "ring-2 ring-green-600",
                 "None": "ring-0",
+            },
+            dragging: {
+                true: "cursor-grabbing",
+                false: "cursor-grab",
             }
         },
         defaultVariants: {
@@ -80,7 +87,8 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
         setOpen((prev) => !prev);
     }
 
-    const onClick = () => {
+    const onClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
         if (isDragging) return;
         if (!isNodeSelected(node)) {
             setSelectedNode(node);
@@ -98,6 +106,7 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
                 className={nodeVariants({
                     variant: node.type,
                     selected: isNodeSelected(node) ? node.type : "None",
+                    dragging: isDragging
                 })}
                 style={{
                     left: node.x,
