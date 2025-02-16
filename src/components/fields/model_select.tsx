@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
-import { useFieldURL } from '@/hooks/url_metadata.hook';
+import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { modelKeys } from '@/lib/query_keys';
 import { getModel } from '@/server/models/get_model';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
@@ -11,7 +11,7 @@ import { ChevronDownIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function ModelSelect() {
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
 
     const { data: model } = useQuery({
         queryKey: modelKeys.id(modelId),

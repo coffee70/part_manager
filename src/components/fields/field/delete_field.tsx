@@ -10,7 +10,7 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { sectionKeys } from "@/lib/query_keys"
-import { useFieldURL } from "@/hooks/url_metadata.hook"
+import { useAdminURL } from "@/hooks/url_metadata.hook"
 import { useQueryClient, useMutation } from "@tanstack/react-query"
 import { deleteField } from "@/server/fields/delete_field"
 import { Button } from "@/components/ui/button"
@@ -24,7 +24,7 @@ type Props = {
 
 export default function DeleteField({ _id, open, onOpenChange }: Props) {
 
-    const { modelId } = useFieldURL()
+    const { modelId } = useAdminURL()
 
     const queryClient = useQueryClient()
 

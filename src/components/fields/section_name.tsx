@@ -5,7 +5,7 @@ import { ClickAwayListener } from '@mui/base'
 import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
-import { useFieldURL } from '@/hooks/url_metadata.hook'
+import { useAdminURL } from '@/hooks/url_metadata.hook'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { sectionKeys } from '@/lib/query_keys'
 import { Input } from '@/components/ui/input'
@@ -44,7 +44,7 @@ export default function SectionName() {
     const { section } = useSectionContext();
     const { _id, name } = section;
 
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
 
     const { isEditing, setIsEditing, inputRef } = useIsEditing();
 

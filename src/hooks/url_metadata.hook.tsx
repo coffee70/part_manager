@@ -1,7 +1,7 @@
 'use client'
 import { usePathname, useSearchParams } from "next/navigation";
 
-export function useFieldURL() {
+export function useAdminURL() {
     const searchParams = useSearchParams();
     const modelId = searchParams.get('modelId');
 

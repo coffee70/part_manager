@@ -5,7 +5,7 @@ import Section from './section';
 import { AppBar } from '@/components/ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
-import { useFieldURL } from '@/hooks/url_metadata.hook';
+import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { modelKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
@@ -17,7 +17,7 @@ const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
 
     const { data, isError, isPending } = useQuery({
         queryKey: sectionKeys.all(modelId),

@@ -15,7 +15,7 @@ import {
     AlertDialogFooter,
     AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import { useFieldURL } from '@/hooks/url_metadata.hook';
+import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { useSectionContext } from '../section.context';
 import Loader from '@/components/ui/loader';
@@ -24,7 +24,7 @@ export default function DeleteSection() {
     const { section } = useSectionContext();
     const { _id } = section;
 
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
     const queryClient = useQueryClient()
 
     const { mutate, isPending } = useMutation({

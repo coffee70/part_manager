@@ -16,7 +16,7 @@ import TextForm from "./forms/text";
 import ParagraphForm from "./forms/paragraph";
 import { Field, FieldType, fieldtypes } from "@/types/collections";
 import { useSectionContext } from "../section.context";
-import { useFieldURL } from "@/hooks/url_metadata.hook";
+import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertField } from "@/server/fields/upsert_field";
 import { sectionKeys } from "@/lib/query_keys";
@@ -60,7 +60,7 @@ type Props = {
 
 export default function FieldForm({ field, open, onOpenChange }: Props) {
     const { section } = useSectionContext();
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
     const queryClient = useQueryClient();
 
     const initialFormState = {

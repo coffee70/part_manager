@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { PlusIcon } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSection } from '@/server/sections/create_section';
-import { useFieldURL } from '@/hooks/url_metadata.hook';
+import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
@@ -16,7 +16,7 @@ type FormState = {
 }
 
 export default function AddSection() {
-    const { modelId } = useFieldURL();
+    const { modelId } = useAdminURL();
 
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({
