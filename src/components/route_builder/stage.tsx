@@ -28,6 +28,7 @@ function useStage() {
         resetEndpoint,
         setSelectedNode,
         setSelectedEdge,
+        removeSelectedItem,
     } = useBuilderContext();
 
     const onClick = () => {
@@ -41,6 +42,10 @@ function useStage() {
             resetEndpoint();
             setSelectedNode(null);
             setSelectedEdge(null);
+        }
+
+        if (e.key === "Backspace" || e.key === "Delete") {
+            removeSelectedItem();
         }
     }
 

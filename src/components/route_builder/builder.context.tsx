@@ -22,6 +22,7 @@ type BuilderContextType = {
     setSelectedEdge: (edge: Edge | null) => void
     isNodeSelected: (node: Node) => boolean
     isEdgeSelected: (edge: Edge) => boolean
+    removeSelectedItem: () => void
 }
 
 const BuilderContext = React.createContext<BuilderContextType | null>(null);
@@ -40,6 +41,21 @@ type Props = {
 
 export function BuilderProvider({ children }: Props) {
     const containerRef = React.useRef<HTMLDivElement>(null);
+
+    const {
+        route,
+        isEditing,
+        isAddingEdges,
+        nodeRefs,
+        addNode,
+        removeNode,
+        updateNode,
+        addEdge,
+        removeEdge,
+        addEndpoint,
+        resetEndpoint,
+        updateEdges,
+    } = useRoute({ containerRef });
 
     const [selectedItem, setSelectedItem] = React.useState<Item | null>(null);
 
@@ -67,20 +83,16 @@ export function BuilderProvider({ children }: Props) {
         return selectedItem?.type === 'edge' && selectedItem.id === edge.id;
     }
 
-    const {
-        route,
-        isEditing,
-        isAddingEdges,
-        nodeRefs,
-        addNode,
-        removeNode,
-        updateNode,
-        addEdge,
-        addEndpoint,
-        resetEndpoint,
-        updateEdges,
-        removeEdge,
-    } = useRoute({ containerRef });
+    const removeSelectedItem = () => {
+        if (!selectedItem) return;
+        if (selectedItem.type === 'node') {
+            setSelectedNode(null);
+            removeNode(selectedItem.id);
+        } else if (selectedItem.type === 'edge') {
+            setSelectedEdge(null);
+            removeEdge(selectedItem.id);
+        }
+    }
 
     const value = {
         isAddingEdges,
@@ -96,6 +108,7 @@ export function BuilderProvider({ children }: Props) {
         setSelectedEdge,
         isNodeSelected,
         isEdgeSelected,
+        removeSelectedItem,
     }
 
     return (
