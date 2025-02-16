@@ -36,13 +36,24 @@ function useStage() {
         setSelectedEdge(null);
     };
 
+    const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        console.log("key pressed", e.key);
+        if (e.key === "Escape") {
+            resetEndpoint();
+            setSelectedNode(null);
+            setSelectedEdge(null);
+        }
+    }
+
     const getStageProps = () => ({
         ref: containerRef,
-        className: "relative m-6 border-dashed border-gray-400 rounded-md h-[720px]",
+        className: "relative m-6 border-dashed border-gray-400 rounded-md h-[720px] outline-none",
         style: {
             borderWidth: `${STAGE_BORDER_WIDTH}px`,
         },
         onClick,
+        onKeyDown,
+        tabIndex: 0,
     })
 
     return { getStageProps }
