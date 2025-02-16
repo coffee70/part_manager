@@ -3,6 +3,7 @@ import { useBuilderContext } from "@/components/route_builder/builder.context";
 import React from "react"
 import Node from "./node";
 import Toolbar from "./toolbar";
+import Background from "./background";
 
 export const STAGE_BORDER_WIDTH = 2;
 
@@ -21,7 +22,7 @@ export default function Stage() {
     return (
         <div
             ref={containerRef}
-            className="relative m-6 border-dashed border-gray-600 rounded-md h-[720px]"
+            className="relative m-6 border-dashed border-gray-400 rounded-md h-[720px]"
             style={{
                 borderWidth: `${STAGE_BORDER_WIDTH}px`,
             }}
@@ -42,7 +43,7 @@ export default function Stage() {
                             id={edge.id}
                             d={edge.path}
                             fill="none"
-                            stroke="black"
+                            stroke="#9ca3af"
                             strokeWidth="2"
                         />
                     ))}
@@ -57,6 +58,7 @@ export default function Stage() {
                     />
                 ))}
             </svg>
+            <Background />
             <Toolbar />
         </div >
     )
