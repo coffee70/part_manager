@@ -2,15 +2,22 @@
 import { useBuilderContext } from "@/components/route_builder/builder.context";
 import useDragger from "@/components/route_builder/draggable.hook";
 import React, { useImperativeHandle } from "react"
-import Handle, { OFFSET } from "./handle";
+import Handle from "./handle";
 import { type Node as NodeType, Position } from "./types";
 import StepForm from "./step_form";
 import { cva } from "class-variance-authority";
 import { StepType } from "@/types/collections";
+import { useHoverField } from "./hover_field.hook";
+import { useObserver } from "./observer.hook";
+
+type SelectedType = StepType | "None";
 
 type Variants = {
     variant: {
         [key in StepType]: string
+    };
+    selected: {
+        [key in SelectedType]: string;
     }
 }
 
@@ -22,10 +29,19 @@ const nodeVariants = cva<Variants>(
                 "To-do": "bg-gray-100 text-gray-800 border border-gray-600",
                 "In-progress": "bg-blue-100 text-blue-800 border border-blue-600",
                 "Done": "bg-green-100 text-green-800 border border-green-600",
+            },
+            selected: {
+                "To-do": "ring-2 ring-gray-600",
+                "In-progress": "ring-2 ring-blue-600",
+                "Done": "ring-2 ring-green-600",
+                "None": "ring-0",
             }
+        },
+        defaultVariants: {
+            variant: "To-do",
+            selected: "None",
         }
     }
-
 )
 
 type NodeProps = {
@@ -33,101 +49,61 @@ type NodeProps = {
 }
 
 const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
-    const [open, setOpen] = React.useState(false);
-    const [isHovered, setIsHovered] = React.useState(false);
-
-    const onDoubleClick = React.useCallback(() => {
-        setOpen((prev) => !prev);
-    }, []);
-
     const internalRef = React.useRef<HTMLDivElement>(null);
+    const [open, setOpen] = React.useState(false);
+
+    const {
+        containerRef,
+        setSelectedNode,
+        isNodeSelected
+    } = useBuilderContext();
+
+    const { isHovered } = useHoverField({
+        draggableRef: internalRef,
+    });
+
+    const { isDragging } = useDragger({
+        containerRef,
+        draggableRef: internalRef,
+    });
+
     useImperativeHandle(ref, () => {
         if (!internalRef.current) throw new Error("draggableRef is not assigned");
         return internalRef.current;
     });
 
-    const { updateEdges, containerRef } = useBuilderContext();
-
-    useDragger({
-        containerRef,
+    useObserver({
         draggableRef: internalRef,
-    });
+    })
 
-    // const {
-    //     position: activePosition,
-    // } = useConnectorHover({ draggableRef: internalRef });
+    const onDoubleClick = () => {
+        setOpen((prev) => !prev);
+    }
 
-    React.useEffect(() => {
-        if (!internalRef.current) throw new Error("draggableRef is not assigned");
-        if (!containerRef.current) throw new Error("containerRef is not assigned");
-
-        const element = internalRef.current;
-
-        const resizeObserver = new ResizeObserver((entries) => {
-            for (const entry of entries) {
-                updateEdges(entry.target);
-            }
-        });
-
-        const mutationObserver = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.type === 'attributes') {
-                    updateEdges(mutation.target as Element);
-                }
-            }
-        });
-
-        resizeObserver.observe(element);
-        mutationObserver.observe(element, {
-            attributes: true,
-        });
-
-        return () => {
-            resizeObserver.unobserve(element);
-            mutationObserver.disconnect();
+    const onClick = () => {
+        if (isDragging) return;
+        if (!isNodeSelected(node)) {
+            setSelectedNode(node);
         }
-    }, [internalRef, containerRef]);
-
-    // hover field
-    React.useEffect(() => {
-        if (!internalRef.current) throw new Error("draggableRef is not assigned");
-        const rect = internalRef.current.getBoundingClientRect();
-        const x = rect.x
-        const y = rect.y
-        const width = rect.width;
-        const height = rect.height;
-
-        const hoverRect = {
-            left: x - OFFSET,
-            right: x + width + OFFSET,
-            top: y - OFFSET,
-            bottom: y + height + OFFSET,
+        else {
+            setSelectedNode(null)
         }
-
-        window.addEventListener("mousemove", (e) => {
-            if (
-                e.x > hoverRect.left
-                && e.x < hoverRect.right
-                && e.y > hoverRect.top
-                && e.y < hoverRect.bottom
-            ) {
-                setIsHovered(true);
-            } else {
-                setIsHovered(false);
-            }
-        });
-    });
+    }
 
     return (
         <>
             <div
                 ref={internalRef}
                 id={node.id}
-                className={nodeVariants({ variant: node.type })}
+                className={nodeVariants({
+                    variant: node.type,
+                    selected: isNodeSelected(node) ? node.type : "None",
+                })}
                 style={{
                     left: node.x,
                     top: node.y,
                 }}
+                onClick={onClick}
                 onDoubleClick={onDoubleClick}
             >
                 <span>{node.name.toUpperCase()}</span>

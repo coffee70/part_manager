@@ -4,7 +4,7 @@ import { useBuilderContext } from "@/components/route_builder/builder.context";
 import { cn } from "@/lib/utils";
 import { ArrowBigDownIcon, ArrowBigLeftIcon, ArrowBigRightIcon, ArrowBigUpIcon, CirclePlusIcon } from "lucide-react";
 import { Position } from "./types";
-import { useHoverField } from "./hover_field.hook";
+import { useHandlePosition } from "./handle_position.hook";
 
 const getIcon = ({
     position,
@@ -66,7 +66,7 @@ export default function Handle({
         if (!isAddingEdges) setIsSelected(false);
     }, [isAddingEdges])
 
-    useHoverField({
+    useHandlePosition({
         nodeId,
         position,
         nodeRef,
