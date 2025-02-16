@@ -32,7 +32,6 @@ function Use({ edge }: { edge: Edge }) {
     const { setSelectedEdge, isEdgeSelected } = useBuilderContext();
 
     const onClick = (e: React.MouseEvent) => {
-        console.log("edge clicked", edge);
         e.stopPropagation();
         if (!isEdgeSelected(edge)) {
             setSelectedEdge(edge);
