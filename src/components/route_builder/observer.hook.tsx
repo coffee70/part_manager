@@ -24,7 +24,6 @@ export function useObserver({
         const mutationObserver = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
                 if (mutation.type === "attributes") {
-                    console.log("attribute changed, firing updateNodeLocation");
                     updateNodeLocation(mutation.target as HTMLElement);
                 }
             }

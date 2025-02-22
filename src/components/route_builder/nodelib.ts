@@ -18,7 +18,6 @@ export const calculateNodePosition = ({
     const container = containerRef.current;
     const containerRect = container.getBoundingClientRect();
     const targetRect = target.getBoundingClientRect();
-    console.log("updateNodePosition: updated calculated node position", targetRect.x - containerRect.x, targetRect.y - containerRect.y);
     return {
         x: targetRect.x - containerRect.x,
         y: targetRect.y - containerRect.y,

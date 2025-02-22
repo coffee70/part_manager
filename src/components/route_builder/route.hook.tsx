@@ -143,8 +143,6 @@ export function useRoute() {
                 ...prevRoute,
                 nodes: prevRoute.nodes.map(node => {
                     if (node.id === nodeId) {
-                        console.log('updateNodeLocation: current state node position', node.x, node.y);
-                        console.log('updateNodeLocation: updated node position', target.getBoundingClientRect().x, target.getBoundingClientRect().y);
                         return {
                             ...node,
                             ...calculateNodePosition({

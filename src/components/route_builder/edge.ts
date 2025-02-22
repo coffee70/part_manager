@@ -82,8 +82,6 @@ export const calculatePath = (
         y2: sourceOrigin.y,
     });
 
-    console.log(`M ${sourceOrigin.x} ${sourceOrigin.y} C ${sourceControlX} ${sourceControlY}, ${targetControlX} ${targetControlY}, ${targetOrigin.x} ${targetOrigin.y}`);
-
     return `M ${sourceOrigin.x} ${sourceOrigin.y} C ${sourceControlX} ${sourceControlY}, ${targetControlX} ${targetControlY}, ${targetOrigin.x} ${targetOrigin.y}`;
 };
 
