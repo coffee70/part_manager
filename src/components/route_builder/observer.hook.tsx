@@ -15,11 +15,11 @@ export function useObserver({
 
         const element = draggableRef.current;
 
-        // const resizeObserver = new ResizeObserver((entries) => {
-        //     for (const entry of entries) {
-        //         updateNodeLocation(entry.target);
-        //     }
-        // });
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                updateNodeLocation(entry.target);
+            }
+        });
 
         const mutationObserver = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
@@ -29,13 +29,13 @@ export function useObserver({
             }
         });
 
-        // resizeObserver.observe(element);
+        resizeObserver.observe(element);
         mutationObserver.observe(element, {
             attributes: true,
         });
 
         return () => {
-            // resizeObserver.unobserve(element);
+            resizeObserver.unobserve(element);
             mutationObserver.disconnect();
         }
     }, [draggableRef, containerRef, updateNodeLocation]);
