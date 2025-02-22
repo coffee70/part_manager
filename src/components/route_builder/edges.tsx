@@ -19,12 +19,15 @@ export default function Edges() {
 }
 
 function Definition({ edge }: { edge: Edge }) {
-
+    const { isEdgeSelected } = useBuilderContext();
     return (
-        <path
-            id={edge.id}
-            d={edge.path}
-        />
+        <g id={edge.id}>
+            <Marker edge={edge} />
+            <path
+                d={edge.path}
+                markerEnd={`url(#arrow-${edge.id})`}
+            />
+        </g>
     )
 }
 
@@ -60,5 +63,45 @@ function Use({ edge }: { edge: Edge }) {
                 onClick={onClick}
             />
         </>
+    )
+}
+
+function Marker({
+    edge
+}: {
+    edge: Edge
+}) {
+    const { isEdgeSelected } = useBuilderContext();
+
+    let path: string = "";
+
+    switch (edge.targetPosition) {
+        case "top":
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case "right":
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case "bottom":
+            path = "M 0 0 L 10 5 L 0 10 z"; 
+            break;
+        case "left":
+            path = "M 0 0 L 0 10 L 10 5 z";
+            break;
+    }
+
+    return (
+        <marker
+            id={`arrow-${edge.id}`}
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="2"
+            markerHeight="2"
+            orient="auto-start-reverse"
+            fill={isEdgeSelected(edge) ? "black" : "gray"}
+        >
+            <path d={path} />
+        </marker>
     )
 }
