@@ -3,36 +3,45 @@ import React from "react"
 import { useBuilderContext } from "@/components/route_builder/builder.context";
 import { cn } from "@/lib/utils";
 import { ArrowBigDownIcon, ArrowBigLeftIcon, ArrowBigRightIcon, ArrowBigUpIcon, CirclePlusIcon } from "lucide-react";
-import { Position } from "./types";
 import { useHandlePosition } from "./handle_position.hook";
+import { HandlePosition } from "./types";
 
 const getIcon = ({
     position,
     isAddingEdges,
-    isSelected,
+    isSelected
 }: {
-    position: Position;
+    position: HandlePosition;
     isAddingEdges?: boolean;
     isSelected?: boolean;
 }) => {
     if (isAddingEdges && !isSelected) {
-        return <CirclePlusIcon className="text-gray-800 fill-gray-300" />;
+        return <CirclePlusIcon className="w-4 h-4 text-gray-800 fill-gray-300 opacity-60 hover:opacity-100" />;
     }
+
+    const className = "w-5 h-5 text-gray-600 fill-gray-600"
+
     switch (position) {
-        case Position.Left:
-            return <ArrowBigLeftIcon className="text-gray-600 fill-gray-600" />;
-        case Position.Right:
-            return <ArrowBigRightIcon className="text-gray-600 fill-gray-600" />;
-        case Position.Top:
-            return <ArrowBigUpIcon className="text-gray-600 fill-gray-600" />;
-        case Position.Bottom:
-            return <ArrowBigDownIcon className="text-gray-600 fill-gray-600" />;
+        case HandlePosition.Left:
+            return <ArrowBigLeftIcon className={className} />;
+        case HandlePosition.Right:
+            return <ArrowBigRightIcon className={className} />;
+        case HandlePosition.TopLeft:
+            return <ArrowBigUpIcon className={className} />;
+        case HandlePosition.TopRight:
+            return <ArrowBigUpIcon className={className} />;
+        case HandlePosition.TopMiddle:
+            return <ArrowBigUpIcon className={className} />;
+        case HandlePosition.BottomLeft:
+            return <ArrowBigDownIcon className={className} />;
+        case HandlePosition.BottomRight:
+            return <ArrowBigDownIcon className={className} />;
+        case HandlePosition.BottomMiddle:
+            return <ArrowBigDownIcon className={className} />;
         default:
             return null;
     }
 };
-
-export const OFFSET = 30;
 
 export default function Handle({
     nodeId,
@@ -41,7 +50,7 @@ export default function Handle({
     isNodeHovered
 }: {
     nodeId: string;
-    position: Position;
+    position: HandlePosition;
     nodeRef: React.RefObject<HTMLDivElement>;
     isNodeHovered?: boolean;
 }) {
@@ -58,7 +67,7 @@ export default function Handle({
         setIsSelected(() => !isAddingEdges ? !isSelected : false);
         addEndpoint({
             id: nodeId,
-            position: position
+            position: position,
         });
     }, [nodeId, position, isSelected, isAddingEdges, addEndpoint]);
 
@@ -86,11 +95,13 @@ export default function Handle({
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {getIcon({
-                position,
-                isAddingEdges,
-                isSelected
-            })}
+            <div className="flex items-center justify-center w-6 h-6">
+                {getIcon({
+                    position,
+                    isAddingEdges,
+                    isSelected
+                })}
+            </div>
         </button>
     )
 }

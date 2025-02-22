@@ -2,6 +2,8 @@
 import React from 'react';
 import { Position } from '../types';
 import { calculateOrigin } from './shared';
+import { handlePositionToNodePosition } from '../handlelib';
+import { HandlePosition } from "../types";
 
 type GetControlWithCurvatureParams = {
     pos: Position;
@@ -15,9 +17,9 @@ type GetControlWithCurvatureParams = {
 const calculatePath = (
     containerRef: React.RefObject<HTMLDivElement>,
     sourceId: string,
-    sourcePosition: Position,
+    sourceHandlePosition: HandlePosition,
     targetId: string,
-    targetPosition: Position,
+    targetHandlePosition: HandlePosition,
 ) => {
     const source = document.getElementById(sourceId);
     const target = document.getElementById(targetId);
@@ -36,14 +38,17 @@ const calculatePath = (
     const sourceOrigin = calculateOrigin({
         componentRect: sourceRect,
         containerRect: containerRect,
-        position: sourcePosition,
+        position: sourceHandlePosition,
     });
 
     const targetOrigin = calculateOrigin({
         componentRect: targetRect,
         containerRect: containerRect,
-        position: targetPosition,
+        position: targetHandlePosition,
     });
+
+    const sourcePosition = handlePositionToNodePosition(sourceHandlePosition);
+    const targetPosition = handlePositionToNodePosition(targetHandlePosition);
 
     const [sourceControlX, sourceControlY] = getControlWithCurvature({
         pos: sourcePosition,

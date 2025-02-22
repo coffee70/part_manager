@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { OFFSET } from "./handle";
+import { HANDLE_OFFSET } from "./handle_position.hook";
 
 export function useHoverField({
     draggableRef,
@@ -18,10 +18,10 @@ export function useHoverField({
         const height = rect.height;
 
         const hoverRect = {
-            left: x - OFFSET,
-            right: x + width + OFFSET,
-            top: y - OFFSET,
-            bottom: y + height + OFFSET,
+            left: x - HANDLE_OFFSET,
+            right: x + width + HANDLE_OFFSET,
+            top: y - HANDLE_OFFSET,
+            bottom: y + height + HANDLE_OFFSET,
         }
 
         window.addEventListener("mousemove", (e) => {

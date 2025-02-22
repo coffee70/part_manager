@@ -1,5 +1,5 @@
 'use server'
-import { Position } from "@/components/route_builder/types";
+import { HandlePosition, Position } from "@/components/route_builder/types";
 import { ModelDoc, stepTypes } from "@/types/collections";
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
@@ -20,9 +20,9 @@ const InputSchema = z.object({
         edges: z.array(z.object({
             id: z.string(),
             sourceId: z.string(),
-            sourcePosition: z.nativeEnum(Position),
+            sourcePosition: z.nativeEnum(HandlePosition),
             targetId: z.string(),
-            targetPosition: z.nativeEnum(Position),
+            targetPosition: z.nativeEnum(HandlePosition),
             path: z.string(),
         })),
     })

@@ -1,6 +1,6 @@
 'use client'
 import { useBuilderContext } from "./builder.context";
-import { Edge } from "./types";
+import { Edge, HandlePosition } from "./types";
 
 export default function Edges() {
     const { route } = useBuilderContext();
@@ -76,16 +76,28 @@ function Marker({
     let path: string = "";
 
     switch (edge.targetPosition) {
-        case "top":
+        case HandlePosition.TopMiddle:
             path = "M 0 0 L 10 5 L 0 10 z";
             break;
-        case "right":
+        case HandlePosition.TopLeft:
             path = "M 0 0 L 10 5 L 0 10 z";
             break;
-        case "bottom":
-            path = "M 0 0 L 10 5 L 0 10 z"; 
+        case HandlePosition.TopRight:
+            path = "M 0 0 L 10 5 L 0 10 z";
             break;
-        case "left":
+        case HandlePosition.BottomMiddle:
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case HandlePosition.BottomLeft:
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case HandlePosition.BottomRight:
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case HandlePosition.Right:
+            path = "M 0 0 L 10 5 L 0 10 z";
+            break;
+        case HandlePosition.Left:
             path = "M 0 0 L 0 10 L 10 5 z";
             break;
     }

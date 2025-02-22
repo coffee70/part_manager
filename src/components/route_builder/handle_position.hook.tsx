@@ -1,7 +1,8 @@
 'use client'
 import React from "react";
-import { Position } from "./types";
-import { OFFSET } from "./handle";
+import { HandlePosition } from "./types";
+
+export const HANDLE_OFFSET = 25;
 
 export function useHandlePosition({
     nodeId,
@@ -10,7 +11,7 @@ export function useHandlePosition({
     handleRef
 }: {
     nodeId: string;
-    position: Position;
+    position: HandlePosition;
     nodeRef: React.RefObject<HTMLDivElement>;
     handleRef: React.RefObject<HTMLButtonElement>;
 }) {
@@ -30,22 +31,41 @@ export function useHandlePosition({
         } = handle.getBoundingClientRect();
 
         switch (position) {
-            case Position.Left:
-                handle.style.left = `${-OFFSET}px`;
+            case HandlePosition.Left:
+                handle.style.left = `${-HANDLE_OFFSET}px`;
                 handle.style.top = `${(nodeHeight / 2) - (handleHeight / 2)}px`;
                 break;
-            case Position.Right:
-                handle.style.right = `${-OFFSET}px`;
+            case HandlePosition.Right:
+                handle.style.right = `${-HANDLE_OFFSET}px`;
                 handle.style.top = `${(nodeHeight / 2) - (handleHeight / 2)}px`;
                 break;
-            case Position.Top:
+            case HandlePosition.TopMiddle:
                 handle.style.left = `${(nodeWidth / 2) - (handleWidth / 2)}px`;
-                handle.style.top = `${-OFFSET}px`;
+                handle.style.top = `${-HANDLE_OFFSET}px`;
                 break;
-            case Position.Bottom:
+            case HandlePosition.TopLeft:
+                handle.style.left = `${(nodeWidth / 5) - (handleWidth / 2)}px`;
+                handle.style.top = `${-HANDLE_OFFSET}px`;
+                break;
+            case HandlePosition.TopRight:
+                handle.style.right = `${(nodeWidth / 5) - (handleWidth / 2)}px`;
+                handle.style.top = `${-HANDLE_OFFSET}px`;
+                break;
+            case HandlePosition.BottomMiddle:
                 handle.style.left = `${(nodeWidth / 2) - (handleWidth / 2)}px`;
-                handle.style.bottom = `${-OFFSET}px`;
+                handle.style.bottom = `${-HANDLE_OFFSET}px`;
                 break;
+            case HandlePosition.BottomLeft:
+                handle.style.left = `${(nodeWidth / 5) - (handleWidth / 2)}px`;
+                handle.style.bottom = `${-HANDLE_OFFSET}px`;
+                break;
+            case HandlePosition.BottomRight:
+                handle.style.right = `${(nodeWidth / 5) - (handleWidth / 2)}px`;
+                handle.style.bottom = `${-HANDLE_OFFSET}px`;
+                break;
+            default:
+                console.log("position", position);
+                throw new Error("Invalid handle position");
         }
     }, [nodeId, position, nodeRef, handleRef]);
 }

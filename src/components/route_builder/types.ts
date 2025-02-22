@@ -1,8 +1,19 @@
 import { StepType } from "@/types/collections";
 
+export enum HandlePosition {
+    TopLeft = "top-left",
+    TopRight = "top-right",
+    TopMiddle = "top",
+    BottomLeft = "bottom-left",
+    BottomRight = "bottom-right",
+    BottomMiddle = "bottom",
+    Left = "left",
+    Right = "right"
+}
+
 export type Endpoint = {
     id: string;
-    position: Position;
+    position: HandlePosition;
 }
 
 export enum Position {
@@ -15,9 +26,9 @@ export enum Position {
 export type Edge = {
     id: string;
     sourceId: string;
-    sourcePosition: Position;
+    sourcePosition: HandlePosition;
     targetId: string;
-    targetPosition: Position;
+    targetPosition: HandlePosition;
     path: string;
 }
 

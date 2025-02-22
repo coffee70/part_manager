@@ -1,5 +1,5 @@
 'use server'
-import { Position } from "@/components/route_builder/types"
+import { HandlePosition, Position } from "@/components/route_builder/types"
 import { db } from "@/lib/db"
 import { ModelDoc, stepTypes } from "@/types/collections"
 import { ObjectId } from "mongodb"
@@ -17,9 +17,9 @@ const OutputSchema = z.object({
     edges: z.array(z.object({
         id: z.string(),
         sourceId: z.string(),
-        sourcePosition: z.nativeEnum(Position),
+        sourcePosition: z.nativeEnum(HandlePosition),
         targetId: z.string(),
-        targetPosition: z.nativeEnum(Position),
+        targetPosition: z.nativeEnum(HandlePosition),
         path: z.string(),
     })),
 })

@@ -10,6 +10,7 @@ import { StepType } from "@/types/collections";
 import { useHoverField } from "./hover_field.hook";
 import { useObserver } from "./observer.hook";
 import { STAGE_BORDER_WIDTH } from "./stage";
+import Handles from "./handles";
 
 type SelectedType = StepType | "None";
 
@@ -118,27 +119,8 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
                 onDoubleClick={onDoubleClick}
             >
                 <span>{node.name.toUpperCase()}</span>
-                <Handle
+                <Handles
                     nodeId={node.id}
-                    position={Position.Left}
-                    nodeRef={internalRef}
-                    isNodeHovered={isHovered}
-                />
-                <Handle
-                    nodeId={node.id}
-                    position={Position.Right}
-                    nodeRef={internalRef}
-                    isNodeHovered={isHovered}
-                />
-                <Handle
-                    nodeId={node.id}
-                    position={Position.Top}
-                    nodeRef={internalRef}
-                    isNodeHovered={isHovered}
-                />
-                <Handle
-                    nodeId={node.id}
-                    position={Position.Bottom}
                     nodeRef={internalRef}
                     isNodeHovered={isHovered}
                 />
