@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import { Endpoint, Node, Position, Route } from "./types";
-import { calculatePath } from "./edge";
+import { calculatePath } from "./edgelib/smooth_step";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { upsertRoute } from "@/server/routes/upsert_route";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
