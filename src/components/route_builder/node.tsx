@@ -27,7 +27,7 @@ type Variants = {
 }
 
 const nodeVariants = cva<Variants>(
-    "absolute z-10 flex items-center justify-center h-8 min-w-24 rounded-md text-xs font-bold select-none",
+    "absolute z-10 flex items-center justify-center h-8 min-w-24 px-1 rounded-md text-xs font-bold select-none",
     {
         variants: {
             variant: {

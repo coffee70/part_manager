@@ -1,6 +1,7 @@
 'use client'
 import React from "react";
 import { HandlePosition } from "./types";
+import { useBuilderContext } from "./builder.context";
 
 export const HANDLE_OFFSET = 25;
 
@@ -15,6 +16,8 @@ export function useHandlePosition({
     nodeRef: React.RefObject<HTMLDivElement>;
     handleRef: React.RefObject<HTMLButtonElement>;
 }) {
+    const { route } = useBuilderContext();
+
     React.useEffect(() => {
         if (!nodeRef.current) throw new Error("nodeRef is not assigned");
         const handle = handleRef.current;
@@ -63,9 +66,6 @@ export function useHandlePosition({
                 handle.style.right = `${(nodeWidth / 5) - (handleWidth / 2)}px`;
                 handle.style.bottom = `${-HANDLE_OFFSET}px`;
                 break;
-            default:
-                console.log("position", position);
-                throw new Error("Invalid handle position");
         }
-    }, [nodeId, position, nodeRef, handleRef]);
+    }, [nodeId, position, nodeRef, handleRef, route]);
 }
