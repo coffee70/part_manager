@@ -2,23 +2,42 @@
 import React from "react";
 import { Endpoint, Node, Position, Route } from "./types";
 import { calculatePath } from "./edge";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { upsertRoute } from "@/server/routes/upsert_route";
+import { useAdminURL } from "@/hooks/url_metadata.hook";
+import { routeKeys } from "@/lib/query_keys";
+import { getRoute } from "@/server/routes/get_route";
+import { calculateNodePosition } from "./nodelib";
 
-export function useRoute({
-    containerRef,
-}: {
-    containerRef: React.RefObject<HTMLDivElement>;
-}) {
-    const [route, setRoute] = React.useState<Route>({
+export function useRoute() {
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    const { modelId } = useAdminURL();
+
+    const { data: initialRoute } = useQuery({
+        queryKey: routeKeys.id(modelId),
+        queryFn: () => getRoute({
+            modelId: modelId ?? undefined,
+        })
+    })
+
+    const [route, setRoute] = React.useState<Route>(initialRoute ?? {
         nodes: [],
         edges: [],
     });
+
+    React.useEffect(() => {
+        if (initialRoute) {
+            setRoute(initialRoute);
+        }
+    }, [initialRoute]);
 
     const nodeRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
     const [isEditing, setIsEditing] = React.useState(false);
     const [isAddingEdges, setIsAddingEdges] = React.useState(false);
 
-    const addNode = React.useCallback((node: Node) => {
+    const addNode = (node: Node) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
@@ -27,9 +46,9 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    };
 
-    const removeNode = React.useCallback((id: string) => {
+    const removeNode = (id: string) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
@@ -39,9 +58,9 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    };
 
-    const updateNode = React.useCallback((updatedNode: Node) => {
+    const updateNode = (updatedNode: Node) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
@@ -58,7 +77,7 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    }
 
     const addEdge = React.useCallback((
         sourceId: string,
@@ -98,7 +117,7 @@ export function useRoute({
         setIsEditing(true);
     }, [containerRef]);
 
-    const updateEdges = (target: Element) => {
+    const updateNodeLocation = React.useCallback((target: Element) => {
         const nodeId = target.getAttribute('id');
         setRoute((prevRoute) => {
             const node = prevRoute.nodes.find(node => node.id === nodeId);
@@ -122,6 +141,20 @@ export function useRoute({
             });
             const updatedRoute = {
                 ...prevRoute,
+                nodes: prevRoute.nodes.map(node => {
+                    if (node.id === nodeId) {
+                        console.log('updateNodeLocation: current state node position', node.x, node.y);
+                        console.log('updateNodeLocation: updated node position', target.getBoundingClientRect().x, target.getBoundingClientRect().y);
+                        return {
+                            ...node,
+                            ...calculateNodePosition({
+                                target,
+                                containerRef,
+                            }),
+                        };
+                    }
+                    return node;
+                }),
                 edges: prevRoute.edges.map(edge => {
                     const updatedEdge = updatedEdges.find(updatedEdge => updatedEdge.id === edge.id);
                     if (updatedEdge) {
@@ -133,9 +166,9 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }
+    }, [containerRef]);
 
-    const removeEdge = React.useCallback((id: string) => {
+    const removeEdge = (id: string) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
@@ -144,7 +177,7 @@ export function useRoute({
             return updatedRoute;
         });
         setIsEditing(true);
-    }, []);
+    };
 
     const [endpoint, setEndpoint] = React.useState<Endpoint>();
 
@@ -186,13 +219,30 @@ export function useRoute({
             }, 2000);
             return () => clearTimeout(timer);
         }
-    }, [saveSuccess]);    
+    }, [saveSuccess]);
+
+    const { mutate: save } = useMutation({
+        mutationFn: upsertRoute,
+        onSuccess: (data) => {
+            if (data.success) {
+                setIsEditing(false);
+                setSaveSuccess(true);
+            }
+            else {
+                console.error(data.error)
+            }
+        }
+    })
 
     const saveRoute = () => {
-        setSaveSuccess(true);
+        save({
+            modelId: modelId ?? undefined,
+            route,
+        });
     }
 
     return {
+        containerRef,
         route,
         isEditing,
         isAddingEdges,
@@ -204,7 +254,7 @@ export function useRoute({
         addEdge,
         addEndpoint,
         resetEndpoint,
-        updateEdges,
+        updateNodeLocation,
         removeEdge,
         saveRoute,
     }

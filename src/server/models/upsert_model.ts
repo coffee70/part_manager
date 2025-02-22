@@ -42,6 +42,10 @@ export async function upsertModel(
     } else {
         await models.insertOne({
             ...model,
+            route: {
+                nodes: [],
+                edges: []
+            },
             updatedAt: new Date(),
             updatedBy: user._id
         });

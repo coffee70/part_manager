@@ -19,7 +19,7 @@ export default function Notifications() {
 
         notificationEl.style.left = `${(containerRect.width / 2) - (notificationRect.width / 2)}px`;
         notificationEl.style.top = `${OFFSET}px`;
-    })
+    }, [containerRef, notificationRef]);
 
     return (
         <div ref={notificationRef} className="absolute">

@@ -7,7 +7,7 @@ export function useObserver({
 }: {
     draggableRef: React.RefObject<HTMLDivElement>;
 }) {
-    const { updateEdges, containerRef } = useBuilderContext();
+    const { updateNodeLocation, containerRef } = useBuilderContext();
 
     React.useEffect(() => {
         if (!draggableRef.current) throw new Error("draggableRef is not assigned");
@@ -15,28 +15,29 @@ export function useObserver({
 
         const element = draggableRef.current;
 
-        const resizeObserver = new ResizeObserver((entries) => {
-            for (const entry of entries) {
-                updateEdges(entry.target);
-            }
-        });
+        // const resizeObserver = new ResizeObserver((entries) => {
+        //     for (const entry of entries) {
+        //         updateNodeLocation(entry.target);
+        //     }
+        // });
 
         const mutationObserver = new MutationObserver((mutations) => {
             for (const mutation of mutations) {
-                if (mutation.type === 'attributes') {
-                    updateEdges(mutation.target as Element);
+                if (mutation.type === "attributes") {
+                    console.log("attribute changed, firing updateNodeLocation");
+                    updateNodeLocation(mutation.target as HTMLElement);
                 }
             }
         });
 
-        resizeObserver.observe(element);
+        // resizeObserver.observe(element);
         mutationObserver.observe(element, {
             attributes: true,
         });
 
         return () => {
-            resizeObserver.unobserve(element);
+            // resizeObserver.unobserve(element);
             mutationObserver.disconnect();
         }
-    }, [draggableRef, containerRef]);
+    }, [draggableRef, containerRef, updateNodeLocation]);
 }

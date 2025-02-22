@@ -38,3 +38,7 @@ export const attachmentKeys = {
     all: (modelId: string, instanceId?: string | null) => ['attachments', modelId, instanceId],
     one: (modelId: string, instanceId: string, attachmentId: string) => [...attachmentKeys.all(modelId, instanceId), attachmentId]
 }
+
+export const routeKeys = {
+    id: (modelId: string | null) => ['route', modelId],
+}

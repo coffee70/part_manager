@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
+import { Route } from "@/components/route_builder/types";
 
 export const fieldtypes = ['text', 'number', 'date', 'time', 'paragraph', 'select'] as const;
 
@@ -155,6 +156,7 @@ export type ModelDoc = {
     commentable: boolean;
     priority: boolean;
     color: string;
+    route: Route;
     updatedAt: Date;
     updatedBy: string;
 }
@@ -167,6 +169,7 @@ export type Model = {
     commentable: boolean;
     priority: boolean;
     color: string;
+    route: Route;
 }
 
 export type InstanceDoc = {

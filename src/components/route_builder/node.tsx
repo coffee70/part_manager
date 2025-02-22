@@ -9,6 +9,7 @@ import { cva } from "class-variance-authority";
 import { StepType } from "@/types/collections";
 import { useHoverField } from "./hover_field.hook";
 import { useObserver } from "./observer.hook";
+import { STAGE_BORDER_WIDTH } from "./stage";
 
 type SelectedType = StepType | "None";
 
@@ -72,6 +73,7 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
     const { isDragging } = useDragger({
         containerRef,
         draggableRef: internalRef,
+        node,
     });
 
     useImperativeHandle(ref, () => {
@@ -109,8 +111,8 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
                     dragging: isDragging
                 })}
                 style={{
-                    left: node.x,
-                    top: node.y,
+                    left: node.x - STAGE_BORDER_WIDTH,
+                    top: node.y - STAGE_BORDER_WIDTH,
                 }}
                 onClick={onClick}
                 onDoubleClick={onDoubleClick}

@@ -19,7 +19,7 @@ type BuilderContextType = {
     resetEndpoint: () => void;
     addNode: (node: Node) => void;
     updateNode: (updatedNode: Node) => void;
-    updateEdges: (target: Element) => void;
+    updateNodeLocation: (target: Element) => void;
     setSelectedNode: (node: Node | null) => void;
     setSelectedEdge: (edge: Edge | null) => void;
     isNodeSelected: (node: Node) => boolean;
@@ -42,11 +42,10 @@ type Props = {
     children: React.ReactNode;
 }
 
-
 export function BuilderProvider({ children }: Props) {
-    const containerRef = React.useRef<HTMLDivElement>(null);
 
     const {
+        containerRef,
         route,
         isEditing,
         isAddingEdges,
@@ -59,9 +58,9 @@ export function BuilderProvider({ children }: Props) {
         removeEdge,
         addEndpoint,
         resetEndpoint,
-        updateEdges,
+        updateNodeLocation,
         saveRoute,
-    } = useRoute({ containerRef });
+    } = useRoute();
 
     const [selectedItem, setSelectedItem] = React.useState<Item | null>(null);
 
@@ -115,7 +114,7 @@ export function BuilderProvider({ children }: Props) {
         resetEndpoint,
         addNode,
         updateNode,
-        updateEdges,
+        updateNodeLocation,
         setSelectedNode,
         setSelectedEdge,
         isNodeSelected,

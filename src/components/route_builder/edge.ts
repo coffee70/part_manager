@@ -55,20 +55,12 @@ export const calculatePath = (
         return '';
     }
 
-    // const sourceOrigin = {
-    //     x: sourceRect.x + sourceRect.width - containerRect.x - STAGE_BORDER_WIDTH,
-    //     y: sourceRect.y + (sourceRect.height / 2) - containerRect.y - STAGE_BORDER_WIDTH,
-    // }
     const sourceOrigin = calculateOrigin({
         componentRect: sourceRect,
         containerRect: containerRect,
         position: sourcePosition,
     });
 
-    // const targetOrigin = {
-    //     x: targetRect.x - containerRect.x - STAGE_BORDER_WIDTH,
-    //     y: targetRect.y + (targetRect.height / 2) - containerRect.y - STAGE_BORDER_WIDTH,
-    // }
     const targetOrigin = calculateOrigin({
         componentRect: targetRect,
         containerRect: containerRect,
@@ -89,6 +81,8 @@ export const calculatePath = (
         x2: sourceOrigin.x,
         y2: sourceOrigin.y,
     });
+
+    console.log(`M ${sourceOrigin.x} ${sourceOrigin.y} C ${sourceControlX} ${sourceControlY}, ${targetControlX} ${targetControlY}, ${targetOrigin.x} ${targetOrigin.y}`);
 
     return `M ${sourceOrigin.x} ${sourceOrigin.y} C ${sourceControlX} ${sourceControlY}, ${targetControlX} ${targetControlY}, ${targetOrigin.x} ${targetOrigin.y}`;
 };

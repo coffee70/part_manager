@@ -33,18 +33,27 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
 
     const { addNode, updateNode } = useBuilderContext();
 
-    React.useEffect(() => {
-        setFormState(initialState)
-    }, [step]);
-
     const initialState = React.useCallback(() => ({
         name: step ? step.name : '',
         type: step ? step.type : 'To-do',
     }), [step]);
 
+    React.useEffect(() => {
+        setFormState(initialState)
+    }, [step, initialState]);
+
     const [formState, setFormState] = React.useState<FormState>(initialState);
 
-    const onSubmit = React.useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    const handleOpenChange = (newOpen: boolean) => {
+        if (!isControlled) {
+            _setOpen(newOpen);
+        }
+        if (setOpen) {
+            setOpen(newOpen);
+        }
+    };
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (step) {
             updateNode({
@@ -61,15 +70,6 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
         }
         handleOpenChange(false);
         setFormState(initialState);
-    }, [formState, step, addNode, updateNode]);
-
-    const handleOpenChange = (newOpen: boolean) => {
-        if (!isControlled) {
-            _setOpen(newOpen);
-        }
-        if (setOpen) {
-            setOpen(newOpen);
-        }
     };
 
     const title = step ? `Edit step: ${step.name}` : 'Create a new step';

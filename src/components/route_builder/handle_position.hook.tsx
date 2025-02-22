@@ -47,5 +47,5 @@ export function useHandlePosition({
                 handle.style.bottom = `${-OFFSET}px`;
                 break;
         }
-    }, [nodeId, position, nodeRef]);
+    }, [nodeId, position, nodeRef, handleRef]);
 }

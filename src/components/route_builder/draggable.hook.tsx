@@ -1,12 +1,18 @@
 'use client'
 import React from "react";
+import { Node } from "./types";
 
 type Props = {
     containerRef: React.RefObject<HTMLDivElement>;
     draggableRef: React.RefObject<HTMLDivElement>;
+    node: Node;
 }
 
-function useDragger({ containerRef, draggableRef }: Props) {
+function useDragger({ 
+    containerRef, 
+    draggableRef,
+    node
+}: Props) {
     const isClicked = React.useRef<boolean>(false);
     const [isDragging, setIsDragging] = React.useState(false);
 
@@ -18,8 +24,8 @@ function useDragger({ containerRef, draggableRef }: Props) {
     }>({
         startX: 0,
         startY: 0,
-        lastX: 0,
-        lastY: 0
+        lastX: node.x,
+        lastY: node.y
     })
 
     React.useEffect(() => {
