@@ -31,7 +31,11 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
         _setOpen(false);
     }, [isControlled, open]);
 
-    const { addNode, updateNode } = useBuilderContext();
+    const {
+        addNode,
+        updateNode,
+        resetSelectedItem,
+    } = useBuilderContext();
 
     const initialState = React.useCallback(() => ({
         name: step ? step.name : '',
@@ -43,6 +47,15 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
     }, [step, initialState]);
 
     const [formState, setFormState] = React.useState<FormState>(initialState);
+
+    React.useEffect(() => {
+        // on open make sure no items are selected because
+        // if the form is open and the node is selected and the 
+        // use presses the delete key it will delete the node
+        if (currentOpen) {
+            resetSelectedItem();
+        }
+    }, [currentOpen, resetSelectedItem]);
 
     const handleOpenChange = (newOpen: boolean) => {
         if (!isControlled) {

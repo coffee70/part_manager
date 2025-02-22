@@ -25,6 +25,7 @@ type BuilderContextType = {
     isNodeSelected: (node: Node) => boolean;
     isEdgeSelected: (edge: Edge) => boolean;
     isItemSelected: () => boolean;
+    resetSelectedItem: () => void;
     removeSelectedItem: () => void;
     saveRoute: () => void;
 }
@@ -92,6 +93,10 @@ export function BuilderProvider({ children }: Props) {
         return selectedItem !== null;
     }
 
+    const resetSelectedItem = () => {
+        setSelectedItem(null);
+    }
+
     const removeSelectedItem = () => {
         if (!selectedItem) return;
         if (selectedItem.type === 'node') {
@@ -120,6 +125,7 @@ export function BuilderProvider({ children }: Props) {
         isNodeSelected,
         isEdgeSelected,
         isItemSelected,
+        resetSelectedItem,
         removeSelectedItem,
         saveRoute,
     }
