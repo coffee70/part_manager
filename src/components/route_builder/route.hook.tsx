@@ -2,8 +2,7 @@
 import React from "react";
 import { Endpoint, Node, HandlePosition, Route } from "./types";
 import { calculatePath } from "./edgelib/smooth_step";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { upsertRoute } from "@/server/routes/upsert_route";
+import { useQuery } from "@tanstack/react-query";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
@@ -208,44 +207,13 @@ export function useRoute() {
         setIsAddingEdges(false);
     }, []);
 
-    const [saveSuccess, setSaveSuccess] = React.useState(false);
-
-    React.useEffect(() => {
-        if (saveSuccess) {
-            const timer = setTimeout(() => {
-                setSaveSuccess(false);
-            }, 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [saveSuccess]);
-
-    const { mutate: save } = useMutation({
-        mutationFn: upsertRoute,
-        onSuccess: (data) => {
-            if (data.success) {
-                setIsEditing(false);
-                setSaveSuccess(true);
-            }
-            else {
-                console.error(data.error)
-            }
-        }
-    })
-
-    const saveRoute = () => {
-        save({
-            modelId: modelId ?? undefined,
-            route,
-        });
-    }
-
     return {
         containerRef,
         route,
         isEditing,
         isAddingEdges,
         nodeRefs,
-        saveSuccess,
+        setIsEditing,
         addNode,
         removeNode,
         updateNode,
@@ -254,6 +222,5 @@ export function useRoute() {
         resetEndpoint,
         updateNodeLocation,
         removeEdge,
-        saveRoute,
     }
 }

@@ -45,3 +45,7 @@ export type Route = {
     edges: Edge[];
 };
 
+export type Notification = {
+    message: string;
+    type: 'success' | 'error';
+}

@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useRoute } from './route.hook';
-import { Endpoint, Route, Node, Edge } from './types';
+import { Endpoint, Route, Node, Edge, Notification } from './types';
 
 type Item = {
     id: string;
@@ -14,7 +14,9 @@ type BuilderContextType = {
     nodeRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
     route: Route;
     isEditing: boolean;
-    saveSuccess: boolean;
+    notification: Notification | null;
+    isNotifying: boolean;
+    notify: (notification: Notification) => void;
     addEndpoint: ({ id, position, }: Endpoint) => void;
     resetEndpoint: () => void;
     addNode: (node: Node) => void;
@@ -27,7 +29,7 @@ type BuilderContextType = {
     isItemSelected: () => boolean;
     resetSelectedItem: () => void;
     removeSelectedItem: () => void;
-    saveRoute: () => void;
+    setIsEditing: (isEditing: boolean) => void;
 }
 
 const BuilderContext = React.createContext<BuilderContextType | null>(null);
@@ -51,7 +53,7 @@ export function BuilderProvider({ children }: Props) {
         isEditing,
         isAddingEdges,
         nodeRefs,
-        saveSuccess,
+        setIsEditing,
         addNode,
         removeNode,
         updateNode,
@@ -60,7 +62,6 @@ export function BuilderProvider({ children }: Props) {
         addEndpoint,
         resetEndpoint,
         updateNodeLocation,
-        saveRoute,
     } = useRoute();
 
     const [selectedItem, setSelectedItem] = React.useState<Item | null>(null);
@@ -108,13 +109,27 @@ export function BuilderProvider({ children }: Props) {
         }
     }
 
+    // notifications
+    const [isNotifying, setIsNotifying] = React.useState(false);
+    const [notification, setNotification] = React.useState<Notification | null>(null);
+
+    const notify = (notification: Notification) => {
+        setNotification(notification);
+        setIsNotifying(true);
+        setTimeout(() => {
+            setIsNotifying(false);
+        }, 3000);
+    }
+
     const value = {
         isAddingEdges,
         containerRef,
         nodeRefs,
         route,
         isEditing,
-        saveSuccess,
+        notification,
+        isNotifying,
+        notify,
         addEndpoint,
         resetEndpoint,
         addNode,
@@ -127,7 +142,7 @@ export function BuilderProvider({ children }: Props) {
         isItemSelected,
         resetSelectedItem,
         removeSelectedItem,
-        saveRoute,
+        setIsEditing,
     }
 
     return (
