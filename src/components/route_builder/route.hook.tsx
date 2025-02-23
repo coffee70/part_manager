@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { Endpoint, Node, HandlePosition, Route, StartNode } from "./types";
+import { Endpoint, Node, HandlePosition, Route, StartNode, Edge } from "./types";
 import { calculatePath } from "./edgelib/smooth_step";
 import { useQuery } from "@tanstack/react-query";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
@@ -245,6 +245,16 @@ export function useRoute() {
                     }
                     return edge;
                 }),
+                startEdge: prevRoute.startEdge?.targetId === nodeId ? {
+                    ...prevRoute.startEdge,
+                    path: calculatePath(
+                        containerRef,
+                        prevRoute.startEdge.sourceId,
+                        prevRoute.startEdge.sourcePosition,
+                        prevRoute.startEdge.targetId,
+                        prevRoute.startEdge.targetPosition,
+                    ),
+                } : prevRoute.startEdge,
             };
             return updatedRoute;
         });
