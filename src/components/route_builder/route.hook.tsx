@@ -1,15 +1,26 @@
 'use client'
 import React from "react";
-import { Endpoint, Node, HandlePosition, Route } from "./types";
+import { Endpoint, Node, HandlePosition, Route, StartNode } from "./types";
 import { calculatePath } from "./edgelib/smooth_step";
 import { useQuery } from "@tanstack/react-query";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
 import { calculateNodePosition } from "./nodelib";
+import { START_NODE_ID } from "./start_node";
+import { useNotifications } from "./notifications/notification.hook";
+
+const START_EDGE_ID = 'start-edge';
 
 export function useRoute() {
     const containerRef = React.useRef<HTMLDivElement>(null);
+
+    // notifications
+    const {
+        notification,
+        isNotifying,
+        notify,
+    } = useNotifications();
 
     const { modelId } = useAdminURL();
 
@@ -23,6 +34,8 @@ export function useRoute() {
     const [route, setRoute] = React.useState<Route>(initialRoute ?? {
         nodes: [],
         edges: [],
+        startNode: undefined,
+        startEdge: undefined,
     });
 
     React.useEffect(() => {
@@ -36,11 +49,24 @@ export function useRoute() {
     const [isEditing, setIsEditing] = React.useState(false);
     const [isAddingEdges, setIsAddingEdges] = React.useState(false);
 
+    const hasStartNode = React.useCallback(() => route.startNode !== undefined, [route.startNode]);
+
     const addNode = (node: Node) => {
         setRoute((prevRoute) => {
             const updatedRoute = {
                 ...prevRoute,
                 nodes: [...prevRoute.nodes, node],
+            };
+            return updatedRoute;
+        });
+        setIsEditing(true);
+    };
+
+    const addStartNode = (startNode: StartNode) => {
+        setRoute((prevRoute) => {
+            const updatedRoute = {
+                ...prevRoute,
+                startNode,
             };
             return updatedRoute;
         });
@@ -84,19 +110,43 @@ export function useRoute() {
         targetId: string,
         targetPosition: HandlePosition,
     ) => {
+        // check if target is start node
+        if (targetId === START_NODE_ID) {
+            notify({
+                message: 'Start node cannot be a target!',
+                type: 'error',
+            })
+            return;
+        }
+
         // you can't add an edge from a node
         // to itself in the same position
         if (sourceId === targetId && sourcePosition === targetPosition) return;
 
-        const path = calculatePath(
-            containerRef,
-            sourceId,
-            sourcePosition,
-            targetId,
-            targetPosition,
-        );
-
         setRoute((prevRoute) => {
+            // start edge
+            if (sourceId === START_NODE_ID) {
+                const updatedRoute = {
+                    ...prevRoute,
+                    startEdge: {
+                        id: START_EDGE_ID,
+                        sourceId,
+                        sourcePosition,
+                        targetId,
+                        targetPosition,
+                        path: calculatePath(
+                            containerRef,
+                            sourceId,
+                            sourcePosition,
+                            targetId,
+                            targetPosition,
+                        ),
+                    },
+                };
+                return updatedRoute;
+            }
+
+            // regular edge
             const updatedRoute = {
                 ...prevRoute,
                 edges: [
@@ -107,7 +157,13 @@ export function useRoute() {
                         sourcePosition,
                         targetId,
                         targetPosition,
-                        path,
+                        path: calculatePath(
+                            containerRef,
+                            sourceId,
+                            sourcePosition,
+                            targetId,
+                            targetPosition,
+                        ),
                     },
                 ],
             };
@@ -118,6 +174,36 @@ export function useRoute() {
 
     const updateNodeLocation = React.useCallback((target: Element) => {
         const nodeId = target.getAttribute('id');
+
+        // start node
+        if (nodeId === START_NODE_ID) {
+            setRoute((prevRoute) => {
+                const updatedRoute: Route = {
+                    ...prevRoute,
+                    startEdge: prevRoute.startEdge ? {
+                        ...prevRoute.startEdge,
+                        path: calculatePath(
+                            containerRef,
+                            START_NODE_ID,
+                            prevRoute.startEdge.sourcePosition,
+                            prevRoute.startEdge.targetId,
+                            prevRoute.startEdge.targetPosition,
+                        )
+                    } : undefined,
+                    startNode: prevRoute.startNode ?{
+                        ...prevRoute.startNode,
+                        ...calculateNodePosition({
+                            target,
+                            containerRef,
+                        }),
+                    } : undefined,
+                }
+                return updatedRoute;
+            })
+            return;
+        }
+
+        // regular nodes
         setRoute((prevRoute) => {
             const node = prevRoute.nodes.find(node => node.id === nodeId);
             if (node === undefined) return prevRoute;
@@ -167,6 +253,15 @@ export function useRoute() {
 
     const removeEdge = (id: string) => {
         setRoute((prevRoute) => {
+            // start edge
+            if (id === START_EDGE_ID) {
+                const updatedRoute = {
+                    ...prevRoute,
+                    startEdge: undefined,
+                };
+                return updatedRoute
+            }
+            // regular edge
             const updatedRoute = {
                 ...prevRoute,
                 edges: prevRoute.edges.filter(edge => edge.id !== id),
@@ -213,8 +308,13 @@ export function useRoute() {
         isEditing,
         isAddingEdges,
         nodeRefs,
+        notification,
+        isNotifying,
+        notify,
         setIsEditing,
         addNode,
+        addStartNode,
+        hasStartNode,
         removeNode,
         updateNode,
         addEdge,

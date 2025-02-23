@@ -5,17 +5,21 @@ import { cn } from "@/lib/utils";
 import { ArrowBigDownIcon, ArrowBigLeftIcon, ArrowBigRightIcon, ArrowBigUpIcon, CirclePlusIcon } from "lucide-react";
 import { useHandlePosition } from "./handle_position.hook";
 import { HandlePosition } from "./types";
+import { START_NODE_ID } from "./start_node";
 
 const getIcon = ({
     position,
     isAddingEdges,
-    isSelected
+    isSelected,
+    isStartNode,
 }: {
     position: HandlePosition;
     isAddingEdges?: boolean;
     isSelected?: boolean;
+    isStartNode?: boolean;
 }) => {
     if (isAddingEdges && !isSelected) {
+        if (isStartNode) return null;
         return <CirclePlusIcon className="w-4 h-4 text-gray-800 fill-gray-300 opacity-60 hover:opacity-100" />;
     }
 
@@ -99,7 +103,8 @@ export default function Handle({
                 {getIcon({
                     position,
                     isAddingEdges,
-                    isSelected
+                    isSelected,
+                    isStartNode: nodeId === START_NODE_ID,
                 })}
             </div>
         </button>

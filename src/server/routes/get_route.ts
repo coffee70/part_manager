@@ -5,6 +5,7 @@ import { ModelDoc, stepTypes } from "@/types/collections"
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
+import { START_NODE_ID } from "@/components/route_builder/start_node"
 
 const OutputSchema = z.object({
     nodes: z.array(z.object({
@@ -22,6 +23,19 @@ const OutputSchema = z.object({
         targetPosition: z.nativeEnum(HandlePosition),
         path: z.string(),
     })),
+    startEdge: z.object({
+        id: z.string(),
+        sourceId: z.string(),
+        sourcePosition: z.nativeEnum(HandlePosition),
+        targetId: z.string(),
+        targetPosition: z.nativeEnum(HandlePosition),
+        path: z.string(),
+    }).optional(),
+    startNode: z.object({
+        id: z.literal("start"),
+        x: z.number(),
+        y: z.number(),
+    }).optional(),
 })
 
 const InputSchema = z.object({

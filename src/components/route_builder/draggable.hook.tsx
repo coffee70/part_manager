@@ -5,13 +5,15 @@ import { Node } from "./types";
 type Props = {
     containerRef: React.RefObject<HTMLDivElement>;
     draggableRef: React.RefObject<HTMLDivElement>;
-    node: Node;
+    lastX: number;
+    lastY: number;
 }
 
 function useDragger({ 
     containerRef, 
     draggableRef,
-    node
+    lastX,
+    lastY
 }: Props) {
     const isClicked = React.useRef<boolean>(false);
     const [isDragging, setIsDragging] = React.useState(false);
@@ -24,8 +26,8 @@ function useDragger({
     }>({
         startX: 0,
         startY: 0,
-        lastX: node.x,
-        lastY: node.y
+        lastX: lastX,
+        lastY: lastY
     })
 
     React.useEffect(() => {

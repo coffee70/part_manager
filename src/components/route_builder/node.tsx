@@ -74,7 +74,8 @@ const Node = React.forwardRef<HTMLDivElement, NodeProps>(({ node }, ref) => {
     const { isDragging } = useDragger({
         containerRef,
         draggableRef: internalRef,
-        node,
+        lastX: node.x,
+        lastY: node.y
     });
 
     useImperativeHandle(ref, () => {

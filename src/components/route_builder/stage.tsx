@@ -2,7 +2,7 @@
 import { useBuilderContext } from "@/components/route_builder/builder.context";
 import React from "react"
 import Node from "./node";
-import Toolbar from "./toolbar";
+import Toolbar from "./toolbar/toolbar";
 import Background from "./background";
 import Edges from "./edges";
 import Nodes from "./nodes";

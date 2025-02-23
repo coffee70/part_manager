@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useRoute } from './route.hook';
-import { Endpoint, Route, Node, Edge, Notification } from './types';
+import { Endpoint, Route, Node, Edge, Notification, StartNode } from './types';
 
 type Item = {
     id: string;
@@ -20,6 +20,8 @@ type BuilderContextType = {
     addEndpoint: ({ id, position, }: Endpoint) => void;
     resetEndpoint: () => void;
     addNode: (node: Node) => void;
+    addStartNode: (startNode: StartNode) => void;
+    hasStartNode: () => boolean;
     updateNode: (updatedNode: Node) => void;
     updateNodeLocation: (target: Element) => void;
     setSelectedNode: (node: Node | null) => void;
@@ -53,8 +55,13 @@ export function BuilderProvider({ children }: Props) {
         isEditing,
         isAddingEdges,
         nodeRefs,
+        notification,
+        isNotifying,
+        notify,
         setIsEditing,
         addNode,
+        addStartNode,
+        hasStartNode,
         removeNode,
         updateNode,
         addEdge,
@@ -109,18 +116,6 @@ export function BuilderProvider({ children }: Props) {
         }
     }
 
-    // notifications
-    const [isNotifying, setIsNotifying] = React.useState(false);
-    const [notification, setNotification] = React.useState<Notification | null>(null);
-
-    const notify = (notification: Notification) => {
-        setNotification(notification);
-        setIsNotifying(true);
-        setTimeout(() => {
-            setIsNotifying(false);
-        }, 3000);
-    }
-
     const value = {
         isAddingEdges,
         containerRef,
@@ -133,6 +128,8 @@ export function BuilderProvider({ children }: Props) {
         addEndpoint,
         resetEndpoint,
         addNode,
+        addStartNode,
+        hasStartNode,
         updateNode,
         updateNodeLocation,
         setSelectedNode,

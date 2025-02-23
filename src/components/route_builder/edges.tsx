@@ -10,16 +10,17 @@ export default function Edges() {
                 {route.edges.map((edge, index) => (
                     <Definition key={index} edge={edge} />
                 ))}
+                {route.startEdge && <Definition edge={route.startEdge} />}
             </defs>
             {route.edges.map((edge, index) => (
                 <Use key={index} edge={edge} />
             ))}
+            {route.startEdge && <Use edge={route.startEdge} />}
         </svg>
     )
 }
 
 function Definition({ edge }: { edge: Edge }) {
-    const { isEdgeSelected } = useBuilderContext();
     return (
         <g id={edge.id}>
             <Marker edge={edge} />

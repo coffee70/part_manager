@@ -1,4 +1,5 @@
 import { StepType } from "@/types/collections";
+import { START_NODE_ID } from "./start_node";
 
 export enum HandlePosition {
     TopLeft = "top-left",
@@ -40,7 +41,15 @@ export type Node = {
     y: number;
 }
 
+export type StartNode = {
+    id: typeof START_NODE_ID;
+    x: number;
+    y: number;
+}
+
 export type Route = {
+    startEdge?: Edge;
+    startNode?: StartNode;
     nodes: Node[];
     edges: Edge[];
 };
