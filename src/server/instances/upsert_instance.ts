@@ -2,10 +2,9 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, priorities } from "@/types/collections";
+import { InstanceDoc, ModelDoc, priorities } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
-import { redirect } from "next/navigation";
 import { instanceURL } from "@/lib/url";
 
 const InputSchema = z.object({
@@ -36,11 +35,15 @@ export async function upsertInstance(input: z.input<typeof InputSchema>): Promis
     if (instanceId) {
         await instanceCollection.updateOne({ _id: new ObjectId(instanceId) }, { $set: instance });
     } else {
+        const modelCollection = db.collection<ModelDoc>('models');
+        const model = await modelCollection.findOne({ _id: new ObjectId(modelId) });
+        if (!model) throw new Error('Model not found');
         const { insertedId } = await instanceCollection.insertOne({
             ...instance,
             links: [],
             comments: [],
             attachments: [],
+            stepId: model.route?.startEdge?.targetId,
             updatedAt: new Date(),
             updatedById: user._id,
         });

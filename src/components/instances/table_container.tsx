@@ -21,6 +21,7 @@ import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getModel } from "@/server/models/get_model";
+import { StepBadge } from "@/components/ui/badge";
 
 export default function TableContainer() {
 
@@ -75,9 +76,9 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={order.number} />
                             </TableCell>
-                            <TableCell align="right">
-                                {/* <StatusBadge label={order.status.label} color={order.status.color} /> */}
-                            </TableCell>
+                            {order.step && <TableCell align="left">
+                                <StepBadge step={order.step} />
+                            </TableCell>}
                             <TableCell>
                                 <People name={order.updatedBy} at={order.updatedAt} iconPosition="right" />
                             </TableCell>

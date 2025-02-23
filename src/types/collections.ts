@@ -156,7 +156,7 @@ export type ModelDoc = {
     commentable: boolean;
     priority: boolean;
     color: string;
-    route: Route;
+    route?: Route;
     updatedAt: Date;
     updatedBy: string;
 }
@@ -169,7 +169,7 @@ export type Model = {
     commentable: boolean;
     priority: boolean;
     color: string;
-    route: Route;
+    route?: Route;
 }
 
 export type InstanceDoc = {
@@ -177,6 +177,7 @@ export type InstanceDoc = {
     number: string;
     priority: Priority;
     notes: string;
+    stepId?: string;
     updatedAt: Date;
     updatedById: string;
 }
@@ -190,6 +191,7 @@ export type Instance = {
     number: string;
     priority: Priority;
     notes: string;
+    stepId?: string;
     updatedAt: Date;
     updatedById: string;
 }
