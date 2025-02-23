@@ -119,9 +119,14 @@ export function useRoute() {
             return;
         }
 
-        // you can't add an edge from a node
-        // to itself in the same position
-        if (sourceId === targetId && sourcePosition === targetPosition) return;
+        // you can't add an edge from a node to itself
+        if (sourceId === targetId) {
+            notify({
+                message: 'Cannot add edge from a step to itself!',
+                type: 'error',
+            })
+            return;
+        }
 
         setRoute((prevRoute) => {
             // start edge
