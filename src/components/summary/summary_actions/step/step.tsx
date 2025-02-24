@@ -49,14 +49,18 @@ export default function Step({ step, targetSteps }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuGroup>
-                    {Array.from(targetSteps).map((targetStep, index) => (
+                    {targetSteps.size > 0 ? Array.from(targetSteps).map((targetStep, index) => (
                         <DropdownMenuItem
                             key={index}
                             onClick={() => handleStepChange(targetStep.id)}
                         >
                             <StepItem step={targetStep} />
                         </DropdownMenuItem>
-                    ))}
+                    )) : (
+                        <DropdownMenuItem disabled>
+                            There are no further steps
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>
