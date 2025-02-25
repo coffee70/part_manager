@@ -317,6 +317,16 @@ export function useRoute() {
         setIsAddingEdges(false);
     }, []);
 
+    const removeRoute = () => {
+        setRoute({
+            nodes: [],
+            edges: [],
+            startNode: undefined,
+            startEdge: undefined,
+        });
+        setIsEditing(true);
+    }
+
     return {
         containerRef,
         route,
@@ -325,6 +335,7 @@ export function useRoute() {
         nodeRefs,
         notification,
         isNotifying,
+        removeRoute,
         notify,
         setIsEditing,
         addNode,

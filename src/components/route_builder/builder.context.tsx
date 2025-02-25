@@ -16,6 +16,7 @@ type BuilderContextType = {
     isEditing: boolean;
     notification: Notification | null;
     isNotifying: boolean;
+    removeRoute: () => void;
     notify: (notification: Notification) => void;
     addEndpoint: ({ id, position, }: Endpoint) => void;
     resetEndpoint: () => void;
@@ -57,6 +58,7 @@ export function BuilderProvider({ children }: Props) {
         nodeRefs,
         notification,
         isNotifying,
+        removeRoute,
         notify,
         setIsEditing,
         addNode,
@@ -124,6 +126,7 @@ export function BuilderProvider({ children }: Props) {
         isEditing,
         notification,
         isNotifying,
+        removeRoute,
         notify,
         addEndpoint,
         resetEndpoint,

@@ -52,9 +52,11 @@ export async function upsertRoute(
     const { modelId, route } = validation.data;
     if (!modelId) return { success: false, error: "Model ID is required" };
 
-    // ensure route has starting node and starting edge
-    if (!route.startNode || !route.startEdge) {
-        return { success: false, error: "Route must have a starting step!" }
+    // ensure route has both starting node and starting edge if the route
+    // has any nodes or edges
+    if ((route.nodes.length || route.edges.length) &&
+        (!route.startNode && !route.startEdge)) {
+        return { success: false, error: "Route must have both a starting step!" }
     }
 
     const modelCollection = db.collection<ModelDoc>("models")
