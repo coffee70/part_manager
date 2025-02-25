@@ -9,8 +9,8 @@ type Props = {
     lastY: number;
 }
 
-function useDragger({ 
-    containerRef, 
+function useDragger({
+    containerRef,
     draggableRef,
     lastX,
     lastY
@@ -36,6 +36,7 @@ function useDragger({
 
         const onMouseDown = (e: MouseEvent) => {
             isClicked.current = true;
+            setIsDragging(true);
             coords.current.startX = e.clientX;
             coords.current.startY = e.clientY;
         }
@@ -53,8 +54,6 @@ function useDragger({
         const onMouseMove = (e: MouseEvent) => {
             if (!isClicked.current) return;
             if (!draggableRef.current) return;
-
-            setIsDragging(true);
 
             const nextX = e.clientX - coords.current.startX + coords.current.lastX;
             const nextY = e.clientY - coords.current.startY + coords.current.lastY;
