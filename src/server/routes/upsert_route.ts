@@ -55,8 +55,8 @@ export async function upsertRoute(
     // ensure route has both starting node and starting edge if the route
     // has any nodes or edges
     if ((route.nodes.length || route.edges.length) &&
-        (!route.startNode && !route.startEdge)) {
-        return { success: false, error: "Route must have both a starting step!" }
+        (!route.startNode || !route.startEdge)) {
+        return { success: false, error: "Route must have a starting step!" }
     }
 
     const modelCollection = db.collection<ModelDoc>("models")

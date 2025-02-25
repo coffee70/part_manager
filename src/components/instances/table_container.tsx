@@ -68,22 +68,22 @@ export default function TableContainer() {
             </FilterToolbar>
             <Table>
                 <TableBody>
-                    {data.map((order) => (
-                        <TableRow key={order._id} onClick={() => handleClick(order._id)}>
+                    {data.map((instance) => (
+                        <TableRow key={instance._id} onClick={() => handleClick(instance._id)}>
                             {model?.priority && <TableCell className="px-1">
-                                <Priority priority={order.priority} />
+                                <Priority priority={instance.priority} />
                             </TableCell>}
                             <TableCell>
-                                <Label label={order.number} />
+                                <Label label={instance.number} />
                             </TableCell>
-                            {order.step && <TableCell align="left">
-                                <StepBadge step={order.step} />
+                            {instance.step && <TableCell align="left">
+                                <StepBadge step={instance.step} />
                             </TableCell>}
                             <TableCell>
-                                <People name={order.updatedBy} at={order.updatedAt} iconPosition="right" />
+                                <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>
                             <TableCell>
-                                <DeleteInstance id={order._id} />
+                                <DeleteInstance id={instance._id} />
                             </TableCell>
                         </TableRow>
                     ))}

@@ -1,9 +1,10 @@
 'use client'
 import React from "react";
 import { useBuilderContext } from "../builder.context";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { upsertRoute } from "@/server/routes/upsert_route";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
+import { instanceKeys, routeKeys } from "@/lib/query_keys";
 
 export default function Save() {
     const { modelId } = useAdminURL();
@@ -15,10 +16,14 @@ export default function Save() {
         setIsEditing,
     } = useBuilderContext();
 
+    const queryClient = useQueryClient();
+
     const { mutate: save } = useMutation({
         mutationFn: upsertRoute,
         onSuccess: (data) => {
             if (data.success) {
+                queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId) });
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId ?? '') });
                 setIsEditing(false);
                 notify({
                     type: "success",
