@@ -177,15 +177,8 @@ export function useRoute() {
         setIsEditing(true);
     }, [containerRef]);
 
-    const [count, setCount] = React.useState(0);
-
-    React.useEffect(() => {
-        console.log('count', count);
-    }, [count]);
-
     const updateNodeLocation = React.useCallback((target: Element) => {
         const nodeId = target.getAttribute('id');
-        setCount(count => count + 1);
 
         // start node
         if (nodeId === START_NODE_ID) {

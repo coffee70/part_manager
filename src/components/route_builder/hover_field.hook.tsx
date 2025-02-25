@@ -24,7 +24,7 @@ export function useHoverField({
             bottom: y + height + HANDLE_OFFSET,
         }
 
-        window.addEventListener("mousemove", (e) => {
+        const onMouseMove = (e: MouseEvent) => {
             if (
                 e.x > hoverRect.left
                 && e.x < hoverRect.right
@@ -35,7 +35,13 @@ export function useHoverField({
             } else {
                 setIsHovered(false);
             }
-        });
+        }
+
+        window.addEventListener("mousemove", onMouseMove);
+
+        return () => {
+            window.removeEventListener("mousemove", onMouseMove);
+        }
     });
 
     return { isHovered };
