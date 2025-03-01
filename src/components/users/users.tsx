@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import User from './user';
 import { AppBar } from "@/components/ui/app_bar";
 import { PageTitle } from "@/components/ui/page_title";
-import { UserIcon } from "@/components/ui/icons/icons";
+import { SecondaryUserIcon } from "@/components/ui/icons/icons";
 import CreateUser from "./create_user";
 
 export default function Users() {
@@ -24,7 +24,7 @@ export default function Users() {
         <div className="flex flex-col w-full h-full">
             <AppBar>
                 <PageTitle
-                    icon={<UserIcon size={50} />}
+                    icon={<SecondaryUserIcon size={50} />}
                     title="Users"
                 />
                 <CreateUser />

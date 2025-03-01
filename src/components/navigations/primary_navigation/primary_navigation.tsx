@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import { PrimaryModelIcon, RouteIcon, UserIcon } from "@/components/ui/icons/icons";
+import { RouteIcon, PrimaryUserIcon, PrimaryModelIcon } from "@/components/ui/icons/icons";
 import { PrimaryDivider, PrimaryGroup, PrimaryHeader, PrimaryItem, PrimarySeparator } from "./components";
 import { router } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
@@ -18,7 +18,10 @@ export default function PrimaryNavigation() {
                     context="models"
                     href={router().models().base()}
                 >
-                    <PrimaryModelIcon size={24} selected={headSegment === "models"} />
+                    <PrimaryModelIcon
+                        size={24}
+                        selected={headSegment === "models"}
+                    />
                 </PrimaryItem>
                 <PrimaryItem
                     id="routers_primary_navigation"
@@ -35,7 +38,7 @@ export default function PrimaryNavigation() {
                     context="users"
                     href={router().users().base()}
                 >
-                    <UserIcon size={24} selected={headSegment === "users"} />
+                    <PrimaryUserIcon size={24} selected={headSegment === "users"} />
                 </PrimaryItem>
             </PrimaryGroup>
             <PrimarySeparator />

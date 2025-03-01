@@ -2,7 +2,7 @@
 import { ModelItem, NavBase, NavContent, NavDivider, NavHeader, NavItem } from "@/components/ui/side_nav";
 import Profile from "./profile";
 import { Logo } from "@/components/ui/logo";
-import { FieldIcon, PrimaryModelIcon, RouteIcon, UserIcon } from "@/components/ui/icons/icons";
+import { FieldIcon, RouteIcon, PrimaryUserIcon, PrimaryModelIcon } from "@/components/ui/icons/icons";
 import { modelKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { getModels } from "@/server/models/get_models";
@@ -54,7 +54,7 @@ export default function SideNavigation() {
                 <NavItem
                     label='Users'
                     href='/users'
-                    icon={<UserIcon selected={tailSegment === 'users'} />}
+                    icon={<PrimaryUserIcon selected={tailSegment === 'users'} />}
                 />
             </NavContent>
             <NavDivider bottom />
