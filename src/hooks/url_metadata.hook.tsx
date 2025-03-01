@@ -18,6 +18,10 @@ export function useInstanceURL() {
 }
 
 export function useURL() {
+    const path = usePathname()?.split('/');
+    // remove the first empty string
+    path.shift();
+    const headSegment = path.shift();
     const tailSegment = usePathname()?.split('/').pop();
-    return { tailSegment };
+    return { headSegment, tailSegment };
 }

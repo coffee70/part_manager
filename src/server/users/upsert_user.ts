@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import { createSession, generateSessionToken, generateUserId } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { setSessionTokenCookie } from "@/lib/cookies";
+import { router } from "@/lib/url";
 
 const InputSchema = z.object({
     _id: z.string().optional(),
@@ -92,7 +93,7 @@ export async function upsertUser(
             const token = generateSessionToken();
             const session = await createSession(token, userId);
             setSessionTokenCookie(token, session.expires_at);
-            redirect('/')
+            redirect(router().base());
         }
     }
 

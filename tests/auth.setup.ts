@@ -45,7 +45,7 @@ setup('create admin user', async ({ page }) => {
     await page.getByRole('button', { name: 'Create Account' }).click();
 
     // check for welcome message
-    await expect(page.getByRole('heading')).toContainText('Welcome test');
+    await expect(page.getByRole('heading')).toContainText('Models');
 
     // Save storage state
     await page.context().storageState({ path: STORAGE_STATE });

@@ -11,8 +11,8 @@ import { PageTitle } from '@/components/ui/page_title';
 import { FieldIcon } from '@/components/ui/icons/icons';
 import { getModel } from '@/server/models/get_model';
 import { SectionProvider } from './section.context';
-import ModelSelect from '@/components/ui/model_select';
-import { fieldURL } from '@/lib/url';
+import ModelSelect from '@/components/fields/model_select';
+import { fieldURL, router } from '@/lib/url';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
@@ -42,7 +42,7 @@ export default function Sections() {
                     icon={<FieldIcon size={50} />}
                 />
                 <div className='flex items-center space-x-4'>
-                    <ModelSelect urlSetter={fieldURL} />
+                    <ModelSelect />
                     <AddSection />
                 </div>
             </AppBar>

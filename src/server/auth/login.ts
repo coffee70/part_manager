@@ -6,6 +6,7 @@ import { verify } from "@node-rs/argon2";
 import { createSession, generateSessionToken } from "@/lib/session";
 import { setSessionTokenCookie } from "@/lib/cookies";
 import { redirect } from "next/navigation";
+import { router } from "@/lib/url";
 
 const AUTH_ERROR_MESSAGE = "Incorrect username or password.";
 
@@ -56,5 +57,5 @@ export async function login(input: Input): Promise<ServerActionState> {
     const token = generateSessionToken();
     const session = await createSession(token, existingUser._id); 
     setSessionTokenCookie(token, session.expires_at);
-    redirect("/");
+    redirect(router().base());
 }   

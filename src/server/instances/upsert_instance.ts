@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc, ModelDoc, priorities } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
-import { instanceURL } from "@/lib/url";
+import { router } from "@/lib/url";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -56,7 +56,7 @@ export async function upsertInstance(input: z.input<typeof InputSchema>): Promis
         data: {
             redirect:
                 redirectInstanceId
-                    ? instanceURL(modelId, redirectInstanceId)
+                    ? router().models().instances().instance(modelId, redirectInstanceId)
                     : undefined
         }
     };

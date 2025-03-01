@@ -19,6 +19,9 @@ export const ATTACHMENT_DIR = path.join(__dirname, 'playwright/.attachments');
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  /** timeout for each individual test */
+  timeout: 60000,
+  /* Directory where the test files are */
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: true,

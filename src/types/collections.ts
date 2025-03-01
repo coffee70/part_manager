@@ -2,6 +2,10 @@ import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
 import { Route } from "@/components/route_builder/types";
 
+export const contexts = ['models', 'routers', 'users'] as const;
+
+export type Context = typeof contexts[number];
+
 export const fieldtypes = ['text', 'number', 'date', 'time', 'paragraph', 'select'] as const;
 
 export type FieldType = typeof fieldtypes[number];

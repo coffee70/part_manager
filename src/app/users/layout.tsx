@@ -1,8 +1,8 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import SideNavigation from "@/components/navigations/side_nav/side_nav";
 import { getCurrentSession } from "@/server/auth/get_current_session";
-import SideNavigationProvider from "@/components/navigations/side_nav/side_nav_provider";
+import { router } from "@/lib/url";
+import PrimaryNavigation from "@/components/navigations/primary_navigation/primary_navigation";
 
 type Props = Readonly<{
     children: React.ReactNode;
@@ -12,14 +12,12 @@ export default async function Layout({ children }: Props) {
 
     const { user } = await getCurrentSession();
     if (!user || user.role !== "admin") {
-        redirect("/login");
+        redirect(router().auth().login());
     }
 
     return (
-        <main className="flex h-screen">
-            <SideNavigationProvider>
-                <SideNavigation />
-            </SideNavigationProvider>
+        <main className="flex h-screen w-full">
+            <PrimaryNavigation />
             {children}
         </main>
     )

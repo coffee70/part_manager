@@ -1,15 +1,16 @@
 import { test, expect } from '@playwright/test';
+import { modelFormColor, modelsAdminPageNavigation } from './lib';
 
 test('models', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
   await page.getByRole('button', { name: 'New Model' }).click();
   await page.getByRole('textbox').fill('Models Test');
   await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
   await page.getByLabel('Create Model').getByText('Links').click();
   await page.getByLabel('Create Model').getByText('Comments').click();
   await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
-  await page.locator('div:nth-child(16)').click();
+  await modelFormColor(page, 16).click();
   await page.getByRole('button', { name: 'Save' }).click();
 
   // create a Models Test instance
@@ -33,7 +34,7 @@ test('models', async ({ page }) => {
   await expect(page.locator('#priority-table-indicator')).toBeVisible();
 
   // take away attachable, linkable, commentable
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
@@ -62,7 +63,7 @@ test('models', async ({ page }) => {
   await page.getByRole('button', { name: 'Delete' }).click();
 
   // return the models page
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
 
   // add back attachable, linkable, commentable
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
@@ -107,7 +108,7 @@ test('models', async ({ page }) => {
   await page.getByLabel('Create Model').getByText('Links').click();
   await page.getByLabel('Create Model').getByText('Comments').click();
   await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
-  await page.locator('div:nth-child(11)').click();
+  await modelFormColor(page, 11).click();
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('table')).toMatchAriaSnapshot(`
         - table:
@@ -143,7 +144,7 @@ test('models', async ({ page }) => {
   await expect(page.locator('#more-button')).not.toBeVisible();
 
   // add comments to the model
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByLabel('Create Model').getByText('Comments').click();
@@ -164,7 +165,7 @@ test('models', async ({ page }) => {
   await page.keyboard.press('Escape');
 
   // remove comments and add links
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByLabel('Create Model').getByText('Comments').click();
@@ -186,7 +187,7 @@ test('models', async ({ page }) => {
   await page.keyboard.press('Escape');
 
   // remove links and add attachments
-  await page.getByRole('link', { name: 'Models', exact: true }).click();
+  await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByLabel('Create Model').getByText('Links').click();

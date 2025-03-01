@@ -8,14 +8,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
 import { getModels } from '@/server/models/get_models';
 import { Button } from '@/components/ui/button';
 import { ChevronDownIcon } from 'lucide-react';
+import { router } from '@/lib/url';
 import { useRouter } from 'next/navigation';
-import { URLSetter } from '@/lib/url';
 
-export default function ModelSelect({
-    urlSetter
-}: {
-    urlSetter: URLSetter;
-}) {
+export default function ModelSelect() {
     const { modelId } = useAdminURL();
 
     const { data: model } = useQuery({
@@ -28,7 +24,7 @@ export default function ModelSelect({
         queryFn: () => getModels(),
     })
 
-    const router = useRouter();
+    const nextRouter = useRouter();
 
     return (
         <DropdownMenu>
@@ -47,7 +43,7 @@ export default function ModelSelect({
                         <DropdownMenuItem
                             key={model._id}
                             className='flex items-center space-x-2'
-                            onClick={() => router.push(urlSetter(model._id))}
+                            onClick={() => nextRouter.push(router().models().admin().fields().model(model._id))}
                         >
                             <div className='w-4 h-4 rounded-full' style={{ backgroundColor: model.color }} />
                             <span>{model.name}</span>

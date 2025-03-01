@@ -1,12 +1,12 @@
 'use client'
 import { ModelItem, NavBase, NavContent, NavDivider, NavHeader, NavItem } from "@/components/ui/side_nav";
 import Profile from "./profile";
-import Logo from "@/components/ui/logo";
-import { FieldIcon, ModelIcon, RouteIcon, UserIcon } from "@/components/ui/icons/icons";
+import { Logo } from "@/components/ui/logo";
+import { FieldIcon, PrimaryModelIcon, RouteIcon, UserIcon } from "@/components/ui/icons/icons";
 import { modelKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { getModels } from "@/server/models/get_models";
-import { instanceURL } from "@/lib/url";
+import { router } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
 
 export default function SideNavigation() {
@@ -28,7 +28,7 @@ export default function SideNavigation() {
                     <ModelItem
                         key={model._id}
                         label={model.name}
-                        href={instanceURL(model._id)}
+                        href={router().models().instances().model(model._id)}
                         color={model.color}
                         selected={model._id === tailSegment}
                     />
@@ -39,7 +39,7 @@ export default function SideNavigation() {
                 <NavItem
                     label="Models"
                     href="/models"
-                    icon={<ModelIcon selected={tailSegment === 'models'} />}
+                    icon={<PrimaryModelIcon selected={tailSegment === 'models'} />}
                 />
                 <NavItem
                     label="Fields"

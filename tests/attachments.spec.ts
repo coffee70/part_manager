@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test';
 import { ATTACHMENT_DIR } from '../playwright.config';
 import path from 'path';
+import { modelFormColor, modelsAdminPageNavigation } from './lib';
 
 test('test attachments', async ({ page }) => {
     await page.goto('/')
     
     // create model
-    await page.getByRole('link', { name: 'Models', exact: true }).click();
+    await modelsAdminPageNavigation(page).click();
     await page.getByRole('button', { name: 'New Model' }).click();
     await page.getByRole('textbox').fill('Attachments Test');
     await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
-    await page.locator('div:nth-child(16)').click();
+    await modelFormColor(page, 16).click();
     await page.getByRole('button', { name: 'Save' }).click();
 
     // go to instances

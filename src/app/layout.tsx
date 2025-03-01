@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils"
-import ReactQueryProvider from "@/app/(user)/providers";
+import ReactQueryProvider from "@/app/providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import PrimaryNavigation from "@/components/navigations/primary_navigation/primary_navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export default async function Layout({ children }: Props) {
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "flex min-h-screen bg-background font-sans antialiased",
           fontSans.variable
         )}
       >

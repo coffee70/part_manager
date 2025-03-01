@@ -8,7 +8,7 @@ import { getInstance } from "@/server/instances/get_instance";
 import SummaryContainer from "@/components/instances/summary_container";
 import { redirect } from "next/navigation";
 import { getInstances } from "@/server/instances/get_instances";
-import { instanceURL } from "@/lib/url";
+import { router } from "@/lib/url";
 import SummaryError from "@/components/summary/summary_error";
 import { getAttachments } from "@/server/attachments/get_attachments";
 import { getModels } from "@/server/models/get_models";
@@ -30,7 +30,7 @@ export default async function Page({
     if (!instanceId || Array.isArray(instanceId)) {
         const instances = await getInstances({ modelId, searchParams })
         if (instances.length === 0) return <SummaryError />
-        redirect(instanceURL(modelId, instances[0]._id));
+        redirect(router().models().instances().instance(modelId, instances[0]._id));
     }
 
     const queryClient = new QueryClient();

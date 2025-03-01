@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import { deleteAttachment } from "../attachments/delete_attachment";
 import { deleteLink } from "../links/delete_link";
 import { z } from "zod";
-import { instanceURL } from "@/lib/url";
+import { router } from "@/lib/url";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -57,6 +57,6 @@ export async function deleteModel(input: z.input<typeof InputSchema>) {
     await instanceCollection.deleteOne({ _id: new ObjectId(instanceId) });
 
     if (urlInstanceId === instanceId) {
-        redirect(instanceURL(modelId));
+        redirect(router().models().instances().model(modelId));
     }
 }

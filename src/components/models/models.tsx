@@ -4,7 +4,7 @@ import { getModels } from "@/server/models/get_models";
 import { useQuery } from "@tanstack/react-query";
 import { AppBar } from "@/components/ui/app_bar";
 import { PageTitle } from "@/components/ui/page_title";
-import { ModelIcon } from "@/components/ui/icons/icons";
+import { SecondaryModelIcon } from "@/components/ui/icons/icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import CreateModel from "./create_model";
 import { CheckIcon } from "lucide-react";
@@ -24,7 +24,7 @@ export default function Models() {
             <AppBar>
                 <PageTitle
                     title="Models"
-                    icon={<ModelIcon size={50} />}
+                    icon={<SecondaryModelIcon size={50} />}
                 />
                 <CreateModel />
             </AppBar>

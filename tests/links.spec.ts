@@ -1,14 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { modelFormColor, modelsAdminPageNavigation } from './lib';
 
 test('links', async ({ page }) => {
     await page.goto('/')
 
     // create model
-    await page.getByRole('link', { name: 'Models', exact: true }).click();
+    await modelsAdminPageNavigation(page).click();
     await page.getByRole('button', { name: 'New Model' }).click();
     await page.getByRole('textbox').fill('Links Model');
     await page.getByLabel('Create Model').getByText('Links').click();
-    await page.locator('div:nth-child(16)').click();
+    await modelFormColor(page, 16).click();
     await page.getByRole('button', { name: 'Save' }).click();
 
     // create target link model
@@ -16,7 +17,7 @@ test('links', async ({ page }) => {
     await page.getByRole('textbox').fill('Target Link');
     await page.getByLabel('Create Model').getByText('Links').click();
     await page.getByRole('img').nth(1).click();
-    await page.locator('div:nth-child(24)').click();
+    await modelFormColor(page, 24).click();
     await page.getByRole('button', { name: 'Save' }).click();
 
     // create linkable instance

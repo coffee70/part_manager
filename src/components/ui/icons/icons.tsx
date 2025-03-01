@@ -11,54 +11,80 @@ type Props = {
     selected?: boolean;
 }
 
-export function ModelIcon({ size, selected }: Props) {
+function PrimaryModelIcon({ size, selected }: Props) {
     return (
         <div
             className={cn(
-                "bg-rose-600 p-1 rounded-md text-white ring-rose-600 ring-offset-2 ring-offset-foreground group-hover:ring-2",
-                selected ? "ring-2" : ""
+                "p-1 rounded-md transition-all duration-200",
+                selected
+                    ? "bg-gradient-to-br from-rose-500 to-red-700 text-white shadow-md"
+                    : "text-stone-600 hover:bg-stone-200"
             )}
         >
-            <BoxesIcon size={size} />
+            <BoxesIcon size={size} strokeWidth={selected ? 2 : 1.5} />
         </div>
     )
 }
 
-export function FieldIcon({ size, selected }: Props) {
+function SecondaryModelIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "bg-sky-600 p-1 rounded-md text-white ring-sky-600 ring-offset-2 ring-offset-foreground group-hover:ring-2",
-                selected ? "ring-2" : ""
+                "p-1 rounded-md",
             )}
         >
-            <AlignLeftIcon size={size} />
+            <BoxesIcon size={size} strokeWidth={1.5} />
         </div>
     )
 }
 
-export function RouteIcon({ size, selected }: Props) {
-    return (
-        <div
-            className={cn(
-                "bg-violet-600 p-1 rounded-md text-white ring-violet-600 ring-offset-2 ring-offset-foreground group-hover:ring-2",
-                selected ? "ring-2" : ""
-            )}
-        >
-            <LucideRouteIcon size={size} />
-        </div>
-    )
-}
+    function RouteIcon({ size, selected }: Props) {
+        return (
+            <div
+                className={cn(
+                    "p-1 rounded-md transition-all duration-200",
+                    selected
+                        ? "bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-md"
+                        : "text-stone-600 hover:bg-stone-200"
+                )}
+            >
+                <LucideRouteIcon size={size} strokeWidth={1.5} />
+            </div>
+        )
+    }
 
-export function UserIcon({ size, selected }: Props) {
-    return (
-        <div
-            className={cn(
-                "bg-lime-600 p-1 rounded-md text-white ring-lime-600 ring-offset-2 ring-offset-foreground group-hover:ring-2",
-                selected ? "ring-2" : ""
-            )}
-        >
-            <LucideUserIcon size={size} />
-        </div>
-    )
-}
+    function UserIcon({ size, selected }: Props) {
+        return (
+            <div
+                className={cn(
+                    "p-1 rounded-md transition-all duration-200",
+                    selected
+                        ? "bg-gradient-to-br from-green-500 to-lime-600 text-white shadow-md"
+                        : "text-stone-600 hover:bg-stone-200"
+                )}
+            >
+                <LucideUserIcon size={size} strokeWidth={1.5} />
+            </div>
+        )
+    }
+
+    function FieldIcon({ size, selected }: Props) {
+        return (
+            <div
+                className={cn(
+                    "p-1 rounded-md",
+                    selected ? "" : ""
+                )}
+            >
+                <AlignLeftIcon size={size} />
+            </div>
+        )
+    }
+
+    export {
+        PrimaryModelIcon,
+        SecondaryModelIcon,
+        RouteIcon,
+        UserIcon,
+        FieldIcon
+    }

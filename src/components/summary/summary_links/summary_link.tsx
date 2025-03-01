@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteLink } from "@/server/links/delete_link";
 import { linkKeys } from "@/lib/query_keys";
 import React from "react";
-import { instanceURL } from "@/lib/url";
+import { router } from "@/lib/url";
 import { XIcon } from "lucide-react";
 
 type Props = {
@@ -41,7 +41,7 @@ export default function SummaryLink({ link }: Props) {
                     />
                 </div>
                 <Link
-                    href={instanceURL(link.modelId, link.instanceId)}
+                    href={router().models().instances().instance(link.modelId, link.instanceId)}
                     className="text-primary cursor-pointer hover:underline hover:underline-offset-2"
                 >{link.number}</Link>
             </div>

@@ -7,7 +7,7 @@ import { getModels } from "@/server/models/get_models";
 import { redirect } from "next/navigation";
 import { getModel } from "@/server/models/get_model";
 import SectionError from "@/components/fields/section_error";
-import { fieldURL } from "@/lib/url";
+import { router } from "@/lib/url";
 
 export default async function Page({
     searchParams
@@ -18,7 +18,7 @@ export default async function Page({
     if (!modelId || Array.isArray(modelId)) {
         const models = await getModels();
         if (models.length === 0) return <SectionError />;
-        redirect(fieldURL(models[0]._id));
+        redirect(router().models().admin().fields().model(models[0]._id));
     }
 
     const queryClient = new QueryClient();
