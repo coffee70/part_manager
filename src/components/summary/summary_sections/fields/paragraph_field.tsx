@@ -1,7 +1,5 @@
 'use client'
 import React from 'react'
-import { cn } from "@/lib/utils"
-import { ClickAwayListener } from '@mui/base'
 import Error from '@/components/ui/fields/error'
 import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
@@ -26,7 +24,7 @@ export default function ParagraphField({ field }: Props) {
         setValue(field.value ?? '')
     }, [field.value])
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const submitRef = React.useRef<HTMLButtonElement>(null);
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -43,9 +41,9 @@ export default function ParagraphField({ field }: Props) {
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateFieldValue,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(id) });
             setIsEditing(false);
         }
     })
@@ -53,7 +51,7 @@ export default function ParagraphField({ field }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId,
+            modelId: id,
             instanceId,
             fieldId: field._id,
             value

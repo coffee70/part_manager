@@ -16,7 +16,7 @@ type FormState = {
 }
 
 export default function AddSection() {
-    const { id } = useAdminURL();
+    const { context, id } = useAdminURL();
 
     const [open, setOpen] = React.useState(false);
     const [formState, setFormState] = React.useState<FormState>({
@@ -29,7 +29,7 @@ export default function AddSection() {
         mutationFn: createSection,
         onSuccess: ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: sectionKeys.all(id) });
+                queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) });
                 setOpen(false);
             }
         }
@@ -37,7 +37,7 @@ export default function AddSection() {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate({ ...formState, modelId: id });
+        mutate({ ...formState, context, id });
     }
 
     return (

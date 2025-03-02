@@ -14,7 +14,7 @@ export default async function Page({
 }: {
     searchParams: NextServerSearchParams
 }) {
-    const modelId = searchParams.modelId;
+    const modelId = searchParams.id;
     if (!modelId || Array.isArray(modelId)) {
         const models = await getModels();
         if (models.length === 0) return <SectionError />;
@@ -24,8 +24,11 @@ export default async function Page({
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: sectionKeys.all(modelId),
-        queryFn: () => getSections({ modelId }),
+        queryKey: sectionKeys.all("models", modelId),
+        queryFn: () => getSections({
+            context: "models",
+            id: modelId
+        }),
     })
 
     await queryClient.prefetchQuery({

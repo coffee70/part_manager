@@ -5,7 +5,6 @@ import { usePathname, useSearchParams } from "next/navigation";
 export function useAdminURL() {
     // get the context from the URL
     const path = usePathname()?.split('/');
-    // remove the first empty string
     path.shift();
     const context = path.shift();
     if (!isContext(context)) throw new Error('URL is malformed. Not a valid context.');
@@ -18,12 +17,20 @@ export function useAdminURL() {
 }
 
 export function useInstanceURL() {
-    const modelId = usePathname()?.split('/').pop();
-    if (!modelId) throw new Error('Model ID is required');
+    // get the context from the URL
+    const path = usePathname()?.split('/');
+    path.shift();
+    const context = path.shift();
+    if (!isContext(context)) throw new Error('URL is malformed. Not a valid context.');
+
+    // get the model ID and instance ID from the URL
+    const id = usePathname()?.split('/').pop();
+    if (!id) throw new Error('Model ID is required');
     const searchParams = useSearchParams();
     const instanceId = searchParams.get('id');
-
-    return { modelId, instanceId };
+    
+    // TODO: remove modelId from the return object
+    return { context, id, instanceId, modelId: id };
 }
 
 export function useURL() {

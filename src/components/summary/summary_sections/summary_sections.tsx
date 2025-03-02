@@ -13,11 +13,11 @@ import { mergeValues } from "@/lib/merge_values";
 type SummarySectionsProps = Valuable;
 
 export default function SummarySections({ values }: SummarySectionsProps) {
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
     const { data: sections } = useQuery({
-        queryKey: sectionKeys.all(modelId),
-        queryFn: () => getSections({ modelId }),
+        queryKey: sectionKeys.all(context, id),
+        queryFn: () => getSections({ context, id }),
     })
 
     if (!sections || sections.length === 0) return null;

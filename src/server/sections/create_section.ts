@@ -1,6 +1,6 @@
 'use server'
 import { db } from "@/lib/db"
-import { SectionDoc } from "@/types/collections";
+import { contexts, SectionDoc } from "@/types/collections";
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { WithoutId } from "mongodb";
@@ -8,7 +8,8 @@ import { ActionState, validate } from "@/lib/validators/server_actions";
 
 const InputSchema = z.object({
     name: z.string().min(1, { message: 'Section name is required.' }),
-    modelId: z.string().nullable().optional(),
+    context: z.enum(contexts),
+    id: z.string().nullable().optional(),
 })
 
 export async function createSection(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema>> {
@@ -18,13 +19,14 @@ export async function createSection(input: z.input<typeof InputSchema>): Promise
     const validation = validate(InputSchema, input);
     if (!validation.success) return validation;
 
-    const { name, modelId } = validation.data;
-    if (!modelId) return { success: false, error: 'Model ID is required' }
+    const { name, context, id } = validation.data;
+    if (!id) return { success: false, error: 'ID is required' }
 
     const sections = db.collection<WithoutId<SectionDoc>>('sections')
     await sections.insertOne({
         name,
-        modelId,
+        modelId: context === 'models' ? id : undefined,
+        routerId: context === 'routers' ? id : undefined,
     })
 
     return { success: true }

@@ -16,11 +16,11 @@ type Props = {
 
 export default function Fields({ fieldState, setFieldState }: Props) {
     
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
     const { data: sections } = useQuery({
-        queryKey: sectionKeys.all(modelId),
-        queryFn: () => getSections({ modelId }),
+        queryKey: sectionKeys.all(context, id),
+        queryFn: () => getSections({ context, id }),
     })
 
     if (!sections

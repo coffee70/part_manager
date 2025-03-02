@@ -27,8 +27,11 @@ export default async function Page({
     })
 
     await queryClient.prefetchQuery({
-        queryKey: sectionKeys.all(modelId),
-        queryFn: () => getSections({ modelId }),
+        queryKey: sectionKeys.all("models", modelId),
+        queryFn: () => getSections({
+            context: "models",
+            id: modelId
+        }),
     })
 
     return (

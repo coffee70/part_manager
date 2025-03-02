@@ -6,27 +6,28 @@ import { AppBar } from '@/components/ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import { useAdminURL } from '@/hooks/url_metadata.hook';
-import { modelKeys, sectionKeys } from '@/lib/query_keys';
+import { contextKeys, modelKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { TitleFieldIcon } from '@/components/ui/icons/icons';
 import { getModel } from '@/server/models/get_model';
 import { SectionProvider } from './section.context';
 import ModelSelect from '@/components/fields/model_select';
+import { getContext } from '@/server/contexts/get_context';
 
 const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const { id } = useAdminURL();
+    const { context, id } = useAdminURL();
 
     const { data, isError, isPending } = useQuery({
-        queryKey: sectionKeys.all(id),
-        queryFn: () => getSections({ modelId: id }),
+        queryKey: sectionKeys.all(context, id),
+        queryFn: () => getSections({ context, id }),
     });
 
     const { data: model } = useQuery({
-        queryKey: modelKeys.id(id),
-        queryFn: () => getModel({ modelId: id }),
+        queryKey: contextKeys.id(context, id),
+        queryFn: () => getContext({ context, id }),
     })
 
     if (isPending) return <Loading />;

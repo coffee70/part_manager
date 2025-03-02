@@ -60,7 +60,7 @@ type Props = {
 
 export default function FieldForm({ field, open, onOpenChange }: Props) {
     const { section } = useSectionContext();
-    const { id } = useAdminURL();
+    const { context, id } = useAdminURL();
     const queryClient = useQueryClient();
 
     const initialFormState = {
@@ -87,7 +87,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
         mutationFn: upsertField,
         onSuccess: ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: sectionKeys.all(id) });
+                queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) });
                 setFormState(initialFormState);
                 onOpenChange(false);
             }

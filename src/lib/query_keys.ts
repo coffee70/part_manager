@@ -1,8 +1,7 @@
-import { hasPriority } from "@/server/models/has_priority"
 import { Context } from "@/types/collections"
 
 export const sectionKeys = {
-    all: (modelId?: string | null) => modelId ? ['sections', modelId] : ['sections'],
+    all: (context: Context, id?: string | null) => id ? ['sections', context, id] : ['sections', context],
 }
 
 export const instanceKeys = {

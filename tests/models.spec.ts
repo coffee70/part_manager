@@ -37,10 +37,10 @@ test('models', async ({ page }) => {
   await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
-  await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
-  await page.getByLabel('Create Model').getByText('Links', { exact: true }).click();
-  await page.getByLabel('Create Model').getByText('Comments', { exact: true }).click();
-  await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click()
+  await page.getByLabel('Edit Model').getByText('Attachments', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Links', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Comments', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Priority', { exact: true }).click()
   await page.getByRole('button', { name: 'Save' }).click();
 
   // check that instance is not attachable, linkable, commentable
@@ -68,10 +68,10 @@ test('models', async ({ page }) => {
   // add back attachable, linkable, commentable
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
-  await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
-  await page.getByLabel('Create Model').getByText('Links').click();
-  await page.getByLabel('Create Model').getByText('Comments').click();
-  await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Attachments', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Links').click();
+  await page.getByLabel('Edit Model').getByText('Comments').click();
+  await page.getByLabel('Edit Model').getByText('Priority', { exact: true }).click();
   await page.getByRole('button', { name: 'Save' }).click();
 
   await expect(page.getByRole('table')).toMatchAriaSnapshot(`
@@ -104,10 +104,10 @@ test('models', async ({ page }) => {
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByRole('textbox').fill('Models Test Edited');
-  await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
-  await page.getByLabel('Create Model').getByText('Links').click();
-  await page.getByLabel('Create Model').getByText('Comments').click();
-  await page.getByLabel('Create Model').getByText('Priority', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Attachments', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Links').click();
+  await page.getByLabel('Edit Model').getByText('Comments').click();
+  await page.getByLabel('Edit Model').getByText('Priority', { exact: true }).click();
   await modelFormColor(page, 11).click();
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('table')).toMatchAriaSnapshot(`
@@ -147,7 +147,7 @@ test('models', async ({ page }) => {
   await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
-  await page.getByLabel('Create Model').getByText('Comments').click();
+  await page.getByLabel('Edit Model').getByText('Comments').click();
   await page.getByRole('button', { name: 'Save' }).click();
 
   // check More button has "Add Comment" option
@@ -168,8 +168,8 @@ test('models', async ({ page }) => {
   await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
-  await page.getByLabel('Create Model').getByText('Comments').click();
-  await page.getByLabel('Create Model').getByText('Links').click();
+  await page.getByLabel('Edit Model').getByText('Comments').click();
+  await page.getByLabel('Edit Model').getByText('Links').click();
   await page.getByRole('button', { name: 'Save' }).click();
 
   // check More button has "Add Link" option
@@ -190,8 +190,8 @@ test('models', async ({ page }) => {
   await modelsAdminPageNavigation(page).click();
   await page.getByRole('row', { name: 'Models Test Edited' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
-  await page.getByLabel('Create Model').getByText('Links').click();
-  await page.getByLabel('Create Model').getByText('Attachments', { exact: true }).click();
+  await page.getByLabel('Edit Model').getByText('Links').click();
+  await page.getByLabel('Edit Model').getByText('Attachments', { exact: true }).click();
   await page.getByRole('button', { name: 'Save' }).click();
 
   // check More button has "Add Attachment" option

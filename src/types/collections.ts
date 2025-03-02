@@ -72,13 +72,15 @@ export type Values = {
 
 export type Section = {
     _id: string;
-    modelId: string;
+    modelId?: string;
+    routerId?: string;
     name: string;
 }
 
 export type SectionDoc = {
     _id: ObjectId;
-    modelId: string;
+    modelId?: string;
+    routerId?: string;
     name: string;
 }
 

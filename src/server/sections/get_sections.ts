@@ -1,29 +1,32 @@
 'use server'
 import { db } from "@/lib/db"
-import { Field, Section } from "@/types/collections";
+import { contexts, Field, Section, SectionDoc } from "@/types/collections";
 import { getFields } from "@/server/fields/get_fields";
 import { validators } from "../validators/validators";
 import { getCurrentSession } from "../auth/get_current_session";
+import { z } from "zod";
 
 type Output = Array<Section & {
     fields: Field[];
 }>;
 
 
-type Input = {
-    modelId?: string | null;
-}
+const InputSchema = z.object({
+    context: z.enum(contexts),
+    id: z.string().nullable().optional(),
+})
 
-export async function getSections(input: Input) {
+export async function getSections(input: z.input<typeof InputSchema>): Promise<Output> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId } = validators.input<Input>(input);
+    const { context, id } = InputSchema.parse(input)
+    if (!id) return []
 
-    if (!modelId) return []
-    
-    const sectionsCollection = db.collection<Section>('sections')
-    const sections = await sectionsCollection.find({ modelId }).toArray()
+    const sectionsCollection = db.collection<SectionDoc>('sections')
+    const sections = await sectionsCollection.find({
+        [context === 'models' ? 'modelId' : 'routerId']: id
+    }).toArray()
 
     const fields = await Promise.all(sections.map(async section => ({
         ...section,

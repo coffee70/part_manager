@@ -24,14 +24,14 @@ type Props = {
 
 export default function DeleteField({ _id, open, onOpenChange }: Props) {
 
-    const { id } = useAdminURL()
+    const { context, id } = useAdminURL()
 
     const queryClient = useQueryClient()
 
     const { mutate, isPending } = useMutation({
         mutationFn: () => deleteField({ _id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(id) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
         }
     })
 
