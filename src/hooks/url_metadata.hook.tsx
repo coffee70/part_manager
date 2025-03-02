@@ -12,7 +12,7 @@ export function useAdminURL() {
 
     // get the model ID from the URL
     const searchParams = useSearchParams();
-    const modelId = searchParams.get('modelId');
+    const modelId = searchParams.get('id');
 
     return { context, modelId };
 }

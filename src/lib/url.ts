@@ -94,7 +94,7 @@ class ModelsAdminFieldsRouterBuilder {
         return this._base;
     }
     model(modelId: string) {
-        return `${this._base}/?modelId=${modelId}`;
+        return `${this._base}/?id=${modelId}`;
     }
 }
 
@@ -138,7 +138,7 @@ class RoutersAdminFieldsRouterBuilder {
         return this._base;
     }
     router(routerId: string) {
-        return `${this._base}/?routerId=${routerId}`;
+        return `${this._base}/?id=${routerId}`;
     }
 }
 
