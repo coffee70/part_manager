@@ -1,3 +1,5 @@
+import { Context, contexts } from "@/types/collections";
+
 export type URLSetter = (...args: any[]) => string;
 
 export const fieldURL: URLSetter = (modelId: string) => {
@@ -8,6 +10,17 @@ export const fieldURL: URLSetter = (modelId: string) => {
 export const modelURL: URLSetter = (modelId: string) => {
     if (!modelId) return `/models`;
     return `/models?modelId=${modelId}`;
+}
+
+/**
+ * Check if the given context is a valid context. Context will be pulled
+ * from the front of the URL path.
+ * 
+ * @param context The context to check
+ * @returns True if the context is a valid context, false otherwise
+ */
+export function isContext(context: string): context is Context {
+    return contexts.some((c: Context) => c === context);
 }
 
 class RouterBuilder {
