@@ -19,7 +19,7 @@ export const modelURL: URLSetter = (modelId: string) => {
  * @param context The context to check
  * @returns True if the context is a valid context, false otherwise
  */
-export function isContext(context: string): context is Context {
+export function isContext(context: string | undefined): context is Context {
     return contexts.some((c: Context) => c === context);
 }
 

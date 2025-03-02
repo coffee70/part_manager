@@ -1,11 +1,20 @@
 'use client'
+import { isContext } from "@/lib/url";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export function useAdminURL() {
+    // get the context from the URL
+    const path = usePathname()?.split('/');
+    // remove the first empty string
+    path.shift();
+    const context = path.shift();
+    if (!isContext(context)) throw new Error('URL is malformed. Not a valid context.');
+
+    // get the model ID from the URL
     const searchParams = useSearchParams();
     const modelId = searchParams.get('modelId');
 
-    return { modelId };
+    return { context, modelId };
 }
 
 export function useInstanceURL() {
