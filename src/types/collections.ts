@@ -176,6 +176,26 @@ export type Model = {
     route?: Route;
 }
 
+export type RouterDoc = {
+    _id: ObjectId;
+    name: string;
+    attachable: boolean;
+    linkable: boolean;
+    commentable: boolean;
+    color: string;
+    updatedAt: Date;
+    updatedBy: string;
+}
+
+export type Router = {
+    _id: string;
+    name: string;
+    attachable: boolean;
+    linkable: boolean;
+    commentable: boolean;
+    color: string;
+}
+
 export type InstanceDoc = {
     _id: ObjectId;
     number: string;

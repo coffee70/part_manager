@@ -21,6 +21,9 @@ class RouterBuilder {
     models() {
         return new ModelsRouterBuilder();
     }
+    routers() {
+        return new RoutersRouterBuilder();
+    }
     users() {
         return new UserRouterBuilder();
     }
@@ -79,6 +82,50 @@ class ModelsAdminFieldsRouterBuilder {
     }
     model(modelId: string) {
         return `${this._base}/?modelId=${modelId}`;
+    }
+}
+
+class RoutersRouterBuilder {
+    private _base: string = "/routers";
+    base() {
+        return this._base;
+    }
+    instances() {
+        return new RoutersInstancesRouterBuilder();
+    }
+    admin() {
+        return new RoutersAdminRouterBuilder();
+    }
+}
+
+class RoutersInstancesRouterBuilder {
+    private _base: string = "/routers/instances";
+    base() {
+        return this._base;
+    }
+    router(routerId: string) {
+        return `${this._base}/${routerId}`;
+    }
+}
+
+class RoutersAdminRouterBuilder {
+    private _base: string = "/routers/admin";
+    routers() {
+        return `${this._base}/routers`;
+    }
+    fields() {
+        return new RoutersAdminFieldsRouterBuilder();
+    }
+
+}
+
+class RoutersAdminFieldsRouterBuilder {
+    private _base: string = "/routers/admin/fields";
+    base() {
+        return this._base;
+    }
+    router(routerId: string) {
+        return `${this._base}/?routerId=${routerId}`;
     }
 }
 

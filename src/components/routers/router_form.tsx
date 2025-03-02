@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { cn } from "@/lib/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { modelKeys } from "@/lib/query_keys"
-import { Model } from "@/types/collections"
+import { Router } from "@/types/collections"
 import { Input } from "@/components/ui/fields/input"
-import { upsertModel } from "@/server/models/upsert_model"
 import Loader from "../ui/loader"
+import { upsertRouter } from "@/server/routers/upsert_router"
+import { routerKeys } from "@/lib/query_keys"
 
 const colors = [
     'hsl(0, 85%, 65%)',    // bright red
@@ -40,29 +40,28 @@ const colors = [
 ]
 
 type Props = {
-    model?: Model;
+    router?: Router;
     open: boolean;
     setOpen: (open: boolean) => void;
 }
 
-export default function ModelForm({ model, open, setOpen }: Props) {
+export default function ModelForm({ router, open, setOpen }: Props) {
     const [formState, setFormState] = React.useState({
-        _id: model?._id,
-        name: model?.name || '',
-        color: model?.color || colors[0],
-        attachable: model?.attachable || false,
-        linkable: model?.linkable || false,
-        commentable: model?.commentable || false,
-        priority: model?.priority || false,
+        _id: router?._id,
+        name: router?.name || '',
+        color: router?.color || colors[0],
+        attachable: router?.attachable || false,
+        linkable: router?.linkable || false,
+        commentable: router?.commentable || false,
     });
 
     const queryClient = useQueryClient();
 
     const { mutate, data, isPending } = useMutation({
-        mutationFn: upsertModel,
+        mutationFn: upsertRouter,
         onSuccess: ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: modelKeys.all() });
+                queryClient.invalidateQueries({ queryKey: routerKeys.all() });
                 setOpen(false);
             }
         }
@@ -73,10 +72,10 @@ export default function ModelForm({ model, open, setOpen }: Props) {
         mutate(formState);
     }
 
-    const title = model ? "Edit Model" : "Create Model";
-    const description = model
-        ? "A modal dialog that displays a form for editing a model."
-        : "A modal dialog that displays a form for creating a new model.";
+    const title = router ? "Edit Router" : "Create Router";
+    const description = router
+        ? "A modal dialog that displays a form for editing a router."
+        : "A modal dialog that displays a form for creating a new router.";
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -95,7 +94,7 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                 >
                     <Input
                         label="Name"
-                        description="The name of the model."
+                        description="The name of the router."
                         value={formState.name}
                         onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
                         error={data?.fieldErrors?.name}
@@ -107,27 +106,21 @@ export default function ModelForm({ model, open, setOpen }: Props) {
                         </div>
                         <Checkbox
                             label="Attachments"
-                            description="A user can add attachments to this model."
+                            description="A user can add attachments to this router."
                             value={formState.attachable}
                             onChange={(attachable) => setFormState(prev => ({ ...prev, attachable: attachable }))}
                         />
                         <Checkbox
                             label="Links"
-                            description="A user can link this model to other models."
+                            description="A user can link this router to other routers."
                             value={formState.linkable}
                             onChange={(linkable) => setFormState(prev => ({ ...prev, linkable: linkable }))}
                         />
                         <Checkbox
                             label="Comments"
-                            description="A user can comment on this model."
+                            description="A user can comment on this router."
                             value={formState.commentable}
                             onChange={(commentable) => setFormState(prev => ({ ...prev, commentable: commentable }))}
-                        />
-                        <Checkbox
-                            label="Priority"
-                            description="A priority is associated with this model."
-                            value={formState.priority}
-                            onChange={(priority) => setFormState(prev => ({ ...prev, priority: priority }))}
                         />
                     </div>
                     <div className="space-y-3">

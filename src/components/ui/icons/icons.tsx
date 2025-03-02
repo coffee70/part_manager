@@ -66,6 +66,30 @@ function RouteIcon({ size, selected }: Props) {
     )
 }
 
+function SecondaryRouteIcon({ size }: Props) {
+    return (
+        <div
+            className={cn(
+                "p-1 rounded-md",
+            )}
+        >
+            <LucideRouteIcon size={size} strokeWidth={1.5} />
+        </div>
+    )
+}
+
+function TitleRouterIcon({ size }: Props) {
+    return (
+        <div
+            className={cn(
+                "p-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-md",
+            )}
+        >
+            <LucideRouteIcon size={size} strokeWidth={1.5} />
+        </div>
+    )
+}
+
 function PrimaryUserIcon({ size, selected }: Props) {
     return (
         <div
@@ -136,6 +160,8 @@ export {
     SecondaryModelIcon,
     TitleModelIcon,
     RouteIcon,
+    SecondaryRouteIcon,
+    TitleRouterIcon,
     PrimaryUserIcon,
     SecondaryUserIcon,
     FieldIcon,

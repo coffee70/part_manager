@@ -31,7 +31,14 @@ export const modelKeys = {
     linkable: (id?: string | null) => [...modelKeys.id(id), 'linkable'],
     commentable: (id?: string | null) => [...modelKeys.id(id), 'commentable'],
     hasPriority: (id?: string | null) => [...modelKeys.id(id), 'hasPriority'],
+}
 
+export const routerKeys = {
+    all: () => ['routers'],
+    id: (id?: string | null) => id ? [...routerKeys.all(), id] : routerKeys.all(),
+    attachable: (id?: string | null) => [...routerKeys.id(id), 'attachable'],
+    linkable: (id?: string | null) => [...routerKeys.id(id), 'linkable'],
+    commentable: (id?: string | null) => [...routerKeys.id(id), 'commentable'],
 }
 
 export const attachmentKeys = {
