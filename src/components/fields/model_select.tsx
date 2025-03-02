@@ -12,11 +12,11 @@ import { router } from '@/lib/url';
 import { useRouter } from 'next/navigation';
 
 export default function ModelSelect() {
-    const { modelId } = useAdminURL();
+    const { id } = useAdminURL();
 
     const { data: model } = useQuery({
-        queryKey: modelKeys.id(modelId),
-        queryFn: () => getModel({ modelId }),
+        queryKey: modelKeys.id(id),
+        queryFn: () => getModel({ modelId: id }),
     })
 
     const { data: models } = useQuery({

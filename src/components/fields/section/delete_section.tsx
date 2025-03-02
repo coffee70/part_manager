@@ -24,13 +24,13 @@ export default function DeleteSection() {
     const { section } = useSectionContext();
     const { _id } = section;
 
-    const { modelId } = useAdminURL();
+    const { id } = useAdminURL();
     const queryClient = useQueryClient()
 
     const { mutate, isPending } = useMutation({
         mutationFn: () => deleteSection({ _id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(id) })
         }
     })
 

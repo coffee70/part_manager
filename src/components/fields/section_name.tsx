@@ -44,7 +44,7 @@ export default function SectionName() {
     const { section } = useSectionContext();
     const { _id, name } = section;
 
-    const { modelId } = useAdminURL();
+    const { id } = useAdminURL();
 
     const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
@@ -58,7 +58,7 @@ export default function SectionName() {
         mutationFn: updateSectionName,
         onSuccess: ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: sectionKeys.all(modelId) })
+                queryClient.invalidateQueries({ queryKey: sectionKeys.all(id) })
                 setIsEditing(false);
             }
         }

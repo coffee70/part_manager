@@ -17,16 +17,16 @@ const Loading = () => <div>Loading...</div>;
 const Error = () => <div>Error...</div>;
 
 export default function Sections() {
-    const { modelId } = useAdminURL();
+    const { id } = useAdminURL();
 
     const { data, isError, isPending } = useQuery({
-        queryKey: sectionKeys.all(modelId),
-        queryFn: () => getSections({ modelId }),
+        queryKey: sectionKeys.all(id),
+        queryFn: () => getSections({ modelId: id }),
     });
 
     const { data: model } = useQuery({
-        queryKey: modelKeys.id(modelId),
-        queryFn: () => getModel({ modelId }),
+        queryKey: modelKeys.id(id),
+        queryFn: () => getModel({ modelId: id }),
     })
 
     if (isPending) return <Loading />;

@@ -12,9 +12,9 @@ export function useAdminURL() {
 
     // get the model ID from the URL
     const searchParams = useSearchParams();
-    const modelId = searchParams.get('id');
+    const id = searchParams.get('id');
 
-    return { context, modelId };
+    return { context, id };
 }
 
 export function useInstanceURL() {

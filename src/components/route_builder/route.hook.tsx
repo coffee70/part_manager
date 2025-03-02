@@ -22,12 +22,12 @@ export function useRoute() {
         notify,
     } = useNotifications();
 
-    const { modelId } = useAdminURL();
+    const { id } = useAdminURL();
 
     const { data: initialRoute } = useQuery({
-        queryKey: routeKeys.id(modelId),
+        queryKey: routeKeys.id(id),
         queryFn: () => getRoute({
-            modelId: modelId ?? undefined,
+            modelId: id ?? undefined,
         })
     })
 
