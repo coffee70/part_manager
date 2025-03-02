@@ -1,4 +1,5 @@
 import { hasPriority } from "@/server/models/has_priority"
+import { Context } from "@/types/collections"
 
 export const sectionKeys = {
     all: (modelId?: string | null) => modelId ? ['sections', modelId] : ['sections'],
@@ -39,6 +40,15 @@ export const routerKeys = {
     attachable: (id?: string | null) => [...routerKeys.id(id), 'attachable'],
     linkable: (id?: string | null) => [...routerKeys.id(id), 'linkable'],
     commentable: (id?: string | null) => [...routerKeys.id(id), 'commentable'],
+}
+
+export const contextKeys = {
+    all: (context: Context) => context === "models" ? modelKeys.all() : routerKeys.all(),
+    id: (context: Context, id?: string | null) => context === "models" ? modelKeys.id(id) : routerKeys.id(id),
+    attachable: (context: Context, id?: string | null) => context === "models" ? modelKeys.attachable(id) : routerKeys.attachable(id),
+    linkable: (context: Context, id?: string | null) => context === "models" ? modelKeys.linkable(id) : routerKeys.linkable(id),
+    commentable: (context: Context, id?: string | null) => context === "models" ? modelKeys.commentable(id) : routerKeys.commentable(id),
+    hasPriority: (context: Context, id?: string | null) => context === "models" ? modelKeys.hasPriority(id) : [],
 }
 
 export const attachmentKeys = {
