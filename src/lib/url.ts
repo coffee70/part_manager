@@ -37,6 +37,9 @@ class RouterBuilder {
     routers() {
         return new RoutersRouterBuilder();
     }
+    context(context: Context) {
+        return new ContextRouterBuilder(context);
+    }
     users() {
         return new UserRouterBuilder();
     }
@@ -139,6 +142,46 @@ class RoutersAdminFieldsRouterBuilder {
     }
     router(routerId: string) {
         return `${this._base}/?id=${routerId}`;
+    }
+}
+
+class ContextRouterBuilder {
+    constructor(private _context: Context) {
+        this._context = _context;
+    }
+    private _base: string = `/${this._context}`;
+    base() {
+        return this._base;
+    }
+    admin() {
+        return new ContextAdminRouterBuilder(this._context);
+    }
+}
+
+class ContextAdminRouterBuilder {
+    constructor(private _context: Context) {
+        this._context = _context;
+    }
+    private _base: string = `/${this._context}/admin`;
+    base() {
+        return this._base;
+    }
+    fields() {
+        return new ContextAdminFieldsRouterBuilder(this._context);
+    }
+}
+
+class ContextAdminFieldsRouterBuilder {
+    constructor(private _context: Context) {
+        this._context = _context;
+    }
+    private _base: string = `/${this._context}/admin/fields`;
+    base() {
+        return this._base;
+    }
+    context(id: string | null) {
+        if (!id) return this._base;
+        return `${this._base}/?id=${id}`;
     }
 }
 

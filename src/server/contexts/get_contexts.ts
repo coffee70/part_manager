@@ -9,7 +9,7 @@ const InputSchema = z.object({
     context: z.enum(contexts),
 })
 
-export async function getContext(input: z.input<typeof InputSchema>) {
+export async function getContexts(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
