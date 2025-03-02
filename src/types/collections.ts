@@ -152,6 +152,12 @@ export type LinkableDoc = {
     }[];
 };
 
+export interface ContextImpl {
+    _id: string;
+    name: string;
+    color: string;
+}
+
 export type ModelDoc = {
     _id: ObjectId;
     name: string;
