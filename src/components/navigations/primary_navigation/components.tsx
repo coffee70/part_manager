@@ -1,7 +1,8 @@
 import { CondensedLogo } from "@/components/ui/logo";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Context, getContextColor } from "../lib";
+import { getContextColor } from "../lib";
 import Link from "next/link";
+import { Context } from "@/types/collections";
 
 function PrimaryHeader() {
     return (

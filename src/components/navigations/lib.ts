@@ -1,4 +1,4 @@
-export type Context = 'models' | 'routers' | 'users'
+import { Context } from "@/types/collections";
 
 // Helper function to get the appropriate color based on context
 export function getContextColor(context: Context): { bg: string, hover: string, text: string, border: string, ring: string } {

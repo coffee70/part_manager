@@ -1,8 +1,9 @@
 'use client'
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
-import { Context, getContextColor } from "../lib";
+import { getContextColor } from "../lib";
 import Link from "next/link";
+import { Context } from "@/types/collections";
 
 function SecondaryGroup({
     label,
