@@ -19,7 +19,7 @@ export default function Sort({ keys }: Props) {
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const sort_by = searchParams.get('sort_by');
@@ -45,7 +45,7 @@ export default function Sort({ keys }: Props) {
             params.set('sort_by', key);
             params.set('sort_order', 'asc');
         }
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         replace(`${pathname}?${params.toString()}`);
     }
 

@@ -11,7 +11,7 @@ import { XIcon } from "lucide-react";
 type Props = {
     link: {
         _id: string;
-        modelId: string;
+        contextId: string;
         instanceId: string;
         number: string;
         color: string;
@@ -19,15 +19,15 @@ type Props = {
 }
 
 export default function SummaryLink({ link }: Props) {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
-        mutationFn: () => deleteLink({ modelId, instanceId, linkId: link._id }),
-        onSuccess: ({ linkModelId, linkInstanceId }) => {
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: linkKeys.all(linkModelId, linkInstanceId) })
+        mutationFn: () => deleteLink({ id, instanceId, linkId: link._id }),
+        onSuccess: ({ linkContextId, linkInstanceId }) => {
+            queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
+            queryClient.invalidateQueries({ queryKey: linkKeys.all(context, linkContextId, linkInstanceId) })
         }
     })
 
@@ -41,7 +41,7 @@ export default function SummaryLink({ link }: Props) {
                     />
                 </div>
                 <Link
-                    href={router().models().instances().instance(link.modelId, link.instanceId)}
+                    href={router().models().instances().instance(link.contextId, link.instanceId)}
                     className="text-primary cursor-pointer hover:underline hover:underline-offset-2"
                 >{link.number}</Link>
             </div>

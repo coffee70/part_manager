@@ -7,7 +7,7 @@ import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { instanceKeys, routeKeys } from "@/lib/query_keys";
 
 export default function Save() {
-    const { id } = useAdminURL();
+    const { context, id } = useAdminURL();
 
     const {
         route,
@@ -23,7 +23,7 @@ export default function Save() {
         onSuccess: (data) => {
             if (data.success) {
                 queryClient.invalidateQueries({ queryKey: routeKeys.id(id) });
-                queryClient.invalidateQueries({ queryKey: instanceKeys.all(id ?? '') });
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
                 setIsEditing(false);
                 notify({
                     type: "success",

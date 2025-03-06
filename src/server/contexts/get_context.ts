@@ -10,7 +10,26 @@ const InputSchema = z.object({
     id: z.string().nullable().optional(),
 })
 
-export async function getContext(input: z.input<typeof InputSchema>) {
+const OutputSchema = z.object({
+    _id: z.string(),
+    name: z.string(),
+    attachable: z.boolean(),
+    linkable: z.boolean(),
+    commentable: z.boolean(),
+    priority: z.boolean(),
+    color: z.string(),
+}).or(z.object({
+    _id: z.string(),
+    name: z.string(),
+    attachable: z.boolean(),
+    linkable: z.boolean(),
+    commentable: z.boolean(),
+    color: z.string(),
+})).nullable()
+
+export async function getContext(
+    input: z.input<typeof InputSchema>
+): Promise<z.output<typeof OutputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 

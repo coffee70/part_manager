@@ -57,7 +57,7 @@ export default function Notes({ initialValue }: Props) {
 
     const [value, setValue] = React.useState(initialValue ?? '');
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, textareaRef } = useIsEditing();
 
@@ -66,8 +66,8 @@ export default function Notes({ initialValue }: Props) {
     const { mutate, isError, isPending, error } = useMutation({
         mutationFn: updateNotes,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id(context, id, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
             setIsEditing(false);
         }
     })
@@ -75,7 +75,7 @@ export default function Notes({ initialValue }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId,
+            id,
             instanceId,
             notes: value
         })

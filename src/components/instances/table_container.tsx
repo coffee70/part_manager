@@ -16,11 +16,11 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
-import { instanceKeys, modelKeys } from "@/lib/query_keys";
+import { instanceKeys, contextKeys } from "@/lib/query_keys";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
-import { getModel } from "@/server/models/get_model";
+import { getContext } from "@/server/contexts/get_context";
 import { StepBadge } from "@/components/ui/badge";
 
 export default function TableContainer() {
@@ -29,7 +29,7 @@ export default function TableContainer() {
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
@@ -37,14 +37,14 @@ export default function TableContainer() {
         replace(`${pathname}?${params.toString()}`)
     }
 
-    const { data: model } = useQuery({
-        queryKey: modelKeys.id(modelId),
-        queryFn: () => getModel({ modelId }),
+    const { data: contextImpl } = useQuery({
+        queryKey: contextKeys.id(context, id),
+        queryFn: () => getContext({ context, id }),
     })
 
     const { data, isError, isPending } = useQuery({
-        queryKey: instanceKeys.all(modelId),
-        queryFn: () => getInstances({ modelId, searchParams }),
+        queryKey: instanceKeys.all(context, id),
+        queryFn: () => getInstances({ id, searchParams }),
     })
 
     if (isPending) return <TableSkeleton />
@@ -56,7 +56,7 @@ export default function TableContainer() {
             <FilterToolbar>
                 <FilterToolbarRow>
                     <InstanceForm>
-                        <New id={`create-instance-${model?.name}`} />
+                        <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
                     <SearchInput />
                     <Filter labels={['Updated At', 'Priority']}>
@@ -70,7 +70,7 @@ export default function TableContainer() {
                 <TableBody>
                     {data.map((instance) => (
                         <TableRow key={instance._id} onClick={() => handleClick(instance._id)}>
-                            {model?.priority && <TableCell className="px-1">
+                            {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableCell className="px-1">
                                 <Priority priority={instance.priority} />
                             </TableCell>}
                             <TableCell>

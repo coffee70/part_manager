@@ -22,7 +22,7 @@ export default function DateRangeFilter({ paramKey }: Props) {
         to: initParam?.to ? new Date(initParam.to) : undefined,
     }
     
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const onChange = (value: DateRange | undefined) => {
@@ -32,7 +32,7 @@ export default function DateRangeFilter({ paramKey }: Props) {
         } else {
             params.delete(paramKey);
         }
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         replace(`${pathname}?${params.toString()}`);
     }
 

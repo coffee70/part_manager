@@ -149,7 +149,7 @@ export interface CommentableDoc {
 export type LinkableDoc = {
     links: {
         _id: ObjectId;
-        modelId: string;
+        contextId: string;
         instanceId: string;
     }[];
 };

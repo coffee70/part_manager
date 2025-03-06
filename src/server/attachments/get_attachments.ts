@@ -2,13 +2,14 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { AttachableDoc } from "@/types/collections";
+import { AttachableDoc, contexts } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getAttachment } from "./get_attachment";
-import { isAttachable } from "../models/is_attachable";
+import { isAttachable } from "../contexts/is_attachable";
 
 const InputSchema = z.object({
-    modelId: z.string(),
+    context: z.enum(contexts),
+    id: z.string(),
     instanceId: z.string().nullable().optional(),
 })
 
@@ -23,14 +24,14 @@ export async function getAttachments(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, instanceId } = InputSchema.parse(input);
+    const { context, id, instanceId } = InputSchema.parse(input);
     if (!instanceId) throw new Error('instance Id is required');
 
-    if (!await isAttachable({ modelId })) {
+    if (!await isAttachable({ context, id })) {
         return [];
     }
 
-    const instanceCollection = db.collection<AttachableDoc>(modelId);
+    const instanceCollection = db.collection<AttachableDoc>(id);
     const instance = await instanceCollection.findOne({ _id: new ObjectId(instanceId) });
     if (!instance) throw new Error('Instance not found');
 

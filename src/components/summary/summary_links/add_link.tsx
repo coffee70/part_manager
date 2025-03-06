@@ -7,10 +7,10 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createLink } from "@/server/links/create_link";
-import { instanceKeys, linkKeys, modelKeys } from "@/lib/query_keys";
+import { instanceKeys, linkKeys, contextKeys } from "@/lib/query_keys";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { getModels } from "@/server/models/get_models";
+import { getContexts } from "@/server/contexts/get_contexts";
 import { getInstances } from "@/server/instances/get_instances";
 import Select from "@/components/ui/fields/select";
 
@@ -20,29 +20,33 @@ type Props = {
 }
 
 export default function AddLink({ open, onOpenChange }: Props) {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
-    const { data: models = [] } = useQuery({
-        queryKey: modelKeys.all(),
-        queryFn: () => getModels(),
+    const { data: contexts = [] } = useQuery({
+        queryKey: contextKeys.all(context),
+        queryFn: () => getContexts({ context }),
     })
 
-    const nameToId = models.reduce<Record<string, string>>((acc, model) => {
-        acc[model.name] = model._id;
+    // Filter to only show linkable contexts
+    const linkableContexts = contexts.filter(ctx => ctx.linkable);
+
+    const nameToId = linkableContexts.reduce<Record<string, string>>((acc, ctx) => {
+        acc[ctx.name] = ctx._id;
         return acc;
     }, {});
 
-    const idToName = models.reduce<Record<string, string>>((acc, model) => {
-        acc[model._id] = model.name;
+    const idToName = linkableContexts.reduce<Record<string, string>>((acc, ctx) => {
+        acc[ctx._id] = ctx.name;
         return acc;
     }, {});
 
-    const [linkedModelId, setLinkedModelId] = React.useState(models[0]?._id || '');
+    const [linkedContextId, setLinkedContextId] = React.useState(linkableContexts[0]?._id || '');
 
     const { data: instances = [] } = useQuery({
-        queryKey: instanceKeys.all(linkedModelId),
-        queryFn: () => getInstances({ modelId: linkedModelId }),
-    })
+        queryKey: instanceKeys.all(context, linkedContextId),
+        queryFn: () => getInstances({ id: linkedContextId }),
+        enabled: !!linkedContextId, // Only fetch instances if we have a selected context
+    })  
 
     const [linkedInstanceNumber, setLinkedInstanceNumber] = React.useState(instances[0]?.number || '');
 
@@ -52,8 +56,8 @@ export default function AddLink({ open, onOpenChange }: Props) {
         mutationFn: createLink,
         onSuccess: ({ success, data }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: linkKeys.all(modelId, instanceId) })
-                if (data) queryClient.invalidateQueries({ queryKey: linkKeys.all(data.linkedModelId, data.linkedInstanceId) })
+                queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
+                if (data) queryClient.invalidateQueries({ queryKey: linkKeys.all(context, data.linkedId, data.linkedInstanceId) })
                 onOpenChange(false);
             }
         }
@@ -62,9 +66,10 @@ export default function AddLink({ open, onOpenChange }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId,
+            context,
+            id,
             instanceId,
-            linkedModelId,
+            linkedId: linkedContextId,
             linkedInstanceNumber,
         });
     }
@@ -75,7 +80,7 @@ export default function AddLink({ open, onOpenChange }: Props) {
                 <DialogHeader>
                     <DialogTitle>Create Link</DialogTitle>
                     <VisuallyHidden>
-                        <DialogDescription>Create a link between two models.</DialogDescription>
+                        <DialogDescription>Create a link between two {context}s.</DialogDescription>
                     </VisuallyHidden>
                 </DialogHeader>
                 <form
@@ -89,15 +94,15 @@ export default function AddLink({ open, onOpenChange }: Props) {
                             <AlertDescription>{data.error}</AlertDescription>
                         </Alert>}
                         <Select
-                            label="Model"
-                            description="The model you want to link from."
-                            options={models.map(model => model.name)}
-                            value={idToName[linkedModelId]}
-                            onChange={(v) => setLinkedModelId(nameToId[v as string])}
+                            label={context.charAt(0).toUpperCase() + context.slice(1)}
+                            description={`The ${context} you want to link from.`}
+                            options={linkableContexts.map(ctx => ctx.name)}
+                            value={idToName[linkedContextId]}
+                            onChange={(v) => setLinkedContextId(nameToId[v as string])}
                         />
                         <Select
                             label="Number"
-                            description="The number of the model you want to link from."
+                            description={`The number of the ${context} you want to link from.`}
                             options={instances.map(instance => instance.number)}
                             value={linkedInstanceNumber}
                             onChange={(v) => setLinkedInstanceNumber(v as string)}

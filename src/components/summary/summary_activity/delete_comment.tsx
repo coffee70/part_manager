@@ -23,18 +23,18 @@ type Props = {
     id: string;
 }
 
-export default function DeleteComment({ id }: Props) {
+export default function DeleteComment({ id: commentId }: Props) {
     const [open, setOpen] = React.useState(false);
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate, error, isError, isPending } = useMutation({
-        mutationFn: () => deleteComment({ modelId, instanceId, commentId: id }),
+        mutationFn: () => deleteComment({ id, instanceId, commentId }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(context, id, instanceId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setOpen(false);
         }
     })

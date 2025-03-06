@@ -27,23 +27,29 @@ export default function UpdateComment({ comment }: Props) {
     const [value, setValue] = React.useState(comment.text);
     const [open, setOpen] = React.useState(false);
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate, error, isError } = useMutation({
         mutationFn: updateComment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(context, id, instanceId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setOpen(false);
         }
     })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        mutate({ modelId, instanceId, commentId: comment._id, text: value });
+        mutate({
+            context,
+            id,
+            instanceId,
+            commentId: comment._id,
+            text: value
+        });
     }
 
     return (

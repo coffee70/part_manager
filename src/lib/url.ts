@@ -122,6 +122,9 @@ class RoutersInstancesRouterBuilder {
     router(routerId: string) {
         return `${this._base}/${routerId}`;
     }
+    instance(routerId: string, instanceId: string) {
+        return `${this._base}/${routerId}?id=${instanceId}`;
+    }
 }
 
 class RoutersAdminRouterBuilder {
@@ -153,8 +156,27 @@ class ContextRouterBuilder {
     base() {
         return this._base;
     }
+    instances() {
+        return new ContextInstancesRouterBuilder(this._context);
+    }
     admin() {
         return new ContextAdminRouterBuilder(this._context);
+    }
+}
+
+class ContextInstancesRouterBuilder {
+    constructor(private _context: Context) {
+        this._context = _context;
+    }
+    private _base: string = `/${this._context}/instances`;
+    base() {
+        return this._base;
+    }
+    context(id: string) {
+        return `${this._base}/${id}`;
+    }
+    instance(id: string, instanceId: string) {
+        return `${this._base}/${id}?id=${instanceId}`;
     }
 }
 

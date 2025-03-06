@@ -29,8 +29,8 @@ export default function Step({ step, targetSteps }: Props) {
     const { mutate } = useMutation({
         mutationFn: updateStep,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) })
         }
     })
 

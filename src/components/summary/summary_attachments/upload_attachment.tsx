@@ -10,16 +10,16 @@ type Props = {
 }
 
 export default function UploadAttachment({ inputRef }: Props) {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: createAttachment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: attachmentKeys.all(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: attachmentKeys.all(context, id, instanceId) });
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         }
     })
 
@@ -28,7 +28,8 @@ export default function UploadAttachment({ inputRef }: Props) {
         if (file && instanceId) {
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('modelId', modelId);
+            formData.append('id', id);
+            formData.append('context', context);
             formData.append('instanceId', instanceId);
             mutate(formData);
         }

@@ -5,29 +5,29 @@ import MoreButton from './more_button'
 import { useMoreContext } from './more_context';
 import { LinkIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { modelKeys } from '@/lib/query_keys';
+import { contextKeys } from '@/lib/query_keys';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
-import { isAttachable } from '@/server/models/is_attachable';
-import { isLinkable } from '@/server/models/is_linkable';
-import { isCommentable } from '@/server/models/is_commentable';
+import { isAttachable } from '@/server/contexts/is_attachable';
+import { isLinkable } from '@/server/contexts/is_linkable';
+import { isCommentable } from '@/server/contexts/is_commentable';
 
 export default function More() {
 
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
     const { data: attachable } = useQuery({
-        queryKey: modelKeys.attachable(modelId),
-        queryFn: () => isAttachable({ modelId }),
+        queryKey: contextKeys.attachable(context, id),
+        queryFn: () => isAttachable({ context, id }),
     })
 
     const { data: linkable } = useQuery({
-        queryKey: modelKeys.linkable(modelId),
-        queryFn: () => isLinkable({ modelId }),
+        queryKey: contextKeys.linkable(context, id),
+        queryFn: () => isLinkable({ context, id }),
     })
 
     const { data: commentable } = useQuery({
-        queryKey: modelKeys.commentable(modelId),
-        queryFn: () => isCommentable({ modelId }),
+        queryKey: contextKeys.commentable(context, id),
+        queryFn: () => isCommentable({ context, id }),
     })
 
     const {

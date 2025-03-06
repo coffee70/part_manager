@@ -13,7 +13,7 @@ const SearchInput = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const { modelId } = useInstanceURL();
+  const { context, id } = useInstanceURL();
   const queryClient = useQueryClient();
 
   const initialValue = searchParams.get('search') || '';
@@ -24,7 +24,7 @@ const SearchInput = () => {
   const handleClear = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
-    queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+    queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
     replace(`${pathname}?${params.toString()}`);
     setValue('');
     if (inputRef.current) {
@@ -39,7 +39,7 @@ const SearchInput = () => {
     } else {
       params.delete('search');
     }
-    queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+    queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 

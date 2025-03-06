@@ -1,14 +1,15 @@
 'use server'
 import { db } from "@/lib/db";
-import { AttachableDoc } from "@/types/collections";
+import { AttachableDoc, contexts } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { z } from "zod";
-import { isAttachable } from "../models/is_attachable";
+import { isAttachable } from "../contexts/is_attachable";
 
 const FormDataSchema = z.object({
+    context: z.enum(contexts),
+    id: z.string(),
     file: z.custom<File>(),
-    modelId: z.string(),
     instanceId: z.string()
 })
 
@@ -16,14 +17,14 @@ export async function createAttachment(formData: FormData) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized')
 
-    const { file, modelId, instanceId } = FormDataSchema.parse(Object.fromEntries(formData))
+    const { file, context, id, instanceId } = FormDataSchema.parse(Object.fromEntries(formData))
     if (!instanceId) throw new Error('No instanceId provided');
 
-    if (!await isAttachable({ modelId })) {
-        throw new Error('Model is not attachable')
+    if (!await isAttachable({ context, id })) {
+        throw new Error(`Cannot attach to ${context} ${id}`);
     }
     
-    const instanceCollection = db.collection<AttachableDoc>(modelId)
+    const instanceCollection = db.collection<AttachableDoc>(id)
     const attachmentId = new ObjectId()
 
     instanceCollection.updateOne(

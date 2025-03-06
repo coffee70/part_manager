@@ -18,16 +18,16 @@ export default function CreateComment() {
         commentsTextAreaRef: textareaRef
     } = useMoreContext();
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate } = useMutation({
         mutationFn: createComment,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: commentKeys.all(modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: commentKeys.all(context, id, instanceId) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setValue("");
             setShowActions(false);
         }
@@ -35,7 +35,8 @@ export default function CreateComment() {
 
     const handleSave = () => {
         mutate({
-            modelId,
+            context,
+            id,
             instanceId,
             text: value
         })

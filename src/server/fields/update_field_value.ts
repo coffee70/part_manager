@@ -6,7 +6,7 @@ import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 
 const InputSchema = z.object({
-    modelId: z.string(),
+    id: z.string(),
     instanceId: z.string().nullable().optional(),
     fieldId: z.string(),
     value: z.union([z.string(), z.array(z.string())]).optional(),
@@ -16,12 +16,12 @@ export async function updateFieldValue(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, instanceId, fieldId, value } = InputSchema.parse(input)
+    const { id, instanceId, fieldId, value } = InputSchema.parse(input)
 
     if (!instanceId) throw new Error('Cannot update field value without a model id')
     if (!value) return
 
-    const instanceCollection = db.collection<Valuable>(modelId)
+    const instanceCollection = db.collection<Valuable>(id)
 
     await instanceCollection.updateOne(
         { 

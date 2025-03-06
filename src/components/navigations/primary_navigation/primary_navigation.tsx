@@ -26,7 +26,7 @@ export default function PrimaryNavigation() {
                 <PrimaryItem
                     id="routers_primary_navigation"
                     context="routers"
-                    href={"<ROUTER ROUTE HERE>"}
+                    href={router().routers().base()}
                 >
                     <RouteIcon size={24} selected={headSegment === "routers"} />
                 </PrimaryItem>

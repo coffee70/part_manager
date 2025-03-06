@@ -29,16 +29,20 @@ type Props = {
 export default function DeleteAttachment({ file, hovered }: Props) {
     const [openDelete, setOpenDelete] = React.useState<boolean>(false)
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
-        mutationFn: () => deleteAttachment({ modelId, instanceId, attachmentId: file._id }),
+        mutationFn: () => deleteAttachment({ 
+            id, 
+            instanceId, 
+            attachmentId: file._id 
+        }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: attachmentKeys.all(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: attachmentKeys.all(context, id, instanceId) });
             // updates the table view to show the updated at change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setOpenDelete(false);
         }
     })

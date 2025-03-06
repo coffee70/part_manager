@@ -11,46 +11,46 @@ import SummaryLinks from "@/components/summary/summary_links/summary_links";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
-import { instanceKeys, modelKeys } from '@/lib/query_keys';
+import { instanceKeys, contextKeys, modelKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
 import Edit from '@/components/summary/summary_actions/edit/edit';
 import { getInstance } from '@/server/instances/get_instance';
 import InstanceForm from './instance_form';
 import SummaryNumber from '@/components/summary/summary_title/summary_number';
-import { isAttachable } from '@/server/models/is_attachable';
-import { isLinkable } from '@/server/models/is_linkable';
-import { isCommentable } from '@/server/models/is_commentable';
-import { hasPriority } from '@/server/models/has_priority';
+import { isAttachable } from '@/server/contexts/is_attachable';
+import { isLinkable } from '@/server/contexts/is_linkable';
+import { isCommentable } from '@/server/contexts/is_commentable';
+import { hasPriority } from '@/server/contexts/has_priority';
 import More from '../summary/summary_actions/more/more';
 import { MoreProvider } from '../summary/summary_actions/more/more_context';
 import Step from '@/components/summary/summary_actions/step/step';
 
 export default function SummaryContainer() {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const { data: instance, isError, isPending } = useQuery({
-        queryKey: instanceKeys.id(modelId, instanceId),
-        queryFn: () => getInstance({ modelId, instanceId }),
+        queryKey: instanceKeys.id(context, id, instanceId),
+        queryFn: () => getInstance({ id, instanceId }),
     })
 
     const { data: attachable } = useQuery({
-        queryKey: modelKeys.attachable(modelId),
-        queryFn: () => isAttachable({ modelId }),
+        queryKey: contextKeys.attachable(context, id),
+        queryFn: () => isAttachable({ context, id }),
     })
 
     const { data: linkable } = useQuery({
-        queryKey: modelKeys.linkable(modelId),
-        queryFn: () => isLinkable({ modelId }),
+        queryKey: contextKeys.linkable(context, id),
+        queryFn: () => isLinkable({ context, id }),
     })
 
     const { data: commentable } = useQuery({
-        queryKey: modelKeys.commentable(modelId),
-        queryFn: () => isCommentable({ modelId }),
+        queryKey: contextKeys.commentable(context, id),
+        queryFn: () => isCommentable({ context, id }),
     })
 
     const { data: priority } = useQuery({
-        queryKey: modelKeys.hasPriority(modelId),
-        queryFn: () => hasPriority({ modelId }),
+        queryKey: contextKeys.hasPriority(context, id),
+        queryFn: () => hasPriority({ context, id }),
     })
 
     if (isPending) return <SummarySkeleton />
@@ -69,12 +69,12 @@ export default function SummaryContainer() {
                     </InstanceForm>
                     <More />
                     {priority && <Priority priority={instance.priority} />}
-                    {instance.step && (
+                    {/* {instance.step && (
                         <Step
                             step={instance.step}
                             targetSteps={instance.targetSteps}
                         />
-                    )}
+                    )} */}
                 </SummaryToolbar>
                 <SummarySections values={instance.values} />
                 <SummaryNotes initialValue={instance.notes} />

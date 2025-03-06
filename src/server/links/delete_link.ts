@@ -6,7 +6,7 @@ import { getCurrentSession } from "../auth/get_current_session";
 import { z } from "zod";
 
 const InputSchema = z.object({
-    modelId: z.string(),
+    id: z.string(),
     instanceId: z.string().nullable().optional(),
     linkId: z.string(),
 })
@@ -15,10 +15,10 @@ export async function deleteLink(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, instanceId, linkId } = InputSchema.parse(input);
-    if (!instanceId) throw new Error(`No modelId provided`);
+    const { id, instanceId, linkId } = InputSchema.parse(input);
+    if (!instanceId) throw new Error(`No instanceId provided`);
 
-    const instanceCollection = db.collection<LinkableDoc>(modelId);
+    const instanceCollection = db.collection<LinkableDoc>(id);
     const instance = await instanceCollection.findOne({ _id: new ObjectId(instanceId) });
     if (!instance) throw new Error(`Instance not found`);
 
@@ -33,11 +33,11 @@ export async function deleteLink(input: z.input<typeof InputSchema>) {
     );
 
     // remove the link on the target
-    const linkedCollection = db.collection<LinkableDoc>(link.modelId);
+    const linkedCollection = db.collection<LinkableDoc>(link.contextId);
     await linkedCollection.updateOne(
         { _id: new ObjectId(link.instanceId) },
-        { $pull: { links: { modelId, instanceId } } }
+        { $pull: { links: { contextId: link.contextId, instanceId } } }
     );
 
-    return { linkModelId: link.modelId, linkInstanceId: link.instanceId };
+    return { linkContextId: link.contextId, linkInstanceId: link.instanceId };
 }

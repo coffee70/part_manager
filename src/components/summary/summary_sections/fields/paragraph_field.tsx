@@ -43,7 +43,7 @@ export default function ParagraphField({ field }: Props) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
             // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(id) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setIsEditing(false);
         }
     })
@@ -51,7 +51,7 @@ export default function ParagraphField({ field }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId: id,
+            id,
             instanceId,
             fieldId: field._id,
             value

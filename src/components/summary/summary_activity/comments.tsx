@@ -12,11 +12,11 @@ import Comment from './comment';
 
 export default function Comments() {
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const { data, isPending, isError } = useQuery({
-        queryKey: commentKeys.all(modelId, instanceId),
-        queryFn: () => getComments({ modelId, instanceId }),
+        queryKey: commentKeys.all(context, id, instanceId),
+        queryFn: () => getComments({ context, id, instanceId }),
     })
 
     return (

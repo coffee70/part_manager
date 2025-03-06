@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { priorities, Priority, Values } from "@/types/collections"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { instanceKeys, modelKeys } from '@/lib/query_keys';
+import { contextKeys, instanceKeys, modelKeys } from '@/lib/query_keys';
 import Fields from '@/components/models/fields';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getModel } from '@/server/models/get_model';
@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
 import { Textarea } from '@/components/ui/fields/textarea';
 import { useRouter } from 'next/navigation';
+import { getContext } from '@/server/contexts/get_context';
 
 type Props = {
     instance?: {
@@ -36,15 +37,18 @@ type AttributeState = {
 
 export default function InstanceForm({ instance, children }: Props) {
     const router = useRouter();
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
-    const { data: model } = useQuery({
-        queryKey: modelKeys.id(modelId),
-        queryFn: () => getModel({ modelId }),
+    const { data: contextImpl } = useQuery({
+        queryKey: contextKeys.id(context, id),
+        queryFn: () => getContext({
+            context,
+            id,
+        }),
     })
 
-    const title = instance ? `Edit Instance: ${model?.name}` : `Create Instance: ${model?.name}`;
-    const description = instance ? `Edit existing instance; ${model?.name}` : `Create a new instance; ${model?.name}`;
+    const title = instance ? `Edit Instance: ${contextImpl?.name}` : `Create Instance: ${contextImpl?.name}`;
+    const description = instance ? `Edit existing instance; ${contextImpl?.name}` : `Create a new instance; ${contextImpl?.name}`;
 
     const queryClient = useQueryClient();
 
@@ -66,7 +70,7 @@ export default function InstanceForm({ instance, children }: Props) {
         onSuccess: ({ success, data }) => {
             if (success) {
                 if (data?.redirect) router.push(data.redirect)
-                queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
                 setOpen(false)
             }
         }
@@ -83,7 +87,8 @@ export default function InstanceForm({ instance, children }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         mutate({
-            modelId,
+            context,
+            id,
             instanceId: instance?._id,
             values: fieldState,
             ...attributeState
@@ -120,15 +125,18 @@ export default function InstanceForm({ instance, children }: Props) {
                             onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
                             error={data?.fieldErrors?.number}
                         />
-                        {model?.priority && <Select
-                            id='priority'
-                            label='Priority'
-                            description='The priority of this instance'
-                            options={[...priorities]}
-                            value={attributeState.priority}
-                            onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
-                            error={data?.fieldErrors?.priority}
-                        />}
+                        {contextImpl
+                            && 'priority' in contextImpl
+                            && contextImpl.priority === true
+                            && <Select
+                                id='priority'
+                                label='Priority'
+                                description='The priority of this instance'
+                                options={[...priorities]}
+                                value={attributeState.priority}
+                                onChange={(v) => setAttributeState({ ...attributeState, priority: v as Priority })}
+                                error={data?.fieldErrors?.priority}
+                            />}
                         <Textarea
                             id='dialog-notes'
                             label='Notes'

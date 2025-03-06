@@ -10,7 +10,7 @@ import { getAttachments } from '@/server/attachments/get_attachments';
 import { useMoreContext } from '../summary_actions/more/more_context';
 
 export default function SummaryAttachments() {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const {
         attachmentsInputRef: inputRef,
@@ -21,8 +21,8 @@ export default function SummaryAttachments() {
     }
 
     const { data: attachments } = useQuery({
-        queryKey: attachmentKeys.all(modelId, instanceId),
-        queryFn: () => getAttachments({ modelId, instanceId }),
+        queryKey: attachmentKeys.all(context, id, instanceId),
+        queryFn: () => getAttachments({ context, id, instanceId }),
     })
 
     return (

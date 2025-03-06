@@ -4,14 +4,14 @@ import SummaryLink from "./summary_link"
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
-import { linkKeys, modelKeys } from "@/lib/query_keys";
+import { linkKeys, contextKeys } from "@/lib/query_keys";
 import { getLinks } from "@/server/links/get_links";
 import AddLink from "./add_link";
-import { getModels } from "@/server/models/get_models";
+import { getContexts } from "@/server/contexts/get_contexts";
 import { useMoreContext } from "../summary_actions/more/more_context";
 
 export default function SummaryLinks() {
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const {
         linkOpen: open,
@@ -23,22 +23,22 @@ export default function SummaryLinks() {
         isPending: linksPending,
         isError: linksError
     } = useQuery({
-        queryKey: linkKeys.all(modelId, instanceId),
-        queryFn: () => getLinks({ modelId, instanceId }),
+        queryKey: linkKeys.all(context, id, instanceId),
+        queryFn: () => getLinks({ context, id, instanceId }),
     })
 
     const {
-        data: models,
-        isPending: modelsPending,
-        isError: modelsError
+        data: contexts,
+        isPending: contextsPending,
+        isError: contextsError
     } = useQuery({
-        queryKey: modelKeys.all(),
-        queryFn: () => getModels(),
+        queryKey: contextKeys.all(context),
+        queryFn: () => getContexts({ context }),
     })
 
-    if (linksPending || modelsPending) return <div>Loading...</div>
+    if (linksPending || contextsPending) return <div>Loading...</div>
 
-    if (linksError || modelsError) return <div>Error...</div>
+    if (linksError || contextsError) return <div>Error...</div>
 
     return (
         <>
@@ -49,14 +49,14 @@ export default function SummaryLinks() {
 
             <SummaryBase title='Links' action={() => setOpen(true)} label="Add Link">
                 <div className='flex flex-col space-y-2'>
-                    {models.map(model => {
-                        const filteredLinks = links.filter(link => link.modelId === model._id)
+                    {contexts.map(context => {
+                        const filteredLinks = links.filter(link => link.contextId === context._id)
                         if (filteredLinks.length === 0) return null
                         return (
-                            <div key={model._id}>
-                                <div className="text-sm font-bold">{model.name}</div>
+                            <div key={context._id}>
+                                <div className="text-sm font-bold">{context.name}</div>
                                 <div className='flex flex-col'>
-                                    {links.filter(link => link.modelId === model._id).map(link => (
+                                    {links.filter(link => link.contextId === context._id).map(link => (
                                         <SummaryLink key={link._id} link={link} />
                                     ))}
                                 </div>

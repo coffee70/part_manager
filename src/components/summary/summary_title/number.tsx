@@ -58,7 +58,7 @@ export default function Number({ initialValue }: Props) {
 
     const [value, setValue] = React.useState(initialValue ?? '');
 
-    const { modelId, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const { isEditing, setIsEditing, inputRef } = useIsEditing();
 
@@ -68,8 +68,8 @@ export default function Number({ initialValue }: Props) {
         mutationFn: updateNumber,
         onSuccess: ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
-                queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+                queryClient.invalidateQueries({ queryKey: instanceKeys.id(context, id, instanceId) })
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
                 setIsEditing(false);
             }
         }
@@ -78,7 +78,7 @@ export default function Number({ initialValue }: Props) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         mutate({
-            modelId,
+            id,
             instanceId,
             number: value
         })

@@ -17,7 +17,7 @@ export default function PriorityFilter() {
 
     const initialValue = searchParams.get('priority');
 
-    const { modelId } = useInstanceURL();
+    const { id } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const handlePriorityChange = (label: string) => {
@@ -27,7 +27,7 @@ export default function PriorityFilter() {
         } else {
             params.set('priority', label);
         }
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", id) });
         replace(`${pathname}?${params.toString()}`);
     }
 

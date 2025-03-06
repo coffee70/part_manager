@@ -5,8 +5,8 @@ export const sectionKeys = {
 }
 
 export const instanceKeys = {
-    all: (modelId: string) => ['instances', modelId],
-    id: (modelId: string, instanceId?: string | null) => [...instanceKeys.all(modelId), instanceId]
+    all: (context: Context, id: string | null) => ['instances', context, id],
+    id: (context: Context, id: string | null, instanceId?: string | null) => [...instanceKeys.all(context, id), instanceId]
 }
 
 export const userKeys = {
@@ -16,12 +16,12 @@ export const userKeys = {
 }
 
 export const commentKeys = {
-    all: (modelId: string, instanceId?: string | null) => ['comments', modelId, instanceId],
+    all: (context: Context, id: string, instanceId?: string | null) => ['comments', context, id, instanceId],
 }
 
 export const linkKeys = {
-    all: (modelId: string, instanceId?: string | null) => ['links', modelId, instanceId],
-    one: (modelId: string, linkId: string, instanceId?: string | null, ) => [...linkKeys.all(modelId, instanceId), linkId]
+    all: (context: Context, id: string, instanceId?: string | null) => ['links', context, id, instanceId],
+    one: (context: Context, id: string, linkId: string, instanceId?: string | null) => [...linkKeys.all(context, id, instanceId), linkId]
 }
 
 export const modelKeys = {
@@ -51,8 +51,8 @@ export const contextKeys = {
 }
 
 export const attachmentKeys = {
-    all: (modelId: string, instanceId?: string | null) => ['attachments', modelId, instanceId],
-    one: (modelId: string, instanceId: string, attachmentId: string) => [...attachmentKeys.all(modelId, instanceId), attachmentId]
+    all: (context: Context, id: string, instanceId?: string | null) => ['attachments', context, id, instanceId],
+    one: (context: Context, id: string, instanceId: string, attachmentId: string) => [...attachmentKeys.all(context, id, instanceId), attachmentId]
 }
 
 export const routeKeys = {

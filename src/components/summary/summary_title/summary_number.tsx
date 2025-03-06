@@ -1,8 +1,8 @@
 import { Breadcrumb } from "@/components/ui/breadcrumb"
 import Number from "./number";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
-import { modelKeys } from "@/lib/query_keys";
-import { getModel } from "@/server/models/get_model";
+import { contextKeys } from "@/lib/query_keys";
+import { getContext } from "@/server/contexts/get_context";
 import { useQuery } from "@tanstack/react-query";
 
 type Props = {
@@ -14,20 +14,20 @@ type Props = {
 }
 
 export default function SummaryNumber({ number, items }: Props) {
-    const { modelId } = useInstanceURL();
+    const { context, id } = useInstanceURL();
 
-    const { data: model } = useQuery({
-        queryKey: modelKeys.id(modelId),
-        queryFn: () => getModel({ modelId }),
+    const { data: contextImpl } = useQuery({
+        queryKey: contextKeys.id(context, id),
+        queryFn: () => getContext({ context, id }),
     })
 
     return (
         <div className="flex items-center space-x-4">
-            {model && <div
+            {contextImpl && <div
                 className="w-8 h-8 bg-primary rounded-full ring ring-primary ring-offset-2"
                 style={{
-                    '--tw-ring-color': model.color,
-                    backgroundColor: model.color,
+                    '--tw-ring-color': contextImpl.color,
+                    backgroundColor: contextImpl.color,
                 } as React.CSSProperties}
             />}
             <div className="flex flex-col">

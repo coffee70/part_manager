@@ -17,8 +17,8 @@ export default function Priority({ priority }: { priority: Priority }) {
     const { mutate } = useMutation({
         mutationFn: updatePriority,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.id(modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(modelId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) })
         }
     })
 
