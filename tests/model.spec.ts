@@ -74,33 +74,21 @@ test('models', async ({ page }) => {
   await page.getByLabel('Edit Model').getByText('Priority', { exact: true }).click();
   await page.getByRole('button', { name: 'Save' }).click();
 
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
-        - table:
-          - rowgroup:
-            - row "Color Name Attachments Links Comments Priority":
-              - cell "Color"
-              - cell "Name"
-              - cell "Attachments"
-              - cell "Links"
-              - cell "Comments"
-              - cell "Priority"
-              - cell
-          - rowgroup:
-            - row "Models Test":
-              - cell
-              - cell "Models Test"
-              - cell:
-                - img
-              - cell:
-                - img
-              - cell:
-                - img
-              - cell:
-                - img
-              - cell:
-                - button:
-                  - img
-        `);
+  await expect(page.getByRole('table')).toContainText('Color');
+  await expect(page.getByRole('table')).toContainText('Name');
+  await expect(page.getByRole('table')).toContainText('Attachments');
+  await expect(page.getByRole('table')).toContainText('Links');
+  await expect(page.getByRole('table')).toContainText('Comments');
+  await expect(page.getByRole('table')).toContainText('Priority');
+
+  const modelsTestRow = page.getByRole('row', { name: 'Models Test' });
+  await expect(modelsTestRow).toBeVisible();
+  await expect(modelsTestRow.getByRole('cell').nth(1)).toHaveText('Models Test');
+  await expect(page.getByTestId('attachable-Models Test')).toBeVisible();
+  await expect(page.getByTestId('linkable-Models Test')).toBeVisible();
+  await expect(page.getByTestId('commentable-Models Test')).toBeVisible();
+  await expect(page.getByTestId('priority-Models Test')).toBeVisible();
+
   await page.getByRole('row', { name: 'Models Test' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   await page.getByRole('textbox').fill('Models Test Edited');
@@ -110,29 +98,21 @@ test('models', async ({ page }) => {
   await page.getByLabel('Edit Model').getByText('Priority', { exact: true }).click();
   await modelFormColor(page, 11).click();
   await page.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
-        - table:
-          - rowgroup:
-            - row "Color Name Attachments Links Comments Priority":
-              - cell "Color"
-              - cell "Name"
-              - cell "Attachments"
-              - cell "Links"
-              - cell "Comments"
-              - cell "Priority"
-              - cell
-          - rowgroup:
-            - row "Models Test Edited":
-              - cell
-              - cell "Models Test Edited"
-              - cell
-              - cell
-              - cell
-              - cell
-              - cell:
-                - button:
-                  - img
-        `);
+
+  await expect(page.getByRole('table')).toContainText('Color');
+  await expect(page.getByRole('table')).toContainText('Name');
+  await expect(page.getByRole('table')).toContainText('Attachments');
+  await expect(page.getByRole('table')).toContainText('Links');
+  await expect(page.getByRole('table')).toContainText('Comments');
+  await expect(page.getByRole('table')).toContainText('Priority');
+
+  const modelsTestEditedRow = page.getByRole('row', { name: 'Models Test Edited' });
+  await expect(modelsTestEditedRow).toBeVisible();
+  await expect(modelsTestEditedRow.getByRole('cell').nth(1)).toHaveText('Models Test Edited');
+  await expect(page.getByTestId('attachable-Models Test Edited')).not.toBeVisible();
+  await expect(page.getByTestId('linkable-Models Test Edited')).not.toBeVisible();
+  await expect(page.getByTestId('commentable-Models Test Edited')).not.toBeVisible();
+  await expect(page.getByTestId('priority-Models Test Edited')).not.toBeVisible();
 
   // create Models Test instance
   await page.getByRole('link', { name: 'Models Test Edited' }).click();

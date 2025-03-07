@@ -6,11 +6,11 @@ import { AppBar } from '@/components/ui/app_bar';
 import { useQuery } from "@tanstack/react-query";
 import { getSections } from "@/server/sections/get_sections";
 import { useAdminURL } from '@/hooks/url_metadata.hook';
-import { contextKeys, modelKeys, sectionKeys } from '@/lib/query_keys';
+import { contextKeys, sectionKeys } from '@/lib/query_keys';
 import { PageTitle } from '@/components/ui/page_title';
 import { TitleFieldIcon } from '@/components/ui/icons/icons';
 import { SectionProvider } from './section.context';
-import ModelSelect from '@/components/fields/model_select';
+import ContextSelect from '@/components/fields/context_select';
 import { getContext } from '@/server/contexts/get_context';
 
 const Loading = () => <div>Loading...</div>;
@@ -41,7 +41,7 @@ export default function Sections() {
                     icon={<TitleFieldIcon size={50} />}
                 />
                 <div className='flex items-center space-x-4'>
-                    <ModelSelect />
+                    <ContextSelect />
                     <AddSection />
                 </div>
             </AppBar>

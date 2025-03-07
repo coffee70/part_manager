@@ -50,22 +50,22 @@ export default function Models() {
                                 <TableCell>{model.name}</TableCell>
                                 <TableCell>
                                     {model.attachable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`attachable-${model.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell>
                                     {model.linkable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`linkable-${model.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell>
                                     {model.commentable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`commentable-${model.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell>
                                     {model.priority && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`priority-${model.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell className="flex justify-end">

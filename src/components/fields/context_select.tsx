@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 import { getContext } from '@/server/contexts/get_context';
 import { getContexts } from '@/server/contexts/get_contexts';
 
-export default function ModelSelect() {
+export default function ContextSelect() {
     const { context, id } = useAdminURL();
 
     const { data: contextImpl } = useQuery({
@@ -37,7 +37,11 @@ export default function ModelSelect() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button id='model-select' variant='secondary' className='justify-between space-x-2 min-w-44'>
+                <Button 
+                    id={`${context.slice(0, -1)}-select`} 
+                    variant='secondary' 
+                    className='justify-between space-x-2 min-w-44'
+                >
                     <div className='flex items-center space-x-2'>
                         <div className='w-4 h-4 rounded-full' style={{ backgroundColor: contextImpl?.color }} />
                         <span>{contextImpl?.name}</span>

@@ -31,7 +31,7 @@ export default function DeleteInstance({ id: instanceId }: Props) {
     const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
-        mutationFn: () => deleteInstance({ id, instanceId, urlInstanceId }),
+        mutationFn: () => deleteInstance({ context, id, instanceId, urlInstanceId }),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
         }

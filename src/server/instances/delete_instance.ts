@@ -1,5 +1,5 @@
 'use server'
-import { AttachableDoc, InstanceDoc, LinkableDoc } from "@/types/collections";
+import { AttachableDoc, InstanceDoc, LinkableDoc, contexts } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/db";
@@ -10,6 +10,7 @@ import { z } from "zod";
 import { router } from "@/lib/url";
 
 const InputSchema = z.object({
+    context: z.enum(contexts),
     id: z.string(),
     instanceId: z.string().nullable().optional(),
     urlInstanceId: z.string().nullable().optional(),
@@ -21,7 +22,7 @@ export async function deleteInstance(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, instanceId, urlInstanceId } = InputSchema.parse(input);
+    const { context, id, instanceId, urlInstanceId } = InputSchema.parse(input);
 
     if (!instanceId) throw new Error('Instance ID is required');
 
@@ -56,6 +57,6 @@ export async function deleteInstance(input: z.input<typeof InputSchema>) {
     await instanceCollection.deleteOne({ _id: new ObjectId(instanceId) });
 
     if (urlInstanceId === instanceId) {
-        redirect(router().models().instances().model(id));
+        redirect(router().context(context).instances().context(id));
     }
 }

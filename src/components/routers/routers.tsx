@@ -49,17 +49,17 @@ export default function Routers() {
                                 <TableCell>{router.name}</TableCell>
                                 <TableCell>
                                     {router.attachable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`attachable-${router.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell>
                                     {router.linkable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`linkable-${router.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell>
                                     {router.commentable && (
-                                        <CheckIcon size={20} />
+                                        <CheckIcon size={20} data-testid={`commentable-${router.name}`} />
                                     )}
                                 </TableCell>
                                 <TableCell className="flex justify-end">

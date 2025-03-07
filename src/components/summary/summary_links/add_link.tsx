@@ -74,6 +74,9 @@ export default function AddLink({ open, onOpenChange }: Props) {
         });
     }
 
+    const contextLabel = context.slice(0, -1).charAt(0).toUpperCase() + context.slice(0, -1).slice(1);
+    const contextName = context.slice(0, -1);
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="min-w-[650px]">
@@ -94,15 +97,15 @@ export default function AddLink({ open, onOpenChange }: Props) {
                             <AlertDescription>{data.error}</AlertDescription>
                         </Alert>}
                         <Select
-                            label={context.charAt(0).toUpperCase() + context.slice(1)}
-                            description={`The ${context} you want to link from.`}
+                            label={contextLabel}
+                            description={`The ${contextName} you want to link from.`}
                             options={linkableContexts.map(ctx => ctx.name)}
                             value={idToName[linkedContextId]}
                             onChange={(v) => setLinkedContextId(nameToId[v as string])}
                         />
                         <Select
                             label="Number"
-                            description={`The number of the ${context} you want to link from.`}
+                            description={`The number of the ${contextName} you want to link from.`}
                             options={instances.map(instance => instance.number)}
                             value={linkedInstanceNumber}
                             onChange={(v) => setLinkedInstanceNumber(v as string)}
