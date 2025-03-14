@@ -1,19 +1,20 @@
 'use client'
 import React from 'react'
-import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuPortal } from '@/components/ui/dropdown-menu'
 import MoreButton from './more_button'
 import { useMoreContext } from './more_context';
-import { LinkIcon, MessageCircleIcon, PaperclipIcon } from 'lucide-react';
+import { HammerIcon, LinkIcon, MessageCircleIcon, PaperclipIcon, RouteIcon, CopyIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { contextKeys } from '@/lib/query_keys';
+import { contextKeys, routeKeys } from '@/lib/query_keys';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { isAttachable } from '@/server/contexts/is_attachable';
 import { isLinkable } from '@/server/contexts/is_linkable';
 import { isCommentable } from '@/server/contexts/is_commentable';
+import { getRoute } from '@/server/routes/get_route';
 
 export default function More() {
 
-    const { context, id } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const { data: attachable } = useQuery({
         queryKey: contextKeys.attachable(context, id),
@@ -28,6 +29,11 @@ export default function More() {
     const { data: commentable } = useQuery({
         queryKey: contextKeys.commentable(context, id),
         queryFn: () => isCommentable({ context, id }),
+    })
+
+    const { data: route } = useQuery({
+        queryKey: routeKeys.id(id, instanceId),
+        queryFn: () => getRoute({ modelId: id, instanceId }),
     })
 
     const {
@@ -51,14 +57,18 @@ export default function More() {
         }, 0);
     }
 
-    if (!attachable && !linkable && !commentable) return null;
+    const handleAddRoute = () => {
+        console.log('add route');
+    }
+
+    if (!attachable && !linkable && !commentable && context === "routers") return null;
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <MoreButton />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className='w-48'>
                 <DropdownMenuGroup>
                     {attachable && <DropdownMenuItem onClick={handleAddAttachment}>
                         <div className='flex items-center space-x-2'>
@@ -78,6 +88,32 @@ export default function More() {
                             <span>Add Comment</span>
                         </div>
                     </DropdownMenuItem>}
+                    {context === "models" && !route && (
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger onClick={handleAddRoute}>
+                                <div className='flex items-center space-x-2'>
+                                    <RouteIcon className='h-4 w-4' />
+                                    <span>Add Route</span>
+                                </div>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuItem>
+                                        <div className='flex items-center space-x-2'>
+                                            <HammerIcon className='h-4 w-4' />
+                                            <span>From Builder</span>
+                                        </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <div className='flex items-center space-x-2'>
+                                            <CopyIcon className='h-4 w-4' />
+                                            <span>From Clone</span>
+                                        </div>
+                                    </DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                    )}
                 </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>

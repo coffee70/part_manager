@@ -210,6 +210,7 @@ export type InstanceDoc = {
     priority: Priority;
     notes: string;
     stepId?: string;
+    route?: Route;
     updatedAt: Date;
     updatedById: string;
 }

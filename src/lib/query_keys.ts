@@ -56,5 +56,5 @@ export const attachmentKeys = {
 }
 
 export const routeKeys = {
-    id: (modelId: string | null) => ['route', modelId],
+    id: (modelId: string, instanceId?: string | null) => ['route', modelId, instanceId],
 }
