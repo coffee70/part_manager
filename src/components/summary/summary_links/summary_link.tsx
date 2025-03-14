@@ -41,7 +41,7 @@ export default function SummaryLink({ link }: Props) {
                     />
                 </div>
                 <Link
-                    href={router().models().instances().instance(link.contextId, link.instanceId)}
+                    href={router().context(context).instances().instance(link.contextId, link.instanceId)}
                     className="text-primary cursor-pointer hover:underline hover:underline-offset-2"
                 >{link.number}</Link>
             </div>

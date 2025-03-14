@@ -1,10 +1,11 @@
 'use server'
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/db";
-import { InstanceDoc, LinkableDoc, ModelDoc, contexts } from "@/types/collections";
+import { InstanceDoc, LinkableDoc, contexts } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { z } from "zod";
 import { isLinkable } from "../contexts/is_linkable";
+import { getContext } from "../contexts/get_context";
 
 const InputSchema = z.object({
     context: z.enum(contexts),
@@ -38,20 +39,19 @@ export async function getLinks(input: z.input<typeof InputSchema>) {
         return [];
     }
 
-    const modelCollection = db.collection<ModelDoc>('models');
     const links = await Promise.all(document.links.map(async link => {
         const linkedInstanceCollection = db.collection<InstanceDoc>(link.contextId);
 
         const linkedInstance = await linkedInstanceCollection.findOne({ _id: new ObjectId(link.instanceId) });
         if (!linkedInstance) throw new Error('Linked instance not found');
 
-        const linkedModel = await modelCollection.findOne({ _id: new ObjectId(link.contextId) });
-        if (!linkedModel) throw new Error('Linked model not found');
+        const linkedContext = await getContext({ context, id: link.contextId });
+        if (!linkedContext) throw new Error('Linked context not found');
 
         return {
             ...link,
             number: linkedInstance.number,
-            color: linkedModel.color,
+            color: linkedContext.color,
         }
     }))
 
