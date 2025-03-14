@@ -15,6 +15,7 @@ test("test fields", async ({ page }) => {
   await page.getByRole('link', { name: 'Fields', exact: true }).click();
   await page.locator('#model-select').click();
   await page.getByRole('menuitem', { name: 'Fields Test' }).click();
+  await expect(page.getByRole('heading', { name: 'Fields Test' })).toBeVisible();
   await page.getByRole('button', { name: 'New Section' }).click();
   await page.getByLabel('Section Name').fill('Basic');
   await page.getByRole('button', { name: 'Save' }).click();

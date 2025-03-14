@@ -67,6 +67,7 @@ function SecondaryItem({
             href={href}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
+            aria-selected={selected}
         >
             {children}
         </Link>
@@ -114,6 +115,7 @@ function SecondaryGenericItem({
             href={href}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
+            aria-selected={selected}
         >
             <div className="flex flex-col items-center justify-center h-full w-6 relative">
                 {/* Vertical connecting line */}

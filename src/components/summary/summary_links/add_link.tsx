@@ -56,8 +56,8 @@ export default function AddLink({ open, onOpenChange }: Props) {
         mutationFn: createLink,
         onSuccess: ({ success, data }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
                 if (data) queryClient.invalidateQueries({ queryKey: linkKeys.all(context, data.linkedId, data.linkedInstanceId) })
+                queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
                 onOpenChange(false);
             }
         }

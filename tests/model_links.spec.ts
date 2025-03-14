@@ -47,20 +47,26 @@ test('links', async ({ page }) => {
 
     // go to target link model and expect source instance to be linked
     await page.getByRole('link', { name: 'TL-100' }).click();
-    await page.getByRole('link', { name: 'Links Test' }).waitFor({ timeout: 10000 });
+    await expect(page.getByRole('heading', { name: 'Models' })).toBeVisible(); // make sure we are on the models page
+    await expect(page.getByRole('textbox').nth(1)).toHaveValue('TL-100');
     await expect(page.getByRole('link', { name: 'Links Test' })).toBeVisible();
 
     // go back to source instance and expect link to be visible
     await page.getByRole('link', { name: 'Links Test' }).click();
+    await expect(page.getByRole('heading', { name: 'Models' })).toBeVisible(); // make sure we are on the models page
     await expect(page.getByRole('link', { name: 'TL-100' })).toBeVisible();
 
     // delete link
     await page.locator('#link-TL-100').hover();
     await page.locator('#delete-link-TL-100').click();
 
+    // refresh page
     await page.goto('/')
+    await expect(page.getByRole('heading', { name: 'Models' })).toBeVisible(); // make sure we are on the models page
+
     // create multiple linkable instances
     await page.getByRole('link', { name: 'Target Link' }).click();
+    await expect(page.getByRole('heading', { name: 'Models' })).toBeVisible(); // make sure we are on the models page
 
     await page.locator('[id="create-instance-Target\\ Link"]').click();
     await page.getByLabel('Number').fill('TL-200');
@@ -151,22 +157,18 @@ test('links', async ({ page }) => {
 
     // delete links
     await page.locator('#link-TL-200').hover();
-    await page.locator('#delete-link-TL-200').waitFor();
     await page.locator('#delete-link-TL-200').click();
-
+    await expect(page.getByRole('link', { name: 'TL-200' })).not.toBeVisible();
     await page.locator('#link-TL-300').hover();
-    await page.locator('#delete-link-TL-300').waitFor();
     await page.locator('#delete-link-TL-300').click();
-
+    await expect(page.getByRole('link', { name: 'TL-300' })).not.toBeVisible();
     await page.locator('#link-TL-400').hover();
-    await page.locator('#delete-link-TL-400').waitFor();
     await page.locator('#delete-link-TL-400').click();
-
+    await expect(page.getByRole('link', { name: 'TL-400' })).not.toBeVisible();
     await page.locator('#link-TL-500').hover();
-    await page.locator('#delete-link-TL-500').waitFor();
     await page.locator('#delete-link-TL-500').click();
-
+    await expect(page.getByRole('link', { name: 'TL-500' })).not.toBeVisible();
     await page.locator('#link-TL-600').hover();
-    await page.locator('#delete-link-TL-600').waitFor();
     await page.locator('#delete-link-TL-600').click();
+    await expect(page.getByRole('link', { name: 'TL-600' })).not.toBeVisible();
 });

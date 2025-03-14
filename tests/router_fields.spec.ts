@@ -19,6 +19,7 @@ test("test fields", async ({ page }) => {
   await page.getByRole('link', { name: 'Fields', exact: true }).click();
   await page.locator('#router-select').click();
   await page.getByRole('menuitem', { name: 'Fields Test' }).click();
+  await expect(page.getByRole('heading', { name: 'Fields Test' })).toBeVisible();
   await page.getByRole('button', { name: 'New Section' }).click();
   await page.getByLabel('Section Name').fill('Basic');
   await page.getByRole('button', { name: 'Save' }).click();
@@ -509,6 +510,7 @@ test("test fields", async ({ page }) => {
   await routersPrimaryNavigation(page).click();
   await expect(page.getByRole('heading', { name: 'Routers' })).toBeVisible();
   await page.getByRole('link', { name: 'Fields Test' }).click();
+  await expect(page.getByRole('link', { name: 'Fields Test' })).toHaveAttribute('aria-selected', 'true');
   await page.getByRole('button').nth(1).click();
   // fill in the number
   await page.getByLabel('Number', { exact: true }).fill('S-100');
