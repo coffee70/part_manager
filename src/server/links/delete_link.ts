@@ -36,7 +36,7 @@ export async function deleteLink(input: z.input<typeof InputSchema>) {
     const linkedCollection = db.collection<LinkableDoc>(link.contextId);
     await linkedCollection.updateOne(
         { _id: new ObjectId(link.instanceId) },
-        { $pull: { links: { contextId: link.contextId, instanceId } } }
+        { $pull: { links: { contextId: id, instanceId } } }
     );
 
     return { linkContextId: link.contextId, linkInstanceId: link.instanceId };
