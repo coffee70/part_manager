@@ -45,4 +45,57 @@ test('router attachments', async ({ page }) => {
 
     // close the attachment viewer
     await page.getByRole('button', { name: 'Close' }).click();
+
+    // check the attachment preview
+    await page.getByLabel('attachment_preview_A19464.pdf').getByRole('link').hover();
+    await expect(page.getByRole('main')).toContainText('A19464.pdf');
+
+    // upload multiple page attachment
+    await page.getByLabel('action_Attachments').click();
+    await page.locator('#upload-attachment-input').setInputFiles(path.join(ATTACHMENT_DIR, 'A19468.pdf'));
+
+    // check the attachment viewer
+    await page.getByLabel('attachment_preview_A19468.pdf').getByRole('link').click();
+    await expect(page.getByRole('heading')).toContainText('A19468.pdf');
+
+    // navigate through the pages
+    await expect(page.getByLabel('attachment_viewer_A19468.pdf').locator('span')).toContainText('1 / 3');
+    await expect(page.getByRole('button').first()).toBeDisabled();
+    await page.getByRole('button').nth(1).click();
+    await expect(page.getByLabel('attachment_viewer_A19468.pdf').locator('span')).toContainText('2 / 3');
+    await page.getByRole('button').nth(1).click();
+    await expect(page.getByLabel('attachment_viewer_A19468.pdf').locator('span')).toContainText('3 / 3');
+    await expect(page.getByRole('button').nth(1)).toBeDisabled();
+    await page.getByRole('button').first().click();
+    await expect(page.getByLabel('attachment_viewer_A19468.pdf').locator('span')).toContainText('2 / 3');
+    await page.getByRole('button').first().click();
+    await expect(page.getByLabel('attachment_viewer_A19468.pdf').locator('span')).toContainText('1 / 3');
+    await expect(page.getByRole('button').first()).toBeDisabled();
+
+    // download the attachment
+    const download2Promise = page.waitForEvent('download');
+    await page.getByRole('button').nth(2).click();
+    const download2 = await download2Promise;
+    expect(download2.suggestedFilename()).toBe('A19468.pdf');
+
+    // close the attachment viewer
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // check the attachment preview
+    await page.getByLabel('attachment_preview_A19468.pdf').getByRole('link').hover();
+    await expect(page.getByRole('main')).toContainText('A19468.pdf');
+
+    // delete both attachments
+    await page.getByLabel('attachment_preview_A19464.pdf').getByRole('link').hover();
+    await expect(page.getByRole('main')).toContainText('A19464.pdf');
+    await page.getByLabel('delete_attachment_A19464.pdf').click();
+    await page.getByRole('button', { name: 'Delete' }).click();
+    await page.getByLabel('attachment_preview_A19468.pdf').getByRole('link').hover();
+    await expect(page.getByRole('main')).toContainText('A19468.pdf');
+    await page.getByLabel('delete_attachment_A19468.pdf').click();
+    await page.getByRole('button', { name: 'Delete' }).click();
+
+    // check they were deleted
+    await expect(page.getByLabel('attachment_preview_A19464.pdf').getByRole('link')).not.toBeVisible();
+    await expect(page.getByLabel('attachment_preview_A19468.pdf').getByRole('link')).not.toBeVisible();
 }); 

@@ -5,6 +5,7 @@ import { routerFormColor, routersAdminPageNavigation, routersPrimaryNavigation }
 test("test fields", async ({ page }) => {
   await page.goto('/');
   await routersPrimaryNavigation(page).click();
+  await expect(page.getByRole('heading', { name: 'Routers' })).toBeVisible();
   await routersAdminPageNavigation(page).click();
   await page.getByRole('button', { name: 'New Router' }).click();
   await page.getByRole('textbox').fill('Fields Test');
@@ -506,6 +507,7 @@ test("test fields", async ({ page }) => {
   // create a Fields Test instance
   await page.goto('/');
   await routersPrimaryNavigation(page).click();
+  await expect(page.getByRole('heading', { name: 'Routers' })).toBeVisible();
   await page.getByRole('link', { name: 'Fields Test' }).click();
   await page.getByRole('button').nth(1).click();
   // fill in the number
@@ -678,6 +680,7 @@ test("test fields", async ({ page }) => {
   // confirm after reload the field changes persist
   await page.goto('/');
   await routersPrimaryNavigation(page).click();
+  await expect(page.getByRole('heading', { name: 'Routers' })).toBeVisible();
   await page.getByRole('link', { name: 'Fields Test' }).click();
   await page.getByRole('cell', { name: 'S-200' }).click();
   await expect(page.getByLabel('Text Field Edited:')).toHaveValue('something');
