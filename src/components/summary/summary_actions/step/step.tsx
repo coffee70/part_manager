@@ -10,6 +10,7 @@ import { updateStep } from "@/server/routes/update_step";
 import { getCurrentStep } from "@/server/routes/get_current_step";
 import { Skeleton } from "@/components/ui/skeleton";
 import { hasRoute } from "@/server/routes/has_route";
+import { getTargetSteps } from "@/server/routes/get_target_steps";
 
 export default function Step() {
     const { context, modelId, instanceId } = useInstanceURL();
@@ -28,6 +29,13 @@ export default function Step() {
         queryFn: () => getCurrentStep({ modelId, instanceId }),
         enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteData,
     });
+    
+    // Fetch possible target steps
+    const { data: targetSteps, isLoading: isLoadingTargetSteps } = useQuery({
+        queryKey: routeKeys.targetSteps(modelId, instanceId),
+        queryFn: () => getTargetSteps({ modelId, instanceId }),
+        enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteData,
+    });
 
     const { mutate } = useMutation({
         mutationFn: updateStep,
@@ -36,6 +44,7 @@ export default function Step() {
                 queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) });
                 queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
                 queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
             }
         }
     });
@@ -57,39 +66,40 @@ export default function Step() {
     if (!isLoadingHasRoute && !hasRouteData) return null;
     
     // Show loading state
-    if (isLoadingHasRoute || isLoadingCurrentStep) {
+    if (isLoadingHasRoute || isLoadingCurrentStep || isLoadingTargetSteps) {
         return <Skeleton className="h-8 w-24" />;
     }
 
     if (!currentStep) return null;
 
-    // Create step object from current step data
-    const step = {
-        id: currentStep._id,
-        name: currentStep.number,
-        type: "To-do" as StepType
-    };
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <StepButton step={step} />
+                <StepButton step={currentStep} />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                {/* <DropdownMenuGroup>
-                    {targetSteps.size > 0 ? Array.from(targetSteps).map((targetStep, index) => (
-                        <DropdownMenuItem
-                            key={index}
-                            onClick={() => handleStepChange(targetStep.id)}
-                        >
-                            <StepItem step={targetStep} />
-                        </DropdownMenuItem>
-                    )) : (
+                <DropdownMenuGroup>
+                    {targetSteps && targetSteps.length > 0 ? (
+                        targetSteps.map((targetStep, index) => (
+                            <DropdownMenuItem
+                                key={targetStep._id}
+                                onClick={() => handleStepChange(targetStep._id)}
+                            >
+                                <StepItem 
+                                    step={{
+                                        id: targetStep._id,
+                                        name: targetStep.number,
+                                        type: "To-do" as StepType
+                                    }} 
+                                />
+                            </DropdownMenuItem>
+                        ))
+                    ) : (
                         <DropdownMenuItem disabled>
                             There are no further steps
                         </DropdownMenuItem>
                     )}
-                </DropdownMenuGroup> */}
+                </DropdownMenuGroup>
             </DropdownMenuContent>
         </DropdownMenu>
     );

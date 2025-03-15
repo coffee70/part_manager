@@ -4,7 +4,7 @@ import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
 import { InstanceDoc, ModelDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
-
+import { getCurrentStep } from "../routes/get_current_step";
 const InputSchema = z.object({
     id: z.string(),
     searchParams: z.custom<SearchParams>().optional(),
@@ -15,7 +15,7 @@ const OutputSchema = z.array(z.object({
     number: z.string(),
     priority: z.enum(priorities).catch('Medium'),
     step: z.object({
-        id: z.string(),
+        _id: z.string(),
         name: z.string(),
         type: z.enum(stepTypes),
     }).optional(),
@@ -87,24 +87,16 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
         .aggregate(pipeline)
         .toArray();
 
-    const modelCollection = db.collection<ModelDoc>('models');
-
     const res = await Promise.all(instances.map(async instance => {
         const updatedBy = await usersCollection.findOne({ _id: instance.updatedById });
 
-        // const model = await modelCollection.findOne({ _id: new ObjectId(modelId) });
-        // if (!model) throw new Error('Model not found');
-        // let step: Node | undefined;
-        // if (model.route) {
-        //     step =
-        //         model.route.nodes.find(node => node.id === instance.stepId)
-        //         || model.route.nodes.find(node => node.id === model.route?.startEdge?.targetId);
-        // }
+        const currentStep = await getCurrentStep({ modelId: id, instanceId: instance._id.toString() });
 
         return {
             _id: instance._id.toString(),
             number: instance.number,
             priority: instance.priority,
+            step: currentStep,
             updatedAt: instance.updatedAt,
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
         }

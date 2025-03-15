@@ -7,7 +7,7 @@ import React from "react";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     step: {
-        id: string;
+        _id: string;
         name: string;
         type: StepType;
     };

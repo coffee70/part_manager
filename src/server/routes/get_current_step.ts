@@ -2,13 +2,19 @@
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc } from "@/types/collections";
+import { InstanceDoc, stepTypes, StepType } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
 
 const InputSchema = z.object({
   modelId: z.string(),
   instanceId: z.string().nullable(),
+});
+
+const OutputSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+  type: z.enum(stepTypes),
 });
 
 /**
@@ -59,10 +65,12 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
       instanceId: currentStepId
     });
 
-    return {
-      ...routerInstance,
-      routerId,
-    };
+    return OutputSchema.parse({
+      _id: routerInstance._id.toString(),
+      name: routerInstance.number,
+      // TODO: Remove this once we have a proper type for the step type
+      type: 'To-do' as StepType,
+    });
   } catch (error) {
     console.error("Error fetching current step:", error);
     throw new Error("Failed to fetch current step");

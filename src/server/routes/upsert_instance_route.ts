@@ -6,7 +6,7 @@ import { ActionState, validate } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
 import { InstanceDoc, StepType } from "@/types/collections";
 import { ObjectId } from "mongodb";
-import { START_NODE_ID } from "@/components/route_builder/types";
+import { Edge, START_NODE_ID } from "@/components/route_builder/types";
 
 const InputSchema = z.object({
   modelId: z.string(),
@@ -89,6 +89,32 @@ export async function upsertInstanceRoute(
   // If the instance doesn't have a stepId yet, use the first instance in the route
   const currentStepId = instance.route?.currentStepId || firstInstanceId;
 
+  // Create bidirectional edges - for each edge A→B, create a corresponding edge B→A
+  const bidirectionalEdges: Edge[] = [];
+  
+  // Process the original forward edges
+  route.forEach(edge => {
+    // Add the original forward edge
+    bidirectionalEdges.push({
+      id: edge.id,
+      sourceId: edge.sourceId,
+      targetId: edge.targetId,
+      sourcePosition: HandlePosition.BottomMiddle,
+      targetPosition: HandlePosition.TopMiddle,
+      path: ""
+    });
+    
+    // Create and add a backward edge (from target to source)
+    bidirectionalEdges.push({
+      id: `${edge.targetId}-${edge.sourceId}`, // Create a new unique ID for the reverse edge
+      sourceId: edge.targetId, // Reverse the source and target
+      targetId: edge.sourceId,
+      sourcePosition: HandlePosition.TopMiddle, // Reverse the positions too
+      targetPosition: HandlePosition.BottomMiddle,
+      path: ""
+    });
+  });
+
   // Create the route in the database
   // Convert route to a format that can be stored in the database
   const routeToStore = {
@@ -122,17 +148,8 @@ export async function upsertInstanceRoute(
       path: "", // This will be calculated on the client
     },
     
-    // Convert the simplified edges to the full Edge type, excluding the first edge
-    // as it's now handled by startEdge
-    edges: route.slice(1).map(edge => ({
-      id: edge.id,
-      sourceId: edge.sourceId,
-      targetId: edge.targetId,
-      // Add default values for required properties
-      sourcePosition: HandlePosition.BottomMiddle,
-      targetPosition: HandlePosition.TopMiddle,
-      path: "" // This will be calculated on the client
-    }))
+    // Use the bidirectional edges we created
+    edges: bidirectionalEdges
   };
 
   // Store the route with the instance
