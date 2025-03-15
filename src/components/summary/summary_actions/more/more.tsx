@@ -11,10 +11,13 @@ import { isAttachable } from '@/server/contexts/is_attachable';
 import { isLinkable } from '@/server/contexts/is_linkable';
 import { isCommentable } from '@/server/contexts/is_commentable';
 import { getRoute } from '@/server/routes/get_route';
+import Builder from '@/components/route_builder/list_view/builder';
 
 export default function More() {
-
     const { context, id, instanceId } = useInstanceURL();
+    
+    // Create a ref for the Builder's hidden trigger button
+    const builderTriggerRef = React.useRef<HTMLButtonElement>(null);
 
     const { data: attachable } = useQuery({
         queryKey: contextKeys.attachable(context, id),
@@ -61,61 +64,81 @@ export default function More() {
         console.log('add route');
     }
 
+    // Function to open the Builder dialog by clicking its hidden trigger
+    const handleOpenBuilder = () => {
+        builderTriggerRef.current?.click();
+    }
+
     if (!attachable && !linkable && !commentable && context === "routers") return null;
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <MoreButton />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-48'>
-                <DropdownMenuGroup>
-                    {attachable && <DropdownMenuItem onClick={handleAddAttachment}>
-                        <div className='flex items-center space-x-2'>
-                            <PaperclipIcon className='h-4 w-4' />
-                            <span>Add Attachment</span>
-                        </div>
-                    </DropdownMenuItem>}
-                    {linkable && <DropdownMenuItem onClick={handleAddLink}>
-                        <div className='flex items-center space-x-2'>
-                            <LinkIcon className='h-4 w-4' />
-                            <span>Add Link</span>
-                        </div>
-                    </DropdownMenuItem>}
-                    {commentable && <DropdownMenuItem onClick={handleAddComment}>
-                        <div className='flex items-center space-x-2'>
-                            <MessageCircleIcon className='h-4 w-4' />
-                            <span>Add Comment</span>
-                        </div>
-                    </DropdownMenuItem>}
-                    {context === "models" && !route && (
-                        <DropdownMenuSub>
-                            <DropdownMenuSubTrigger onClick={handleAddRoute}>
-                                <div className='flex items-center space-x-2'>
-                                    <RouteIcon className='h-4 w-4' />
-                                    <span>Add Route</span>
-                                </div>
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                                <DropdownMenuSubContent>
-                                    <DropdownMenuItem>
-                                        <div className='flex items-center space-x-2'>
-                                            <HammerIcon className='h-4 w-4' />
-                                            <span>From Builder</span>
-                                        </div>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <div className='flex items-center space-x-2'>
-                                            <CopyIcon className='h-4 w-4' />
-                                            <span>From Clone</span>
-                                        </div>
-                                    </DropdownMenuItem>
-                                </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                        </DropdownMenuSub>
-                    )}
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <Builder>
+                <button 
+                    ref={builderTriggerRef} 
+                    style={{ display: 'none' }} 
+                    aria-hidden="true"
+                >
+                    Open Builder
+                </button>
+            </Builder>
+
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <MoreButton />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className='w-48'>
+                    <DropdownMenuGroup>
+                        {attachable && <DropdownMenuItem onClick={handleAddAttachment}>
+                            <div className='flex items-center space-x-2'>
+                                <PaperclipIcon className='h-4 w-4' />
+                                <span>Add Attachment</span>
+                            </div>
+                        </DropdownMenuItem>}
+                        {linkable && <DropdownMenuItem onClick={handleAddLink}>
+                            <div className='flex items-center space-x-2'>
+                                <LinkIcon className='h-4 w-4' />
+                                <span>Add Link</span>
+                            </div>
+                        </DropdownMenuItem>}
+                        {commentable && <DropdownMenuItem onClick={handleAddComment}>
+                            <div className='flex items-center space-x-2'>
+                                <MessageCircleIcon className='h-4 w-4' />
+                                <span>Add Comment</span>
+                            </div>
+                        </DropdownMenuItem>}
+                        {context === "models" && !route && (
+                            <DropdownMenuSub>
+                                <DropdownMenuSubTrigger onClick={handleAddRoute}>
+                                    <div className='flex items-center space-x-2'>
+                                        <RouteIcon className='h-4 w-4' />
+                                        <span>Add Route</span>
+                                    </div>
+                                </DropdownMenuSubTrigger>
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubContent>
+                                        <DropdownMenuItem onSelect={(e) => {
+                                            e.preventDefault();
+                                            handleOpenBuilder();
+                                        }}>
+                                            <div className='flex items-center space-x-2'>
+                                                <HammerIcon className='h-4 w-4' />
+                                                <span>From Builder</span>
+                                            </div>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <div className='flex items-center space-x-2'>
+                                                <CopyIcon className='h-4 w-4' />
+                                                <span>From Clone</span>
+                                            </div>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
+                        )}
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </>
     )
 }
