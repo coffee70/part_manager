@@ -4,8 +4,7 @@ import { useBuilderContext } from "@/components/route_builder/builder.context";
 import { cn } from "@/lib/utils";
 import { ArrowBigDownIcon, ArrowBigLeftIcon, ArrowBigRightIcon, ArrowBigUpIcon, CirclePlusIcon } from "lucide-react";
 import { useHandlePosition } from "./handle_position.hook";
-import { HandlePosition } from "./types";
-import { START_NODE_ID } from "./start_node";
+import { HandlePosition, START_NODE_ID } from "./types";
 
 const getIcon = ({
     position,

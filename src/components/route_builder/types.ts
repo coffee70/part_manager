@@ -1,5 +1,6 @@
 import { StepType } from "@/types/collections";
-import { START_NODE_ID } from "./start_node";
+
+export const START_NODE_ID = "start" as const;
 
 export enum HandlePosition {
     TopLeft = "top-left",

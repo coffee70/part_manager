@@ -1,13 +1,12 @@
 'use client'
 import React from "react";
-import { Endpoint, Node, HandlePosition, Route, StartNode, Edge } from "./types";
+import { Endpoint, Node, HandlePosition, Route, StartNode, Edge, START_NODE_ID } from "./types";
 import { calculatePath } from "./edgelib/smooth_step";
 import { useQuery } from "@tanstack/react-query";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
 import { calculateNodePosition } from "./nodelib";
-import { START_NODE_ID } from "./start_node";
 import { useNotifications } from "./notifications/notification.hook";
 
 const START_EDGE_ID = 'start-edge';

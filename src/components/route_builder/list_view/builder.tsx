@@ -3,13 +3,17 @@ import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getRouters } from '@/server/routers/get_routers';
 import { routerKeys, instanceKeys } from '@/lib/query_keys';
 import { getInstances } from '@/server/instances/get_instances';
 import { RouteFormState, RouteRow, RouteEdge } from './types';
 import RouterSelector from './router_selector';
 import RouteSteps from './route_steps';
+import { upsertInstanceRoute } from '@/server/routes/upsert_instance_route';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 
 type Props = {
   children?: React.ReactNode;
@@ -17,7 +21,11 @@ type Props = {
 
 export default function Builder({ children }: Props) {
   const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   
+  // Get modelId and instanceId from URL
+  const { id: modelId, instanceId } = useInstanceURL();
+
   // Initialize with an empty form state
   const [formState, setFormState] = React.useState<RouteFormState>({
     routerId: null,
@@ -29,6 +37,8 @@ export default function Builder({ children }: Props) {
     id: crypto.randomUUID(), 
     instanceId: '' 
   }]);
+
+  const queryClient = useQueryClient();
 
   // Get all routers
   const { data: routers = [] } = useQuery({
@@ -42,6 +52,44 @@ export default function Builder({ children }: Props) {
     queryKey: instanceKeys.all('routers', formState.routerId || ''),
     queryFn: () => getInstances({ id: formState.routerId || '' }),
     enabled: !!formState.routerId && open
+  });
+
+  // Setup mutation for saving the route
+  const { mutate: saveRoute, isPending } = useMutation({
+    mutationFn: upsertInstanceRoute,
+    onSuccess: (data) => {
+      if (data.success) {
+        // On success, just close the dialog and invalidate queries
+        if (formState.routerId) {
+          queryClient.invalidateQueries({ queryKey: routerKeys.all() });
+          queryClient.invalidateQueries({ queryKey: instanceKeys.all('routers', formState.routerId) });
+          queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
+        }
+        
+        // Close dialog
+        setOpen(false);
+        
+        // Reset form
+        setFormState({
+          routerId: null,
+          route: []
+        });
+        
+        setRows([{ 
+          id: crypto.randomUUID(), 
+          instanceId: '' 
+        }]);
+        
+        // Clear any errors
+        setError(null);
+      } else {
+        // Display error message
+        setError(data.error || 'Failed to create route');
+      }
+    },
+    onError: (error) => {
+      setError(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
   });
 
   // Helper function to update form state from rows
@@ -82,6 +130,9 @@ export default function Builder({ children }: Props) {
       id: crypto.randomUUID(), 
       instanceId: '' 
     }]);
+    
+    // Clear any errors when router is changed
+    setError(null);
   };
 
   const handleRowsChange = (updatedRows: RouteRow[]) => {
@@ -129,15 +180,49 @@ export default function Builder({ children }: Props) {
   };
 
   const handleSubmit = () => {
-    // Submit the formState which now contains routerId and route edges
-    // Process could be added here to send data to the server
+    // Validate form state
+    if (!modelId) {
+      setError('Model ID is missing from URL');
+      return;
+    }
+    
+    if (!instanceId) {
+      setError('Instance ID is missing from URL');
+      return;
+    }
+    
+    if (!formState.routerId) {
+      setError('Please select a router');
+      return;
+    }
+    
+    if (formState.route.length === 0) {
+      setError('Please create at least one route connection');
+      return;
+    }
+    
+    // Submit the formState to the server
+    saveRoute({
+      modelId,
+      instanceId,
+      routerId: formState.routerId,
+      route: formState.route
+    });
+  };
+
+  // Reset error when dialog is closed
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) {
+      setError(null);
+    }
   };
 
   // Check if we have at least one complete edge
   const hasCompleteRoute = formState.route.length > 0;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -150,6 +235,14 @@ export default function Builder({ children }: Props) {
             </VisuallyHidden.Root>
           </DialogDescription>
         </DialogHeader>
+
+        {error && (
+          <Alert variant='destructive'>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <div className="space-y-6">
           <RouterSelector 
@@ -169,9 +262,9 @@ export default function Builder({ children }: Props) {
             type="submit" 
             className="w-full"
             onClick={handleSubmit}
-            disabled={!formState.routerId || !hasCompleteRoute}
+            disabled={!formState.routerId || !hasCompleteRoute || isPending}
           >
-            Create Route
+            {isPending ? 'Creating...' : 'Create Route'}
           </Button>
         </div>
       </DialogContent>

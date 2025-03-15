@@ -6,10 +6,8 @@ import { useBuilderContext } from "./builder.context";
 import { useObserver } from "./observer.hook";
 import { cva } from "class-variance-authority";
 import Handle from "./handle";
-import { HandlePosition, type StartNode } from "./types";
+import { HandlePosition, type StartNode, START_NODE_ID } from "./types";
 import { STAGE_BORDER_WIDTH } from "./stage";
-
-export const START_NODE_ID = "start";
 
 const startNodeVariants = cva(
     "absolute z-10 p-1 w-14 h-14 flex items-center justify-center bg-foreground border border-muted-foreground text-xs font-semibold rounded-full select-none",
