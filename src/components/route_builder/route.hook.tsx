@@ -21,12 +21,15 @@ export function useRoute() {
         notify,
     } = useNotifications();
 
+    // TODO: Update to use instance page and useInstanceURL for when you integrate
+    // with the instance page
     const { id } = useAdminURL();
 
     const { data: initialRoute } = useQuery({
-        queryKey: routeKeys.id(id),
+        queryKey: routeKeys.id(id || "", ""),
         queryFn: () => getRoute({
-            modelId: id ?? undefined,
+            modelId: id || "",
+            instanceId: ""
         })
     })
 

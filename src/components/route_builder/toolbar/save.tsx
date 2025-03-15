@@ -22,7 +22,7 @@ export default function Save() {
         mutationFn: upsertRoute,
         onSuccess: (data) => {
             if (data.success) {
-                queryClient.invalidateQueries({ queryKey: routeKeys.id(id) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.id(id ?? "", "") });
                 queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
                 setIsEditing(false);
                 notify({
