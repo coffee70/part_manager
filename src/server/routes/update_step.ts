@@ -25,10 +25,30 @@ export async function updateStep(
     if (!instanceId) throw new Error('Instance ID is required');
 
     const instanceCollection = db.collection<InstanceDoc>(modelId);
-
+    
+    // Get the instance to check if it has a route
+    const instance = await instanceCollection.findOne({ 
+        _id: new ObjectId(instanceId) 
+    });
+    
+    if (!instance) {
+        throw new Error('Instance not found');
+    }
+    
+    if (!instance.route) {
+        throw new Error('Instance does not have a route');
+    }
+    
+    // Update the currentStepId within the route object
     await instanceCollection.updateOne(
         { _id: new ObjectId(instanceId) },
-        { $set: { stepId } }
+        { 
+            $set: { 
+                "route.currentStepId": stepId,
+                updatedAt: new Date(),
+                updatedById: user._id
+            } 
+        }
     );
 
     return { success: true };

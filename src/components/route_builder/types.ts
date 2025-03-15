@@ -49,6 +49,8 @@ export type StartNode = {
 }
 
 export type Route = {
+    routerId: string;
+    currentStepId: string;
     startEdge?: Edge;
     startNode?: StartNode;
     nodes: Node[];

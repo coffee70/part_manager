@@ -85,9 +85,17 @@ export async function upsertInstanceRoute(
     return { success: false, error: "Cannot determine the first instance in the route" };
   }
 
+  // Determine the current step ID (stepId)
+  // If the instance doesn't have a stepId yet, use the first instance in the route
+  const currentStepId = instance.route?.currentStepId || firstInstanceId;
+
   // Create the route in the database
   // Convert route to a format that can be stored in the database
   const routeToStore = {
+    // Include routerId and currentStepId in the route object according to the new schema
+    routerId: routerId,
+    currentStepId: currentStepId,
+    
     // Create nodes for each unique instance ID used in the route
     nodes: routerInstanceIdsArray.map(instanceId => ({
       id: instanceId,
@@ -128,11 +136,11 @@ export async function upsertInstanceRoute(
   };
 
   // Store the route with the instance
+  // We no longer need to separately store routerId and stepId as they're part of the route object
   await instanceCollection.updateOne(
     { _id: new ObjectId(instanceId) },
     { 
       $set: { 
-        routerId: routerId,
         route: routeToStore,
         updatedAt: new Date(),
         updatedById: user._id

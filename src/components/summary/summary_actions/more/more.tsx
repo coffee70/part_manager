@@ -60,16 +60,12 @@ export default function More() {
         }, 0);
     }
 
-    const handleAddRoute = () => {
-        console.log('add route');
-    }
-
     // Function to open the Builder dialog by clicking its hidden trigger
     const handleOpenRouteListView = () => {
         routeListViewTriggerRef.current?.click();
     }
 
-    if (!attachable && !linkable && !commentable && (context === "routers" || route !== undefined)) return null;
+    if (!attachable && !linkable && !commentable && (context === "routers" || route)) return null;
 
     return (
         <>
@@ -109,7 +105,7 @@ export default function More() {
                         </DropdownMenuItem>}
                         {context === "models" && !route && (
                             <DropdownMenuSub>
-                                <DropdownMenuSubTrigger onClick={handleAddRoute}>
+                                <DropdownMenuSubTrigger>
                                     <div className='flex items-center space-x-2'>
                                         <RouteIcon className='h-4 w-4' />
                                         <span>Add Route</span>

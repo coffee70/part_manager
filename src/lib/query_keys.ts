@@ -57,4 +57,6 @@ export const attachmentKeys = {
 
 export const routeKeys = {
     id: (modelId: string, instanceId?: string | null) => ['route', modelId, instanceId],
+    currentStep: (modelId: string, instanceId?: string | null) => ['route', 'currentStep', modelId, instanceId],
+    hasRoute: (modelId: string, instanceId?: string | null) => ['route', 'hasRoute', modelId, instanceId],
 }

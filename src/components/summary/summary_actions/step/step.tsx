@@ -3,44 +3,72 @@ import StepButton from "./step_button";
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import StepItem from "./step_item";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { upsertInstance } from "@/server/instances/upsert_instance";
-import { instanceKeys } from "@/lib/query_keys";
+import { instanceKeys, routeKeys } from "@/lib/query_keys";
 import { updateStep } from "@/server/routes/update_step";
+import { getCurrentStep } from "@/server/routes/get_current_step";
+import { Skeleton } from "@/components/ui/skeleton";
+import { hasRoute } from "@/server/routes/has_route";
 
-type Props = {
-    step: {
-        id: string;
-        name: string;
-        type: StepType;
-    };
-    targetSteps: Set<{
-        id: string;
-        name: string;
-        type: StepType;
-    }>;
-}
-
-export default function Step({ step, targetSteps }: Props) {
-    const { modelId, instanceId } = useInstanceURL();
-
+export default function Step() {
+    const { context, modelId, instanceId } = useInstanceURL();
     const queryClient = useQueryClient();
+    
+    // Check if context is 'models' and the instance has a route
+    const { data: hasRouteData, isLoading: isLoadingHasRoute } = useQuery({
+        queryKey: routeKeys.hasRoute(modelId, instanceId),
+        queryFn: () => hasRoute({ modelId, instanceId }),
+        enabled: context === "models" && !!modelId && !!instanceId,
+    });
+
+    // Fetch the current step data only if the instance has a route
+    const { data: currentStep, isLoading: isLoadingCurrentStep } = useQuery({
+        queryKey: routeKeys.currentStep(modelId, instanceId),
+        queryFn: () => getCurrentStep({ modelId, instanceId }),
+        enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteData,
+    });
 
     const { mutate } = useMutation({
         mutationFn: updateStep,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) })
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) })
+            if (context === "models" && modelId && instanceId) {
+                queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
+            }
         }
-    })
+    });
 
     const handleStepChange = (id: string) => {
-        mutate({
-            modelId,
-            instanceId,
-            stepId: id
-        })
+        if (context === "models" && modelId && instanceId) {
+            mutate({
+                modelId,
+                instanceId,
+                stepId: id
+            });
+        }
+    };
+
+    // Return null if not in 'models' context
+    if (context !== "models") return null;
+    
+    // Return null if hasRoute is false
+    if (!isLoadingHasRoute && !hasRouteData) return null;
+    
+    // Show loading state
+    if (isLoadingHasRoute || isLoadingCurrentStep) {
+        return <Skeleton className="h-8 w-24" />;
     }
+
+    if (!currentStep) return null;
+
+    // Create step object from current step data
+    const step = {
+        id: currentStep._id,
+        name: currentStep.number,
+        type: "To-do" as StepType
+    };
 
     return (
         <DropdownMenu>
@@ -48,7 +76,7 @@ export default function Step({ step, targetSteps }: Props) {
                 <StepButton step={step} />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuGroup>
+                {/* <DropdownMenuGroup>
                     {targetSteps.size > 0 ? Array.from(targetSteps).map((targetStep, index) => (
                         <DropdownMenuItem
                             key={index}
@@ -61,8 +89,8 @@ export default function Step({ step, targetSteps }: Props) {
                             There are no further steps
                         </DropdownMenuItem>
                     )}
-                </DropdownMenuGroup>
+                </DropdownMenuGroup> */}
             </DropdownMenuContent>
         </DropdownMenu>
-    )
+    );
 }

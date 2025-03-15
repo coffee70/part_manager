@@ -69,12 +69,7 @@ export default function SummaryContainer() {
                     </InstanceForm>
                     <More />
                     {priority && <Priority priority={instance.priority} />}
-                    {/* {instance.step && (
-                        <Step
-                            step={instance.step}
-                            targetSteps={instance.targetSteps}
-                        />
-                    )} */}
+                    <Step />
                 </SummaryToolbar>
                 <SummarySections values={instance.values} />
                 <SummaryNotes initialValue={instance.notes} />

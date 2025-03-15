@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { attachmentKeys, commentKeys, instanceKeys, linkKeys, sectionKeys, contextKeys } from "@/lib/query_keys";
+import { attachmentKeys, commentKeys, instanceKeys, linkKeys, sectionKeys, contextKeys, routeKeys } from "@/lib/query_keys";
 import { getSections } from "@/server/sections/get_sections";
 import { getComments } from "@/server/comments/get_comments";
 import { NextServerSearchParams } from "@/types/collections";
@@ -16,6 +16,9 @@ import { isLinkable } from "@/server/contexts/is_linkable";
 import { isCommentable } from "@/server/contexts/is_commentable";
 import { hasPriority } from "@/server/contexts/has_priority";
 import { getContext } from "@/server/contexts/get_context";
+import { getRoute } from "@/server/routes/get_route";
+import { getCurrentStep } from "@/server/routes/get_current_step";
+import { hasRoute } from "@/server/routes/has_route";
 
 export default async function Page({
     params,
@@ -88,6 +91,22 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: contextKeys.hasPriority("models", id),
         queryFn: () => hasPriority({ context: "models", id }),
+    })
+
+    // routes
+    await queryClient.prefetchQuery({
+        queryKey: routeKeys.id(id, instanceId),
+        queryFn: () => getRoute({ modelId: id, instanceId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: routeKeys.hasRoute(id, instanceId),
+        queryFn: () => hasRoute({ modelId: id, instanceId }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: routeKeys.currentStep(id, instanceId),
+        queryFn: () => getCurrentStep({ modelId: id, instanceId }),
     })
 
     return (
