@@ -13,10 +13,26 @@ import { getTargetSteps } from "@/server/routes/get_target_steps";
 import { RouteIcon, TrashIcon } from "lucide-react";
 import { ListIcon } from "lucide-react";
 import { HammerIcon } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { deleteRoute } from "@/server/routes/delete_route";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import Loader from "@/components/ui/loader";
 
 export default function Step() {
     const { context, modelId, instanceId } = useInstanceURL();
     const queryClient = useQueryClient();
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     // Check if context is 'models' and the instance has a route
     const { data: hasRouteData, isLoading: isLoadingHasRoute } = useQuery({
@@ -39,7 +55,7 @@ export default function Step() {
         enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteData,
     });
 
-    const { mutate } = useMutation({
+    const { mutate: updateStepMutate } = useMutation({
         mutationFn: updateStep,
         onSuccess: () => {
             if (context === "models" && modelId && instanceId) {
@@ -51,12 +67,40 @@ export default function Step() {
         }
     });
 
+    // Add mutation for deleting a route
+    const { mutate: deleteRouteMutate, isPending: isDeletePending, isError: isDeleteError, error: deleteError } = useMutation({
+        mutationFn: deleteRoute,
+        onSuccess: () => {
+            if (context === "models" && modelId && instanceId) {
+                // Invalidate all relevant queries to update the UI
+                queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
+                queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
+                
+                // Close the delete dialog
+                setDeleteDialogOpen(false);
+            }
+        }
+    });
+
     const handleStepChange = (id: string) => {
         if (context === "models" && modelId && instanceId) {
-            mutate({
+            updateStepMutate({
                 modelId,
                 instanceId,
                 stepId: id
+            });
+        }
+    };
+
+    const handleDeleteRoute = () => {
+        if (context === "models" && modelId && instanceId) {
+            deleteRouteMutate({
+                modelId,
+                instanceId
             });
         }
     };
@@ -75,69 +119,104 @@ export default function Step() {
     if (!currentStep) return null;
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <StepButton step={currentStep} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48">
-                <DropdownMenuGroup>
-                    {targetSteps && targetSteps.length > 0 ? (
-                        targetSteps.map((targetStep, index) => (
-                            <DropdownMenuItem
-                                key={targetStep._id}
-                                onClick={() => handleStepChange(targetStep._id)}
-                            >
-                                <StepItem
-                                    step={{
-                                        _id: targetStep._id,
-                                        name: targetStep.number,
-                                        type: "To-do" as StepType
-                                    }}
-                                />
-                            </DropdownMenuItem>
-                        ))
-                    ) : (
-                        <DropdownMenuItem disabled>
-                            There are no further steps
-                        </DropdownMenuItem>
+        <>
+            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Route</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to delete this route? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    {isDeleteError && (
+                        <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error</AlertTitle>
+                            <AlertDescription>
+                                {deleteError instanceof Error ? deleteError.message : 'An error occurred'}
+                            </AlertDescription>
+                        </Alert>
                     )}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuSub>
-                        <DropdownMenuSubTrigger>
-                            <div className='flex items-center space-x-2'>
-                                <RouteIcon className='h-4 w-4' />
-                                <span>Modify Route</span>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <Button 
+                            onClick={handleDeleteRoute}
+                            disabled={isDeletePending}
+                            variant="destructive"
+                        >
+                            {isDeletePending ? <Loader /> : 'Delete'}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <StepButton step={currentStep} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                    <DropdownMenuGroup>
+                        {targetSteps && targetSteps.length > 0 ? (
+                            targetSteps.map((targetStep, index) => (
+                                <DropdownMenuItem
+                                    key={targetStep._id}
+                                    onClick={() => handleStepChange(targetStep._id)}
+                                >
+                                    <StepItem
+                                        step={{
+                                            _id: targetStep._id,
+                                            name: targetStep.number,
+                                            type: "To-do" as StepType
+                                        }}
+                                    />
+                                </DropdownMenuItem>
+                            ))
+                        ) : (
+                            <DropdownMenuItem disabled>
+                                There are no further steps
+                            </DropdownMenuItem>
+                        )}
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                                <div className='flex items-center space-x-2'>
+                                    <RouteIcon className='h-4 w-4' />
+                                    <span>Modify Route</span>
+                                </div>
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                    <DropdownMenuItem onSelect={(e) => {
+                                        e.preventDefault();
+                                    }}>
+                                        <div className='flex items-center space-x-2'>
+                                            <ListIcon className='h-4 w-4' />
+                                            <span>From List View</span>
+                                        </div>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <div className='flex items-center space-x-2'>
+                                            <HammerIcon className='h-4 w-4' />
+                                            <span>From Builder View</span>
+                                        </div>
+                                    </DropdownMenuItem>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                        <DropdownMenuItem onSelect={(e) => {
+                            e.preventDefault();
+                            setDeleteDialogOpen(true);
+                        }}>
+                            <div className='flex items-center space-x-2 text-destructive'>
+                                <TrashIcon className='h-4 w-4' />
+                                <span>Delete Route</span>
                             </div>
-                        </DropdownMenuSubTrigger>
-                        <DropdownMenuPortal>
-                            <DropdownMenuSubContent>
-                                <DropdownMenuItem onSelect={(e) => {
-                                    e.preventDefault();
-                                }}>
-                                    <div className='flex items-center space-x-2'>
-                                        <ListIcon className='h-4 w-4' />
-                                        <span>From List View</span>
-                                    </div>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <div className='flex items-center space-x-2'>
-                                        <HammerIcon className='h-4 w-4' />
-                                        <span>From Builder View</span>
-                                    </div>
-                                </DropdownMenuItem>
-                            </DropdownMenuSubContent>
-                        </DropdownMenuPortal>
-                    </DropdownMenuSub>
-                    <DropdownMenuItem>
-                        <div className='flex items-center space-x-2 text-destructive'>
-                            <TrashIcon className='h-4 w-4' />
-                            <span>Delete Route</span>
-                        </div>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </>
     );
 }
