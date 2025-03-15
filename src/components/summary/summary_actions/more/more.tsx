@@ -3,7 +3,7 @@ import React from 'react'
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuPortal } from '@/components/ui/dropdown-menu'
 import MoreButton from './more_button'
 import { useMoreContext } from './more_context';
-import { HammerIcon, LinkIcon, MessageCircleIcon, PaperclipIcon, RouteIcon, CopyIcon } from 'lucide-react';
+import { HammerIcon, LinkIcon, MessageCircleIcon, PaperclipIcon, RouteIcon, CopyIcon, ListIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { contextKeys, routeKeys } from '@/lib/query_keys';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
@@ -15,9 +15,9 @@ import Builder from '@/components/route_builder/list_view/builder';
 
 export default function More() {
     const { context, id, instanceId } = useInstanceURL();
-    
+
     // Create a ref for the Builder's hidden trigger button
-    const builderTriggerRef = React.useRef<HTMLButtonElement>(null);
+    const routeListViewTriggerRef = React.useRef<HTMLButtonElement>(null);
 
     const { data: attachable } = useQuery({
         queryKey: contextKeys.attachable(context, id),
@@ -65,8 +65,8 @@ export default function More() {
     }
 
     // Function to open the Builder dialog by clicking its hidden trigger
-    const handleOpenBuilder = () => {
-        builderTriggerRef.current?.click();
+    const handleOpenRouteListView = () => {
+        routeListViewTriggerRef.current?.click();
     }
 
     if (!attachable && !linkable && !commentable && context === "routers") return null;
@@ -74,9 +74,9 @@ export default function More() {
     return (
         <>
             <Builder>
-                <button 
-                    ref={builderTriggerRef} 
-                    style={{ display: 'none' }} 
+                <button
+                    ref={routeListViewTriggerRef}
+                    style={{ display: 'none' }}
                     aria-hidden="true"
                 >
                     Open Builder
@@ -119,11 +119,17 @@ export default function More() {
                                     <DropdownMenuSubContent>
                                         <DropdownMenuItem onSelect={(e) => {
                                             e.preventDefault();
-                                            handleOpenBuilder();
+                                            handleOpenRouteListView();
                                         }}>
                                             <div className='flex items-center space-x-2'>
+                                                <ListIcon className='h-4 w-4' />
+                                                <span>From List View</span>
+                                            </div>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <div className='flex items-center space-x-2'>
                                                 <HammerIcon className='h-4 w-4' />
-                                                <span>From Builder</span>
+                                                <span>From Builder View</span>
                                             </div>
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
