@@ -76,9 +76,9 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={instance.number} />
                             </TableCell>
-                            {instance.step && <TableCell align="left">
-                                <StepBadge step={instance.step} />
-                            </TableCell>}
+                            <TableCell align="left">
+                                {instance.step && <StepBadge step={instance.step} />}
+                            </TableCell>
                             <TableCell>
                                 <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>

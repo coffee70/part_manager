@@ -5,6 +5,8 @@ import { db } from "@/lib/db";
 import { InstanceDoc, ModelDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { getCurrentStep } from "../routes/get_current_step";
+import { hasRoute } from "../routes/has_route";
+
 const InputSchema = z.object({
     id: z.string(),
     searchParams: z.custom<SearchParams>().optional(),
@@ -90,13 +92,20 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const res = await Promise.all(instances.map(async instance => {
         const updatedBy = await usersCollection.findOne({ _id: instance.updatedById });
 
-        const currentStep = await getCurrentStep({ modelId: id, instanceId: instance._id.toString() });
+        let currentStep;
+        if (await hasRoute({ modelId: id, instanceId: instance._id.toString() })) {
+            currentStep = await getCurrentStep({ modelId: id, instanceId: instance._id.toString() });
+        }
 
         return {
             _id: instance._id.toString(),
             number: instance.number,
             priority: instance.priority,
-            step: currentStep,
+            step: currentStep ? {
+                _id: currentStep._id.toString(),
+                name: currentStep.name,
+                type: currentStep.type
+            } : undefined,
             updatedAt: instance.updatedAt,
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
         }

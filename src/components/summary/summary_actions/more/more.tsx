@@ -12,6 +12,7 @@ import { isLinkable } from '@/server/contexts/is_linkable';
 import { isCommentable } from '@/server/contexts/is_commentable';
 import { getRoute } from '@/server/routes/get_route';
 import Builder from '@/components/route_builder/list_view/builder';
+import { hasRoute } from '@/server/routes/has_route';
 
 export default function More() {
     const { context, id, instanceId } = useInstanceURL();
@@ -34,9 +35,9 @@ export default function More() {
         queryFn: () => isCommentable({ context, id }),
     })
 
-    const { data: route } = useQuery({
-        queryKey: routeKeys.id(id, instanceId),
-        queryFn: () => getRoute({ modelId: id, instanceId }),
+    const { data: hasRouteResult } = useQuery({
+        queryKey: routeKeys.hasRoute(id, instanceId),
+        queryFn: () => hasRoute({ modelId: id, instanceId }),
     })
 
     const {
@@ -65,7 +66,7 @@ export default function More() {
         routeListViewTriggerRef.current?.click();
     }
 
-    if (!attachable && !linkable && !commentable && (context === "routers" || route)) return null;
+    if (!attachable && !linkable && !commentable && (context === "routers" || hasRouteResult)) return null;
 
     return (
         <>
@@ -103,7 +104,7 @@ export default function More() {
                                 <span>Add Comment</span>
                             </div>
                         </DropdownMenuItem>}
-                        {context === "models" && !route && (
+                        {context === "models" && !hasRouteResult && (
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>
                                     <div className='flex items-center space-x-2'>

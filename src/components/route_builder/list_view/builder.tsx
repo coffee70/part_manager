@@ -5,7 +5,7 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Button } from '@/components/ui/button';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getRouters } from '@/server/routers/get_routers';
-import { routerKeys, instanceKeys } from '@/lib/query_keys';
+import { routerKeys, instanceKeys, routeKeys } from '@/lib/query_keys';
 import { getInstances } from '@/server/instances/get_instances';
 import { RouteFormState, RouteRow, RouteEdge } from './types';
 import RouterSelector from './router_selector';
@@ -61,9 +61,12 @@ export default function Builder({ children }: Props) {
       if (data.success) {
         // On success, just close the dialog and invalidate queries
         if (formState.routerId) {
-          queryClient.invalidateQueries({ queryKey: routerKeys.all() });
-          queryClient.invalidateQueries({ queryKey: instanceKeys.all('routers', formState.routerId) });
           queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
+          queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
+          queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
+          queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
+          queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
+          queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
         }
         
         // Close dialog
