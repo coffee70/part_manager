@@ -69,7 +69,7 @@ export default function More() {
         routeListViewTriggerRef.current?.click();
     }
 
-    if (!attachable && !linkable && !commentable && context === "routers") return null;
+    if (!attachable && !linkable && !commentable && (context === "routers" || route !== undefined)) return null;
 
     return (
         <>
