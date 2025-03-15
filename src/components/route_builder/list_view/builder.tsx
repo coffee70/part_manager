@@ -199,6 +199,12 @@ export default function Builder({ children }: Props) {
       return;
     }
     
+    // Check if any row has an empty instance selection
+    if (!rows.every(row => row.instanceId !== '')) {
+      setError('Please select an instance for each row');
+      return;
+    }
+    
     if (formState.route.length === 0) {
       setError('Please create at least one route connection');
       return;
@@ -222,7 +228,9 @@ export default function Builder({ children }: Props) {
   };
 
   // Check if we have at least one complete edge
+  // AND make sure all rows have an instance selected
   const hasCompleteRoute = formState.route.length > 0;
+  const allRowsHaveInstances = rows.every(row => row.instanceId !== '');
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -265,7 +273,7 @@ export default function Builder({ children }: Props) {
             type="submit" 
             className="w-full"
             onClick={handleSubmit}
-            disabled={!formState.routerId || !hasCompleteRoute || isPending}
+            disabled={!formState.routerId || !hasCompleteRoute || !allRowsHaveInstances || isPending}
           >
             {isPending ? 'Creating...' : 'Create Route'}
           </Button>
