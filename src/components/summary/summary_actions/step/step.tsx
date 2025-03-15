@@ -87,7 +87,7 @@ export default function Step() {
                             >
                                 <StepItem 
                                     step={{
-                                        id: targetStep._id,
+                                        _id: targetStep._id,
                                         name: targetStep.number,
                                         type: "To-do" as StepType
                                     }} 
