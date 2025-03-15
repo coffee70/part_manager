@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { RouteRow, InstanceType } from './types';
-import { DndContext, DragEndEvent, PointerSensor, closestCenter, useSensor, useSensors, DragStartEvent, defaultDropAnimation } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, PointerSensor, closestCenter, useSensor, useSensors, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableRow from './sortable_row';
 import { Button } from '@/components/ui/button';
@@ -25,40 +25,53 @@ export default function RouteSteps({ rows, instances, selectedRouterId, onRowsCh
     })
   );
 
+  const handleDragStart = (event: DragStartEvent) => {
+    // Could track active item if needed
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
     if (over && active.id !== over.id) {
-      onRowsChange(arrayMove(
+      const updatedRows = arrayMove(
         rows,
         rows.findIndex((row) => row.id === active.id),
         rows.findIndex((row) => row.id === over.id)
-      ));
+      );
+      
+      // Pass the updated rows to parent
+      onRowsChange(updatedRows);
     }
   };
 
   const addRow = () => {
-    onRowsChange([
+    // Add a new row with empty instanceId
+    const updatedRows = [
       ...rows, 
       { 
-        id: crypto.randomUUID(), 
-        routerId: selectedRouterId || '', 
+        id: crypto.randomUUID(),
         instanceId: '' 
       }
-    ]);
+    ];
+    
+    onRowsChange(updatedRows);
   };
 
   const removeRow = (id: string) => {
     if (rows.length > 1) {
-      onRowsChange(rows.filter(row => row.id !== id));
+      const updatedRows = rows.filter(row => row.id !== id);
+      // This will trigger parent's handleRowsChange which should update the edges
+      onRowsChange(updatedRows);
     }
   };
 
-  const updateRow = (id: string, routerId: string, instanceId: string) => {
-    onRowsChange(rows.map(row => 
-      row.id === id ? { ...row, routerId, instanceId } : row
-    ));
+  const updateRow = (id: string, instanceId: string) => {
+    const updatedRows = rows.map(row => 
+      row.id === id ? { ...row, instanceId } : row
+    );
+    
+    // This selection change should trigger edge updates in the parent component
+    onRowsChange(updatedRows);
   };
 
   return (
@@ -68,6 +81,7 @@ export default function RouteSteps({ rows, instances, selectedRouterId, onRowsCh
       <DndContext 
         sensors={sensors}
         collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         autoScroll={{
           enabled: true,
@@ -79,11 +93,13 @@ export default function RouteSteps({ rows, instances, selectedRouterId, onRowsCh
       >
         <SortableContext items={rows.map(row => row.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-3">
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <SortableRow 
                 key={row.id}
                 row={row}
                 instances={instances}
+                index={index}
+                totalRows={rows.length}
                 onRemove={removeRow}
                 onUpdate={updateRow}
               />

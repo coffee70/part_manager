@@ -1,7 +1,17 @@
 export type RouteRow = {
   id: string;
-  routerId: string;
   instanceId: string;
+};
+
+export type RouteEdge = {
+  id: string;
+  sourceId: string;
+  targetId: string;
+};
+
+export type RouteFormState = {
+  routerId: string | null;
+  route: RouteEdge[];
 };
 
 export type RouterType = {

@@ -11,11 +11,13 @@ import { ChevronDown, GripVertical, Trash } from 'lucide-react';
 type SortableRowProps = {
   row: RouteRow;
   instances: InstanceType[];
+  index: number;
+  totalRows: number;
   onRemove: (id: string) => void;
-  onUpdate: (id: string, routerId: string, instanceId: string) => void;
+  onUpdate: (id: string, instanceId: string) => void;
 };
 
-export default function SortableRow({ row, instances, onRemove, onUpdate }: SortableRowProps) {
+export default function SortableRow({ row, instances, index, totalRows, onRemove, onUpdate }: SortableRowProps) {
   const {
     attributes,
     listeners,
@@ -47,13 +49,25 @@ export default function SortableRow({ row, instances, onRemove, onUpdate }: Sort
     }
   };
 
+  // Determine if this row is part of an edge
+  const isPartOfEdge = () => {
+    return row.instanceId !== '';
+  };
+
+  // Determine if this row is connected to the row above it
+  const isConnectedAbove = (index > 0) && row.instanceId !== '';
+  
+  // Determine if this row is connected to the row below it
+  const isConnectedBelow = (index < totalRows - 1) && row.instanceId !== '';
+
   return (
     <div 
       ref={setNodeRef} 
       style={style} 
       className={cn(
         "flex items-center gap-2 p-2 bg-white border border-stone-200 rounded-md shadow-sm transition-colors duration-200",
-        isDragging ? "shadow-md" : "hover:shadow"
+        isDragging ? "shadow-md" : "hover:shadow",
+        isPartOfEdge() ? "border-l-4 border-l-stone-400" : ""
       )}
     >
       <div 
@@ -84,7 +98,7 @@ export default function SortableRow({ row, instances, onRemove, onUpdate }: Sort
             {instances.map(instance => (
               <DropdownMenuItem 
                 key={instance._id} 
-                onClick={() => onUpdate(row.id, row.routerId, instance._id)}
+                onClick={() => onUpdate(row.id, instance._id)}
                 className="text-stone-700 hover:bg-stone-50"
               >
                 {instance.number}

@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getRouters } from '@/server/routers/get_routers';
 import { routerKeys, instanceKeys } from '@/lib/query_keys';
 import { getInstances } from '@/server/instances/get_instances';
-import { RouteRow } from './types';
+import { RouteFormState, RouteRow, RouteEdge } from './types';
 import RouterSelector from './router_selector';
 import RouteSteps from './route_steps';
 
@@ -17,10 +17,16 @@ type Props = {
 
 export default function Builder({ children }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [selectedRouterId, setSelectedRouterId] = React.useState<string | null>(null);
+  
+  // Initialize with an empty form state
+  const [formState, setFormState] = React.useState<RouteFormState>({
+    routerId: null,
+    route: []
+  });
+  
+  // We still need to maintain rows for the UI representation
   const [rows, setRows] = React.useState<RouteRow[]>([{ 
     id: crypto.randomUUID(), 
-    routerId: '', 
     instanceId: '' 
   }]);
 
@@ -33,20 +39,102 @@ export default function Builder({ children }: Props) {
 
   // Get instances for the selected router
   const { data: instances = [] } = useQuery({
-    queryKey: instanceKeys.all('routers', selectedRouterId || ''),
-    queryFn: () => getInstances({ id: selectedRouterId || '' }),
-    enabled: !!selectedRouterId && open
+    queryKey: instanceKeys.all('routers', formState.routerId || ''),
+    queryFn: () => getInstances({ id: formState.routerId || '' }),
+    enabled: !!formState.routerId && open
   });
 
+  // Helper function to update form state from rows
+  const updateFormStateFromRows = (updatedRows: RouteRow[], previousRows?: RouteRow[]) => {
+    // Create edges only between adjacent rows that both have instance values
+    const newEdges: RouteEdge[] = [];
+    
+    // Iterate through rows and only create edges between directly adjacent rows
+    for (let i = 0; i < updatedRows.length - 1; i++) {
+      const currentRow = updatedRows[i];
+      const nextRow = updatedRows[i + 1];
+      
+      // Only create an edge if both adjacent rows have instances selected
+      if (currentRow.instanceId && nextRow.instanceId) {
+        newEdges.push({
+          id: crypto.randomUUID(),
+          sourceId: currentRow.instanceId,
+          targetId: nextRow.instanceId
+        });
+      }
+    }
+    
+    setFormState(prev => ({
+      ...prev,
+      route: newEdges
+    }));
+  };
+
   const handleRouterSelect = (routerId: string) => {
-    setSelectedRouterId(routerId);
-    setRows(rows => rows.map(row => ({ ...row, routerId, instanceId: '' })));
+    // Update form state
+    setFormState({
+      routerId: routerId,
+      route: [] // Reset route when router changes
+    });
+    
+    // Reset rows with the new router
+    setRows([{ 
+      id: crypto.randomUUID(), 
+      instanceId: '' 
+    }]);
+  };
+
+  const handleRowsChange = (updatedRows: RouteRow[]) => {
+    // Store previous rows for comparison
+    const previousRows = [...rows];
+    
+    // Update the rows
+    setRows(updatedRows);
+    
+    // Check if the rows order or content has changed
+    const shouldUpdateFormState = () => {
+      // Quick checks first
+      // 1. Different number of rows
+      if (previousRows.length !== updatedRows.length) return true;
+      
+      // 2. Different number of rows with non-empty instanceId
+      const previousValidRows = previousRows.filter(row => row.instanceId).length;
+      const currentValidRows = updatedRows.filter(row => row.instanceId).length;
+      if (previousValidRows !== currentValidRows) return true;
+      
+      // 3. Check if the ordering of instances has changed
+      // This will detect drag and drop reordering
+      const previousInstanceIds = previousRows
+        .filter(row => row.instanceId)
+        .map(row => row.instanceId);
+      
+      const currentInstanceIds = updatedRows
+        .filter(row => row.instanceId)
+        .map(row => row.instanceId);
+      
+      // Check if order is different or if any instances changed
+      for (let i = 0; i < previousInstanceIds.length; i++) {
+        if (previousInstanceIds[i] !== currentInstanceIds[i]) {
+          return true;
+        }
+      }
+      
+      return false;
+    };
+    
+    // Update form state if needed
+    if (shouldUpdateFormState()) {
+      updateFormStateFromRows(updatedRows, previousRows);
+    }
   };
 
   const handleSubmit = () => {
-    // Here you would handle form submission
-    console.log('Creating route with rows:', rows);
+    // Submit the formState which now contains routerId and route edges
+    // Process could be added here to send data to the server
   };
+
+  // Check if we have at least one complete edge
+  const hasCompleteRoute = formState.route.length > 0;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -66,22 +154,22 @@ export default function Builder({ children }: Props) {
         <div className="space-y-6">
           <RouterSelector 
             routers={routers} 
-            selectedRouterId={selectedRouterId} 
+            selectedRouterId={formState.routerId} 
             onRouterSelect={handleRouterSelect} 
           />
 
           <RouteSteps 
             rows={rows} 
             instances={instances} 
-            selectedRouterId={selectedRouterId} 
-            onRowsChange={setRows} 
+            selectedRouterId={formState.routerId}
+            onRowsChange={handleRowsChange} 
           />
 
           <Button 
             type="submit" 
             className="w-full"
             onClick={handleSubmit}
-            disabled={!selectedRouterId || rows.some(row => !row.instanceId)}
+            disabled={!formState.routerId || !hasCompleteRoute}
           >
             Create Route
           </Button>
