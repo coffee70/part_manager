@@ -45,7 +45,7 @@ export async function upsertRoute(
     input: z.input<typeof InputSchema>
 ): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();
-    if (!user || user.role !== "admin") throw new Error("Unauthorized");
+    if (!user) throw new Error("Unauthorized");
     const validation = validate(InputSchema, input);
     if (!validation.success) return validation;
 
