@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
+import { Node } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
   modelId: z.string(),
@@ -12,8 +13,8 @@ const InputSchema = z.object({
 });
 
 type TargetStep = {
-  _id: string;
   id: string;
+  instanceId: string;
   number: string;
   routerId: string;
 };
@@ -36,10 +37,10 @@ export async function getTargetSteps(input: z.input<typeof InputSchema>): Promis
   try {
     // Get the model instance to access its route information
     const instanceCollection = db.collection<InstanceDoc>(modelId);
-    const instance = await instanceCollection.findOne({ 
-      _id: new ObjectId(instanceId) 
+    const instance = await instanceCollection.findOne({
+      _id: new ObjectId(instanceId)
     });
-    
+
     if (!instance) {
       throw new Error("Model instance not found");
     }
@@ -48,57 +49,94 @@ export async function getTargetSteps(input: z.input<typeof InputSchema>): Promis
     if (!instance.route) {
       throw new Error("Model instance does not have a route");
     }
-    
-    const { routerId, currentStepId, edges } = instance.route;
-    
+
+    const { routerId, currentStepId, nodes } = instance.route;
+
     if (!routerId) {
       throw new Error("Route does not have a router ID");
     }
-    
+
     if (!currentStepId) {
       throw new Error("Route does not have a current step");
     }
-    
-    if (!edges || !Array.isArray(edges)) {
+
+    if (!nodes || !Array.isArray(nodes)) {
       return []; // No edges means no target steps
     }
 
-    // Find all edges where the source is the current step
-    const targetEdges = edges.filter(edge => edge.sourceId === currentStepId);
-    
-    // If no target edges, return empty array
-    if (targetEdges.length === 0) {
+    // Find the current node
+    const currentNodeIndex = nodes.findIndex(node => node.instanceId === currentStepId);
+
+    // If no current node, return empty array
+    if (currentNodeIndex === -1) {
       return [];
     }
-    
+
     // Get unique target IDs
-    const targetIds = Array.from(new Set(targetEdges.map(edge => edge.targetId)));
-    
+    let nextNode: Node | null = null;
+    try {
+      nextNode = nodes[currentNodeIndex + 1];
+    } catch (error) {
+      console.error("Error getting next node:", error);
+      return [];
+    }
+
+    let previousNode: Node | null = null;
+    try {
+      previousNode = nodes[currentNodeIndex - 1];
+    } catch (error) {
+      console.error("Error getting previous node:", error);
+      return [];
+    }
+
     // Fetch all target router instances
     const targetSteps: TargetStep[] = [];
-    
-    for (const targetId of targetIds) {
+
+    if (nextNode) {
       try {
         // Get the router instance
         const routerInstance = await getInstance({
           id: routerId,
-          instanceId: targetId
+          instanceId: nextNode.instanceId
         });
-        
+
         if (routerInstance) {
           targetSteps.push({
-            _id: routerInstance._id,
-            id: routerInstance._id, // Adding both _id and id for flexibility
+            id: nextNode.id,
+            instanceId: routerInstance._id,
             number: routerInstance.number || '',
             routerId
           });
         }
       } catch (error) {
-        console.error(`Error fetching target step ${targetId}:`, error);
+        console.error(`Error fetching target step ${nextNode.instanceId}:`, error);
         // Continue with other steps even if one fails
       }
     }
-    
+
+    if (previousNode) {
+      try {
+        // Get the router instance
+        const routerInstance = await getInstance({
+          id: routerId,
+          instanceId: previousNode.instanceId
+        });
+
+        if (routerInstance) {
+          targetSteps.push({
+            id: previousNode.id,
+            instanceId: routerInstance._id,
+            number: routerInstance.number || '',
+            routerId
+          });
+        }
+      } catch (error) {
+        console.error(`Error fetching previous step ${previousNode.instanceId}:`, error);
+        // Continue with other steps even if one fails
+      }
+    }
+
+
     return targetSteps;
   } catch (error) {
     console.error("Error getting target steps:", error);

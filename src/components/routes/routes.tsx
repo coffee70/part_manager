@@ -3,7 +3,7 @@
 import { AppBar } from "@/components/ui/app_bar";
 import { PageTitle } from "@/components/ui/page_title";
 import { RouteIcon } from "@/components/ui/icons/icons";
-import { RouteBuilder } from "../route_builder/builder";
+import { RouteBuilder } from "../route_builder/builder_view/builder";
 
 export default function Routes() {
     return (

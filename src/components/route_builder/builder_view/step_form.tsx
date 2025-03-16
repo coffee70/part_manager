@@ -1,10 +1,10 @@
 'use client'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../../ui/dialog";
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
 import { StepType, stepTypes } from "@/types/collections";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { Node } from "./types";
 import { useBuilderContext } from "./builder.context";
 import React from "react";

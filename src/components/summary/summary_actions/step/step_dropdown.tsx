@@ -7,7 +7,8 @@ import StepItem from "./step_item";
 import { RouteIcon, TrashIcon, ListIcon, HammerIcon } from "lucide-react";
 
 interface TargetStep {
-    _id: string;
+    id: string;
+    instanceId: string;
     number: string;
 }
 
@@ -16,6 +17,7 @@ interface StepDropdownProps {
     targetSteps: TargetStep[];
     onStepChange: (id: string) => void;
     onDeleteClick: () => void;
+    onOpenRouteListView: () => void;
 }
 
 /**
@@ -25,7 +27,8 @@ export default function StepDropdown({
     currentStep,
     targetSteps,
     onStepChange,
-    onDeleteClick
+    onDeleteClick,
+    onOpenRouteListView
 }: StepDropdownProps) {
     return (
         <DropdownMenu>
@@ -37,12 +40,12 @@ export default function StepDropdown({
                     {targetSteps && targetSteps.length > 0 ? (
                         targetSteps.map((targetStep) => (
                             <DropdownMenuItem
-                                key={targetStep._id}
-                                onClick={() => onStepChange(targetStep._id)}
+                                key={targetStep.id}
+                                onClick={() => onStepChange(targetStep.instanceId)}
                             >
                                 <StepItem
                                     step={{
-                                        _id: targetStep._id,
+                                        _id: targetStep.instanceId,
                                         name: targetStep.number,
                                         type: "To-do" as StepType
                                     }}
@@ -68,7 +71,7 @@ export default function StepDropdown({
                             <DropdownMenuSubContent>
                                 <DropdownMenuItem onSelect={(e) => {
                                     e.preventDefault();
-                                    // Implementation for list view would go here
+                                    onOpenRouteListView();
                                 }}>
                                     <div className='flex items-center space-x-2'>
                                         <ListIcon className='h-4 w-4' />

@@ -1,5 +1,5 @@
 'use server'
-import { HandlePosition } from "@/components/route_builder/types";
+import { HandlePosition } from "@/components/route_builder/builder_view/types";
 import { ModelDoc, stepTypes } from "@/types/collections";
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";

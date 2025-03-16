@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { RouteRow, InstanceType } from './types';
+import { Instance, Node } from './types';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import { cn } from '@/lib/utils';
@@ -9,8 +9,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { ChevronDown, GripVertical, Trash } from 'lucide-react';
 
 type SortableRowProps = {
-  row: RouteRow;
-  instances: InstanceType[];
+  row: Node;
+  instances: Instance[];
   index: number;
   totalRows: number;
   onRemove: (id: string) => void;
@@ -53,12 +53,6 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
   const isPartOfEdge = () => {
     return row.instanceId !== '';
   };
-
-  // Determine if this row is connected to the row above it
-  const isConnectedAbove = (index > 0) && row.instanceId !== '';
-  
-  // Determine if this row is connected to the row below it
-  const isConnectedBelow = (index < totalRows - 1) && row.instanceId !== '';
 
   return (
     <div 

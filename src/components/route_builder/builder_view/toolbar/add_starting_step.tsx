@@ -2,7 +2,7 @@
 import React from "react";
 import { ArrowUpFromDotIcon } from "lucide-react";
 import { useBuilderContext } from "../builder.context";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 import { START_NODE_ID } from "../types";
 
 export default function AddStartingStep() {

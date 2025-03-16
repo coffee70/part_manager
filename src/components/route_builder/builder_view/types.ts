@@ -32,6 +32,7 @@ export type Edge = {
     targetId: string;
     targetPosition: HandlePosition;
     path: string;
+    forBidirectionality?: boolean;
 }
 
 export type Node = {

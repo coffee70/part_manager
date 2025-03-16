@@ -2,7 +2,7 @@
 import React from "react";
 import { PlusIcon } from "lucide-react";
 import StepForm from "../step_form";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 
 export default function AddStep() {
     const [open, setOpen] = React.useState(false);

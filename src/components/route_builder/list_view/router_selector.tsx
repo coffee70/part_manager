@@ -1,12 +1,12 @@
 'use client'
 import React from 'react';
-import { RouterType } from './types';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { Router } from './types';
 
 type RouterSelectorProps = {
-  routers: RouterType[];
+  routers: Router[];
   selectedRouterId: string | null;
   onRouterSelect: (routerId: string) => void;
 };

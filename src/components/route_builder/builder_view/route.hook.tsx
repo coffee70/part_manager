@@ -25,20 +25,24 @@ export function useRoute() {
     // with the instance page
     const { id } = useAdminURL();
 
-    const { data: initialRoute } = useQuery({
-        queryKey: routeKeys.id(id || "", ""),
-        queryFn: () => getRoute({
-            modelId: id || "",
-            instanceId: ""
-        })
-    })
+    // const { data: initialRoute } = useQuery({
+    //     queryKey: routeKeys.id(id || "", ""),
+    //     queryFn: () => getRoute({
+    //         modelId: id || "",
+    //         instanceId: ""
+    //     })
+    // })
 
-    const [route, setRoute] = React.useState<Route>(initialRoute ?? {
+    const initialRoute = React.useMemo(() => ({
         nodes: [],
         edges: [],
         startNode: undefined,
         startEdge: undefined,
-    });
+        routerId: "",
+        currentStepId: "",
+    }), []);
+
+    const [route, setRoute] = React.useState<Route>(initialRoute);
 
     React.useEffect(() => {
         if (initialRoute) {
@@ -320,12 +324,12 @@ export function useRoute() {
     }, []);
 
     const removeRoute = () => {
-        setRoute({
-            nodes: [],
-            edges: [],
-            startNode: undefined,
-            startEdge: undefined,
-        });
+        // setRoute({
+        //     nodes: [],
+        //     edges: [],
+        //     startNode: undefined,
+        //     startEdge: undefined,
+        // });
         setIsEditing(true);
     }
 

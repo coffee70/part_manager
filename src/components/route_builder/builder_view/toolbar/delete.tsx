@@ -1,7 +1,7 @@
 'use client'
 import React from "react";
 import { Trash2Icon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 import { useBuilderContext } from "../builder.context";
 
 export default function Delete() {

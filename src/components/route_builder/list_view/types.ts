@@ -1,27 +1,28 @@
-export type RouteRow = {
-  id: string;
-  instanceId: string;
-};
-
-export type RouteEdge = {
-  id: string;
-  sourceId: string;
-  targetId: string;
-};
+import { StepType } from "@/types/collections";
 
 export type RouteFormState = {
-  routerId: string | null;
-  route: RouteEdge[];
+  route: Route;
 };
 
-export type RouterType = {
-  _id: string;
-  name: string;
-  [key: string]: any;
-};
-
-export type InstanceType = {
+export interface Instance {
   _id: string;
   number: string;
-  [key: string]: any;
-}; 
+}
+
+export interface Router {
+  _id: string;
+  name: string;
+}
+
+export type Node = {
+  id: string;
+  instanceId: string;
+  name: string;
+  type: StepType;
+}
+
+export type Route = {
+  routerId: string;
+  currentStepId: string;
+  nodes: Node[];
+}
