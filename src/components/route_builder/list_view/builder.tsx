@@ -37,6 +37,17 @@ export default function Builder({ children, route }: Props) {
     }
   });
 
+  // add effect to update form state when route changes
+  React.useEffect(() => {
+    setFormState({
+      route: route || {
+        routerId: '',
+        currentStepId: '',
+        nodes: [],
+      }
+    });
+  }, [route]);
+
   const queryClient = useQueryClient();
 
   // Get all routers

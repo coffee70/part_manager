@@ -13,12 +13,14 @@ import { isCommentable } from '@/server/contexts/is_commentable';
 import { getRoute } from '@/server/routes/get_route';
 import Builder from '@/components/route_builder/list_view/builder';
 import { hasRoute } from '@/server/routes/has_route';
+import CloneView from '@/components/route_builder/clone_view/clone_view';
 
 export default function More() {
     const { context, id, instanceId } = useInstanceURL();
 
-    // Create a ref for the Builder's hidden trigger button
+    // Create refs for the hidden trigger buttons
     const routeListViewTriggerRef = React.useRef<HTMLButtonElement>(null);
+    const cloneViewTriggerRef = React.useRef<HTMLButtonElement>(null);
 
     const { data: attachable } = useQuery({
         queryKey: contextKeys.attachable(context, id),
@@ -61,9 +63,13 @@ export default function More() {
         }, 0);
     }
 
-    // Function to open the Builder dialog by clicking its hidden trigger
+    // Function to open dialogs by clicking their hidden triggers
     const handleOpenRouteListView = () => {
         routeListViewTriggerRef.current?.click();
+    }
+
+    const handleOpenCloneView = () => {
+        cloneViewTriggerRef.current?.click();
     }
 
     if (!attachable && !linkable && !commentable && (context === "routers" || hasRouteResult)) return null;
@@ -79,6 +85,16 @@ export default function More() {
                     Open Builder
                 </button>
             </Builder>
+
+            <CloneView>
+                <button
+                    ref={cloneViewTriggerRef}
+                    style={{ display: 'none' }}
+                    aria-hidden="true"
+                >
+                    Open Clone View
+                </button>
+            </CloneView>
 
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -129,7 +145,10 @@ export default function More() {
                                                 <span>From Builder View</span>
                                             </div>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        <DropdownMenuItem onSelect={(e) => {
+                                            e.preventDefault();
+                                            handleOpenCloneView();
+                                        }}>
                                             <div className='flex items-center space-x-2'>
                                                 <CopyIcon className='h-4 w-4' />
                                                 <span>From Clone</span>
