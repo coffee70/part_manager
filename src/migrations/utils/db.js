@@ -1,5 +1,5 @@
-import { MongoClient, Db } from 'mongodb';
-import * as dotenv from 'dotenv';
+const { MongoClient } = require('mongodb');
+const dotenv = require('dotenv');
 
 // Load environment variables
 dotenv.config();
@@ -10,10 +10,10 @@ dotenv.config();
  * @param migrationName The name/version of the migration
  * @param migrationFn The function containing the migration logic
  */
-export async function runMigration(
-  migrationName: string,
-  migrationFn: (db: Db) => Promise<void>
-): Promise<void> {
+async function runMigration(
+  migrationName,
+  migrationFn
+) {
   console.log(`Starting migration ${migrationName}...`);
   
   // Get MongoDB connection string from environment variables
@@ -33,7 +33,7 @@ export async function runMigration(
   // Setup MongoDB client options
   const options = { appName: `part_manager.migration.${migrationName}` };
   
-  let client: MongoClient | null = null;
+  let client = null;
   
   try {
     // Connect to MongoDB
@@ -75,15 +75,21 @@ export async function runMigration(
 /**
  * Helper function to log the result of an update operation
  */
-export function logUpdateResult(collectionName: string, result: { matchedCount: number; modifiedCount: number }): void {
+function logUpdateResult(collectionName, result) {
   console.log(`Updated ${result.modifiedCount}/${result.matchedCount} documents in ${collectionName}`);
 }
 
 /**
  * Helper to execute and log an index creation
  */
-export async function createIndex(db: Db, collectionName: string, indexSpec: Record<string, number>, options: Record<string, any> = {}): Promise<void> {
+async function createIndex(db, collectionName, indexSpec, options = {}) {
   await db.collection(collectionName).createIndex(indexSpec, { background: true, ...options });
   const fieldNames = Object.keys(indexSpec).join(', ');
   console.log(`Created index on ${collectionName}.${fieldNames}`);
-} 
+}
+
+module.exports = {
+  runMigration,
+  logUpdateResult,
+  createIndex
+}; 

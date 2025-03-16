@@ -10,8 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "knip": "knip",
-    "migrate:2.0.1": "node -r ts-node/register src/migrations/2.0.1.ts",
-    "migrate": "node -r ts-node/register"
+    "migrate:2.0.1": "node src/migrations/2.0.1.js",
+    "migrate": "node"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
