@@ -41,32 +41,32 @@ const InputSchema = z.object({
     })
 })
 
-export async function upsertRoute(
+export async function upsertRouteFromBuilderView(
     input: z.input<typeof InputSchema>
 ): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error("Unauthorized");
-    const validation = validate(InputSchema, input);
-    if (!validation.success) return validation;
+    // const validation = validate(InputSchema, input);
+    // if (!validation.success) return validation;
 
-    const { modelId, route } = validation.data;
-    if (!modelId) return { success: false, error: "Model ID is required" };
+    // const { modelId, route } = validation.data;
+    // if (!modelId) return { success: false, error: "Model ID is required" };
 
-    // ensure route has both starting node and starting edge if the route
-    // has any nodes or edges
-    if ((route.nodes.length || route.edges.length) &&
-        (!route.startNode || !route.startEdge)) {
-        return { success: false, error: "Route must have a starting step!" }
-    }
+    // // ensure route has both starting node and starting edge if the route
+    // // has any nodes or edges
+    // if ((route.nodes.length || route.edges.length) &&
+    //     (!route.startNode || !route.startEdge)) {
+    //     return { success: false, error: "Route must have a starting step!" }
+    // }
 
-    const modelCollection = db.collection<ModelDoc>("models")
-    const model = await modelCollection.findOne({ _id: new ObjectId(modelId) });
-    if (!model) return { success: false, error: "Model not found" };
+    // const modelCollection = db.collection<ModelDoc>("models")
+    // const model = await modelCollection.findOne({ _id: new ObjectId(modelId) });
+    // if (!model) return { success: false, error: "Model not found" };
 
-    await modelCollection.updateOne(
-        { _id: new ObjectId(modelId) },
-        { $set: { route } }
-    )
+    // await modelCollection.updateOne(
+    //     { _id: new ObjectId(modelId) },
+    //     { $set: { route } }
+    // )
 
-    return { success: true };
+    return { success: false, error: "Not implemented" };
 }

@@ -21,7 +21,7 @@ const InputSchema = z.object({
   }),
 });
 
-export async function upsertInstanceRoute(
+export async function upsertRouteFromListView(
   input: z.input<typeof InputSchema>
 ): Promise<ActionState<typeof InputSchema>> {
   const { user } = await getCurrentSession();

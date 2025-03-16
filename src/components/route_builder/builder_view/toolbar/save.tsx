@@ -2,7 +2,7 @@
 import React from "react";
 import { useBuilderContext } from "../builder.context";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { upsertRoute } from "@/server/routes/upsert_route";
+import { upsertRouteFromBuilderView } from "@/server/routes/upsert_route_from_builder_view";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { instanceKeys, routeKeys } from "@/lib/query_keys";
 
@@ -19,7 +19,7 @@ export default function Save() {
     const queryClient = useQueryClient();
 
     const { mutate: save } = useMutation({
-        mutationFn: upsertRoute,
+        mutationFn: upsertRouteFromBuilderView,
         onSuccess: (data) => {
             if (data.success) {
                 queryClient.invalidateQueries({ queryKey: routeKeys.id(id ?? "", "") });

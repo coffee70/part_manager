@@ -10,7 +10,7 @@ import { getInstances } from '@/server/instances/get_instances';
 import { RouteFormState, Route } from './types';
 import RouterSelector from './router_selector';
 import RouteSteps from './route_steps';
-import { upsertInstanceRoute } from '@/server/routes/upsert_instance_route';
+import { upsertRouteFromListView } from '@/server/routes/upsert_route_from_list_view';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
@@ -66,7 +66,7 @@ export default function Builder({ children, route }: Props) {
 
   // Setup mutation for saving the route
   const { mutate: saveRoute, isPending } = useMutation({
-    mutationFn: upsertInstanceRoute,
+    mutationFn: upsertRouteFromListView,
     onSuccess: (data) => {
       if (data.success) {
         // On success, just close the dialog and invalidate queries

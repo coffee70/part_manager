@@ -20,7 +20,7 @@ const OutputSchema = z.object({
 /**
  * Clones a route from a source instance to a target instance
  */
-export async function upsertInstanceFromClone(input: z.input<typeof InputSchema>) {
+export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema>) {
   try {
     const { user } = await getCurrentSession();
     if (!user) throw new Error("Unauthorized");

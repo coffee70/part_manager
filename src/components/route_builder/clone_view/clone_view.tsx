@@ -11,7 +11,7 @@ import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import Loader from '@/components/ui/loader';
 import { getInstances } from '@/server/instances/get_instances';
 import { hasRoute } from '@/server/routes/has_route';
-import { upsertInstanceFromClone } from '@/server/routes/upsert_instance_from_clone';
+import { upsertRouteFromCloneView } from '@/server/routes/upsert_route_from_clone_view';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getContexts } from '@/server/contexts/get_contexts';
 
@@ -85,7 +85,7 @@ export default function CloneView({ children }: Props) {
 
     // Setup mutation for cloning the route
     const { mutate: cloneRoute, isPending } = useMutation({
-        mutationFn: upsertInstanceFromClone,
+        mutationFn: upsertRouteFromCloneView,
         onSuccess: (data) => {
             if (data.success) {
                 // On success, just close the dialog and invalidate queries
