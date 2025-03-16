@@ -7,12 +7,14 @@ import { useRouteActions } from "./use_route_actions";
 import DeleteRouteDialog from "./delete_route_dialog";
 import StepDropdown from "./step_dropdown";
 import Builder from "@/components/route_builder/list_view/builder";
-
+import { useRouter } from "next/navigation";
+import { router } from "@/lib/url";
 /**
  * Main Step component that orchestrates the queries and actions
  * related to route steps and provides UI for interacting with them.
  */
 export default function Step() {
+    const nextRouter = useRouter();
     const { context, modelId, instanceId } = useInstanceURL();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const routeListViewTriggerRef = React.useRef<HTMLButtonElement>(null);
@@ -35,6 +37,11 @@ export default function Step() {
 
     const handleOpenRouteListView = () => {
         routeListViewTriggerRef.current?.click();
+    }
+
+    const handleViewCurrentStep = () => {
+        if (!route?.routerId || !currentStep?._id) return;
+        nextRouter.push(router().routers().instances().instance(route.routerId, currentStep._id));
     }
 
     // Return null if not in 'models' context
@@ -77,6 +84,7 @@ export default function Step() {
                 onStepChange={handleStepChange}
                 onDeleteClick={() => setDeleteDialogOpen(true)}
                 onOpenRouteListView={handleOpenRouteListView}
+                onViewCurrentStep={handleViewCurrentStep}
             />
         </>
     );

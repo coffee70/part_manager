@@ -4,7 +4,7 @@ import { StepType } from "@/types/collections";
 import StepButton from "./step_button";
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSubContent, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubTrigger } from '@/components/ui/dropdown-menu'
 import StepItem from "./step_item";
-import { RouteIcon, TrashIcon, ListIcon, HammerIcon } from "lucide-react";
+import { RouteIcon, TrashIcon, ListIcon, HammerIcon, LinkIcon } from "lucide-react";
 
 interface TargetStep {
     id: string;
@@ -18,6 +18,7 @@ interface StepDropdownProps {
     onStepChange: (id: string) => void;
     onDeleteClick: () => void;
     onOpenRouteListView: () => void;
+    onViewCurrentStep: () => void;
 }
 
 /**
@@ -28,7 +29,8 @@ export default function StepDropdown({
     targetSteps,
     onStepChange,
     onDeleteClick,
-    onOpenRouteListView
+    onOpenRouteListView,
+    onViewCurrentStep
 }: StepDropdownProps) {
     return (
         <DropdownMenu>
@@ -60,6 +62,15 @@ export default function StepDropdown({
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
+                    <DropdownMenuItem onSelect={(e) => {
+                        e.preventDefault();
+                        onViewCurrentStep();
+                    }}>
+                        <div className='flex items-center space-x-2'>
+                            <LinkIcon className='h-4 w-4' />
+                            <span>View Current Step</span>
+                        </div>
+                    </DropdownMenuItem>
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <div className='flex items-center space-x-2'>
