@@ -25,11 +25,19 @@ export default function EditProfile({ open, onOpenChange }: Props) {
         queryFn: () => getCurrentUser(),
     })
 
-    const [formState, setFormState] = React.useState({
-        name: user?.name || '',
-        username: user?.username || '',
-        title: user?.title || '',
-    });
+    const initialFormState = React.useCallback(() => {
+        return {
+            name: user?.name || '',
+            username: user?.username || '',
+            title: user?.title || '',
+        }
+    }, [user])
+
+    const [formState, setFormState] = React.useState(initialFormState);
+
+    React.useEffect(() => {
+        setFormState(initialFormState);
+    }, [user, initialFormState])
 
     const queryClient = useQueryClient();
 
