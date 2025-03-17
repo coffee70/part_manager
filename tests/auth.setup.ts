@@ -47,6 +47,73 @@ setup('create admin user', async ({ page }) => {
     // check for welcome message
     await expect(page.getByRole('heading')).toContainText('Models');
 
+    // edit username
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('menuitem', { name: 'Edit Profile' }).click();
+    await page.getByRole('textbox').nth(1).click();
+    await page.getByRole('textbox').nth(1).fill('test_edited');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('test_edited');
+    await page.locator('input[type="password"]').click();
+    await page.locator('input[type="password"]').fill('Newpassword10!');
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page.getByRole('heading')).toContainText('Models');
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('menuitem', { name: 'Edit Profile' }).click();
+    await expect(page.getByRole('textbox').nth(1)).toHaveValue('test_edited');
+    await page.getByRole('textbox').nth(1).click();
+    await page.getByRole('textbox').nth(1).fill('test');
+    await page.getByRole('button', { name: 'Save' }).click();
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('test');
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').press('Tab');
+    await page.locator('input[type="password"]').fill('Newpassword10!');
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page.getByRole('heading')).toContainText('Models');
+
+    // edit password
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('menuitem', { name: 'Change Password' }).click();
+    await page.locator('div').filter({ hasText: /^Current Password$/ }).getByRole('textbox').fill('Newpassword10!');
+    await page.getByRole('textbox').nth(1).click();
+    await page.getByRole('textbox').nth(1).fill('Newpassword11!');
+    await page.locator('div').filter({ hasText: /^Confirm Password$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Confirm Password$/ }).getByRole('textbox').fill('Newpassword11!');
+    await page.getByRole('button', { name: 'Change Password' }).click();
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('test');
+    await page.locator('input[type="password"]').click();
+    await page.locator('input[type="password"]').fill('Newpassword10!');
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page.locator('form')).toContainText('ErrorIncorrect username or password.');
+    await page.locator('input[type="password"]').click();
+    await page.locator('input[type="password"]').fill('Newpassword11!');
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page.getByRole('heading')).toContainText('Models');
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('menuitem', { name: 'Change Password' }).click();
+    await page.locator('div').filter({ hasText: /^Current Password$/ }).getByRole('textbox').fill('Newpassword11!');
+    await page.getByRole('textbox').nth(1).click();
+    await page.getByRole('textbox').nth(1).fill('Newpassword10!');
+    await page.locator('div').filter({ hasText: /^Confirm Password$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Confirm Password$/ }).getByRole('textbox').fill('Newpassword10!');
+    await page.getByRole('button', { name: 'Change Password' }).click();
+    await page.locator('button[name="more"]').first().click();
+    await page.getByRole('button', { name: 'Logout' }).click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').click();
+    await page.locator('div').filter({ hasText: /^Username$/ }).getByRole('textbox').fill('test');
+    await page.locator('input[type="password"]').click();
+    await page.locator('input[type="password"]').fill('Newpassword10!');
+    await page.getByRole('button', { name: 'Log in' }).click();
+    await expect(page.getByRole('heading')).toContainText('Models');
+
     // Save storage state
     await page.context().storageState({ path: STORAGE_STATE });
 })
