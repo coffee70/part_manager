@@ -29,7 +29,7 @@ export default function TableContainer() {
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const { context, id } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
     const handleClick = (id: string) => {
         const params = new URLSearchParams(searchParams);
@@ -69,7 +69,11 @@ export default function TableContainer() {
             <Table>
                 <TableBody>
                     {data.map((instance) => (
-                        <TableRow key={instance._id} onClick={() => handleClick(instance._id)}>
+                        <TableRow 
+                            key={instance._id} 
+                            onClick={() => handleClick(instance._id)}
+                            selected={instanceId === instance._id}
+                        >
                             {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableCell className="px-1">
                                 <Priority priority={instance.priority} />
                             </TableCell>}
