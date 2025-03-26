@@ -154,27 +154,31 @@ export default function Builder({ children, route }: Props) {
         )}
 
         <div className="space-y-6">
-          <RouterSelector
-            routers={routers}
-            selectedRouterId={formState.route.routerId}
-            onRouterSelect={handleRouterSelect}
-          />
+          <div className="max-h-[70vh] px-1 overflow-y-auto space-y-6">
+            <RouterSelector
+              routers={routers}
+              selectedRouterId={formState.route.routerId}
+              onRouterSelect={handleRouterSelect}
+            />
 
-          <RouteSteps
-            route={formState.route}
-            instances={instances}
-            selectedRouterId={formState.route.routerId}
-            onRouteChange={(route) => setFormState({ ...formState, route })}
-          />
+            <RouteSteps
+              route={formState.route}
+              instances={instances}
+              selectedRouterId={formState.route.routerId}
+              onRouteChange={(route) => setFormState({ ...formState, route })}
+            />
+          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            onClick={handleSubmit}
-            disabled={!formState.route.routerId || isPending}
-          >
-            {isPending ? <Loader /> : 'Save'}
-          </Button>
+          <div className="px-1">
+            <Button
+              type="submit"
+              className="w-full"
+              onClick={handleSubmit}
+              disabled={!formState.route.routerId || isPending}
+            >
+              {isPending ? <Loader /> : 'Save'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
