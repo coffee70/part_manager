@@ -1,7 +1,7 @@
 'use client'
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
-import SummaryLayout from "@/layouts/summary_layout";
+import { SummaryHeader, SummaryContent } from "@/layouts/summary_layout";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
 import Priority from "@/components/summary/summary_actions/priority/priority";
 import SummarySections from "@/components/summary/summary_sections/summary_sections";
@@ -11,7 +11,7 @@ import SummaryLinks from "@/components/summary/summary_links/summary_links";
 import SummaryActivity from "@/components/summary/summary_activity/summary_activity";
 import SummarySkeleton from '@/components/summary/summary_skeleton';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
-import { instanceKeys, contextKeys, modelKeys } from '@/lib/query_keys';
+import { instanceKeys, contextKeys } from '@/lib/query_keys';
 import SummaryError from '@/components/summary/summary_error';
 import Edit from '@/components/summary/summary_actions/edit/edit';
 import { getInstance } from '@/server/instances/get_instance';
@@ -61,7 +61,7 @@ export default function SummaryContainer() {
 
     return (
         <MoreProvider>
-            <SummaryLayout>
+            <SummaryHeader>
                 <SummaryNumber number={instance.number} />
                 <SummaryToolbar>
                     <InstanceForm instance={instance}>
@@ -71,12 +71,15 @@ export default function SummaryContainer() {
                     {priority && <Priority priority={instance.priority} />}
                     <Step />
                 </SummaryToolbar>
+            </SummaryHeader>
+
+            <SummaryContent>
                 <SummarySections values={instance.values} />
                 <SummaryNotes initialValue={instance.notes} />
                 {attachable && <SummaryAttachments />}
                 {linkable && <SummaryLinks />}
                 {commentable && <SummaryActivity />}
-            </SummaryLayout>
+            </SummaryContent>
         </MoreProvider>
     )
 }

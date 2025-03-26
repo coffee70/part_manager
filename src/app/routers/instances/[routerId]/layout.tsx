@@ -18,7 +18,7 @@ export default async function Layout({
             </ResizablePanel>
             <ResizableHandle withHandle />
             <ResizablePanel className="h-full">
-                <div className="p-8 overflow-y-auto h-full">
+                <div className="overflow-y-auto h-full">
                     {summary}
                 </div>
             </ResizablePanel>
