@@ -50,6 +50,12 @@ export async function upsertRouteFromListView(
   const routerInstanceCollection = db.collection<InstanceDoc>(route.routerId);
 
   for (const node of route.nodes) {
+    if (!ObjectId.isValid(node.instanceId)) {
+      return {
+        success: false,
+        error: "Ensure all router instances are filled in and are valid!"
+      };
+    }
     const routerInstance = await routerInstanceCollection.findOne({ _id: new ObjectId(node.instanceId) });
     if (!routerInstance) {
       return {
