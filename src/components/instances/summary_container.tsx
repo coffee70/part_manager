@@ -74,10 +74,10 @@ export default function SummaryContainer() {
             </SummaryHeader>
 
             <SummaryContent>
+                {linkable && <SummaryLinks />}
                 <SummarySections values={instance.values} />
                 <SummaryNotes initialValue={instance.notes} />
                 {attachable && <SummaryAttachments />}
-                {linkable && <SummaryLinks />}
                 {commentable && <SummaryActivity />}
             </SummaryContent>
         </MoreProvider>

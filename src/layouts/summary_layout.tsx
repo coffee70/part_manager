@@ -12,6 +12,6 @@ export function SummaryHeader({ children }: Props) {
 
 export function SummaryContent({ children }: Props) {
     return (
-        <div className="px-8 pb-8">{children}</div>
+        <div className="flex flex-col space-y-6 px-8 pb-8">{children}</div>
     )
 }
