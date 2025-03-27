@@ -21,6 +21,7 @@ const OutputSchema = z.array(z.object({
         name: z.string(),
         type: z.enum(stepTypes),
     }).optional(),
+    routeIsStarted: z.boolean().optional(),
     updatedAt: z.date(),
     updatedBy: z.string(),
 }))
@@ -106,6 +107,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
                 name: currentStep.name,
                 type: currentStep.type
             } : undefined,
+            routeIsStarted: instance.route?.isStarted,
             updatedAt: instance.updatedAt,
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
         }

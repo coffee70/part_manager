@@ -79,6 +79,13 @@ export async function upsertRouteFromListView(
     currentStepId = firstInstanceId;
   }
 
+  // check if the route has an isStarted property
+  // if it doesn't, set it to false
+  let isStarted = instance.route?.isStarted;
+  if (isStarted === undefined) {
+    isStarted = false;
+  }
+
   // Store the route with the instance
   // We no longer need to separately store routerId and stepId as they're part of the route object
 
@@ -89,7 +96,8 @@ export async function upsertRouteFromListView(
         route: {
           routerId: route.routerId,
           currentStepId: currentStepId,
-          nodes: route.nodes
+          nodes: route.nodes,
+          isStarted
         },
         updatedAt: new Date(),
         updatedById: user._id

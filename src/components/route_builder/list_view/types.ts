@@ -22,6 +22,7 @@ export type Node = {
 }
 
 export type Route = {
+  isStarted?: boolean;
   routerId: string;
   currentStepId: string;
   nodes: Node[];

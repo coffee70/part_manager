@@ -9,6 +9,8 @@ import StepDropdown from "./step_dropdown";
 import Builder from "@/components/route_builder/list_view/builder";
 import { useRouter } from "next/navigation";
 import { router } from "@/lib/url";
+import StartRoute from "./start_route";
+
 /**
  * Main Step component that orchestrates the queries and actions
  * related to route steps and provides UI for interacting with them.
@@ -25,7 +27,8 @@ export default function Step() {
         isLoading,
         currentStep,
         targetSteps,
-        route
+        route,
+        isStarted
     } = useStepQueries(context, modelId, instanceId);
 
     // Get route actions
@@ -56,6 +59,10 @@ export default function Step() {
     }
 
     if (!currentStep) return null;
+
+    if (!isStarted) {
+        return <StartRoute />
+    }
 
     return (
         <>

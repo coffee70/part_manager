@@ -5,7 +5,7 @@ import { hasRoute } from "@/server/routes/has_route";
 import { getCurrentStep } from "@/server/routes/get_current_step";
 import { getTargetSteps } from "@/server/routes/get_target_steps";
 import { getRoute } from "@/server/routes/get_route";
-
+import { isStarted } from "@/server/routes/is_started";
 /**
  * Custom hook to handle all queries related to the Step component
  */
@@ -38,12 +38,20 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteQuery.data,
   });
 
+  // Fetch if the route is started
+  const isStartedQuery = useQuery({
+    queryKey: routeKeys.isStarted(modelId, instanceId),
+    queryFn: () => isStarted({ modelId, instanceId }),
+    enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteQuery.data,
+  });
+
   // Combined loading state
   const isLoading = 
     hasRouteQuery.isLoading || 
     currentStepQuery.isLoading || 
     targetStepsQuery.isLoading || 
-    routeQuery.isLoading;
+    routeQuery.isLoading ||
+    isStartedQuery.isLoading;
 
   return {
     hasRoute: hasRouteQuery.data,
@@ -54,6 +62,8 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     isLoadingTargetSteps: targetStepsQuery.isLoading,
     route: routeQuery.data,
     isLoadingRoute: routeQuery.isLoading,
+    isStarted: isStartedQuery.data,
+    isLoadingIsStarted: isStartedQuery.isLoading,
     isLoading,
   };
 } 
