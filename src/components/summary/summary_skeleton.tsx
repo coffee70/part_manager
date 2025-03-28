@@ -1,17 +1,21 @@
-import SummaryLayout from "@/layouts/summary_layout";
+import { SummaryHeader, SummaryContent } from "@/layouts/summary_layout";
 import { Skeleton } from "../ui/skeleton";
 import SummaryToolbar from "./summary_toolbar";
 
 export default function SummarySkeleton() {
     return (
-        <SummaryLayout>
-            <SummaryTitleSkeleton />
-            <SummaryToolbarSkeleton />
-            <SummaryNotesSkeleton />
-            <SummaryAttachmentsSkeleton />
-            <SummaryListSkeleton />
-            <SummaryActivitySkeleton />
-        </SummaryLayout>
+        <>
+            <SummaryHeader>
+                <SummaryTitleSkeleton />
+                <SummaryToolbarSkeleton />
+            </SummaryHeader>
+            <SummaryContent>
+                <SummaryNotesSkeleton />
+                <SummaryAttachmentsSkeleton />
+                <SummaryListSkeleton />
+                <SummaryActivitySkeleton />
+            </SummaryContent>
+        </>
     )
 }
 
