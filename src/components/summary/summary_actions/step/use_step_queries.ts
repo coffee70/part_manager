@@ -58,7 +58,7 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     isLoadingHasRoute: hasRouteQuery.isLoading,
     currentStep: currentStepQuery.data,
     isLoadingCurrentStep: currentStepQuery.isLoading,
-    targetSteps: targetStepsQuery.data || [],
+    targetSteps: targetStepsQuery.data,
     isLoadingTargetSteps: targetStepsQuery.isLoading,
     route: routeQuery.data,
     isLoadingRoute: routeQuery.isLoading,

@@ -8,9 +8,9 @@ import { deleteRoute } from "@/server/routes/delete_route";
  * Custom hook to handle all mutations related to routes
  */
 export function useRouteActions(
-  context: string, 
-  modelId: string, 
-  instanceId: string | null, 
+  context: string,
+  modelId: string,
+  instanceId: string | null,
   onDeleteSuccess?: () => void
 ) {
   const queryClient = useQueryClient();
@@ -33,14 +33,14 @@ export function useRouteActions(
     mutationFn: deleteRoute,
     onSuccess: () => {
       if (context === "models" && modelId && instanceId) {
-        // Invalidate all relevant queries to update the UI
-        queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) });
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
-        
+        queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
+
         // Call success callback if provided
         if (onDeleteSuccess) {
           onDeleteSuccess();

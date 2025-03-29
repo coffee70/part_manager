@@ -50,16 +50,18 @@ export default function Step() {
     // Return null if not in 'models' context
     if (context !== "models") return null;
 
-    // Return null if hasRoute is false
-    if (!isLoading && !hasRoute) return null;
-
     // Show loading state
     if (isLoading) {
         return <Skeleton className="h-8 w-24" />;
     }
 
+    // Return null if hasRoute is false
+    if (!hasRoute) return null;
+
+    // Return null if currentStep is null or undefined
     if (!currentStep) return null;
 
+    // Return StartRoute if isStarted is false
     if (!isStarted) {
         return <StartRoute />
     }
@@ -84,7 +86,7 @@ export default function Step() {
                 isError={deleteRouteMutation.isError}
                 error={deleteRouteMutation.error}
             />
-            
+
             <StepDropdown
                 currentStep={currentStep}
                 targetSteps={targetSteps}

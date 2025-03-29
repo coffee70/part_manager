@@ -7,14 +7,14 @@ import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
 
 const InputSchema = z.object({
-  modelId: z.string(),
-  instanceId: z.string().nullable(),
+    modelId: z.string(),
+    instanceId: z.string().nullable(),
 });
 
 const OutputSchema = z.object({
-  _id: z.string(),
-  name: z.string(),
-  type: z.enum(stepTypes),
+    _id: z.string(),
+    name: z.string(),
+    type: z.enum(stepTypes),
 });
 
 /**
@@ -24,55 +24,55 @@ const OutputSchema = z.object({
  * A step in a model route is a router instance.
  */
 export async function getCurrentStep(input: z.input<typeof InputSchema>) {
-  const { user } = await getCurrentSession();
-  if (!user) throw new Error("Unauthorized");
+    const { user } = await getCurrentSession();
+    if (!user) throw new Error("Unauthorized");
 
-  const { modelId, instanceId } = InputSchema.parse(input);
-  if (!modelId) throw new Error("Model ID is required");
-  if (!instanceId) throw new Error("Instance ID is required");
+    const { modelId, instanceId } = InputSchema.parse(input);
+    if (!modelId) throw new Error("Model ID is required");
+    if (!instanceId) throw new Error("Instance ID is required");
 
-  // Get the model instance to access its route information
-  const instanceCollection = db.collection<InstanceDoc>(modelId);
-  const instance = await instanceCollection.findOne({ 
-    _id: new ObjectId(instanceId) 
-  });
-  
-  if (!instance) {
-    throw new Error("Model instance not found");
-  }
-
-  // Check if route exists
-  if (!instance.route) {
-    throw new Error("Model instance does not have a route");
-  }
-  
-  // Access routerId and currentStepId from the route object
-  const { routerId, currentStepId } = instance.route;
-  
-  if (!routerId) {
-    throw new Error("Route does not have a router ID");
-  }
-  
-  if (!currentStepId) {
-    throw new Error("Route does not have a current step");
-  }
-
-  // Get the router instance that represents the current step
-  try {
-    // Use getInstance to get the router instance
-    const routerInstance = await getInstance({
-      id: routerId,
-      instanceId: currentStepId
+    // Get the model instance to access its route information
+    const instanceCollection = db.collection<InstanceDoc>(modelId);
+    const instance = await instanceCollection.findOne({
+        _id: new ObjectId(instanceId)
     });
 
-    return OutputSchema.parse({
-      _id: routerInstance._id.toString(),
-      name: routerInstance.number,
-      // TODO: Remove this once we have a proper type for the step type
-      type: 'To-do' as StepType,
-    });
-  } catch (error) {
-    console.error("Error fetching current step:", error);
-    throw new Error("Failed to fetch current step");
-  }
+    if (!instance) {
+        throw new Error("Model instance not found");
+    }
+
+    // Check if route exists
+    if (!instance.route) {
+        return null;
+    }
+
+    // Access routerId and currentStepId from the route object
+    const { routerId, currentStepId } = instance.route;
+
+    if (!routerId) {
+        throw new Error("Route does not have a router ID");
+    }
+
+    if (!currentStepId) {
+        throw new Error("Route does not have a current step");
+    }
+
+    // Get the router instance that represents the current step
+    try {
+        // Use getInstance to get the router instance
+        const routerInstance = await getInstance({
+            id: routerId,
+            instanceId: currentStepId
+        });
+
+        return OutputSchema.parse({
+            _id: routerInstance._id.toString(),
+            name: routerInstance.number,
+            // TODO: Remove this once we have a proper type for the step type
+            type: 'To-do' as StepType,
+        });
+    } catch (error) {
+        console.error("Error fetching current step:", error);
+        throw new Error("Failed to fetch current step");
+    }
 } 

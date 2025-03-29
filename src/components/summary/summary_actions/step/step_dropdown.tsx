@@ -14,7 +14,7 @@ interface TargetStep {
 
 interface StepDropdownProps {
     currentStep: any;
-    targetSteps: TargetStep[];
+    targetSteps?: TargetStep[] | null;
     onStepChange: (id: string) => void;
     onDeleteClick: () => void;
     onOpenRouteListView: () => void;

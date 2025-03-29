@@ -16,23 +16,12 @@ const StartRoute = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
     const { mutate, isPending } = useMutation({
         mutationFn: startRoute,
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: routeKeys.isStarted(modelId, instanceId),
-            })
-            queryClient.invalidateQueries({
-                queryKey: routeKeys.currentStep(modelId, instanceId),
-            })
-            queryClient.invalidateQueries({
-                queryKey: routeKeys.targetSteps(modelId, instanceId),
-            })
-            queryClient.invalidateQueries({
-                queryKey: routeKeys.id(modelId, instanceId),
-            })
-
+            queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
+            queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
             // invalidate table view
-            queryClient.invalidateQueries({
-                queryKey: instanceKeys.all("models", modelId),
-            })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
         }
     })
 
