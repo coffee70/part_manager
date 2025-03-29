@@ -1,10 +1,11 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { startRoute } from "@/server/routes/start_route";
+import { updateRouteState } from "@/server/routes/update_route_state";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import Loader from "@/components/ui/loader";
 import { instanceKeys, routeKeys } from "@/lib/query_keys";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -14,9 +15,8 @@ const StartRoute = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
     const queryClient = useQueryClient();
 
     const { mutate, isPending } = useMutation({
-        mutationFn: startRoute,
+        mutationFn: updateRouteState,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
             queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
             queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
             queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
@@ -29,6 +29,7 @@ const StartRoute = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
         mutate({
             modelId,
             instanceId,
+            state: RouteState.Started
         })
     }
 

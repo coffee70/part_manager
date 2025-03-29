@@ -2,10 +2,12 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, ModelDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
+import { InstanceDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
-import { getCurrentStep } from "../routes/get_current_step";
-import { hasRoute } from "../routes/has_route";
+import { RouteState } from "@/components/route_builder/list_view/types";
+import { getRoute } from "../routes/get_route";
+import { getInstance } from "./get_instance";
+import { Node } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     id: z.string(),
@@ -16,12 +18,14 @@ const OutputSchema = z.array(z.object({
     _id: z.string(),
     number: z.string(),
     priority: z.enum(priorities).catch('Medium'),
-    step: z.object({
-        _id: z.string(),
-        name: z.string(),
-        type: z.enum(stepTypes),
+    route: z.object({
+        state: z.nativeEnum(RouteState),
+        currentStep: z.object({
+            id: z.string(),
+            name: z.string(),
+            type: z.enum(stepTypes),
+        }).optional(),
     }).optional(),
-    routeIsStarted: z.boolean().optional(),
     updatedAt: z.date(),
     updatedBy: z.string(),
 }))
@@ -93,21 +97,32 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const res = await Promise.all(instances.map(async instance => {
         const updatedBy = await usersCollection.findOne({ _id: instance.updatedById });
 
-        let currentStep;
-        if (await hasRoute({ modelId: id, instanceId: instance._id.toString() })) {
-            currentStep = await getCurrentStep({ modelId: id, instanceId: instance._id.toString() });
+        const route = await getRoute({ modelId: id, instanceId: instance._id.toString() });
+
+        let currentStep: Node | undefined;
+        if (route) {
+            let currentNode = route.nodes.find(node => node.instanceId === route.currentStepId);
+            if (currentNode) {
+                let routerInstance = await getInstance({ id: route.routerId, instanceId: currentNode.instanceId })
+                if (routerInstance) {
+                    currentStep = {
+                        id: currentNode.id,
+                        instanceId: routerInstance._id.toString(),
+                        name: routerInstance.number,
+                        type: 'To-do',
+                    }
+                }
+            }
         }
 
         return {
             _id: instance._id.toString(),
             number: instance.number,
             priority: instance.priority,
-            step: currentStep ? {
-                _id: currentStep._id.toString(),
-                name: currentStep.name,
-                type: currentStep.type
+            route: route ? {
+                state: route.state,
+                currentStep: currentStep
             } : undefined,
-            routeIsStarted: instance.route?.isStarted,
             updatedAt: instance.updatedAt,
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
         }

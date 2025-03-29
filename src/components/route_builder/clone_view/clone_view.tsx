@@ -90,7 +90,6 @@ export default function CloneView({ children }: Props) {
             if (data.success) {
                 // On success, just close the dialog and invalidate queries
                 queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
-                queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
                 queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
                 queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
                 queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });

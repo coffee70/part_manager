@@ -34,7 +34,6 @@ export function useRouteActions(
     onSuccess: () => {
       if (context === "models" && modelId && instanceId) {
         queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
-        queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });

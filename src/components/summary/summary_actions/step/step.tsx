@@ -10,6 +10,7 @@ import Builder from "@/components/route_builder/list_view/builder";
 import { useRouter } from "next/navigation";
 import { router } from "@/lib/url";
 import StartRoute from "./start_route";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 /**
  * Main Step component that orchestrates the queries and actions
@@ -28,7 +29,6 @@ export default function Step() {
         currentStep,
         targetSteps,
         route,
-        isStarted
     } = useStepQueries(context, modelId, instanceId);
 
     // Get route actions
@@ -56,13 +56,13 @@ export default function Step() {
     }
 
     // Return null if hasRoute is false
-    if (!hasRoute) return null;
+    if (!hasRoute || !route) return null;
 
     // Return null if currentStep is null or undefined
     if (!currentStep) return null;
 
     // Return StartRoute if isStarted is false
-    if (!isStarted) {
+    if (route.state === RouteState.Stopped) {
         return <StartRoute />
     }
 

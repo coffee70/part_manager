@@ -47,7 +47,7 @@ export default function StepDropdown({
                             >
                                 <StepItem
                                     step={{
-                                        _id: targetStep.instanceId,
+                                        id: targetStep.instanceId,
                                         name: targetStep.number,
                                         type: "To-do" as StepType
                                     }}

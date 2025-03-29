@@ -20,9 +20,7 @@ import { getRoute } from "@/server/routes/get_route";
 import { getCurrentStep } from "@/server/routes/get_current_step";
 import { hasRoute } from "@/server/routes/has_route";
 import { getTargetSteps } from "@/server/routes/get_target_steps";
-import { getModels } from "@/server/models/get_models";
 import { getContexts } from "@/server/contexts/get_contexts";
-import { isStarted } from "@/server/routes/is_started";
 
 export default async function Page({
     params,
@@ -116,11 +114,6 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: routeKeys.targetSteps(id, instanceId),
         queryFn: () => getTargetSteps({ modelId: id, instanceId }),
-    })
-
-    await queryClient.prefetchQuery({
-        queryKey: routeKeys.isStarted(id, instanceId),
-        queryFn: () => isStarted({ modelId: id, instanceId }),
     })
 
     // route cloning

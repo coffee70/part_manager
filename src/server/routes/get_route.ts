@@ -4,6 +4,7 @@ import { InstanceDoc, stepTypes } from "@/types/collections"
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
+import { RouteState } from "@/components/route_builder/list_view/types"
 
 const OutputSchema = z.object({
     routerId: z.string(),
@@ -14,6 +15,7 @@ const OutputSchema = z.object({
         name: z.string(),
         type: z.enum(stepTypes),
     })),
+    state: z.nativeEnum(RouteState).default(RouteState.Stopped),
 }).nullable();
 
 const InputSchema = z.object({

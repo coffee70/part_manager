@@ -4,7 +4,7 @@ import { MoveRightIcon } from "lucide-react";
 
 type Props = {
     step: {
-        _id: string;
+        id: string;
         name: string;
         type: StepType;
     }

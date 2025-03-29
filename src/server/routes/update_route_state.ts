@@ -5,13 +5,15 @@ import { db } from "@/lib/db";
 import { getCurrentSession } from "../auth/get_current_session";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { ObjectId } from "mongodb";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     modelId: z.string(),
-    instanceId: z.string().nullable()
+    instanceId: z.string().nullable(),
+    state: z.nativeEnum(RouteState)
 })
 
-export async function startRoute(
+export async function updateRouteState(
     input: z.input<typeof InputSchema>
 ): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();
@@ -20,7 +22,7 @@ export async function startRoute(
     const validation = validate(InputSchema, input);
     if (!validation.success) return validation;
 
-    const { modelId, instanceId } = validation.data;
+    const { modelId, instanceId, state } = validation.data;
     if (!instanceId) {
         return {
             success: false,
@@ -37,10 +39,23 @@ export async function startRoute(
         }
     }
 
+    if (!instance.route) {
+        return {
+            success: false,
+            error: "No route found for this instance"
+        }
+    }
+
     await instanceCollection.updateOne(
         { _id: new ObjectId(instanceId) },
-        { $set: { "route.isStarted": true } }
+        { 
+            $set: { 
+                "route.state": state,
+                updatedAt: new Date(),
+                updatedById: user._id
+            } 
+        }
     )
 
     return { success: true };
-}
+} 

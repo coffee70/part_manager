@@ -22,8 +22,15 @@ export type Node = {
 }
 
 export type Route = {
-  isStarted?: boolean;
+  state: RouteState;
   routerId: string;
   currentStepId: string;
   nodes: Node[];
+}
+
+export enum RouteState {
+  Started = "started",
+  Paused = "paused",
+  Completed = "completed",
+  Stopped = "stopped",
 }

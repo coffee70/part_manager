@@ -7,7 +7,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getRouters } from '@/server/routers/get_routers';
 import { routerKeys, instanceKeys, routeKeys } from '@/lib/query_keys';
 import { getInstances } from '@/server/instances/get_instances';
-import { RouteFormState, Route } from './types';
+import { RouteFormState, Route, RouteState } from './types';
 import RouterSelector from './router_selector';
 import RouteSteps from './route_steps';
 import { upsertRouteFromListView } from '@/server/routes/upsert_route_from_list_view';
@@ -34,6 +34,7 @@ export default function Builder({ children, route }: Props) {
       routerId: '',
       currentStepId: '',
       nodes: [],
+      state: RouteState.Stopped
     }
   });
 
@@ -44,6 +45,7 @@ export default function Builder({ children, route }: Props) {
         routerId: '',
         currentStepId: '',
         nodes: [],
+        state: RouteState.Stopped
       }
     });
   }, [route]);
@@ -71,7 +73,6 @@ export default function Builder({ children, route }: Props) {
       if (data.success) {
         // On success, just close the dialog and invalidate queries
         queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
-        queryClient.invalidateQueries({ queryKey: routeKeys.isStarted(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
@@ -100,6 +101,7 @@ export default function Builder({ children, route }: Props) {
         routerId: routerId,
         currentStepId: '',
         nodes: [],
+        state: RouteState.Stopped
       }
     });
 

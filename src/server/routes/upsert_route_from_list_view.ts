@@ -5,6 +5,7 @@ import { ActionState, validate } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
 import { InstanceDoc, stepTypes } from "@/types/collections";
 import { ObjectId } from "mongodb";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
   modelId: z.string(),
@@ -79,16 +80,12 @@ export async function upsertRouteFromListView(
     currentStepId = firstInstanceId;
   }
 
-  // check if the route has an isStarted property
-  // if it doesn't, set it to false
-  let isStarted = instance.route?.isStarted;
-  if (isStarted === undefined) {
-    isStarted = false;
-  }
+  // Determine the route state
+  // If this is a new route (no existing route), set it to Stopped
+  // If updating an existing route, preserve the current state
+  const routeState = instance.route?.state || RouteState.Stopped;
 
   // Store the route with the instance
-  // We no longer need to separately store routerId and stepId as they're part of the route object
-
   await instanceCollection.updateOne(
     { _id: new ObjectId(instanceId) },
     {
@@ -97,7 +94,7 @@ export async function upsertRouteFromListView(
           routerId: route.routerId,
           currentStepId: currentStepId,
           nodes: route.nodes,
-          isStarted
+          state: routeState
         },
         updatedAt: new Date(),
         updatedById: user._id

@@ -16,13 +16,13 @@ import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
-import { instanceKeys, contextKeys, routeKeys } from "@/lib/query_keys";
+import { instanceKeys, contextKeys } from "@/lib/query_keys";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
 import { Badge, StepBadge } from "@/components/ui/badge";
-import { isStarted } from "@/server/routes/is_started";
+import { RouteState } from "../route_builder/list_view/types";
 
 export default function TableContainer() {
 
@@ -70,8 +70,8 @@ export default function TableContainer() {
             <Table>
                 <TableBody>
                     {data.map((instance) => (
-                        <TableRow 
-                            key={instance._id} 
+                        <TableRow
+                            key={instance._id}
                             onClick={() => handleClick(instance._id)}
                             selected={instanceId === instance._id}
                         >
@@ -81,15 +81,19 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={instance.number} />
                             </TableCell>
-                            {!instance.routeIsStarted && instance.step ? (
-                                <TableCell align="left">
-                                    <Badge label={"NOT STARTED"} className="border border-stone-500 text-stone-500 px-2" />
-                                </TableCell>
-                            ) : (
-                                <TableCell align="left">
-                                    {instance.step && <StepBadge step={instance.step} />}
-                                </TableCell>
-                            )}
+
+                            {instance.route &&
+                                (instance.route.state === RouteState.Stopped ? (
+                                    <TableCell align="left">
+                                        <Badge label={"NOT STARTED"} className="border border-stone-500 text-stone-500 px-2" />
+                                    </TableCell>
+                                ) : (
+                                    <TableCell align="left">
+                                        {instance.route.currentStep && <StepBadge step={instance.route.currentStep} />}
+                                    </TableCell>
+                                ))
+                            }
+
                             <TableCell>
                                 <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>

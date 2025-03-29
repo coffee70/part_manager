@@ -24,7 +24,7 @@ export function Badge({ label, color, appendIcon, className }: BadgeProps) {
 
 type StatusBadgeProps = {
     step: {
-        _id: string;
+        id: string;
         name: string;
         type: StepType;
     }
