@@ -181,7 +181,7 @@ export function useRoute() {
             return updatedRoute;
         });
         setIsEditing(true);
-    }, [containerRef]);
+    }, [containerRef, notify]);
 
     const updateNodeLocation = React.useCallback((target: Element) => {
         const nodeId = target.getAttribute('id');
