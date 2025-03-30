@@ -52,10 +52,9 @@ export async function updateRouteState(
         updatedById: user._id
     };
 
-    // If the route is being stopped, reset the currentStepId to the first node
-    if (state === RouteState.Stopped && instance.route.nodes && instance.route.nodes.length > 0) {
-        const firstNodeInstanceId = instance.route.nodes[0].instanceId;
-        updateFields["route.currentStepId"] = firstNodeInstanceId;
+    // If the route is being stopped, reset the currentStepId to null
+    if (state === RouteState.Stopped) {
+        updateFields["route.currentStepId"] = null;
     }
 
     if (state === RouteState.Completed) {

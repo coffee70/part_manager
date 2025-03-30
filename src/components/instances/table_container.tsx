@@ -21,8 +21,6 @@ import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
-import { Badge, StepBadge } from "@/components/ui/badge";
-import { RouteState } from "../route_builder/list_view/types";
 import Step from "../list/data_table/step";
 
 export default function TableContainer() {
@@ -82,7 +80,11 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={instance.number} />
                             </TableCell>
-                            <Step instance={instance} />
+                            {instance.route && (
+                                <TableCell align="left">
+                                    <Step state={instance.route.state} currentStep={instance.route.currentStep} />
+                                </TableCell>
+                            )}
                             <TableCell>
                                 <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>

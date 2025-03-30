@@ -109,7 +109,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
                         id: currentNode.id,
                         instanceId: routerInstance._id.toString(),
                         name: routerInstance.number,
-                        type: 'To-do',
+                        type: 'In-progress',
                     }
                 }
             }

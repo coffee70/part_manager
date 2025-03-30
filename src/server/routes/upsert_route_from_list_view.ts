@@ -74,16 +74,19 @@ export async function upsertRouteFromListView(
     return { success: false, error: "Cannot determine the first instance in the route" };
   }
 
-  // check the current step id is in the route
-  let currentStepId = instance.route?.currentStepId;
-  if (!currentStepId || !route.nodes.some(node => node.instanceId === currentStepId)) {
-    currentStepId = firstInstanceId;
-  }
-
   // Determine the route state
   // If this is a new route (no existing route), set it to Stopped
   // If updating an existing route, preserve the current state
-  const routeState = instance.route?.state || RouteState.Stopped;
+  let routeState = instance.route?.state || RouteState.Stopped;
+
+  // check the current step id is in the route
+  // if not, set the current step id to null and the route state to Stopped
+  // to indicate that the route has not started
+  let currentStepId = instance.route?.currentStepId;
+  if (!currentStepId || !route.nodes.some(node => node.instanceId === currentStepId)) {
+    currentStepId = null;
+    routeState = RouteState.Stopped;
+  }
 
   // Store the route with the instance
   await instanceCollection.updateOne(

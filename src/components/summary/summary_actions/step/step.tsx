@@ -10,7 +10,6 @@ import StepDropdown from "./step_dropdown";
 import Builder from "@/components/route_builder/list_view/builder";
 import { useRouter } from "next/navigation";
 import { router } from "@/lib/url";
-import StartRoute from "./start_route";
 import { RouteState } from "@/components/route_builder/list_view/types";
 
 /**
@@ -74,10 +73,6 @@ export default function Step() {
     // Return null if currentStep is null or undefined
     if (!currentStep && route.state !== RouteState.Completed) return null;
 
-    // Return StartRoute if isStarted is false
-    if (route.state === RouteState.Stopped) {
-        return <StartRoute />
-    }
 
     return (
         <>
@@ -114,6 +109,7 @@ export default function Step() {
                 targetSteps={targetSteps}
                 isPaused={route.state === RouteState.Paused}
                 isCompleted={route.state === RouteState.Completed}
+                isStopped={route.state === RouteState.Stopped}
                 isOnLastStep={isOnLastStep}
                 onStepChange={handleStepChange}
                 onDeleteClick={() => setDeleteDialogOpen(true)}

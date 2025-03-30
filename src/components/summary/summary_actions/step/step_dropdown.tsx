@@ -30,6 +30,7 @@ interface TargetStep {
     id: string;
     instanceId: string;
     number: string;
+    type: StepType;
 }
 
 interface StepDropdownProps {
@@ -37,6 +38,7 @@ interface StepDropdownProps {
     targetSteps?: TargetStep[] | null;
     isPaused: boolean;
     isCompleted: boolean;
+    isStopped: boolean;
     isOnLastStep: boolean;
     onStepChange: (id: string) => void;
     onDeleteClick: () => void;
@@ -56,6 +58,7 @@ export default function StepDropdown({
     targetSteps,
     isPaused,
     isCompleted,
+    isStopped,
     isOnLastStep,
     onStepChange,
     onDeleteClick,
@@ -101,7 +104,7 @@ export default function StepDropdown({
                                     step={{
                                         id: targetStep.instanceId,
                                         name: targetStep.number,
-                                        type: "To-do" as StepType
+                                        type: targetStep.type
                                     }}
                                 />
                             </DropdownMenuItem>
@@ -116,7 +119,7 @@ export default function StepDropdown({
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    {!isCompleted && (
+                    {!isCompleted && !isStopped && (
                         <DropdownMenuItem onSelect={(e) => {
                             e.preventDefault();
                             onViewCurrentStep();
@@ -154,39 +157,43 @@ export default function StepDropdown({
                             </DropdownMenuSubContent>
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
-                    {!isCompleted && (isPaused ? (
-                        <DropdownMenuItem onSelect={(e) => {
-                            e.preventDefault();
-                            onResumeRoute();
-                        }}>
-                            <div className='flex items-center space-x-2'>
-                                <PlayIcon className='h-4 w-4' />
-                                <span>Resume Route</span>
-                            </div>
-                        </DropdownMenuItem>
-                    ) : (
-                        <DropdownMenuItem onSelect={(e) => {
-                            e.preventDefault();
-                            onPauseRoute();
-                        }}>
-                            <div className='flex items-center space-x-2'>
-                                <PauseIcon className='h-4 w-4' />
-                                <span>Pause Route</span>
-                            </div>
-                        </DropdownMenuItem>
-                    ))}
-                    {!isCompleted && (
-                        <DropdownMenuItem
-                            className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
-                            onSelect={(e) => {
-                                e.preventDefault();
-                                onStopRoute();
-                            }}>
-                            <div className='flex items-center space-x-2 text-destructive'>
-                                <SquareIcon className='h-4 w-4' />
-                                <span>Stop Route</span>
-                            </div>
-                        </DropdownMenuItem>
+                    {!isStopped && (
+                        <>
+                            {!isCompleted && (isPaused ? (
+                                <DropdownMenuItem onSelect={(e) => {
+                                    e.preventDefault();
+                                    onResumeRoute();
+                                }}>
+                                    <div className='flex items-center space-x-2'>
+                                        <PlayIcon className='h-4 w-4' />
+                                        <span>Resume Route</span>
+                                    </div>
+                                </DropdownMenuItem>
+                            ) : (
+                                <DropdownMenuItem onSelect={(e) => {
+                                    e.preventDefault();
+                                    onPauseRoute();
+                                }}>
+                                    <div className='flex items-center space-x-2'>
+                                        <PauseIcon className='h-4 w-4' />
+                                        <span>Pause Route</span>
+                                    </div>
+                                </DropdownMenuItem>
+                            ))}
+                            {!isCompleted && (
+                                <DropdownMenuItem
+                                    className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
+                                    onSelect={(e) => {
+                                        e.preventDefault();
+                                        onStopRoute();
+                                    }}>
+                                    <div className='flex items-center space-x-2 text-destructive'>
+                                        <SquareIcon className='h-4 w-4' />
+                                        <span>Stop Route</span>
+                                    </div>
+                                </DropdownMenuItem>
+                            )}
+                        </>
                     )}
                     <DropdownMenuItem
                         className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'

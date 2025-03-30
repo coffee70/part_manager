@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc } from "@/types/collections";
+import { InstanceDoc, StepType } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
 import { Node, RouteState } from "@/components/route_builder/list_view/types";
@@ -17,6 +17,7 @@ type TargetStep = {
     instanceId: string;
     number: string;
     routerId: string;
+    type: StepType;
 };
 
 /**
@@ -57,7 +58,9 @@ export async function getTargetSteps(
         throw new Error("Route does not have a router ID");
     }
 
-    if (!currentStepId && state !== RouteState.Completed) {
+    if (!currentStepId 
+        && state !== RouteState.Completed
+        && state !== RouteState.Stopped) {
         throw new Error("Route does not have a current step");
     }
 
@@ -72,9 +75,12 @@ export async function getTargetSteps(
     if (currentNodeIndex === -1 && state === RouteState.Completed) {
         currentNodeIndex = nodes.length;
     }
-
+    // if no current node and route is stopped, set currentNodeIndex to out of bounds
+    else if (currentNodeIndex === -1 && state === RouteState.Stopped) {
+        currentNodeIndex = -1;
+    }
     // If no current node, return empty array
-    if (currentNodeIndex === -1) {
+    else if (currentNodeIndex === -1) {
         return [];
     }
 
@@ -98,7 +104,8 @@ export async function getTargetSteps(
                     id: nextNode.id,
                     instanceId: routerInstance._id,
                     number: routerInstance.number || '',
-                    routerId
+                    routerId,
+                    type: 'In-progress'
                 });
             }
         } catch (error) {
@@ -120,7 +127,8 @@ export async function getTargetSteps(
                     id: previousNode.id,
                     instanceId: routerInstance._id,
                     number: routerInstance.number || '',
-                    routerId
+                    routerId,
+                    type: 'In-progress'
                 });
             }
         } catch (error) {

@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, stepTypes, StepType } from "@/types/collections";
+import { InstanceDoc, stepTypes } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
 import { RouteState } from "@/components/route_builder/list_view/types";
@@ -58,7 +58,15 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
         return OutputSchema.parse({
             _id: "done",
             name: "Done",
-            type: "Done" as StepType,
+            type: "Done",
+        });
+    }
+
+    if (!currentStepId && state === RouteState.Stopped) {
+        return OutputSchema.parse({
+            _id: "not-started",
+            name: "Not Started",
+            type: "To-do",
         });
     }
 
@@ -78,7 +86,7 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
             _id: routerInstance._id.toString(),
             name: routerInstance.number,
             // TODO: Remove this once we have a proper type for the step type
-            type: 'To-do' as StepType,
+            type: 'In-progress',
         });
     } catch (error) {
         console.error("Error fetching current step:", error);
