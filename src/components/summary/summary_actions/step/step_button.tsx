@@ -36,7 +36,7 @@ const StepButton = React.forwardRef<HTMLDivElement, Props>(({ step, isPaused, ..
             )}
         >
             <div className='px-2 py-1 rounded-l-sm'>
-                {isPaused ? <span>Paused</span> : <span>{step.name}</span>}
+                <span>{step.name}</span>
             </div>
             <div className={cn(
                 'border-l',

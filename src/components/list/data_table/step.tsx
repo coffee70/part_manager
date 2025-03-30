@@ -20,7 +20,7 @@ export default function Step({ state, currentStep }: Props) {
             type: "To-do"
         }} />
     ) : state === RouteState.Paused ? (
-        <Badge label={"PAUSED"} className="border border-stone-500 text-stone-500 px-2" />
+        currentStep && <Badge label={currentStep.name.toUpperCase()} className="border border-stone-500 text-stone-500 px-2" />
     ) : state === RouteState.Completed ? (
         <StepBadge step={{
             id: "done",
