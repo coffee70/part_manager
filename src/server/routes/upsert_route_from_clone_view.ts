@@ -4,6 +4,7 @@ import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
 import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
   targetModelId: z.string(),
@@ -26,7 +27,7 @@ export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema
     if (!user) throw new Error("Unauthorized");
 
     const { targetModelId, targetInstanceId, sourceModelId, sourceInstanceId } = InputSchema.parse(input);
-    
+
     if (!targetModelId || !targetInstanceId || !sourceModelId || !sourceInstanceId) {
       return OutputSchema.parse({
         success: false,
@@ -36,12 +37,12 @@ export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema
 
     // Get the source instance to get its route
     const sourceCollection = db.collection<InstanceDoc>(sourceModelId);
-    const sourceInstance = await sourceCollection.findOne({ 
+    const sourceInstance = await sourceCollection.findOne({
       _id: new ObjectId(sourceInstanceId)
     }, {
-      projection: { route: 1 } 
+      projection: { route: 1 }
     });
-    
+
     if (!sourceInstance || !sourceInstance.route) {
       return OutputSchema.parse({
         success: false,
@@ -65,9 +66,13 @@ export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema
     // Update the target instance with the cloned route
     const result = await targetCollection.updateOne(
       { _id: new ObjectId(targetInstanceId) },
-      { 
-        $set: { 
-          route: sourceInstance.route,
+      {
+        $set: {
+          route: {
+            ...sourceInstance.route,
+            state: RouteState.Stopped,
+            currentStepId: null
+          },
           updatedAt: new Date(),
           updatedById: user._id
         }
@@ -80,7 +85,7 @@ export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema
         error: "Failed to update target instance"
       });
     }
-    
+
     return OutputSchema.parse({
       success: true
     });
