@@ -74,10 +74,13 @@ export default function StepDropdown({
             <DropdownMenuContent className="w-48">
                 <DropdownMenuGroup>
                     {isOnLastStep && (
-                        <DropdownMenuItem onSelect={(e) => {
-                            e.preventDefault();
-                            onCompleteRoute();
-                        }}>
+                        <DropdownMenuItem
+                            onSelect={(e) => {
+                                e.preventDefault();
+                                onCompleteRoute();
+                            }}
+                            disabled={isPaused}
+                        >
                             <StepItem
                                 step={{
                                     id: "done",
@@ -175,12 +178,12 @@ export default function StepDropdown({
                     {!isCompleted && (
                         <DropdownMenuItem
                             className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
-                        onSelect={(e) => {
-                            e.preventDefault();
-                            onStopRoute();
-                        }}>
-                        <div className='flex items-center space-x-2 text-destructive'>
-                            <SquareIcon className='h-4 w-4' />
+                            onSelect={(e) => {
+                                e.preventDefault();
+                                onStopRoute();
+                            }}>
+                            <div className='flex items-center space-x-2 text-destructive'>
+                                <SquareIcon className='h-4 w-4' />
                                 <span>Stop Route</span>
                             </div>
                         </DropdownMenuItem>
