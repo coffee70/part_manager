@@ -21,7 +21,11 @@ export default function Step({ instance }: Props) {
     return instance.route &&
         (instance.route.state === RouteState.Stopped ? (
             <TableCell align="left">
-                <Badge label={"NOT STARTED"} className="border border-stone-500 text-stone-500 px-2" />
+                <StepBadge step={{
+                    id: "not-started",
+                    name: "Not Started",
+                    type: "To-do"
+                }} />
             </TableCell>
         ) : instance.route.state === RouteState.Paused ? (
             <TableCell align="left">
