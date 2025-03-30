@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useStepQueries } from "./use_step_queries";
 import { useRouteActions } from "./use_route_actions";
 import DeleteRouteDialog from "./delete_route_dialog";
+import StopRouteDialog from "./stop_route_dialog";
 import StepDropdown from "./step_dropdown";
 import Builder from "@/components/route_builder/list_view/builder";
 import { useRouter } from "next/navigation";
@@ -20,6 +21,7 @@ export default function Step() {
     const nextRouter = useRouter();
     const { context, modelId, instanceId } = useInstanceURL();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [stopDialogOpen, setStopDialogOpen] = useState(false);
     const routeListViewTriggerRef = React.useRef<HTMLButtonElement>(null);
 
     // Get route data from queries
@@ -35,7 +37,11 @@ export default function Step() {
     const {
         handleStepChange,
         handleDeleteRoute,
-        deleteRouteMutation
+        deleteRouteMutation,
+        handlePauseRoute,
+        handleStopRoute,
+        handleResumeRoute,
+        updateRouteStateMutation
     } = useRouteActions(context, modelId, instanceId, () => setDeleteDialogOpen(false));
 
     const handleOpenRouteListView = () => {
@@ -45,6 +51,11 @@ export default function Step() {
     const handleViewCurrentStep = () => {
         if (!route?.routerId || !currentStep?._id) return;
         nextRouter.push(router().routers().instances().instance(route.routerId, currentStep._id));
+    }
+
+    const handleConfirmStopRoute = () => {
+        handleStopRoute();
+        setStopDialogOpen(false);
     }
 
     // Return null if not in 'models' context
@@ -87,13 +98,26 @@ export default function Step() {
                 error={deleteRouteMutation.error}
             />
 
+            <StopRouteDialog
+                open={stopDialogOpen}
+                onOpenChange={setStopDialogOpen}
+                onStop={handleConfirmStopRoute}
+                isPending={updateRouteStateMutation.isPending}
+                isError={updateRouteStateMutation.isError}
+                error={updateRouteStateMutation.error}
+            />
+
             <StepDropdown
                 currentStep={currentStep}
                 targetSteps={targetSteps}
+                isPaused={route.state === RouteState.Paused}
                 onStepChange={handleStepChange}
                 onDeleteClick={() => setDeleteDialogOpen(true)}
                 onOpenRouteListView={handleOpenRouteListView}
                 onViewCurrentStep={handleViewCurrentStep}
+                onPauseRoute={handlePauseRoute}
+                onStopRoute={() => setStopDialogOpen(true)}
+                onResumeRoute={handleResumeRoute}
             />
         </>
     );

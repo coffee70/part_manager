@@ -87,6 +87,10 @@ export default function TableContainer() {
                                     <TableCell align="left">
                                         <Badge label={"NOT STARTED"} className="border border-stone-500 text-stone-500 px-2" />
                                     </TableCell>
+                                ) : instance.route.state === RouteState.Paused ? (
+                                    <TableCell align="left">
+                                        <Badge label={"PAUSED"} className="border border-stone-500 text-stone-500 px-2" />
+                                    </TableCell>
                                 ) : (
                                     <TableCell align="left">
                                         {instance.route.currentStep && <StepBadge step={instance.route.currentStep} />}

@@ -11,9 +11,10 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
         name: string;
         type: StepType;
     };
+    isPaused: boolean;
 }
 
-const StepButton = React.forwardRef<HTMLDivElement, Props>(({ step, ...props }, ref) => {
+const StepButton = React.forwardRef<HTMLDivElement, Props>(({ step, isPaused, ...props }, ref) => {
     const [isHovered, setIsHovered] = React.useState(false);
 
     const handleMouseEnter = () => {
@@ -30,20 +31,25 @@ const StepButton = React.forwardRef<HTMLDivElement, Props>(({ step, ...props }, 
             ref={ref}
             className={cn(
                 "flex rounded-sm border text-white font-bold",
-                stepBackgroundVariants({ variant: step.type })
+                stepBackgroundVariants({ variant: step.type }),
+                isPaused && 'bg-transparent text-stone-500 border border-stone-500'
             )}
         >
             <div className='px-2 py-1 rounded-l-sm'>
-                <span>{step.name}</span>
+                {isPaused ? <span>Paused</span> : <span>{step.name}</span>}
             </div>
-            <div className='border-l'></div>
+            <div className={cn(
+                'border-l',
+                isPaused && 'border-stone-500'
+            )}></div>
             <button
                 {...props}
                 id='more-button-dropdown-trigger'
                 className={cn(
                     'px-1 rounded-r-sm',
                     stepBackgroundVariants({ variant: step.type }),
-                    isHovered ? 'brightness-90' : 'brightness-100'
+                    isHovered ? 'brightness-90' : 'brightness-100',
+                    isPaused && 'bg-transparent text-stone-500 hover:bg-stone-50'
                 )}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}

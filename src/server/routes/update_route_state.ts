@@ -46,16 +46,22 @@ export async function updateRouteState(
         }
     }
 
+    const updateFields: Record<string, any> = { 
+        "route.state": state,
+        updatedAt: new Date(),
+        updatedById: user._id
+    };
+
+    // If the route is being stopped, reset the currentStepId to the first node
+    if (state === RouteState.Stopped && instance.route.nodes && instance.route.nodes.length > 0) {
+        const firstNodeInstanceId = instance.route.nodes[0].instanceId;
+        updateFields["route.currentStepId"] = firstNodeInstanceId;
+    }
+
     await instanceCollection.updateOne(
         { _id: new ObjectId(instanceId) },
-        { 
-            $set: { 
-                "route.state": state,
-                updatedAt: new Date(),
-                updatedById: user._id
-            } 
-        }
-    )
+        { $set: updateFields }
+    );
 
     return { success: true };
 } 

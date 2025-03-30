@@ -139,12 +139,12 @@ export default function More() {
                                                 <span>From List View</span>
                                             </div>
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem>
+                                        {/* <DropdownMenuItem>
                                             <div className='flex items-center space-x-2'>
                                                 <HammerIcon className='h-4 w-4' />
                                                 <span>From Builder View</span>
                                             </div>
-                                        </DropdownMenuItem>
+                                        </DropdownMenuItem> */}
                                         <DropdownMenuItem onSelect={(e) => {
                                             e.preventDefault();
                                             handleOpenCloneView();

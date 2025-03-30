@@ -37,7 +37,7 @@ const StartRoute = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
         <Button
             ref={ref}
             variant='secondary'
-            className="py-4 px rounded-sm border text-base font-bold"
+            className="py-4 px rounded-sm border text-base font-bold bg-transparent text-stone-500 border-stone-500 hover:bg-stone-100"
             onClick={handleClick}
             {...props}
         >
