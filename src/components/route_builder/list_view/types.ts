@@ -24,7 +24,7 @@ export type Node = {
 export type Route = {
   state: RouteState;
   routerId: string;
-  currentStepId: string;
+  currentStepId: string | null;
   nodes: Node[];
 }
 

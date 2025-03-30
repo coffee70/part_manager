@@ -8,7 +8,7 @@ import { RouteState } from "@/components/route_builder/list_view/types"
 
 const OutputSchema = z.object({
     routerId: z.string(),
-    currentStepId: z.string(),
+    currentStepId: z.string().nullable(),
     nodes: z.array(z.object({
         id: z.string(),
         instanceId: z.string(),

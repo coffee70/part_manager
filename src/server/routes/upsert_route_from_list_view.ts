@@ -12,7 +12,7 @@ const InputSchema = z.object({
   instanceId: z.string().nullable(),
   route: z.object({
     routerId: z.string(),
-    currentStepId: z.string(),
+    currentStepId: z.string().nullable(),
     nodes: z.array(z.object({
       id: z.string(),
       instanceId: z.string(),

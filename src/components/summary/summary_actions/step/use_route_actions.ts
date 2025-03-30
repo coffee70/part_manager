@@ -22,10 +22,12 @@ export function useRouteActions(
     mutationFn: updateStep,
     onSuccess: () => {
       if (context === "models" && modelId && instanceId) {
-        queryClient.invalidateQueries({ queryKey: instanceKeys.id("models", modelId, instanceId) });
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", modelId) });
+        queryClient.invalidateQueries({ queryKey: routeKeys.id(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
       }
     }
   });
@@ -111,6 +113,16 @@ export function useRouteActions(
     }
   };
 
+  const handleCompleteRoute = () => {
+    if (context === "models" && modelId && instanceId) {
+      updateRouteStateMutation.mutate({
+        modelId,
+        instanceId,
+        state: RouteState.Completed
+      });
+    }
+  };
+
   return {
     handleStepChange,
     handleDeleteRoute,
@@ -119,6 +131,7 @@ export function useRouteActions(
     updateRouteStateMutation,
     handlePauseRoute,
     handleStopRoute,
-    handleResumeRoute
+    handleResumeRoute,
+    handleCompleteRoute
   };
 } 

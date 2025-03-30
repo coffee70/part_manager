@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
-import { Node } from "@/components/route_builder/list_view/types";
+import { Node, RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -51,13 +51,13 @@ export async function getTargetSteps(
         return null;
     }
 
-    const { routerId, currentStepId, nodes } = instance.route;
+    const { routerId, currentStepId, nodes, state } = instance.route;
 
     if (!routerId) {
         throw new Error("Route does not have a router ID");
     }
 
-    if (!currentStepId) {
+    if (!currentStepId && state !== RouteState.Completed) {
         throw new Error("Route does not have a current step");
     }
 
@@ -66,7 +66,12 @@ export async function getTargetSteps(
     }
 
     // Find the current node
-    const currentNodeIndex = nodes.findIndex(node => node.instanceId === currentStepId);
+    let currentNodeIndex = nodes.findIndex(node => node.instanceId === currentStepId);
+
+    // If no current node and route is completed, set currentNodeIndex to out of bounds
+    if (currentNodeIndex === -1 && state === RouteState.Completed) {
+        currentNodeIndex = nodes.length;
+    }
 
     // If no current node, return empty array
     if (currentNodeIndex === -1) {
@@ -74,21 +79,8 @@ export async function getTargetSteps(
     }
 
     // Get unique target IDs
-    let nextNode: Node | null = null;
-    try {
-        nextNode = nodes[currentNodeIndex + 1];
-    } catch (error) {
-        console.error("Error getting next node:", error);
-        return [];
-    }
-
-    let previousNode: Node | null = null;
-    try {
-        previousNode = nodes[currentNodeIndex - 1];
-    } catch (error) {
-        console.error("Error getting previous node:", error);
-        return [];
-    }
+    let nextNode: Node | undefined = nodes[currentNodeIndex + 1];
+    let previousNode: Node | undefined = nodes[currentNodeIndex - 1];
 
     // Fetch all target router instances
     const targetSteps: TargetStep[] = [];

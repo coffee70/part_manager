@@ -5,6 +5,7 @@ import { ActionState, validate } from "@/lib/validators/server_actions";
 import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/db";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -45,6 +46,7 @@ export async function updateStep(
         { 
             $set: { 
                 "route.currentStepId": stepId,
+                "route.state": RouteState.Started,
                 updatedAt: new Date(),
                 updatedById: user._id
             } 

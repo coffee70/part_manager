@@ -58,6 +58,10 @@ export async function updateRouteState(
         updateFields["route.currentStepId"] = firstNodeInstanceId;
     }
 
+    if (state === RouteState.Completed) {
+        updateFields["route.currentStepId"] = null;
+    }
+
     await instanceCollection.updateOne(
         { _id: new ObjectId(instanceId) },
         { $set: updateFields }

@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc, stepTypes, StepType } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "../instances/get_instance";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -47,10 +48,18 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
     }
 
     // Access routerId and currentStepId from the route object
-    const { routerId, currentStepId } = instance.route;
+    const { routerId, currentStepId, state } = instance.route;
 
     if (!routerId) {
         throw new Error("Route does not have a router ID");
+    }
+
+    if (!currentStepId && state === RouteState.Completed) {
+        return OutputSchema.parse({
+            _id: "done",
+            name: "Done",
+            type: "Done" as StepType,
+        });
     }
 
     if (!currentStepId) {

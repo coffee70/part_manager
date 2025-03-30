@@ -23,6 +23,7 @@ import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
 import { Badge, StepBadge } from "@/components/ui/badge";
 import { RouteState } from "../route_builder/list_view/types";
+import Step from "../list/data_table/step";
 
 export default function TableContainer() {
 
@@ -81,23 +82,7 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={instance.number} />
                             </TableCell>
-
-                            {instance.route &&
-                                (instance.route.state === RouteState.Stopped ? (
-                                    <TableCell align="left">
-                                        <Badge label={"NOT STARTED"} className="border border-stone-500 text-stone-500 px-2" />
-                                    </TableCell>
-                                ) : instance.route.state === RouteState.Paused ? (
-                                    <TableCell align="left">
-                                        <Badge label={"PAUSED"} className="border border-stone-500 text-stone-500 px-2" />
-                                    </TableCell>
-                                ) : (
-                                    <TableCell align="left">
-                                        {instance.route.currentStep && <StepBadge step={instance.route.currentStep} />}
-                                    </TableCell>
-                                ))
-                            }
-
+                            <Step instance={instance} />
                             <TableCell>
                                 <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>

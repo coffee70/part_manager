@@ -1,4 +1,5 @@
 'use client'
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { routeKeys } from "@/lib/query_keys";
 import { hasRoute } from "@/server/routes/has_route";
@@ -39,6 +40,16 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
   });
 
 
+  const isOnLastStep = React.useMemo(() => {
+    if (currentStepQuery && currentStepQuery.data && routeQuery && routeQuery.data) {
+      if (currentStepQuery.data._id === routeQuery.data.nodes[routeQuery.data.nodes.length - 1].instanceId) {
+        return true;
+      }
+    }
+    return false;
+  }, [currentStepQuery, routeQuery]);
+
+
   // Combined loading state
   const isLoading = 
     hasRouteQuery.isLoading || 
@@ -56,5 +67,6 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     route: routeQuery.data,
     isLoadingRoute: routeQuery.isLoading,
     isLoading,
+    isOnLastStep,
   };
 } 

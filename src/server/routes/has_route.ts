@@ -39,7 +39,6 @@ export async function hasRoute(input: z.input<typeof InputSchema>): Promise<bool
     // Check if the route exists and is properly populated with required fields
     return !!(instance.route && 
       instance.route.routerId && 
-      instance.route.currentStepId && 
       instance.route.nodes && 
       instance.route.nodes.length > 0);
   } catch (error) {

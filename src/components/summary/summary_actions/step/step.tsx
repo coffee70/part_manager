@@ -31,6 +31,7 @@ export default function Step() {
         currentStep,
         targetSteps,
         route,
+        isOnLastStep
     } = useStepQueries(context, modelId, instanceId);
 
     // Get route actions
@@ -41,6 +42,7 @@ export default function Step() {
         handlePauseRoute,
         handleStopRoute,
         handleResumeRoute,
+        handleCompleteRoute,
         updateRouteStateMutation
     } = useRouteActions(context, modelId, instanceId, () => setDeleteDialogOpen(false));
 
@@ -70,7 +72,7 @@ export default function Step() {
     if (!hasRoute || !route) return null;
 
     // Return null if currentStep is null or undefined
-    if (!currentStep) return null;
+    if (!currentStep && route.state !== RouteState.Completed) return null;
 
     // Return StartRoute if isStarted is false
     if (route.state === RouteState.Stopped) {
@@ -111,6 +113,8 @@ export default function Step() {
                 currentStep={currentStep}
                 targetSteps={targetSteps}
                 isPaused={route.state === RouteState.Paused}
+                isCompleted={route.state === RouteState.Completed}
+                isOnLastStep={isOnLastStep}
                 onStepChange={handleStepChange}
                 onDeleteClick={() => setDeleteDialogOpen(true)}
                 onOpenRouteListView={handleOpenRouteListView}
@@ -118,6 +122,7 @@ export default function Step() {
                 onPauseRoute={handlePauseRoute}
                 onStopRoute={() => setStopDialogOpen(true)}
                 onResumeRoute={handleResumeRoute}
+                onCompleteRoute={handleCompleteRoute}
             />
         </>
     );
