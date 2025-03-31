@@ -26,6 +26,7 @@ export function useRouteActions(
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: routeKeys.currentSteps(modelId) });
         queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
       }
@@ -41,6 +42,7 @@ export function useRouteActions(
         queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
+        queryClient.invalidateQueries({ queryKey: routeKeys.currentSteps(modelId) });
         queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
         queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
 
@@ -59,6 +61,7 @@ export function useRouteActions(
       queryClient.invalidateQueries({ queryKey: routeKeys.currentStep(modelId, instanceId) });
       queryClient.invalidateQueries({ queryKey: routeKeys.targetSteps(modelId, instanceId) });
       queryClient.invalidateQueries({ queryKey: routeKeys.hasRoute(modelId, instanceId) });
+      queryClient.invalidateQueries({ queryKey: routeKeys.currentSteps(modelId) });
       queryClient.invalidateQueries({ queryKey: instanceKeys.id('models', modelId, instanceId) });
       queryClient.invalidateQueries({ queryKey: instanceKeys.all('models', modelId) });
     }

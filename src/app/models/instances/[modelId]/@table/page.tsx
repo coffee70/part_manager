@@ -1,10 +1,11 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { NextServerSearchParams } from "@/types/collections";
 import TableContainer from "@/components/instances/table_container";
-import { instanceKeys, sectionKeys, contextKeys } from "@/lib/query_keys";
+import { instanceKeys, sectionKeys, contextKeys, routeKeys } from "@/lib/query_keys";
 import { getInstances } from "@/server/instances/get_instances";
 import { getSections } from "@/server/sections/get_sections";
 import { getContext } from "@/server/contexts/get_context";
+import { getCurrentSteps } from "@/server/routes/get_current_steps";
 
 export default async function Page({
     params,
@@ -32,6 +33,12 @@ export default async function Page({
             context: "models",
             id
         }),
+    })
+
+    // current steps for filtering and sorting
+    await queryClient.prefetchQuery({
+        queryKey: routeKeys.currentSteps(id),
+        queryFn: () => getCurrentSteps({ modelId: id }),
     })
 
     return (

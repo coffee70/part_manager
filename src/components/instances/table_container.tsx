@@ -22,9 +22,9 @@ import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
 import Step from "../list/data_table/step";
+import StepFilter from "@/components/list/filters/filter_step";
 
 export default function TableContainer() {
-
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
@@ -59,9 +59,10 @@ export default function TableContainer() {
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
                     <SearchInput />
-                    <Filter labels={['Updated At', 'Priority']}>
+                    <Filter labels={['Updated At', 'Priority', 'Step']}>
                         <DateRangeFilter paramKey="updatedAt" />
                         <PriorityFilter />
+                        <StepFilter />
                     </Filter>
                     <Sort keys={sortKeys} />
                 </FilterToolbarRow>
@@ -80,11 +81,11 @@ export default function TableContainer() {
                             <TableCell>
                                 <Label label={instance.number} />
                             </TableCell>
-                            {instance.route && (
-                                <TableCell align="left">
+                            <TableCell align="left">
+                                {instance.route && (
                                     <Step state={instance.route.state} currentStep={instance.route.currentStep} />
-                                </TableCell>
-                            )}
+                                )}
+                            </TableCell>
                             <TableCell>
                                 <People name={instance.updatedBy} at={instance.updatedAt} iconPosition="right" />
                             </TableCell>

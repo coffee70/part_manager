@@ -1,6 +1,7 @@
 import { ReadonlyURLSearchParams } from "next/navigation"
 import { z } from "zod"
 import { NextServerSearchParams, Priority, sortKeys } from "@/types/collections"
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const UpdatedAt = z.object({
     to: z.coerce.date().optional(),
@@ -21,6 +22,8 @@ export const getSearchParams = (searchParams?: SearchParams) => {
     else {
         params = searchParams;
     }
+
+    console.log(params);
 
     // pull out updatedAt
     const updatedAtJson = params.updatedAt;
@@ -45,6 +48,18 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("priority must be a valid priority");
     }
 
+    // pull out steps
+    const { data: steps, error: stepsError } = z.union([z.string(), z.array(z.string())]).optional().safeParse(params.step);
+    if (stepsError) {
+        throw new Error("steps must be a string or an array of strings");
+    }
+
+    // pull out route-status
+    const { data: routeStatus, error: routeStatusError } = z.union([z.nativeEnum(RouteState), z.array(z.nativeEnum(RouteState))]).optional().safeParse(params['route-status']);
+    if (routeStatusError) {
+        throw new Error("routeStatus must be a valid route status");
+    }
+
     const { data: sortBy, error: sortByError } = z.enum(sortKeys).optional().safeParse(params.sort_by);
     if (sortByError) {
         throw new Error(`sortBy must be one of ${sortKeys.join(', ')}`);
@@ -56,7 +71,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("sortOrder must be either 'asc' or 'desc'");
     }
 
-    return { updatedAt, search, priority, sortBy, sortOrder };
+    return { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder };
 }
 
 export const convertSearchParams = (

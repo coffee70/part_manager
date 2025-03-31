@@ -36,7 +36,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     const { id, searchParams } = InputSchema.parse(input)
 
-    const { updatedAt, search, priority, sortBy, sortOrder } = getSearchParams(searchParams);
+    const { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder } = getSearchParams(searchParams);
 
     // filters
     const matchStage: any = {};
@@ -53,6 +53,24 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     if (priority) {
         matchStage.priority = priority;
+    }
+
+    if (steps) {
+        if (Array.isArray(steps)) {
+            matchStage['route.currentStepId'] = { $in: steps };
+        } else {
+            matchStage['route.currentStepId'] = steps;
+        }
+    }
+
+    console.log(routeStatus);
+
+    if (routeStatus) {
+        if (Array.isArray(routeStatus)) {
+            matchStage['route.state'] = { $in: routeStatus };
+        } else {
+            matchStage['route.state'] = routeStatus;
+        }
     }
 
     // sort
