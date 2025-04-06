@@ -19,7 +19,6 @@ import {
     RouteIcon,
     TrashIcon,
     ListIcon,
-    HammerIcon,
     LinkIcon,
     PauseIcon,
     SquareIcon,
@@ -97,12 +96,12 @@ export default function StepDropdown({
                         targetSteps.map((targetStep) => (
                             <DropdownMenuItem
                                 key={targetStep.id}
-                                onClick={() => onStepChange(targetStep.instanceId)}
+                                onClick={() => onStepChange(targetStep.id)}
                                 disabled={isPaused}
                             >
                                 <StepItem
                                     step={{
-                                        id: targetStep.instanceId,
+                                        id: targetStep.id,
                                         name: targetStep.number,
                                         type: targetStep.type
                                     }}

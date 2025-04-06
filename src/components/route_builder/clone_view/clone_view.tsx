@@ -51,15 +51,8 @@ export default function CloneView({ children }: Props) {
 
             // Filter instances to only those with routes
             const filteredInstances = [];
-            let i = 0;
 
             for (const instance of allInstances) {
-                i++;
-                // Update progress in console for debugging
-                if (i % 10 === 0) {
-                    console.log(`Checking routes: ${i}/${allInstances.length}`);
-                }
-
                 const hasRouteResult = await hasRoute({
                     modelId: selectedModelId,
                     instanceId: instance._id

@@ -14,6 +14,7 @@ const InputSchema = z.object({
 
 const OutputSchema = z.object({
     _id: z.string(),
+    instanceId: z.string(),
     name: z.string(),
     type: z.enum(stepTypes),
 });
@@ -57,6 +58,7 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
     if (!currentStepId && state === RouteState.Completed) {
         return OutputSchema.parse({
             _id: "done",
+            instanceId: "done",
             name: "Done",
             type: "Done",
         });
@@ -65,6 +67,7 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
     if (!currentStepId && state === RouteState.Stopped) {
         return OutputSchema.parse({
             _id: "not-started",
+            instanceId: "not-started",
             name: "Not Started",
             type: "To-do",
         });
@@ -74,16 +77,22 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
         throw new Error("Route does not have a current step");
     }
 
+    const node = instance.route.nodes.find(node => node.id === currentStepId);
+    if (!node) {
+        throw new Error("Current step not found in route nodes");
+    }
+
     // Get the router instance that represents the current step
     try {
         // Use getInstance to get the router instance
         const routerInstance = await getInstance({
             id: routerId,
-            instanceId: currentStepId
+            instanceId: node.instanceId
         });
 
         return OutputSchema.parse({
-            _id: routerInstance._id.toString(),
+            _id: node.id,
+            instanceId: node.instanceId,
             name: routerInstance.number,
             // TODO: Remove this once we have a proper type for the step type
             type: 'In-progress',

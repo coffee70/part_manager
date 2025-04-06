@@ -23,8 +23,6 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         params = searchParams;
     }
 
-    console.log(params);
-
     // pull out updatedAt
     const updatedAtJson = params.updatedAt;
     if (Array.isArray(updatedAtJson)) {

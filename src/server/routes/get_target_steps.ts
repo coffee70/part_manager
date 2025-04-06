@@ -69,7 +69,7 @@ export async function getTargetSteps(
     }
 
     // Find the current node
-    let currentNodeIndex = nodes.findIndex(node => node.instanceId === currentStepId);
+    let currentNodeIndex = nodes.findIndex(node => node.id === currentStepId);
 
     // If no current node and route is completed, set currentNodeIndex to out of bounds
     if (currentNodeIndex === -1 && state === RouteState.Completed) {
@@ -136,7 +136,6 @@ export async function getTargetSteps(
             // Continue with other steps even if one fails
         }
     }
-
 
     return targetSteps;
 } 

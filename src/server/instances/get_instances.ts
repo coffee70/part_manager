@@ -39,6 +39,8 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder } = getSearchParams(searchParams);
 
     // filters
+    const pipeline: any[] = [];
+
     const matchStage: any = {};
     if (updatedAt) {
         matchStage.updatedAt = {
@@ -55,22 +57,50 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
         matchStage.priority = priority;
     }
 
+    // Create conditions for OR relationship
+    const orConditions = [];
+    
     if (steps) {
+        pipeline.push({
+            $addFields: {
+                currentStepInstanceId: {
+                    $let: {
+                        vars: {
+                            matchingNode: {
+                                $arrayElemAt: [
+                                    { $filter: { 
+                                        input: "$route.nodes", 
+                                        as: "node", 
+                                        cond: { $eq: ["$$node.id", "$route.currentStepId"] } 
+                                    }},
+                                    0
+                                ]
+                            }
+                        },
+                        in: "$$matchingNode.instanceId"
+                    }
+                }
+            }
+        });
+
         if (Array.isArray(steps)) {
-            matchStage['route.currentStepId'] = { $in: steps };
+            orConditions.push({ currentStepInstanceId: { $in: steps } });
         } else {
-            matchStage['route.currentStepId'] = steps;
+            orConditions.push({ currentStepInstanceId: steps });
         }
     }
 
-    console.log(routeStatus);
-
     if (routeStatus) {
         if (Array.isArray(routeStatus)) {
-            matchStage['route.state'] = { $in: routeStatus };
+            orConditions.push({ 'route.state': { $in: routeStatus } });
         } else {
-            matchStage['route.state'] = routeStatus;
+            orConditions.push({ 'route.state': routeStatus });
         }
+    }
+
+    // Add OR conditions to match stage if any exist
+    if (orConditions.length > 0) {
+        matchStage.$or = orConditions;
     }
 
     // sort
@@ -82,7 +112,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const instanceCollection = db.collection<InstanceDoc>(id);
     const usersCollection = db.collection<UserDoc>('users');
 
-    const pipeline: any[] = [{ $match: matchStage }];
+    pipeline.push({ $match: matchStage });
 
     if (sortBy === 'priority') {
         pipeline.push(
@@ -119,7 +149,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
         let currentStep: Node | undefined;
         if (route) {
-            let currentNode = route.nodes.find(node => node.instanceId === route.currentStepId);
+            let currentNode = route.nodes.find(node => node.id === route.currentStepId);
             if (currentNode) {
                 let routerInstance = await getInstance({ id: route.routerId, instanceId: currentNode.instanceId })
                 if (routerInstance) {

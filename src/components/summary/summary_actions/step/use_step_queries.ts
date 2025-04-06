@@ -42,7 +42,7 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
 
   const isOnLastStep = React.useMemo(() => {
     if (currentStepQuery && currentStepQuery.data && routeQuery && routeQuery.data) {
-      if (currentStepQuery.data._id === routeQuery.data.nodes[routeQuery.data.nodes.length - 1].instanceId) {
+      if (currentStepQuery.data._id === routeQuery.data.nodes[routeQuery.data.nodes.length - 1].id) {
         return true;
       }
     }

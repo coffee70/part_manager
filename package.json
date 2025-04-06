@@ -11,6 +11,7 @@
     "test:watch": "jest --watch",
     "knip": "knip",
     "migrate:2.0.1": "node src/migrations/2.0.1.js",
+    "migrate:2.0.1.2": "node src/migrations/2.0.1.2.js",
     "migrate": "node"
   },
   "dependencies": {

@@ -40,22 +40,30 @@ export async function getCurrentSteps(input: z.input<typeof InputSchema>): Promi
 
     for (const instance of instances) {
         if (instance.route && instance.route.routerId && instance.route.currentStepId) {
+            // the try block creates a boundary which prevents proper narrowing of instance.route in the 
+            // if statement above, so we need to assign the narrowed variable to a new variable
+            const route = instance.route;
             try {
+                const node = instance.route.nodes.find(node => node.id === route.currentStepId);
+                if (!node) {
+                    continue;
+                }
+
                 // check if the currentStepId has already been added to the result
-                if (steps.some(step => step.instanceId === instance.route?.currentStepId)) {
+                if (steps.some(step => step.instanceId === node.instanceId)) {
                     continue;
                 }
 
                 // Get the router instance using the getInstance function
                 const routerInstance = await getInstance({ 
-                    id: instance.route.routerId, 
-                    instanceId: instance.route.currentStepId 
+                    id: route.routerId, 
+                    instanceId: node.instanceId
                 });
                 
                 if (routerInstance) {
                     steps.push({
-                        routerId: instance.route.routerId,
-                        instanceId: routerInstance._id.toString(),
+                        routerId: route.routerId,
+                        instanceId: node.instanceId,
                         number: routerInstance.number,
                         type: "In-progress"
                     });
