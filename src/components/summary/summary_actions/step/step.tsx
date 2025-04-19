@@ -54,6 +54,11 @@ export default function Step() {
         nextRouter.push(router().routers().instances().instance(route.routerId, currentStep._id));
     }
 
+    const handleViewRoute = () => {
+        if (!route?.routerId || !currentStep?._id) return;
+        nextRouter.push(router().models().instances().routing(route.routerId, currentStep.instanceId));
+    }
+
     const handleConfirmStopRoute = () => {
         handleStopRoute();
         setStopDialogOpen(false);
@@ -115,6 +120,7 @@ export default function Step() {
                 onDeleteClick={() => setDeleteDialogOpen(true)}
                 onOpenRouteListView={handleOpenRouteListView}
                 onViewCurrentStep={handleViewCurrentStep}
+                onViewRoute={handleViewRoute}
                 onPauseRoute={handlePauseRoute}
                 onStopRoute={() => setStopDialogOpen(true)}
                 onResumeRoute={handleResumeRoute}

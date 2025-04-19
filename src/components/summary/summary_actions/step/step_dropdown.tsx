@@ -22,7 +22,8 @@ import {
     LinkIcon,
     PauseIcon,
     SquareIcon,
-    PlayIcon
+    PlayIcon,
+    PencilIcon
 } from "lucide-react";
 
 interface TargetStep {
@@ -43,6 +44,7 @@ interface StepDropdownProps {
     onDeleteClick: () => void;
     onOpenRouteListView: () => void;
     onViewCurrentStep: () => void;
+    onViewRoute: () => void;
     onPauseRoute: () => void;
     onStopRoute: () => void;
     onResumeRoute: () => void;
@@ -63,6 +65,7 @@ export default function StepDropdown({
     onDeleteClick,
     onOpenRouteListView,
     onViewCurrentStep,
+    onViewRoute,
     onPauseRoute,
     onStopRoute,
     onResumeRoute,
@@ -129,10 +132,19 @@ export default function StepDropdown({
                             </div>
                         </DropdownMenuItem>
                     )}
+                    <DropdownMenuItem onSelect={(e) => {
+                        e.preventDefault();
+                        onViewRoute();
+                    }}>
+                        <div className='flex items-center space-x-2'>
+                            <RouteIcon className='h-4 w-4' />
+                            <span>View Route</span>
+                        </div>
+                    </DropdownMenuItem>
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                             <div className='flex items-center space-x-2'>
-                                <RouteIcon className='h-4 w-4' />
+                                <PencilIcon className='h-4 w-4' />
                                 <span>Modify Route</span>
                             </div>
                         </DropdownMenuSubTrigger>
