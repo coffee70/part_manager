@@ -104,7 +104,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
             <DialogContent className="min-w-[650px]">
                 <DialogHeader>
                     <DialogTitle>New Field</DialogTitle>
-                    <DialogDescription>Customize a new order field.</DialogDescription>
+                    <DialogDescription>Customize a new field.</DialogDescription>
                 </DialogHeader>
                 {data?.success === false && <Alert variant='destructive'>
                     <AlertCircle className="h-4 w-4" />
