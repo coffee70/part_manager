@@ -51,7 +51,7 @@ export default function Step() {
 
     const handleViewCurrentStep = () => {
         if (!route?.routerId || !currentStep?._id) return;
-        nextRouter.push(router().routers().instances().instance(route.routerId, currentStep._id));
+        nextRouter.push(router().routers().instances().instance(route.routerId, currentStep.instanceId));
     }
 
     const handleViewRoute = () => {
