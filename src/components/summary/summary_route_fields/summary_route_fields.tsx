@@ -1,6 +1,7 @@
 import SummaryBase from "@/components/summary/summary_base";
 import RouteFieldsSectionForm from "@/components/summary/summary_route_fields/sections/section_form";
-import { useState } from "react";
+import FieldForm from "@/components/summary/summary_route_fields/fields/field_form";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRouteFields } from "@/server/routers/get_route_fields";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
@@ -8,11 +9,20 @@ import { routerKeys } from "@/lib/query_keys";
 import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+// Dialog type to track which dialog is currently open
+type DialogType = "section" | "field" | null;
+
+// Section type matching the expected type in the section form
+type Section = { _id: string; name: string };
+
 export default function SummaryRouteFields() {
     const { id, instanceId } = useInstanceURL();
 
-    const [open, setOpen] = useState(false);
-    const [selectedSection, setSelectedSection] = useState<{ _id: string; name: string } | undefined>(undefined);
+    // Track which section is selected (for both dialogs)
+    const [selectedSection, setSelectedSection] = useState<{ _id: string; name?: string } | undefined>(undefined);
+    
+    // Track which dialog is open
+    const [openDialog, setOpenDialog] = useState<DialogType>(null);
 
     const { data, isPending, isError } = useQuery({
         queryKey: routerKeys.routeFields(id, instanceId),
@@ -21,12 +31,35 @@ export default function SummaryRouteFields() {
 
     const handleAddSection = () => {
         setSelectedSection(undefined);
-        setOpen(true);
+        setOpenDialog("section");
     };
 
-    const handleEditSection = (section: { _id: string; name: string }) => {
+    const handleEditSection = (section: Section) => {
         setSelectedSection(section);
-        setOpen(true);
+        setOpenDialog("section");
+    };
+
+    const handleAddField = (sectionId: string) => {
+        setSelectedSection({ _id: sectionId });
+        setOpenDialog("field");
+    };
+
+    // Helper functions to handle dialog open/close
+    const handleSectionDialogChange = (open: boolean) => {
+        if (!open) setOpenDialog(null);
+    };
+
+    const handleFieldDialogChange = (open: boolean) => {
+        if (!open) setOpenDialog(null);
+    };
+
+    // Get section data in the correct format for the section form
+    const getSectionForForm = (): Section | undefined => {
+        if (!selectedSection || !selectedSection.name) return undefined;
+        return {
+            _id: selectedSection._id,
+            name: selectedSection.name
+        };
     };
 
     if (isPending) return <div>Loading...</div>
@@ -35,14 +68,19 @@ export default function SummaryRouteFields() {
     return (
         <>
             <RouteFieldsSectionForm 
-                // This key field is used to force the form to re-render when the section is edited so the 
-                // props update and the form is updated with the new section
-                // This is an alternative to using useEffect to update the form
-                key={selectedSection?._id}
-                open={open} 
-                setOpen={setOpen} 
-                section={selectedSection}
+                key={`section-form-${selectedSection?._id || "new"}`}
+                open={openDialog === "section"} 
+                setOpen={handleSectionDialogChange} 
+                section={getSectionForForm()}
             />
+            
+            <FieldForm
+                key={`field-form-${selectedSection?._id || "new"}`}
+                open={openDialog === "field"}
+                onOpenChange={handleFieldDialogChange}
+                sectionId={selectedSection?._id || ""}
+            />
+
             <SummaryBase title="Route Fields" action={handleAddSection} label="Add Section">
                 {data.map((section) => (
                     <div key={section._id}>
@@ -52,7 +90,11 @@ export default function SummaryRouteFields() {
 
                                 <Tooltip>
                                     <TooltipTrigger asChild>
-                                        <button type="button" className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block">
+                                        <button 
+                                            type="button" 
+                                            className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block"
+                                            onClick={() => handleAddField(section._id)}
+                                        >
                                             <PlusIcon className="w-4 h-4" />
                                         </button>
                                     </TooltipTrigger>
@@ -95,6 +137,17 @@ export default function SummaryRouteFields() {
 
                             </div>
                         </div>
+                        
+                        {/* Display fields for this section */}
+                        {section.fields && section.fields.length > 0 && (
+                            <div className="ml-4 space-y-1 mt-1 mb-2">
+                                {section.fields.map(field => (
+                                    <div key={field._id} className="text-xs text-stone-500 pl-2 border-l border-stone-200 py-0.5">
+                                        {field.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ))}
             </SummaryBase>
