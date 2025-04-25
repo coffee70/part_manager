@@ -39,6 +39,7 @@ export const routerKeys = {
     attachable: (id?: string | null) => [...routerKeys.id(id), 'attachable'],
     linkable: (id?: string | null) => [...routerKeys.id(id), 'linkable'],
     commentable: (id?: string | null) => [...routerKeys.id(id), 'commentable'],
+    routeFields: (id: string, instanceId?: string | null) => [...routerKeys.id(id), instanceId, 'route_fields'],
 }
 
 export const contextKeys = {

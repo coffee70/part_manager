@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { attachmentKeys, commentKeys, instanceKeys, linkKeys, sectionKeys, contextKeys } from "@/lib/query_keys";
+import { attachmentKeys, commentKeys, instanceKeys, linkKeys, sectionKeys, contextKeys, routerKeys } from "@/lib/query_keys";
 import { getSections } from "@/server/sections/get_sections";
 import { getComments } from "@/server/comments/get_comments";
 import { NextServerSearchParams } from "@/types/collections";
@@ -16,6 +16,7 @@ import { isLinkable } from "@/server/contexts/is_linkable";
 import { isCommentable } from "@/server/contexts/is_commentable";
 import { hasPriority } from "@/server/contexts/has_priority";
 import { getContext } from "@/server/contexts/get_context";
+import { getRouteFields } from "@/server/routers/get_route_fields";
 
 export default async function Page({
     params,
@@ -88,6 +89,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: contextKeys.hasPriority("routers", routerId),
         queryFn: () => hasPriority({ context: "routers", id: routerId }),
+    })
+
+    // route fields
+    await queryClient.prefetchQuery({
+        queryKey: routerKeys.routeFields(routerId, instanceId),
+        queryFn: () => getRouteFields({ routerId, instanceId }),
     })
 
     return (

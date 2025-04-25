@@ -24,6 +24,7 @@ import { hasPriority } from '@/server/contexts/has_priority';
 import More from '../summary/summary_actions/more/more';
 import { MoreProvider } from '../summary/summary_actions/more/more_context';
 import Step from '@/components/summary/summary_actions/step/step';
+import SummaryRouteFields from '@/components/summary/summary_route_fields/summary_route_fields';
 
 export default function SummaryContainer() {
     const { context, id, instanceId } = useInstanceURL();
@@ -76,6 +77,7 @@ export default function SummaryContainer() {
             <SummaryContent>
                 {linkable && <SummaryLinks />}
                 <SummarySections values={instance.values} />
+                {context === "routers" && <SummaryRouteFields />}
                 <SummaryNotes initialValue={instance.notes} />
                 {attachable && <SummaryAttachments />}
                 {commentable && <SummaryActivity />}

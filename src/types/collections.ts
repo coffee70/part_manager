@@ -190,6 +190,11 @@ export type RouterDoc = {
     linkable: boolean;
     commentable: boolean;
     color: string;
+    route_fields?: {
+        _id: ObjectId;
+        name: string;
+        fields: FieldDoc[];
+    }[];
     updatedAt: Date;
     updatedBy: string;
 }
@@ -201,6 +206,11 @@ export type Router = {
     linkable: boolean;
     commentable: boolean;
     color: string;
+    route_fields?: {
+        _id: string;
+        name: string;
+        fields: Field[];
+    }[];
 }
 
 export type InstanceDoc = {
