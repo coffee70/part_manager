@@ -6,14 +6,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getRouteFields } from "@/server/routers/get_route_fields";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { routerKeys } from "@/lib/query_keys";
-import { PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Section } from "./components/section";
 
 // Dialog type to track which dialog is currently open
 type DialogType = "section" | "field" | null;
 
 // Section type matching the expected type in the section form
-type Section = { _id: string; name: string };
+type SectionType = { _id: string; name: string };
 
 export default function SummaryRouteFields() {
     const { id, instanceId } = useInstanceURL();
@@ -34,7 +33,7 @@ export default function SummaryRouteFields() {
         setOpenDialog("section");
     };
 
-    const handleEditSection = (section: Section) => {
+    const handleEditSection = (section: SectionType) => {
         setSelectedSection(section);
         setOpenDialog("section");
     };
@@ -42,6 +41,11 @@ export default function SummaryRouteFields() {
     const handleAddField = (sectionId: string) => {
         setSelectedSection({ _id: sectionId });
         setOpenDialog("field");
+    };
+
+    const handleDeleteSection = (sectionId: string) => {
+        // Implementation to delete a section would go here
+        console.log(`Delete section with ID: ${sectionId}`);
     };
 
     // Helper functions to handle dialog open/close
@@ -54,7 +58,7 @@ export default function SummaryRouteFields() {
     };
 
     // Get section data in the correct format for the section form
-    const getSectionForForm = (): Section | undefined => {
+    const getSectionForForm = (): SectionType | undefined => {
         if (!selectedSection || !selectedSection.name) return undefined;
         return {
             _id: selectedSection._id,
@@ -83,72 +87,13 @@ export default function SummaryRouteFields() {
 
             <SummaryBase title="Route Fields" action={handleAddSection} label="Add Section">
                 {data.map((section) => (
-                    <div key={section._id}>
-                        <div className="group flex items-center justify-between hover:cursor-pointer hover:bg-stone-50 rounded-md px-2 py-1 h-8">
-                            <span className="text-xs font-semibold text-stone-500 group-hover:text-stone-700">{section.name.toUpperCase()}</span>
-                            <div className="flex items-center gap-2">
-
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <button 
-                                            type="button" 
-                                            className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block"
-                                            onClick={() => handleAddField(section._id)}
-                                        >
-                                            <PlusIcon className="w-4 h-4" />
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
-                                            <span>Add Field</span>
-                                        </div>
-                                    </TooltipContent>
-                                </Tooltip>
-
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <button 
-                                            type="button" 
-                                            className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block"
-                                            onClick={() => handleEditSection(section)}
-                                        >
-                                            <PencilIcon className="w-4 h-4" />
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
-                                            <span>Edit Section</span>
-                                        </div>
-                                    </TooltipContent>
-                                </Tooltip>
-
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <button type="button" className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block">
-                                            <TrashIcon className="w-4 h-4" />
-                                        </button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
-                                            <span>Delete Section</span>
-                                        </div>
-                                    </TooltipContent>
-                                </Tooltip>
-
-                            </div>
-                        </div>
-                        
-                        {/* Display fields for this section */}
-                        {section.fields && section.fields.length > 0 && (
-                            <div className="ml-4 space-y-1 mt-1 mb-2">
-                                {section.fields.map(field => (
-                                    <div key={field._id} className="text-xs text-stone-500 pl-2 border-l border-stone-200 py-0.5">
-                                        {field.name}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <Section 
+                        key={section._id}
+                        section={section}
+                        onAddField={handleAddField}
+                        onEditSection={handleEditSection}
+                        onDeleteSection={handleDeleteSection}
+                    />
                 ))}
             </SummaryBase>
         </>

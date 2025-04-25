@@ -53,6 +53,7 @@ export async function upsertRouteField(input: z.input<typeof InputSchema>): Prom
                 $set: {
                     'route_fields.$[section].fields.$[field]': {
                         _id: new ObjectId(_id),
+                        sectionId,
                         ...fieldData
                     },
                     updatedAt: new Date(),
@@ -77,6 +78,7 @@ export async function upsertRouteField(input: z.input<typeof InputSchema>): Prom
                 $push: {
                     'route_fields.$.fields': {
                         _id: new ObjectId(),
+                        sectionId,
                         ...fieldData
                     }
                 },
