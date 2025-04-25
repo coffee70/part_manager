@@ -82,6 +82,9 @@ class ModelsInstancesRouterBuilder {
     routing(modelId: string, instanceId: string) {
         return `${this._base}/${modelId}/routing/${instanceId}`;
     }
+    step(modelId: string, instanceId: string, stepId: string) {
+        return `${this._base}/${modelId}/routing/${instanceId}?stepId=${stepId}`;
+    }
 }
 
 class ModelsAdminRouterBuilder {

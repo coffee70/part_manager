@@ -7,8 +7,10 @@ import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import { StepBadge } from "@/components/ui/badge";
 import Pulse from "@/components/ui/pulse";
 import RouteTable from "@/components/ui/route_table";
-import { CheckCircleIcon, CircleCheckIcon } from "lucide-react";
+import { CircleCheckIcon } from "lucide-react";
 import { RouteState } from "@/components/route_builder/list_view/types";
+import { useRouter } from "next/navigation";
+import { router } from "@/lib/url";
 
 export default function TableContainer() {
     const { modelId, instanceId } = useModelInstanceRoutingURL();
@@ -17,6 +19,8 @@ export default function TableContainer() {
         queryKey: routeKeys.id(modelId, instanceId),
         queryFn: () => getRoute({ modelId, instanceId })
     })
+
+    const nextRouter = useRouter();
 
     if (isPending) return <TableSkeleton />
 
@@ -40,11 +44,15 @@ export default function TableContainer() {
         return route.currentStepId === stepId;
     }
 
+    const handleClick = (stepId: string) => {
+        nextRouter.push(router().models().instances().step(modelId, instanceId, stepId))
+    }
+
     return (
         <div className="p-8">
             <RouteTable>
                 <RouteTable.Body>
-                    <RouteTable.Row>
+                    <RouteTable.HeaderRow>
                         <RouteTable.Cell>
                             <StepBadge step={{
                                 id: "not-started",
@@ -55,10 +63,10 @@ export default function TableContainer() {
                         <RouteTable.Cell>
                             {isRouteStopped() ? <Pulse /> : <CompletedIcon />}
                         </RouteTable.Cell>
-                    </RouteTable.Row>
+                    </RouteTable.HeaderRow>
                     {route.nodes.map(node => (
                         <>
-                            <RouteTable.Row>
+                            <RouteTable.Row onClick={() => handleClick(node.id)}>
                                 <RouteTable.Cell>
                                     <StepBadge step={{
                                         id: node.id,
@@ -74,7 +82,7 @@ export default function TableContainer() {
                             </RouteTable.Row>
                         </>
                     ))}
-                    <RouteTable.Row>
+                    <RouteTable.FooterRow>
                         <RouteTable.Cell>
                             <StepBadge step={{
                                 id: "done",
@@ -85,7 +93,7 @@ export default function TableContainer() {
                         <RouteTable.Cell>
                             {isRouteCompleted() ? <CompletedIcon /> : <></>}
                         </RouteTable.Cell>
-                    </RouteTable.Row>
+                    </RouteTable.FooterRow>
                 </RouteTable.Body>
             </RouteTable>
         </div>
