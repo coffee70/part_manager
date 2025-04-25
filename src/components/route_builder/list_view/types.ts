@@ -17,8 +17,6 @@ export interface Router {
 export type Node = {
   id: string;
   instanceId: string;
-  name: string;
-  type: StepType;
 }
 
 export type Route = {

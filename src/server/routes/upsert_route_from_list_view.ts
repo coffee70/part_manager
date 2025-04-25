@@ -16,8 +16,6 @@ const InputSchema = z.object({
     nodes: z.array(z.object({
       id: z.string(),
       instanceId: z.string(),
-      name: z.string(),
-      type: z.enum(stepTypes),
     })),
   }),
 });

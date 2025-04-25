@@ -3,14 +3,13 @@ import React from 'react'
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuPortal } from '@/components/ui/dropdown-menu'
 import MoreButton from './more_button'
 import { useMoreContext } from './more_context';
-import { HammerIcon, LinkIcon, MessageCircleIcon, PaperclipIcon, RouteIcon, CopyIcon, ListIcon } from 'lucide-react';
+import { LinkIcon, MessageCircleIcon, PaperclipIcon, RouteIcon, CopyIcon, ListIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { contextKeys, routeKeys } from '@/lib/query_keys';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { isAttachable } from '@/server/contexts/is_attachable';
 import { isLinkable } from '@/server/contexts/is_linkable';
 import { isCommentable } from '@/server/contexts/is_commentable';
-import { getRoute } from '@/server/routes/get_route';
 import Builder from '@/components/route_builder/list_view/builder';
 import { hasRoute } from '@/server/routes/has_route';
 import CloneView from '@/components/route_builder/clone_view/clone_view';

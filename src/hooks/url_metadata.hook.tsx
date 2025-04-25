@@ -33,6 +33,43 @@ export function useInstanceURL() {
     return { context, id, instanceId, modelId: id };
 }
 
+/**
+ * Hook to extract modelId and instanceId from a routing URL
+ * 
+ * Parses the URL pattern: /models/instances/[modelId]/routing/[instanceId]
+ * 
+ * @returns {Object} An object containing:
+ *   - modelId: The ID of the model extracted from the URL path
+ *   - instanceId: The ID of the instance extracted from the URL path
+ * 
+ * @throws {Error} If modelId or instanceId are missing or not strings
+ * 
+ * @example
+ * const { modelId, instanceId } = useModelInstanceRoutingURL();
+ * // Use these values to fetch data specific to this model instance
+ */
+export default function useModelInstanceRoutingURL() {
+    const path = usePathname()?.split("/");
+    
+    // Remove empty first segment
+    path.shift();
+    
+    // Extract path segments
+    const modelId = path[2];
+    const instanceId = path[4];
+    
+    // Validate that modelId and instanceId are present
+    if (!modelId || typeof modelId !== 'string') {
+        throw new Error('ModelId is required and must be a string');
+    }
+    
+    if (!instanceId || typeof instanceId !== 'string') {
+        throw new Error('InstanceId is required and must be a string');
+    }
+    
+    return { modelId, instanceId };
+}
+
 export function useURL() {
     const path = usePathname()?.split('/');
     // remove the first empty string

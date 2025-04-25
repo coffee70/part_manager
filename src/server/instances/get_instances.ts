@@ -5,9 +5,7 @@ import { db } from "@/lib/db";
 import { InstanceDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { RouteState } from "@/components/route_builder/list_view/types";
-import { getRoute } from "../routes/get_route";
 import { getInstance } from "./get_instance";
-import { Node } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     id: z.string(),
@@ -139,16 +137,15 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     }
 
     const instances = await instanceCollection
-        .aggregate(pipeline)
+        .aggregate<InstanceDoc>(pipeline)
         .toArray();
 
     const res = await Promise.all(instances.map(async instance => {
         const updatedBy = await usersCollection.findOne({ _id: instance.updatedById });
 
-        const route = await getRoute({ modelId: id, instanceId: instance._id.toString() });
-
-        let currentStep: Node | undefined;
-        if (route) {
+        let currentStep;
+        if (instance.route) {
+            const route = instance.route;
             let currentNode = route.nodes.find(node => node.id === route.currentStepId);
             if (currentNode) {
                 let routerInstance = await getInstance({ id: route.routerId, instanceId: currentNode.instanceId })
@@ -167,8 +164,8 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
             _id: instance._id.toString(),
             number: instance.number,
             priority: instance.priority,
-            route: route ? {
-                state: route.state,
+            route: instance.route ? {
+                state: instance.route.state,
                 currentStep: currentStep
             } : undefined,
             updatedAt: instance.updatedAt,

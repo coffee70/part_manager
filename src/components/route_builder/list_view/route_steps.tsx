@@ -51,8 +51,6 @@ export default function RouteSteps({ route, instances, selectedRouterId, onRoute
       { 
         id: crypto.randomUUID(),
         instanceId: '',
-        name: '',
-        type: 'To-do',
       }
     ];
     

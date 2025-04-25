@@ -34,5 +34,22 @@ export async function getRoute(input: z.input<typeof InputSchema>) {
     const instance = await instanceCollection.findOne({ _id: new ObjectId(instanceId) });
     if (!instance) throw new Error("Instance not found");
 
-    return OutputSchema.parse(instance.route ?? null);
+    if (instance.route) {
+        const routerInstanceCollection = db.collection<InstanceDoc>(instance.route.routerId)
+        return OutputSchema.parse({
+            ...instance.route,
+            nodes: await Promise.all(instance.route.nodes.map(async node => {
+                const routerInstance = await routerInstanceCollection.findOne({
+                    _id: new ObjectId(node.instanceId)
+                })
+                if (!routerInstance) return;
+                return {
+                    ...node,
+                    name: routerInstance.number
+                }
+            }))
+        })
+    }
+
+    return OutputSchema.parse(null);
 }
