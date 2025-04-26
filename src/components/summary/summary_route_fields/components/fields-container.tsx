@@ -19,11 +19,11 @@ export function FieldsContainer({ fields }: FieldsContainerProps) {
     if (!fields || fields.length === 0) {
         return null;
     }
-    
+
     return (
         <div className="border border-stone-200 bg-stone-50 rounded-md shadow-sm">
 
-            <FieldForm 
+            <FieldForm
                 key={`field-form-${selectedField?._id || "new"}`}
                 field={selectedField}
                 open={openDialog}
@@ -32,11 +32,11 @@ export function FieldsContainer({ fields }: FieldsContainerProps) {
             />
 
             {fields.map(field => (
-                <SectionField 
-                    key={field._id} 
-                    field={field} 
+                <SectionField
+                    key={field._id}
+                    field={field}
                     onEditField={handleOpenEditFieldDialog}
-                    onDeleteField={() => {}}
+                    onDeleteField={() => { }}
                 />
             ))}
         </div>
