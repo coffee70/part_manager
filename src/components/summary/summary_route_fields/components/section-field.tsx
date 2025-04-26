@@ -39,7 +39,7 @@ export function SectionField({ field, onEditField, onDeleteField }: SectionField
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
         >
-            <div className="flex items-center justify-start space-x-4">
+            <div className="flex items-center justify-start space-x-4 ml-1">
                 <div className="py-1">
                     <FieldTypeIcon type={field.type} />
                 </div>
@@ -50,7 +50,7 @@ export function SectionField({ field, onEditField, onDeleteField }: SectionField
             <div className="flex items-center justify-center w-8 py-1">
                 <DropdownMenu open={dropdownOpen} onOpenChange={onDropdownOpenChange}>
                     <DropdownMenuTrigger asChild>
-                        {visibleOptions && <button type="button" className="rounded-full">
+                        {visibleOptions && <button type="button" className="rounded-full p-0.5 hover:bg-stone-300">
                             <MoreHorizontalIcon className="w-4 h-4" />
                         </button>}
                     </DropdownMenuTrigger>
