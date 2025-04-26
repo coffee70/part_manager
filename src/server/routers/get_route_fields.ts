@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
-import { RouterDoc } from "@/types/collections";
+import { InstanceDoc } from "@/types/collections";
 
 const InputSchema = z.object({
     routerId: z.string(),
@@ -18,7 +18,7 @@ export async function getRouteFields(input: z.input<typeof InputSchema>) {
     if (!instanceId) throw new Error('Instance ID is required');
     
     // Get the collection using the routerId which is the collection name
-    const collection = db.collection<RouterDoc>(routerId);
+    const collection = db.collection<InstanceDoc>(routerId);
 
     // Find the document and project only the route_fields
     const instance = await collection.findOne(

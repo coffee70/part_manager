@@ -2,7 +2,7 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { contexts, InstanceDoc, ModelDoc, priorities } from "@/types/collections";
+import { contexts, InstanceDoc, priorities } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { router } from "@/lib/url";
@@ -45,6 +45,7 @@ export async function upsertInstance(
             attachments: [],
             updatedAt: new Date(),
             updatedById: user._id,
+            route_fields: [],
         });
 
         redirectInstanceId = insertedId.toString();

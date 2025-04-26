@@ -1,7 +1,7 @@
 import React from 'react';
-import ParagraphFieldProvider from "@/components/summary/summary_sections/summary_field_providers/paragraph_field_provider";
-import SelectFieldProvider from "@/components/summary/summary_sections/summary_field_providers/select_field_provider";
-import InputFieldProvider from '@/components/summary/summary_sections/summary_field_providers/input_field_provider';
+import ParagraphFieldProvider from "@/components/summary/summary_sections/route_field_providers/paragraph_field_provider";
+import SelectFieldProvider from "@/components/summary/summary_sections/route_field_providers/select_field_provider";
+import InputFieldProvider from '@/components/summary/summary_sections/route_field_providers/input_field_provider';
 import { Field, Section } from '@/types/collections';
 
 type SummarySectionProps = {
@@ -36,4 +36,3 @@ export default function SummarySection({ section }: SummarySectionProps) {
         </div>
     )
 }
-

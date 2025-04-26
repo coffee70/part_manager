@@ -3,8 +3,8 @@ import { ActionState, validate } from "@/lib/validators/server_actions"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { Document, ObjectId } from "mongodb";
-import { RouterDoc } from "@/types/collections";
+import { ObjectId } from "mongodb";
+import { InstanceDoc } from "@/types/collections";
 
 const InputSchema = z.object({
     _id: z.string().optional(),
@@ -30,11 +30,11 @@ export async function upsertRouteFieldsSection(
     }
     
     // Get the collection using the routerId which is the collection name
-    const collection = db.collection<RouterDoc>(routerId);
+    const routerInstanceCollection = db.collection<InstanceDoc>(routerId);
 
     if (_id) {
         // Update existing section
-        await collection.updateOne(
+        await routerInstanceCollection.updateOne(
             { 
                 _id: new ObjectId(instanceId),
                 'route_fields._id': new ObjectId(_id)
@@ -49,7 +49,7 @@ export async function upsertRouteFieldsSection(
         );
     } else {
         // Add new section
-        await collection.updateOne(
+        await routerInstanceCollection.updateOne(
             { _id: new ObjectId(instanceId) },
             {
                 $push: {

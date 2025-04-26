@@ -62,4 +62,5 @@ export const routeKeys = {
     currentSteps: (modelId: string) => ['route', 'currentSteps', modelId],
     hasRoute: (modelId: string, instanceId?: string | null) => ['route', 'hasRoute', modelId, instanceId],
     targetSteps: (modelId: string, instanceId?: string | null) => ['route', 'targetSteps', modelId, instanceId],
+    routeFieldValues: (modelId: string, instanceId?: string | null, stepId?: string | null) => ['route', 'routeFieldValues', modelId, instanceId, stepId],
 }

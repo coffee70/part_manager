@@ -1,3 +1,4 @@
+'use client'
 // Define the pulse animation
 const pulseAnimation = `@keyframes pulse {
     0% {

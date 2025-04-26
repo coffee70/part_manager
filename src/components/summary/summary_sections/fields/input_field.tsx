@@ -6,58 +6,47 @@ import Loading from '@/components/ui/fields/loading'
 import Editing from '@/components/ui/fields/editing'
 import NotEditing from '@/components/ui/fields/not_editing'
 import { Input } from '@/components/ui/input'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { updateFieldValue } from '@/server/fields/update_field_value'
-import { useInstanceURL } from '@/hooks/url_metadata.hook'
-import { instanceKeys, sectionKeys } from '@/lib/query_keys'
 import { getFormClassName } from './field_helpers'
 
 type Props = {
     field: Field & {
         value?: string | string[];
     };
+    value: string | string[];
+    isEditing: boolean;
+    isError: boolean;
+    isPending: boolean;
+    error: Error | null;
+    setIsEditing: (isEditing: boolean) => void;
+    setValue: (value: string | string[]) => void;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export default function InputField({ field }: Props) {
-    const [value, setValue] = React.useState(field.value ?? '');
+export default function InputField(props: Props) {
+    const {
+        field,  
+        value,
+        isEditing,
+        isError,
+        isPending,
+        error,
+        setIsEditing,
+        setValue,
+        handleSubmit
+    } = props;
 
     React.useEffect(() => {
         setValue(field.value ?? '')
-    }, [field.value]);
-
-    const { context, id, instanceId } = useInstanceURL();
+    }, [field.value, setValue]);
 
     const submitRef = React.useRef<HTMLButtonElement>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const [isEditing, setIsEditing] = React.useState(false);
 
     React.useEffect(() => {
         const input = inputRef.current;
         if (isEditing) input?.focus();
         else input?.blur();
     }, [isEditing]);
-
-    const queryClient = useQueryClient();
-
-    const { mutate, isError, isPending, error } = useMutation({
-        mutationFn: updateFieldValue,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
-            // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-            setIsEditing(false);
-        }
-    });
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutate({
-            id,
-            instanceId,
-            fieldId: field._id,
-            value
-        });
-    }
 
     const handleBlur = (e: React.FocusEvent, target: HTMLElement | null) => {
         if (e.relatedTarget !== target) {
@@ -82,7 +71,7 @@ export default function InputField({ field }: Props) {
             />
             <div className="flex flex-col">
                 {isError ? (
-                    <Error message={error.message} />
+                    error && <Error message={error.message} />
                 ) : isPending ? (
                     <Loading />
                 ) : isEditing ? (

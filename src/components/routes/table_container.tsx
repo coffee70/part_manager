@@ -1,5 +1,5 @@
 'use client'
-import useModelInstanceRoutingURL from "@/hooks/url_metadata.hook";
+import { useModelInstanceRoutingURL } from "@/hooks/url_metadata.hook";
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { CircleCheckIcon } from "lucide-react";
 import { RouteState } from "@/components/route_builder/list_view/types";
 import { useRouter } from "next/navigation";
 import { router } from "@/lib/url";
+import React from "react";
 
 export default function TableContainer() {
     const { modelId, instanceId } = useModelInstanceRoutingURL();
@@ -65,7 +66,7 @@ export default function TableContainer() {
                         </RouteTable.Cell>
                     </RouteTable.HeaderRow>
                     {route.nodes.map(node => (
-                        <>
+                        <React.Fragment key={node.id}>
                             <RouteTable.Row onClick={() => handleClick(node.id)}>
                                 <RouteTable.Cell>
                                     <StepBadge step={{
@@ -80,7 +81,7 @@ export default function TableContainer() {
                                             isRouteCompleted() ? <CompletedIcon /> : <></>}
                                 </RouteTable.Cell>
                             </RouteTable.Row>
-                        </>
+                        </React.Fragment>
                     ))}
                     <RouteTable.FooterRow>
                         <RouteTable.Cell>

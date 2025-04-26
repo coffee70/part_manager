@@ -16,48 +16,36 @@ type Props = {
     field: Field & {
         value?: string | string[];
     };
+    value: string | string[] | undefined;
+    isEditing: boolean;
+    isError: boolean;
+    isPending: boolean;
+    error: Error | null;
+    setIsEditing: (isEditing: boolean) => void;
+    setValue: (value: string | string[] | undefined) => void;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export default function SelectField({ field }: Props) {
-    const [value, setValue] = React.useState(field.value);
-
-    React.useEffect(() => {
-        setValue(field.value);
-    }, [field.value]);
-
-    const { context, id, instanceId } = useInstanceURL();
+export default function SelectField({
+    field,
+    value,
+    isEditing,
+    isError,
+    isPending,
+    error,
+    setIsEditing,
+    setValue,
+    handleSubmit
+}: Props) {
 
     const submitRef = React.useRef<HTMLButtonElement>(null);
     const inputRef = React.useRef<HTMLInputElement>(null);
-    const [isEditing, setIsEditing] = React.useState(false);
 
     React.useEffect(() => {
         const input = inputRef.current;
         if (isEditing) input?.focus();
         else input?.blur();
     }, [isEditing]);
-
-    const queryClient = useQueryClient();
-
-    const { mutate, isError, isPending, error } = useMutation({
-        mutationFn: updateFieldValue,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) });
-            // updates the table view to show the updated at date change
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-            setIsEditing(false);
-        }
-    })
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutate({
-            id,
-            instanceId,
-            fieldId: field._id,
-            value
-        });
-    }
 
     const handleBlur = (e: React.FocusEvent, target: HTMLElement | null) => {
         if (e.relatedTarget !== target) {
@@ -83,13 +71,13 @@ export default function SelectField({ field }: Props) {
             />
             <div className="flex flex-col h-full">
                 {isError ? (
-                    <Error message={error.message} />
+                    <Error message={error?.message || 'An error occurred'} />
                 ) : isPending ? (
                     <Loading />
                 ) : isEditing ? (
                     <Editing
                         ref={submitRef}
-                        onBlur={(e) => handleBlur(e, submitRef.current)}
+                        onBlur={(e) => handleBlur(e, inputRef.current)}
                         aria-label={`Save field ${field.name}`} />
                 ) : (
                     <NotEditing

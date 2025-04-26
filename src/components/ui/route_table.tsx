@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils"
 
 function RouteTable({ children, className }: { children?: React.ReactNode, className?: string }) {

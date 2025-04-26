@@ -1,3 +1,4 @@
+'use client'
 import { cn } from "@/lib/utils"
 import { XIcon } from "lucide-react"
 import { stepBackgroundVariants } from "./step";

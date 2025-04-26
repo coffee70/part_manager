@@ -154,6 +154,22 @@ export type LinkableDoc = {
     }[];
 };
 
+export type RouteFieldDoc = {
+    route_fields: {
+        _id: ObjectId;
+        name: string;
+        fields: FieldDoc[];
+    }[];
+}
+
+export type RouteField = {
+    route_fields: {
+        _id: string;
+        name: string;
+        fields: Field[];
+    }[];
+}
+
 export interface ContextImpl {
     _id: string;
     name: string;
@@ -190,11 +206,6 @@ export type RouterDoc = {
     linkable: boolean;
     commentable: boolean;
     color: string;
-    route_fields?: {
-        _id: ObjectId;
-        name: string;
-        fields: FieldDoc[];
-    }[];
     updatedAt: Date;
     updatedBy: string;
 }
@@ -206,11 +217,6 @@ export type Router = {
     linkable: boolean;
     commentable: boolean;
     color: string;
-    route_fields?: {
-        _id: string;
-        name: string;
-        fields: Field[];
-    }[];
 }
 
 export type InstanceDoc = {
@@ -226,6 +232,7 @@ export type InstanceDoc = {
 & CommentableDoc
 & AttachableDoc
 & LinkableDoc
+& RouteFieldDoc
 
 export type Instance = {
     _id: string;
@@ -237,6 +244,7 @@ export type Instance = {
     updatedById: string;
 }
 & Valuable
+& RouteField
 
 // Utility function to get entries with preserved key types
 // this ensures the keys for links are typed as SectionCollection and not string

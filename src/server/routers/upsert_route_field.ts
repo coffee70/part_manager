@@ -1,7 +1,7 @@
 'use server'
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
-import { RouterDoc, fieldtypes } from "@/types/collections";
+import { fieldtypes, InstanceDoc } from "@/types/collections";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
@@ -39,11 +39,11 @@ export async function upsertRouteField(input: z.input<typeof InputSchema>): Prom
     const { _id, sectionId, routerId, instanceId, ...fieldData } = validation.data;
 
     // Get the collection using the routerId which is the collection name
-    const collection = db.collection<RouterDoc>(routerId);
+    const routerInstanceCollection = db.collection<InstanceDoc>(routerId);
 
     if (_id) {
         // Update existing field
-        await collection.updateOne(
+        await routerInstanceCollection.updateOne(
             { 
                 _id: new ObjectId(instanceId),
                 'route_fields._id': new ObjectId(sectionId),
@@ -69,7 +69,7 @@ export async function upsertRouteField(input: z.input<typeof InputSchema>): Prom
         );
     } else {
         // Add new field
-        await collection.updateOne(
+        await routerInstanceCollection.updateOne(
             { 
                 _id: new ObjectId(instanceId),
                 'route_fields._id': new ObjectId(sectionId)
