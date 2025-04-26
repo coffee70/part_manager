@@ -64,6 +64,13 @@ export default function FieldForm({ field, open, onOpenChange, sectionId }: Prop
         options: field?.options
     });
 
+    // if the field props changes, update the form state
+    React.useEffect(() => {
+        if (field) {
+            setFormState(field);
+        }
+    }, [field]);
+
     // Calculate typeValue
     const typeValue = React.useMemo(() =>
         formState.type.charAt(0).toUpperCase() + formState.type.slice(1),
