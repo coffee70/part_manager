@@ -59,7 +59,7 @@ export function SectionField({ field, onEditField, onDeleteField }: SectionField
                             <PencilIcon className="w-4 h-4" />
                             <span>Edit Field</span>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="flex items-center gap-2" onClick={() => onDeleteField(field)}>
+                        <DropdownMenuItem className="flex items-center gap-2 text-destructive hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100" onClick={() => onDeleteField(field)}>
                             <TrashIcon className="w-4 h-4" />
                             <span>Delete Field</span>
                         </DropdownMenuItem>
