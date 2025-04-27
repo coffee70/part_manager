@@ -1,10 +1,10 @@
 'use server'
 import { z } from "zod";
-import { getCurrentSession } from "../auth/get_current_session";
+import { getCurrentSession } from "@/server/auth/get_current_session";
 import { db } from "@/lib/db";
 import { InstanceDoc, stepTypes } from "@/types/collections";
 import { ObjectId } from "mongodb";
-import { getInstance } from "../instances/get_instance";
+import { getInstance } from "@/server/instances/get_instance";
 import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
@@ -17,7 +17,7 @@ const OutputSchema = z.object({
     instanceId: z.string(),
     name: z.string(),
     type: z.enum(stepTypes),
-});
+}).nullable();
 
 /**
  * Gets the current step of a model instance by retrieving its routerId and stepId,
@@ -25,7 +25,9 @@ const OutputSchema = z.object({
  * 
  * A step in a model route is a router instance.
  */
-export async function getCurrentStep(input: z.input<typeof InputSchema>) {
+export async function getCurrentStep(
+    input: z.input<typeof InputSchema>
+): Promise<z.infer<typeof OutputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error("Unauthorized");
 
@@ -39,18 +41,22 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
         _id: new ObjectId(instanceId)
     });
 
+    // This is an actual error, do not return null
     if (!instance) {
         throw new Error("Model instance not found");
     }
 
-    // Check if route exists
+    // This is not an actual error, and is a possible state of the instance
+    // thus we return null
     if (!instance.route) {
-        return null;
+        return OutputSchema.parse(null);
     }
 
     // Access routerId and currentStepId from the route object
     const { routerId, currentStepId, state } = instance.route;
 
+    // This is an actual error, do not return null
+    // All routes have a router ID
     if (!routerId) {
         throw new Error("Route does not have a router ID");
     }
@@ -73,11 +79,15 @@ export async function getCurrentStep(input: z.input<typeof InputSchema>) {
         });
     }
 
+    // This is not an actual error, and is a possible state of the instance
+    // thus we return null
     if (!currentStepId) {
-        throw new Error("Route does not have a current step");
+        return OutputSchema.parse(null);
     }
 
     const node = instance.route.nodes.find(node => node.id === currentStepId);
+    // This is an actual error, do not return null
+    // If the current step is not found in the route nodes, then the route is corrupted
     if (!node) {
         throw new Error("Current step not found in route nodes");
     }
