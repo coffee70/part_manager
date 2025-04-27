@@ -43,11 +43,6 @@ export default function SummaryRouteFields() {
         setOpenDialog("field");
     };
 
-    const handleDeleteSection = (sectionId: string) => {
-        // Implementation to delete a section would go here
-        console.log(`Delete section with ID: ${sectionId}`);
-    };
-
     // Helper functions to handle dialog open/close
     const handleSectionDialogChange = (open: boolean) => {
         if (!open) setOpenDialog(null);
@@ -92,7 +87,6 @@ export default function SummaryRouteFields() {
                         section={section}
                         onAddField={handleAddField}
                         onEditSection={handleEditSection}
-                        onDeleteSection={handleDeleteSection}
                     />
                 ))}
             </SummaryBase>

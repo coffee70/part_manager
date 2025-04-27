@@ -4,10 +4,11 @@ import FieldForm from "../fields/field_form";
 import { type Field } from "@/types/collections";
 
 type FieldsContainerProps = {
+    sectionId: string;
     fields: Field[];
 };
 
-export function FieldsContainer({ fields }: FieldsContainerProps) {
+export function FieldsContainer({ fields, sectionId }: FieldsContainerProps) {
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedField, setSelectedField] = useState<Field | undefined>(undefined);
 
@@ -36,7 +37,7 @@ export function FieldsContainer({ fields }: FieldsContainerProps) {
                     key={field._id}
                     field={field}
                     onEditField={handleOpenEditFieldDialog}
-                    onDeleteField={() => { }}
+                    sectionId={sectionId}
                 />
             ))}
         </div>

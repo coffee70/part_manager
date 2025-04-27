@@ -15,28 +15,30 @@ type SectionComponentProps = {
     section: SectionProps;
     onAddField: (sectionId: string) => void;
     onEditSection: (section: { _id: string; name: string }) => void;
-    onDeleteSection?: (sectionId: string) => void;
 };
 
-export function Section({ section, onAddField, onEditSection, onDeleteSection }: SectionComponentProps) {
+export function Section({ section, onAddField, onEditSection }: SectionComponentProps) {
     const handleAddField = () => onAddField(section._id);
     const handleEditSection = () => onEditSection({ _id: section._id, name: section.name });
-    const handleDeleteSection = onDeleteSection ? () => onDeleteSection(section._id) : undefined;
 
     const [collapsed, setCollapsed] = useState(false);
 
     return (
         <div>
-            <SectionHeader 
-                name={section.name}
+            <SectionHeader
+                section={section}
                 onAddField={handleAddField}
                 onEditSection={handleEditSection}
-                onDeleteSection={handleDeleteSection}
                 collapsed={collapsed}
                 onCollapse={setCollapsed}
             />
-            
-            {!collapsed && <FieldsContainer fields={section.fields} />}
+
+            {!collapsed && (
+                <FieldsContainer
+                    sectionId={section._id}
+                    fields={section.fields}
+                />
+            )}
         </div>
     );
 } 
