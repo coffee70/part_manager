@@ -23,7 +23,17 @@ export default function TableContainer() {
 
     const nextRouter = useRouter();
 
-    if (isPending) return <TableSkeleton />
+    if (isPending) return (
+        <div className="p-8">
+            <RouteTable>
+                <RouteTable.Body>
+                    <div>
+                        <TableSkeleton />
+                    </div>
+                </RouteTable.Body>
+            </RouteTable>
+        </div>
+    )
 
     if (isError || !route) return <div>Error...</div>
 

@@ -10,6 +10,7 @@ import { RouteState } from "@/components/route_builder/list_view/types";
 import RouteNotStarted from "@/components/routes/route_not_started";
 import RouteCompleted from "@/components/routes/route_completed";
 import GenericError from "@/components/errors/generic_error";
+import { getRoute } from "@/server/routes/get_route";
 
 export default async function Page(
     {
@@ -67,6 +68,12 @@ export default async function Page(
     await queryClient.prefetchQuery({
         queryKey: routeKeys.routeFieldValues(modelId, instanceId, stepId),
         queryFn: () => getRouteFieldValues({ stepId, modelId, modelInstanceId: instanceId })
+    })
+
+    // prefetch the route for the title
+    await queryClient.prefetchQuery({
+        queryKey: routeKeys.id(modelId, instanceId),
+        queryFn: () => getRoute({ modelId, instanceId })
     })
 
     // Render summary component with hydrated data
