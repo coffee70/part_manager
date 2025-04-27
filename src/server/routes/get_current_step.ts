@@ -63,7 +63,7 @@ export async function getCurrentStep(
 
     if (!currentStepId && state === RouteState.Completed) {
         return OutputSchema.parse({
-            _id: "done",
+            _id: RouteState.Completed,
             instanceId: "done",
             name: "Done",
             type: "Done",
@@ -72,7 +72,7 @@ export async function getCurrentStep(
 
     if (!currentStepId && state === RouteState.Stopped) {
         return OutputSchema.parse({
-            _id: "not-started",
+            _id: RouteState.Stopped,
             instanceId: "not-started",
             name: "Not Started",
             type: "To-do",

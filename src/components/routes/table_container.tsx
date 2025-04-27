@@ -56,7 +56,7 @@ export default function TableContainer() {
                     <RouteTable.HeaderRow>
                         <RouteTable.Cell>
                             <StepBadge step={{
-                                id: "not-started",
+                                id: RouteState.Stopped,
                                 name: "Not Started",
                                 type: "To-do"
                             }} />
@@ -86,7 +86,7 @@ export default function TableContainer() {
                     <RouteTable.FooterRow>
                         <RouteTable.Cell>
                             <StepBadge step={{
-                                id: "done",
+                                id: RouteState.Completed,
                                 name: "Done",
                                 type: "Done"
                             }} />
