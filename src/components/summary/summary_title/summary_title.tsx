@@ -19,7 +19,7 @@ export default function SummaryTitle() {
     
     return (
         <div>
-            <span className="text-3xl font-bold">
+            <span className="text-2xl font-bold">
                 {title}
             </span>
         </div>
