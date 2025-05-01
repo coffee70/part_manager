@@ -7,7 +7,7 @@ import { useURL } from "@/hooks/url_metadata.hook";
 import Profile from "./profile";
 
 export default function PrimaryNavigation() {
-    const { headSegment } = useURL();
+    const { context } = useURL();
     return (
         <div className="h-screen w-fit bg-stone-100 border-r border-stone-200 px-1.5 py-4 flex flex-col shadow-sm">
             <PrimaryHeader />
@@ -20,7 +20,7 @@ export default function PrimaryNavigation() {
                 >
                     <PrimaryModelIcon
                         size={24}
-                        selected={headSegment === "models"}
+                        selected={context === "models"}
                     />
                 </PrimaryItem>
                 <PrimaryItem
@@ -28,7 +28,7 @@ export default function PrimaryNavigation() {
                     context="routers"
                     href={router().routers().base()}
                 >
-                    <RouteIcon size={24} selected={headSegment === "routers"} />
+                    <RouteIcon size={24} selected={context === "routers"} />
                 </PrimaryItem>
             </PrimaryGroup>
             <PrimaryDivider />
@@ -38,7 +38,7 @@ export default function PrimaryNavigation() {
                     context="users"
                     href={router().users().base()}
                 >
-                    <PrimaryUserIcon size={24} selected={headSegment === "users"} />
+                    <PrimaryUserIcon size={24} selected={context === "users"} />
                 </PrimaryItem>
             </PrimaryGroup>
             <PrimarySeparator />

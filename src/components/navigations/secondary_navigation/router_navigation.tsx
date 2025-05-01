@@ -9,7 +9,7 @@ import { useURL } from "@/hooks/url_metadata.hook";
 import { getRouters } from "@/server/routers/get_routers";
 
 export default function RouterNavigation() {
-    const { tailSegment } = useURL();
+    const { contextId } = useURL();
     const [hoveredItem, setHoveredItem] = React.useState<string | null>(null);
 
     const { data: routers = [] } = useQuery({
@@ -33,7 +33,7 @@ export default function RouterNavigation() {
                         href={appRouter().routers().instances().router(router._id)}
                         top={index === 0}
                         bottom={index === routers.length - 1}
-                        selected={tailSegment === router._id}
+                        selected={contextId === router._id}
                         context="routers"
                         onMouseEnter={() => setHoveredItem(router.name)}
                         onMouseLeave={() => setHoveredItem(null)}
@@ -50,7 +50,7 @@ export default function RouterNavigation() {
                     href={appRouter().routers().admin().fields().base()}
                     onMouseEnter={() => setHoveredItem("Fields")}
                     onMouseLeave={() => setHoveredItem(null)}
-                    selected={tailSegment === "fields"}
+                    selected={contextId === "fields"}
                     isHovered={hoveredItem === "Fields"}
                 >
                     <FieldIcon size={18} />
@@ -61,7 +61,7 @@ export default function RouterNavigation() {
                     href={appRouter().routers().admin().routers()}
                     onMouseEnter={() => setHoveredItem("Routers")}
                     onMouseLeave={() => setHoveredItem(null)}
-                    selected={tailSegment === "routers"}
+                    selected={contextId === "routers"}
                     isHovered={hoveredItem === "Routers"}
                 >
                     <SecondaryRouteIcon size={18} />

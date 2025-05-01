@@ -9,7 +9,7 @@ import { router } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
 
 export default function ModelNavigation() {
-    const { tailSegment } = useURL();
+    const { contextId } = useURL();
     const [hoveredItem, setHoveredItem] = React.useState<string | null>(null);
 
     const { data: models = [] } = useQuery({
@@ -33,7 +33,7 @@ export default function ModelNavigation() {
                         href={router().models().instances().model(model._id)}
                         top={index === 0}
                         bottom={index === models.length - 1}
-                        selected={tailSegment === model._id}
+                        selected={contextId === model._id}
                         context="models"
                         onMouseEnter={() => setHoveredItem(model.name)}
                         onMouseLeave={() => setHoveredItem(null)}
@@ -50,7 +50,7 @@ export default function ModelNavigation() {
                     href={router().models().admin().fields().base()}
                     onMouseEnter={() => setHoveredItem("Fields")}
                     onMouseLeave={() => setHoveredItem(null)}
-                    selected={tailSegment === "fields"}
+                    selected={contextId === "fields"}
                     isHovered={hoveredItem === "Fields"}
                 >
                     <FieldIcon size={18} />
@@ -61,7 +61,7 @@ export default function ModelNavigation() {
                     href={router().models().admin().models()}
                     onMouseEnter={() => setHoveredItem("Models")}
                     onMouseLeave={() => setHoveredItem(null)}
-                    selected={tailSegment === "models"}
+                    selected={contextId === "models"}
                     isHovered={hoveredItem === "Models"}
                 >
                     <SecondaryModelIcon size={18} />

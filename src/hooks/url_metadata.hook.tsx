@@ -75,9 +75,11 @@ export function useModelInstanceRoutingURL() {
 
 export function useURL() {
     const path = usePathname()?.split('/');
-    // remove the first empty string
-    path.shift();
-    const headSegment = path.shift();
-    const tailSegment = usePathname()?.split('/').pop();
-    return { headSegment, tailSegment };
+    
+    // the second segment is the context
+    // the fourth segment is the contextId
+    const context = path[1];
+    const contextId = path[3];
+
+    return { context, contextId };
 }
