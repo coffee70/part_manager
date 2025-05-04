@@ -23,34 +23,8 @@ import { sectionKeys } from "@/lib/query_keys";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-
-const labelToType = (label: string): FieldType => {
-    switch (label) {
-        case 'Text': return 'text';
-        case 'Number': return 'number';
-        case 'Date': return 'date';
-        case 'Time': return 'time';
-        case 'Select': return 'select';
-        case 'Paragraph': return 'paragraph';
-        default: {
-            throw new Error('Invalid label');
-        }
-    }
-}
-
-const TYPE_LABELS = fieldtypes.map((type) => type.charAt(0).toUpperCase() + type.slice(1));
-
-export type FieldFormState = {
-    _id?: string;
-    name: string;
-    sectionId: string;
-    type: FieldType;
-    description: string;
-    multiple?: boolean;
-    creative?: boolean;
-    default?: string;
-    options?: string[];
-}
+import KeyValueForm from "./forms/key_value";
+import { FieldFormState, labelToType, typeToLabel, TYPE_LABELS } from "@/lib/fields";
 
 type Props = {
     open: boolean;
@@ -72,7 +46,8 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
         multiple: field?.multiple,
         creative: field?.creative,
         default: field?.default,
-        options: field?.options
+        options: field?.options,
+        keys: field?.keys,
     }
 
     const [formState, setFormState] = React.useState<FieldFormState>(initialFormState);
@@ -81,7 +56,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
         setFormState(prev => ({ ...prev, type: labelToType(label) }));
     }
 
-    const typeValue = React.useMemo(() => formState.type.charAt(0).toUpperCase() + formState.type.slice(1), [formState.type]);
+    const typeValue = React.useMemo(() => typeToLabel(formState.type), [formState.type]);
 
     const { mutate, data } = useMutation({
         mutationFn: upsertField,
@@ -101,7 +76,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="min-w-[650px]">
+            <DialogContent className="min-w-[800px]">
                 <DialogHeader>
                     <DialogTitle>New Field</DialogTitle>
                     <DialogDescription>Customize a new field.</DialogDescription>
@@ -127,6 +102,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
                     {formState.type === 'time' && <TimeForm formState={formState} setFormState={setFormState} data={data} />}
                     {formState.type === 'select' && <SelectForm formState={formState} setFormState={setFormState} data={data} />}
                     {formState.type === 'paragraph' && <ParagraphForm formState={formState} setFormState={setFormState} data={data} />}
+                    {formState.type === 'key_value' && <KeyValueForm formState={formState} setFormState={setFormState} data={data} />}
                     <Button
                         className="w-full"
                         type='submit'

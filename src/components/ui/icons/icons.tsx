@@ -4,8 +4,16 @@ import {
     BoxesIcon,
     UserIcon as LucideUserIcon,
     RouteIcon as LucideRouteIcon,
-    SearchXIcon
+    SearchXIcon,
+    CaseSensitiveIcon,
+    Clock3Icon,
+    TextIcon,
+    KeyRoundIcon,
+    MousePointerClickIcon,
+    CalendarIcon,
+    HashIcon
 } from "lucide-react"
+import { type FieldType } from "@/types/collections";
 
 type Props = {
     size?: number;
@@ -155,6 +163,25 @@ function NotFoundIcon({ size }: Props) {
     )
 }
 
+function FieldType({ type, size }: { type: FieldType, size: number }) {
+    switch (type) {
+        case 'text':
+            return <CaseSensitiveIcon size={size} />
+        case 'number':
+            return <HashIcon size={size} />
+        case 'date':
+            return <CalendarIcon size={size} />
+        case 'time':
+            return <Clock3Icon size={size} />
+        case 'select':
+            return <MousePointerClickIcon size={size} />
+        case 'paragraph':
+            return <TextIcon size={size} />
+        case 'key_value':
+            return <KeyRoundIcon size={size} />
+    }
+}
+
 export {
     PrimaryModelIcon,
     SecondaryModelIcon,
@@ -167,4 +194,5 @@ export {
     FieldIcon,
     TitleFieldIcon,
     NotFoundIcon,
+    FieldType
 }
