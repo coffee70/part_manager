@@ -45,7 +45,8 @@ export async function getRoute(input: z.input<typeof InputSchema>) {
                 if (!routerInstance) return;
                 return {
                     ...node,
-                    name: routerInstance.number
+                    name: routerInstance.number,
+                    type: 'In-progress'
                 }
             }))
         })
