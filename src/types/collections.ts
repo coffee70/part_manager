@@ -6,7 +6,7 @@ export const contexts = ['models', 'routers', 'users'] as const;
 
 export type Context = typeof contexts[number];
 
-export const fieldtypes = ['text', 'number', 'date', 'time', 'paragraph', 'select'] as const;
+export const fieldtypes = ['text', 'number', 'date', 'time', 'paragraph', 'select', 'key_value'] as const;
 
 export type FieldType = typeof fieldtypes[number];
 
@@ -94,6 +94,7 @@ export type Field = {
     multiple?: boolean;
     creative?: boolean;
     default?: string;
+    keys?: string[];
 }
 
 export type FieldDoc = {
@@ -106,6 +107,7 @@ export type FieldDoc = {
     multiple?: boolean;
     creative?: boolean;
     default?: string;
+    keys?: string[];
 }
 
 export interface UserDoc {

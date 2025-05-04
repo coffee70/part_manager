@@ -16,6 +16,7 @@ const InputSchema = z.object({
     creative: z.boolean().optional(),
     default: z.string().optional(),
     options: z.array(z.string()).optional(),
+    keys: z.array(z.string()).optional(),
     routerId: z.string().min(1, { message: 'Router ID is required.' }),
     instanceId: z.string().min(1, { message: 'Instance ID is required.' })
 }).refine(data => {

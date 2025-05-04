@@ -28,6 +28,8 @@ export default function SummarySection({ section }: SummarySectionProps) {
                         <ParagraphFieldProvider field={field} />
                     ) : field.type === 'select' ? (
                         <SelectFieldProvider field={field} />
+                    ) : field.type === 'key_value' ? (
+                        <div>not implemented</div>
                     ) : (
                         <InputFieldProvider field={field} />
                     )}

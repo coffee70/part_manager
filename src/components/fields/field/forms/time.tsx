@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { FieldFormState } from '../field_form';
+import { FieldFormState } from '@/lib/fields';
 import { upsertField } from '@/server/fields/upsert_field';
 import { Input } from '@/components/ui/fields/input';
 import { Textarea } from '@/components/ui/fields/textarea';

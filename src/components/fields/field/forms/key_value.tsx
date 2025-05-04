@@ -13,7 +13,7 @@ type Props = {
     data?: Awaited<ReturnType<typeof upsertField>>;
 }
 
-export default function SelectForm({ formState, setFormState, data }: Props) {
+export default function KeyValueForm({ formState, setFormState, data }: Props) {
     return (
         <>
             <Input
@@ -37,17 +37,12 @@ export default function SelectForm({ formState, setFormState, data }: Props) {
                 onChange={(newValue) => setFormState(prev => ({ ...prev, multiple: newValue === 'Multiple' }))}
                 labels={['Single', 'Multiple']}
             />
-            <ButtonGroup
-                value={formState.creative ? 'Creative' : 'Restricted'}
-                onChange={(newValue) => setFormState(prev => ({ ...prev, creative: newValue === 'Creative' }))}
-                labels={['Restricted', 'Creative']}
-            />
             <TagInput
-                label='Options'
-                placeholder="Type an option and press Enter..."
-                value={formState.options}
-                onChange={(options) => setFormState(prev => ({ ...prev, options }))}
-                error={data?.fieldErrors?.options}
+                label='Keys'
+                placeholder="Type a key and press Enter..."
+                value={formState.keys}
+                onChange={(keys) => setFormState(prev => ({ ...prev, keys }))}
+                error={data?.fieldErrors?.keys}
             />
         </>
     )

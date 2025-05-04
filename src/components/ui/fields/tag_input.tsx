@@ -11,7 +11,7 @@ export default function TagInput(props: Props) {
     const { label, error, description, className, ...other } = props;
     return (
         <div className="flex flex-col">
-            <label>{label}</label>
+            <label className='text-sm'>{label}</label>
             <BaseTagInput
                 className={cn(
                     'border border-accent-foreground shadow-sm rounded-md p-1',

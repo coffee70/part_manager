@@ -16,6 +16,7 @@ const InputSchema = z.object({
     creative: z.boolean().optional(),
     default: z.string().optional(),
     options: z.array(z.string()).optional(),
+    keys: z.array(z.string()).optional(),
 }).refine(data => {
     if (data.type === 'select') {
         if (data.options) return data.options.length > 0;

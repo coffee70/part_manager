@@ -1,6 +1,5 @@
 import { MoreHorizontalIcon, PencilIcon, TrashIcon } from "lucide-react";
-import { FieldTypeIcon } from "./field-type-icon";
-import { type FieldType } from "@/types/collections";
+import { FieldType } from "@/components/ui/icons/icons";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
@@ -52,7 +51,7 @@ export function SectionField({ sectionId, field, onEditField }: SectionFieldProp
             >
                 <div className="flex items-center justify-start space-x-4 ml-1">
                     <div className="py-1">
-                        <FieldTypeIcon type={field.type} />
+                        <FieldType type={field.type} size={18} />
                     </div>
                     <div className="py-1 text-xs text-stone-500 group-hover:text-stone-700">
                         {field.name}
