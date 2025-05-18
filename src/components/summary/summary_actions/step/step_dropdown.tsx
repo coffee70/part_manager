@@ -80,10 +80,7 @@ export default function StepDropdown({
                 <DropdownMenuGroup>
                     {isOnLastStep && (
                         <DropdownMenuItem
-                            onSelect={(e) => {
-                                e.preventDefault();
-                                onCompleteRoute();
-                            }}
+                            onSelect={onCompleteRoute}
                             disabled={isPaused}
                         >
                             <StepItem
@@ -122,20 +119,14 @@ export default function StepDropdown({
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                     {!isCompleted && !isStopped && (
-                        <DropdownMenuItem onSelect={(e) => {
-                            e.preventDefault();
-                            onViewCurrentStep();
-                        }}>
+                        <DropdownMenuItem onSelect={onViewCurrentStep}>
                             <div className='flex items-center space-x-2'>
                                 <LinkIcon className='h-4 w-4' />
                                 <span>View Current Step</span>
                             </div>
                         </DropdownMenuItem>
                     )}
-                    <DropdownMenuItem onSelect={(e) => {
-                        e.preventDefault();
-                        onViewRoute();
-                    }}>
+                    <DropdownMenuItem onSelect={onViewRoute}>
                         <div className='flex items-center space-x-2'>
                             <RouteIcon className='h-4 w-4' />
                             <span>View Route</span>
@@ -150,10 +141,7 @@ export default function StepDropdown({
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                <DropdownMenuItem onSelect={(e) => {
-                                    e.preventDefault();
-                                    onOpenRouteListView();
-                                }}>
+                                <DropdownMenuItem onSelect={onOpenRouteListView}>
                                     <div className='flex items-center space-x-2'>
                                         <ListIcon className='h-4 w-4' />
                                         <span>From List View</span>
@@ -171,20 +159,14 @@ export default function StepDropdown({
                     {!isStopped && (
                         <>
                             {!isCompleted && (isPaused ? (
-                                <DropdownMenuItem onSelect={(e) => {
-                                    e.preventDefault();
-                                    onResumeRoute();
-                                }}>
+                                <DropdownMenuItem onSelect={onResumeRoute}>
                                     <div className='flex items-center space-x-2'>
                                         <PlayIcon className='h-4 w-4' />
                                         <span>Resume Route</span>
                                     </div>
                                 </DropdownMenuItem>
                             ) : (
-                                <DropdownMenuItem onSelect={(e) => {
-                                    e.preventDefault();
-                                    onPauseRoute();
-                                }}>
+                                <DropdownMenuItem onSelect={onPauseRoute}>
                                     <div className='flex items-center space-x-2'>
                                         <PauseIcon className='h-4 w-4' />
                                         <span>Pause Route</span>
@@ -194,10 +176,7 @@ export default function StepDropdown({
                             {!isCompleted && (
                                 <DropdownMenuItem
                                     className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
-                                    onSelect={(e) => {
-                                        e.preventDefault();
-                                        onStopRoute();
-                                    }}>
+                                    onSelect={onStopRoute}>
                                     <div className='flex items-center space-x-2 text-destructive'>
                                         <SquareIcon className='h-4 w-4' />
                                         <span>Stop Route</span>
@@ -208,10 +187,7 @@ export default function StepDropdown({
                     )}
                     <DropdownMenuItem
                         className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
-                        onSelect={(e) => {
-                            e.preventDefault();
-                            onDeleteClick();
-                        }}>
+                        onSelect={onDeleteClick}>
                         <div className='flex items-center space-x-2 text-destructive'>
                             <TrashIcon className='h-4 w-4' />
                             <span>Delete Route</span>
