@@ -68,6 +68,7 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
         className="cursor-grab p-1 rounded-md hover:bg-stone-100 transition-colors duration-200" 
         {...attributes} 
         {...listeners}
+        data-testid={`drag-handle-${index}`}
       >
         <GripVertical className="h-5 w-5 text-stone-400" />
       </div>
@@ -107,6 +108,7 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
         size="icon" 
         onClick={() => onRemove(row.id)}
         className={cn("text-stone-400 hover:text-red-500 hover:bg-transparent")}
+        data-testid={`delete-step-button-${index}`}
       >
         <Trash className="h-4 w-4" />
       </Button>
