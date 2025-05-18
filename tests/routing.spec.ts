@@ -124,38 +124,274 @@ test('routing', async ({ page }) => {
     await expect(page.getByRole('row')).toContainText('NOT STARTED');
     await expect(page.locator('#step-button')).toContainText('Not Started');
 
-    // step forward and backward in the route
+    // view the routing page
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+
+    // check the table header has not started
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+
+    // check the table footer has done
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+
+    // check the route steps in the table are in the correct order
+    let tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+
+    // navigate back to the instance page
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route forwards to green machine
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'GREEN MACHINE' }).locator('div').first().click();
     await expect(page.getByRole('row')).toContainText('GREEN MACHINE');
     await expect(page.locator('#step-button')).toContainText('Green Machine');
+
+    // confirm the routing page is at green machine
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route forwards to inspection
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
     await expect(page.getByRole('row')).toContainText('INSPECTION');
     await expect(page.locator('#step-button')).toContainText('Inspection');
+
+    // confirm the routing page is at inspection
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route forwards to isopress
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'ISOPRESS' }).click();
     await expect(page.getByRole('row')).toContainText('ISOPRESS');
     await expect(page.locator('#step-button')).toContainText('Isopress');
+
+    // confirm the routing page is at isopress
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route forwards to fpi
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'FPI' }).click();
     await expect(page.getByRole('row')).toContainText('FPI');
     await expect(page.locator('#step-button')).toContainText('FPI');
+
+    // confirm the routing page is at fpi
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route forwards to inspection
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
     await expect(page.getByRole('row')).toContainText('INSPECTION');
     await expect(page.locator('#step-button')).toContainText('Inspection');
+
+    // confirm the routing page is at inspection
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route backwards to fpi
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'FPI' }).click();
     await expect(page.getByRole('row')).toContainText('FPI');
     await expect(page.locator('#step-button')).toContainText('FPI');
+
+    // confirm the routing page is at fpi
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
+    // move the route backwards to isopress
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'ISOPRESS' }).click();
     await expect(page.getByRole('row')).toContainText('ISOPRESS');
     await expect(page.locator('#step-button')).toContainText('Isopress');
+
+    // confirm the routing page is at isopress
     await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
 
     // pause the route
+    await page.locator('#more-button-dropdown-trigger').click();
     await expect(page.getByRole('menu')).toContainText('Pause Route');
     await page.getByRole('menuitem', { name: 'Pause Route' }).click();
     await page.locator('#more-button-dropdown-trigger').click();
@@ -182,6 +418,33 @@ test('routing', async ({ page }) => {
     await expect(page.getByRole('row')).toContainText('NOT STARTED');
     await expect(page.locator('#step-button')).toContainText('Not Started');
 
+    // confirm the routing page is at not started
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).not.toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).not.toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).not.toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
+
     // complete the route
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'GREEN MACHINE' }).click();
@@ -195,6 +458,33 @@ test('routing', async ({ page }) => {
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'DONE' }).click();
+
+    // confirm the routing page is at done
+    await page.locator('#more-button-dropdown-trigger').click();
+    await page.getByRole('menuitem', { name: 'View Route' }).click();
+    await expect(page.getByTestId('route-table-header-row')).toContainText('NOT STARTED');
+    await expect(page.getByTestId('route-table-header-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-header-row').getByTestId('completed-icon')).toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row')).toContainText('DONE');
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('pulse')).not.toBeVisible();
+    await expect(page.getByTestId('route-table-footer-row').getByTestId('completed-icon')).toBeVisible();
+    tableRows = await page.getByTestId('route-table-row').all();
+    expect(tableRows[0]).toContainText('GREEN MACHINE');
+    await expect(tableRows[0].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[0].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[1]).toContainText('INSPECTION');
+    await expect(tableRows[1].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[1].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[2]).toContainText('ISOPRESS');
+    await expect(tableRows[2].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[2].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[3]).toContainText('FPI');
+    await expect(tableRows[3].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[3].getByTestId('completed-icon')).toBeVisible();
+    expect(tableRows[4]).toContainText('INSPECTION');
+    await expect(tableRows[4].getByTestId('pulse')).not.toBeVisible();
+    await expect(tableRows[4].getByTestId('completed-icon')).toBeVisible();
+    await page.getByRole('link', { name: 'Routing Test Instance' }).click();
 
     // check the route is complete
     await expect(page.getByRole('row')).toContainText('DONE');

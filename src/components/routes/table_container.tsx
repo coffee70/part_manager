@@ -113,7 +113,10 @@ export default function TableContainer() {
 
 function CompletedIcon() {
     return (
-        <CircleCheckIcon className="w-6 h-6 fill-green-500 text-stone-50" />
+        <CircleCheckIcon
+            className="w-6 h-6 fill-green-500 text-stone-50"
+            data-testid="completed-icon"
+        />
     )
 }
 
