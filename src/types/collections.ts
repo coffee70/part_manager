@@ -67,7 +67,11 @@ export interface Valuable {
 }
 
 export type Values = {
-    [key: string]: string | string[] | undefined;
+    [key: string]: string | string[] | KVValue | undefined;
+}
+
+export type KVValue = {
+    [key: string]: string | undefined;
 }
 
 export type Section = {

@@ -1,23 +1,23 @@
 import React from "react";
 import { useModelInstanceRoutingURL } from "@/hooks/url_metadata.hook";
+import { Field, KVValue } from "@/types/collections"
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateRouteFieldValue } from "@/server/routes/update_route_field_value";
 import { routeKeys } from "@/lib/query_keys";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Field } from "@/types/collections";
-import InputField from "../fields/input_field";
+import KVField from "../fields/kv_field";
 
 type Props = {
     field: Field & {
-        value?: string | string[];
+        value?: KVValue;
     };
 }
 
-export default function InputFieldProvider({ field }: Props) {
+export default function KVFieldProvider({ field }: Props) {
     const { modelId, instanceId, stepId } = useModelInstanceRoutingURL();
 
     const [isEditing, setIsEditing] = React.useState(false);
-    const [value, setValue] = React.useState(field.value ?? '');
-    
+    const [value, setValue] = React.useState(field.value ?? {});
+
     const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
@@ -40,13 +40,13 @@ export default function InputFieldProvider({ field }: Props) {
     }
 
     return (
-        <InputField
+        <KVField
             field={field}
+            value={value}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             setValue={setValue}
             handleSubmit={handleSubmit}
-            value={value}
             isError={isError}
             isPending={isPending}
             error={error}

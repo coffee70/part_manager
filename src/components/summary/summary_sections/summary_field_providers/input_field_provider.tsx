@@ -1,8 +1,8 @@
+import React from "react";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { sectionKeys, instanceKeys } from "@/lib/query_keys";
 import { updateFieldValue } from "@/server/fields/update_field_value";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
 import InputField from "../fields/input_field";
 import { Field } from "@/types/collections";
 

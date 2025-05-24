@@ -10,7 +10,11 @@ const InputSchema = z.object({
     instanceId: z.string().nullable().optional(),
     stepId: z.string().nullable().optional(),
     fieldId: z.string(),
-    value: z.union([z.string(), z.array(z.string())]).optional(),
+    value: z.union([
+        z.string(),
+        z.array(z.string()),
+        z.record(z.string(), z.union([z.string(), z.undefined()]))
+    ]).optional(),
 })
 
 export async function updateRouteFieldValue(input: z.input<typeof InputSchema>) {

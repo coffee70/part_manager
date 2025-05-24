@@ -9,7 +9,11 @@ const InputSchema = z.object({
     id: z.string(),
     instanceId: z.string().nullable().optional(),
     fieldId: z.string(),
-    value: z.union([z.string(), z.array(z.string())]).optional(),
+    value: z.union([
+        z.string(),
+        z.array(z.string()),
+        z.record(z.string(), z.union([z.string(), z.undefined()]))
+    ]).optional(),
 })
 
 export async function updateFieldValue(input: z.input<typeof InputSchema>) {
@@ -24,11 +28,11 @@ export async function updateFieldValue(input: z.input<typeof InputSchema>) {
     const instanceCollection = db.collection<Valuable>(id)
 
     await instanceCollection.updateOne(
-        { 
-            _id: new ObjectId(instanceId) 
-        }, 
-        { 
-            $set: { 
+        {
+            _id: new ObjectId(instanceId)
+        },
+        {
+            $set: {
                 [`values.${fieldId}`]: value,
                 updatedAt: new Date(),
                 updatedById: user._id

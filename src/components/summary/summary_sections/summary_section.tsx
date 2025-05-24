@@ -3,6 +3,7 @@ import ParagraphFieldProvider from "@/components/summary/summary_sections/summar
 import SelectFieldProvider from "@/components/summary/summary_sections/summary_field_providers/select_field_provider";
 import InputFieldProvider from '@/components/summary/summary_sections/summary_field_providers/input_field_provider';
 import { Field, Section } from '@/types/collections';
+import KVFieldProvider from './summary_field_providers/kv_field_provider';
 
 type SummarySectionProps = {
     section: Section & {
@@ -29,7 +30,7 @@ export default function SummarySection({ section }: SummarySectionProps) {
                     ) : field.type === 'select' ? (
                         <SelectFieldProvider field={field} />
                     ) : field.type === 'key_value' ? (
-                        <div>not implemented</div>
+                        <KVFieldProvider field={field} />
                     ) : (
                         <InputFieldProvider field={field} />
                     )}

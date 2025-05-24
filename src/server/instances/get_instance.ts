@@ -15,7 +15,14 @@ const OutputSchema = z.object({
     number: z.string(),
     priority: z.enum(priorities).catch('Medium'),
     notes: z.string(),
-    values: z.record(z.string(), z.union([z.string(), z.array(z.string())]).optional()),
+    values: z.record(
+        z.string(),
+        z.union([
+            z.string(),
+            z.array(z.string()),
+            z.record(z.string(), z.union([z.string(), z.undefined()]))
+        ]).optional()
+    ),
 })
 
 export async function getInstance(input: z.input<typeof InputSchema>) {
