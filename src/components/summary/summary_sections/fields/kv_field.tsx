@@ -98,7 +98,6 @@ export default function KVField(props: Props) {
     // update the value when the state changes
     React.useEffect(() => {
         const newValue = kvFieldStateToValue(state, field.keys || []);
-        console.log("Updating value to: ", newValue);
         setValue(newValue);
     }, [state, setValue, field.keys]);
 

@@ -18,10 +18,6 @@ export default function KVFieldProvider({ field }: Props) {
     const [isEditing, setIsEditing] = React.useState(false);
     const [value, setValue] = React.useState(field.value ?? {});
 
-    React.useEffect(() => {
-        console.log(value);
-    }, [value]);
-
     const queryClient = useQueryClient();
 
     const { mutate, isError, isPending, error } = useMutation({
