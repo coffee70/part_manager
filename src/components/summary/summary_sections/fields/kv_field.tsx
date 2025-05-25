@@ -12,6 +12,8 @@ import { getFormClassName } from "./field_helpers";
 import Error from "@/components/ui/fields/error";
 import { Plus, Trash2 } from "lucide-react";
 
+const DEFAULT_KEY = '';
+
 type Props = {
     field: Field & {
         value?: KVValue;
@@ -24,6 +26,39 @@ type Props = {
     isError: boolean;
     isPending: boolean;
     error: Error | null;
+}
+
+type KVFieldState = {
+    key: string;
+    value: string;
+}[]
+
+const kvFieldStateToValue = (state: KVFieldState, keys: string[]) => {
+    const value: KVValue = {};
+    for (const line of state) {
+        if (line.key in keys) {
+            value[line.key] = line.value;
+        }
+    }
+    return value;
+}
+
+const kvValueToFieldState = (kvValue: KVValue) => {
+    const state: KVFieldState = [];
+    for (const [key, value] of Object.entries(kvValue)) {
+        state.push({ key, value });
+    }
+    return state;
+}
+
+const getAvailableKeys = (state: KVFieldState, keys: string[]) => {
+    const availableKeys = [...keys];
+    for (const line of state) {
+        if (availableKeys.includes(line.key)) {
+            availableKeys.splice(availableKeys.indexOf(line.key), 1);
+        }
+    }
+    return availableKeys;
 }
 
 export default function KVField(props: Props) {
@@ -39,97 +74,56 @@ export default function KVField(props: Props) {
         error
     } = props;
 
-    const [lines, setLines] = React.useState<number>(1);
-    const [availableKeys, setAvailableKeys] = React.useState<string[]>(field.keys ?? []);
-    const [lineData, setLineData] = React.useState<Array<{id: string, key?: string}>>([{id: '0'}]);
-    const [nextId, setNextId] = React.useState<number>(1);
+    // keep track of the state of the field
+    const [state, setState] = React.useState<KVFieldState>(
+        kvValueToFieldState(value)
+    );
+
+    // keep track of available keys to select from
+    const [availableKeys, setAvailableKeys] = React.useState<string[]>(
+        getAvailableKeys(state, field.keys || [])
+    );
 
     React.useEffect(() => {
-        
-    })
-
-    const onKeyChange = (lineId: string, oldKey: string | undefined, newKey: string) => {
-        // Remove the new key from available keys
-        setAvailableKeys(prev => prev.filter(k => k !== newKey));
-        // Add the old key back to available keys if it exists
-        if (oldKey) setAvailableKeys(prev => [...prev, oldKey]);
-        
-        // Update the line data
-        setLineData(prev => prev.map(line => 
-            line.id === lineId ? { ...line, key: newKey } : line
-        ));
-        setIsEditing(true);
-    }
-
-    const handleAddLine = () => {
-        if (!field.keys) return;
-        if (lines >= field.keys.length) return;
-        setLines(prev => prev + 1);
-        setLineData(prev => [...prev, {id: nextId.toString()}]);
-        setNextId(prev => prev + 1);
-    }
-
-    const handleDeleteLine = (lineId: string) => {
-        const lineToDelete = lineData.find(line => line.id === lineId);
-        const keyToDelete = lineToDelete?.key;
-        
-        if (keyToDelete) {
-            // Add the deleted key back to available keys
-            setAvailableKeys(prev => [...prev, keyToDelete]);
-            
-            // Create new value object without the deleted key
-            const newValue = { ...value };
-            delete newValue[keyToDelete];
-            setValue(newValue);
-        }
-        
-        // Remove the line from lineData array
-        setLineData(prev => prev.filter(line => line.id !== lineId));
-        
-        // Decrease the line count
-        setLines(prev => prev - 1);
-    }
-
-    const linesToRender = () => {
-        if (field.keys === undefined || field.keys.length === 0) {
-            console.error('No keys for field, cannot render kv field', field.name);
-            return 0;
-        }
-
-        if (!field.multiple) {
-            return 1;
-        }
-
-        return Math.min(lines, field.keys.length);
-    }
-
-    React.useEffect(() => {
-        setValue(field.value ?? {});
-    }, [field.value, setValue]);
-
-    const submitRef = React.useRef<HTMLButtonElement>(null);
-    const inputRef = React.useRef<HTMLInputElement>(null);
-
-    React.useEffect(() => {
-        const input = inputRef.current;
-        if (isEditing) input?.focus();
-        else input?.blur();
-    }, [isEditing]);
-
-    const handleBlur = (e: React.FocusEvent, target: HTMLElement | null) => {
-        if (e.relatedTarget !== target) {
-            setIsEditing(false);
-        }
-    };
+        setAvailableKeys(getAvailableKeys(state, field.keys || []));
+    }, [state, field.keys]);
 
     if (field.keys === undefined || field.keys.length === 0) {
         console.error('No keys for field, cannot render kv field', field.name);
         return null;
     }
 
-    // narrowed type for keys since the compiler doesnt infer it correctly
-    // in the map closure below
-    const currentKeys = field.keys;
+    const handleAddLine = () => {
+        setState([...state, { key: DEFAULT_KEY, value: '' }]);
+    }
+
+    const canAddLine = () => {
+        if (!field.multiple) {
+            return false;
+        }
+
+        if (field.keys === undefined || field.keys.length === 0) {
+            return false;
+        }
+
+        if (state.length >= field.keys.length) {
+            return false;
+        }
+
+        return true;
+    }
+
+    const canDeleteLine = () => {
+        if (!field.multiple) {
+            return false;
+        }
+
+        if (state.length <= 1) {
+            return false;
+        }
+
+        return true;
+    }
 
     return (
         <form
@@ -138,30 +132,27 @@ export default function KVField(props: Props) {
         >
             <div className="flex flex-col gap-2 w-full p-0.5">
                 <div className="flex flex-col gap-2">
-                    {lineData.slice(0, linesToRender()).map((line) => (
+                    {state.map((line, index) => (
                         <KVLine
-                            key={line.id}
-                            lineId={line.id}
-                            selectedKey={line.key}
+                            key={index}
+                            index={index}
                             availableKeys={availableKeys}
-                            value={value}
-                            onChange={setValue}
-                            onKeyChange={onKeyChange}
-                            onDelete={() => handleDeleteLine(line.id)}
-                            showDelete={!!field.multiple && lines > 1}
+                            selectedKey={line.key}
+                            state={state}
+                            onChange={setState}
+                            canDeleteLine={canDeleteLine}
                         />
                     ))}
                 </div>
-                {lines < currentKeys.length && !!field.multiple && (
-                    <button 
-                        onClick={handleAddLine}
-                        className="w-full py-1.5 px-2 rounded-md border border-stone-200 bg-stone-50/50 text-stone-500 hover:bg-stone-100 hover:text-stone-700 hover:border-stone-300 active:bg-stone-200 active:border-stone-400 transition-all duration-200 flex items-center justify-center gap-1.5 group"
-                        aria-label="Add new key-value pair"
-                    >
-                        <Plus className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-200" />
-                        <span className="text-xs font-medium">Add pair</span>
-                    </button>
-                )}
+                {canAddLine() && <button
+                    type="button"
+                    className="w-full py-1.5 px-2 rounded-md border border-stone-200 bg-stone-50/50 text-stone-500 hover:bg-stone-100 hover:text-stone-700 hover:border-stone-300 active:bg-stone-200 active:border-stone-400 transition-all duration-200 flex items-center justify-center gap-1.5 group"
+                    aria-label="Add new key-value pair"
+                    onClick={handleAddLine}
+                >
+                    <Plus className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-200" />
+                    <span className="text-xs font-medium">Add pair</span>
+                </button>}
             </div>
             <div className="flex flex-col">
                 {isError ? (
@@ -169,11 +160,7 @@ export default function KVField(props: Props) {
                 ) : isPending ? (
                     <Loading />
                 ) : isEditing ? (
-                    <Editing
-                        ref={submitRef}
-                        onBlur={(e) => handleBlur(e, inputRef.current)}
-                        aria-label={`Save field ${field.name}`}
-                    />
+                    <></>
                 ) : (
                     <NotEditing
                         onClick={() => setIsEditing(true)}
@@ -186,34 +173,45 @@ export default function KVField(props: Props) {
 }
 
 function KVLine({
-    lineId,
-    selectedKey,
+    index,
     availableKeys,
-    value,
+    selectedKey,
+    state,
     onChange,
-    onKeyChange,
-    onDelete,
-    showDelete
+    canDeleteLine,
 }: {
-    lineId: string;
-    selectedKey: string | undefined;
+    index: number;
     availableKeys: string[];
-    value: KVValue;
-    onChange: (value: KVValue) => void;
-    onKeyChange: (lineId: string, oldKey: string | undefined, newKey: string) => void;
-    onDelete: () => void;
-    showDelete: boolean;
+    selectedKey: string;
+    state: KVFieldState;
+    onChange: (value: KVFieldState) => void;
+    canDeleteLine: () => boolean;
 }) {
-    const handleKeyChange = (newKey: string) => {
-        onKeyChange(lineId, selectedKey, newKey);
+
+    const onKeyChange = (newKey: string) => {
+        const newState = [...state];
+        newState[index].key = newKey;
+        onChange(newState);
     }
 
-    let keys = availableKeys;
-    if (selectedKey) keys = [...keys, selectedKey];
+    const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newState = [...state];
+        newState[index].value = e.target.value;
+        onChange(newState);
+    }
+
+    const handleDeleteLine = () => {
+        const newState = [...state];
+        newState.splice(index, 1);
+        onChange(newState);
+    }
+
+    // include the selected key in the list of keys to select from
+    const keys = [selectedKey, ...availableKeys];
 
     return (
         <div className="flex gap-1.5 items-center">
-            <Select onValueChange={handleKeyChange} value={selectedKey}>
+            <Select onValueChange={onKeyChange} value={selectedKey}>
                 <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Select a key" />
                 </SelectTrigger>
@@ -228,11 +226,11 @@ function KVLine({
                     ))}
                 </SelectContent>
             </Select>
-            {selectedKey ? (
+            {selectedKey && selectedKey !== DEFAULT_KEY ? (
                 <Input
                     className="flex-1 h-8 rounded-md border-stone-300 bg-white text-stone-700 placeholder:text-stone-400 focus:ring-stone-400 focus:ring-1 focus:border-stone-400 hover:border-stone-400 hover:bg-stone-50/50 cursor-text transition-colors px-3"
-                    value={value[selectedKey] || ''}
-                    onChange={(e) => onChange({ ...value, [selectedKey]: e.target.value })}
+                    value={state[index].value}
+                    onChange={onValueChange}
                     placeholder="Enter value"
                 />
             ) : (
@@ -240,15 +238,14 @@ function KVLine({
                     Select a key to enter value
                 </div>
             )}
-            {showDelete && (
-                <button
-                    onClick={onDelete}
-                    className="p-1.5 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-50 active:text-red-600 active:bg-red-100 transition-colors"
-                    aria-label="Delete key-value pair"
-                >
-                    <Trash2 className="h-4 w-4" />
-                </button>
-            )}
+            {canDeleteLine() && <button
+                type="button"
+                className="p-1.5 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-50 active:text-red-600 active:bg-red-100 transition-colors"
+                aria-label="Delete key-value pair"
+                onClick={handleDeleteLine}
+            >
+                <Trash2 className="h-4 w-4" />
+            </button>}
         </div>
     )
 }

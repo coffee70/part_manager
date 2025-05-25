@@ -71,7 +71,7 @@ export type Values = {
 }
 
 export type KVValue = {
-    [key: string]: string | undefined;
+    [key: string]: string;
 }
 
 export type Section = {
