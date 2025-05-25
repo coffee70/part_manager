@@ -29,6 +29,7 @@ type Props = {
 }
 
 type KVFieldState = {
+    id: string;
     key: string;
     value: string;
 }[]
@@ -36,7 +37,7 @@ type KVFieldState = {
 const kvFieldStateToValue = (state: KVFieldState, keys: string[]) => {
     const value: KVValue = {};
     for (const line of state) {
-        if (line.key in keys) {
+        if (keys.includes(line.key)) {
             value[line.key] = line.value;
         }
     }
@@ -45,9 +46,24 @@ const kvFieldStateToValue = (state: KVFieldState, keys: string[]) => {
 
 const kvValueToFieldState = (kvValue: KVValue) => {
     const state: KVFieldState = [];
-    for (const [key, value] of Object.entries(kvValue)) {
-        state.push({ key, value });
+    const entries = Object.entries(kvValue);
+    for (const [key, value] of entries) {
+        state.push({
+            id: crypto.randomUUID(),
+            key,
+            value
+        });
     }
+
+    // if the kvValue is empty, add a default key-value pair so a field appears
+    if (entries.length === 0) {
+        state.push({
+            id: crypto.randomUUID(),
+            key: DEFAULT_KEY,
+            value: ''
+        });
+    }
+
     return state;
 }
 
@@ -79,6 +95,13 @@ export default function KVField(props: Props) {
         kvValueToFieldState(value)
     );
 
+    // update the value when the state changes
+    React.useEffect(() => {
+        const newValue = kvFieldStateToValue(state, field.keys || []);
+        console.log("Updating value to: ", newValue);
+        setValue(newValue);
+    }, [state, setValue, field.keys]);
+
     // keep track of available keys to select from
     const [availableKeys, setAvailableKeys] = React.useState<string[]>(
         getAvailableKeys(state, field.keys || [])
@@ -88,13 +111,51 @@ export default function KVField(props: Props) {
         setAvailableKeys(getAvailableKeys(state, field.keys || []));
     }, [state, field.keys]);
 
+    const valueRefs = React.useRef<HTMLInputElement[]>([]);
+
+    const setValueRef = (index: number, ref: HTMLInputElement | null) => {
+        if (ref) {
+            valueRefs.current[index] = ref;
+        }
+    }
+
+    // Watch for focus on any value input to set editing state
+    React.useEffect(() => {
+        const handleFocus = () => setIsEditing(true);
+        const handleBlur = () => setIsEditing(false);
+        const inputs = valueRefs.current;
+
+        inputs.forEach(ref => {
+            if (ref) {
+                ref.addEventListener('focus', handleFocus);
+                ref.addEventListener('blur', handleBlur);
+            }
+        });
+
+        return () => {
+            inputs.forEach(ref => {
+                if (ref) {
+                    ref.removeEventListener('focus', handleFocus);
+                    ref.removeEventListener('blur', handleBlur);
+                }
+            });
+        };
+    }, [valueRefs, setIsEditing]);
+
     if (field.keys === undefined || field.keys.length === 0) {
         console.error('No keys for field, cannot render kv field', field.name);
         return null;
     }
 
     const handleAddLine = () => {
-        setState([...state, { key: DEFAULT_KEY, value: '' }]);
+        setState([
+            ...state,
+            {
+                id: crypto.randomUUID(),
+                key: DEFAULT_KEY,
+                value: ''
+            }
+        ]);
     }
 
     const canAddLine = () => {
@@ -134,13 +195,14 @@ export default function KVField(props: Props) {
                 <div className="flex flex-col gap-2">
                     {state.map((line, index) => (
                         <KVLine
-                            key={index}
-                            index={index}
-                            availableKeys={availableKeys}
+                            key={line.id}
+                            id={line.id}
                             selectedKey={line.key}
                             state={state}
                             onChange={setState}
                             canDeleteLine={canDeleteLine}
+                            availableKeys={availableKeys}
+                            inputRef={(e) => setValueRef(index, e)}
                         />
                     ))}
                 </div>
@@ -160,7 +222,7 @@ export default function KVField(props: Props) {
                 ) : isPending ? (
                     <Loading />
                 ) : isEditing ? (
-                    <></>
+                    <Editing aria-label={`Save field ${field.name}`} />
                 ) : (
                     <NotEditing
                         onClick={() => setIsEditing(true)}
@@ -173,20 +235,24 @@ export default function KVField(props: Props) {
 }
 
 function KVLine({
-    index,
-    availableKeys,
+    id,
     selectedKey,
     state,
     onChange,
     canDeleteLine,
+    availableKeys,
+    inputRef,
 }: {
-    index: number;
-    availableKeys: string[];
+    id: string;
     selectedKey: string;
     state: KVFieldState;
     onChange: (value: KVFieldState) => void;
     canDeleteLine: () => boolean;
+    availableKeys: string[];
+    inputRef: (e: HTMLInputElement | null) => void;
 }) {
+
+    const index = state.findIndex((line) => line.id === id);
 
     const onKeyChange = (newKey: string) => {
         const newState = [...state];
@@ -207,7 +273,11 @@ function KVLine({
     }
 
     // include the selected key in the list of keys to select from
-    const keys = [selectedKey, ...availableKeys];
+    // if the selected key is the default key, then we don't include it
+    let keys = availableKeys;
+    if (selectedKey !== DEFAULT_KEY && !keys.includes(selectedKey)) {
+        keys = [selectedKey, ...availableKeys];
+    }
 
     return (
         <div className="flex gap-1.5 items-center">
@@ -232,6 +302,7 @@ function KVLine({
                     value={state[index].value}
                     onChange={onValueChange}
                     placeholder="Enter value"
+                    ref={inputRef}
                 />
             ) : (
                 <div className="flex-1 h-8 bg-stone-100 rounded-md border border-stone-300 flex items-center px-3 text-stone-500 text-sm">
