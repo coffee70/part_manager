@@ -94,6 +94,27 @@ export default function KVField(props: Props) {
     const [state, setState] = React.useState<KVFieldState>(
         kvValueToFieldState(value)
     );
+    // keep track of initial state for comparison
+    const cleanState = React.useMemo(() => kvValueToFieldState(value), [value]);
+
+    const [isDirty, setIsDirty] = React.useState(false);
+
+    // compare states and update editing status
+    const compareKVFieldStates = (a: KVFieldState, b: KVFieldState): boolean => {
+        if (a.length !== b.length) return false;
+
+        return a.every((item, index) =>
+            item.key === b[index].key &&
+            item.value === b[index].value
+        );
+    };
+
+    React.useEffect(() => {
+        if (!compareKVFieldStates(state, cleanState)) {
+            setIsEditing(true);
+            setIsDirty(true);
+        }
+    }, [state, cleanState, setIsEditing, setIsDirty]);
 
     // update the value when the state changes
     React.useEffect(() => {
@@ -121,7 +142,11 @@ export default function KVField(props: Props) {
     // Watch for focus on any value input to set editing state
     React.useEffect(() => {
         const handleFocus = () => setIsEditing(true);
-        const handleBlur = () => setIsEditing(false);
+        const handleBlur = () => {
+            if (!isDirty) {
+                setIsEditing(false);
+            }
+        }
         const inputs = valueRefs.current;
 
         inputs.forEach(ref => {
@@ -139,7 +164,7 @@ export default function KVField(props: Props) {
                 }
             });
         };
-    }, [valueRefs, setIsEditing]);
+    }, [valueRefs, setIsEditing, isDirty]);
 
     if (field.keys === undefined || field.keys.length === 0) {
         console.error('No keys for field, cannot render kv field', field.name);
