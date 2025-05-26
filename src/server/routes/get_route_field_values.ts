@@ -23,7 +23,12 @@ const OutputSchema = z.array(z.object({
         multiple: z.boolean().optional(),
         creative: z.boolean().optional(),
         default: z.string().optional(),
-        value: z.string().optional(),
+        keys: z.array(z.string()).optional(),
+        value: z.union([
+            z.string(),
+            z.array(z.string()),
+            z.record(z.string(), z.union([z.string(), z.undefined()]))
+        ]).optional(),
     })),
 }));
 
@@ -78,19 +83,12 @@ export async function getRouteFieldValues(input: z.input<typeof InputSchema>): P
     // Combine route_fields with values from the node
     const result = routerInstance.route_fields.map((section) => {
         return {
+            ...section,
             _id: section._id.toString(),
-            name: section.name,
             fields: section.fields.map((field) => {
                 return {
+                    ...field,
                     _id: field._id.toString(),
-                    sectionId: field.sectionId,
-                    type: field.type,
-                    name: field.name,
-                    description: field.description,
-                    options: field.options,
-                    multiple: field.multiple,
-                    creative: field.creative,
-                    default: field.default,
                     value: matchingNode.values?.[field._id.toString()]
                 };
             })
