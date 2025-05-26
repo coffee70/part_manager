@@ -14,44 +14,44 @@ type Props = {
 }
 
 export default function KVFieldProvider({ field }: Props) {
-  const { context, id, instanceId } = useInstanceURL();
+    const { context, id, instanceId } = useInstanceURL();
 
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [value, setValue] = React.useState(field.value ?? {});
+    const [isEditing, setIsEditing] = React.useState(false);
+    const [value, setValue] = React.useState(field.value ?? {});
 
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const { mutate, isError, isPending, error } = useMutation({
-    mutationFn: updateFieldValue,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
-      setIsEditing(false);
-    }
-  });
-  
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    mutate({
-      id,
-      instanceId,
-      fieldId: field._id,
-      value
+    const { mutate, isError, isPending, error } = useMutation({
+        mutationFn: updateFieldValue,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
+            setIsEditing(false);
+        }
     });
-  }
 
-  return (
-    <div> 
-        <KVField
-            field={field}
-            value={value}
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            setValue={setValue}
-            handleSubmit={handleSubmit}
-            isError={isError}
-            isPending={isPending}
-            error={error}
-        />
-    </div>
-  )
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutate({
+            id,
+            instanceId,
+            fieldId: field._id,
+            value
+        });
+    }
+
+    return (
+        <div>
+            <KVField
+                field={field}
+                value={value}
+                isEditing={isEditing}
+                setIsEditing={setIsEditing}
+                setValue={setValue}
+                handleSubmit={handleSubmit}
+                isError={isError}
+                isPending={isPending}
+                error={error}
+            />
+        </div>
+    )
 }
