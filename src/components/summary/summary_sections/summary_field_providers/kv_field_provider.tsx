@@ -4,7 +4,7 @@ import KVField from "../fields/kv_field";
 import { Field, KVValue } from "@/types/collections";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sectionKeys } from "@/lib/query_keys";
+import { instanceKeys, sectionKeys } from "@/lib/query_keys";
 import { updateFieldValue } from "@/server/fields/update_field_value";
 
 type Props = {
@@ -25,6 +25,7 @@ export default function KVFieldProvider({ field }: Props) {
         mutationFn: updateFieldValue,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setIsEditing(false);
         }
     });
