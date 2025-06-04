@@ -76,7 +76,7 @@ export default function SummaryContainer() {
 
             <SummaryContent>
                 {linkable && <SummaryLinks />}
-                <SummarySections values={instance.values} />
+                <SummarySections values={instance.values} kv_values={instance.kv_values} />
                 {context === "routers" && <SummaryRouteFields />}
                 <SummaryNotes initialValue={instance.notes} />
                 {attachable && <SummaryAttachments />}

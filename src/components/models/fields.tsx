@@ -1,6 +1,6 @@
 'use client'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Values } from '@/types/collections';
+import { type Values, type KVValues } from '@/types/collections';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { getSections } from '@/server/sections/get_sections';
 import { sectionKeys } from '@/lib/query_keys';
@@ -8,13 +8,16 @@ import { useQuery } from '@tanstack/react-query';
 import Select from '@/components/ui/fields/select';
 import { Textarea } from '@/components/ui/fields/textarea';
 import { Input } from '@/components/ui/fields/input';
+import KVField from './fields/kv_field';
 
 type Props = {
     fieldState: Values;
     setFieldState: (fieldState: Values) => void;
+    kvFieldState: KVValues;
+    setKvFieldState: (kvFieldState: KVValues) => void;
 }
 
-export default function Fields({ fieldState, setFieldState }: Props) {
+export default function Fields({ fieldState, setFieldState, kvFieldState, setKvFieldState }: Props) {
     
     const { context, id } = useInstanceURL();
 
@@ -66,6 +69,15 @@ export default function Fields({ fieldState, setFieldState }: Props) {
                                         onChange={e => setFieldState({
                                             ...fieldState,
                                             [field._id]: e.target.value,
+                                        })}
+                                    /> 
+                                ) : field.type === 'key_value' ? (
+                                    <KVField
+                                        field={field}
+                                        value={kvFieldState[field._id] || {}}
+                                        setValue={value => setKvFieldState({
+                                            ...kvFieldState,
+                                            [field._id]: value,
                                         })}
                                     />
                                 ) : (

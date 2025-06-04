@@ -1,7 +1,7 @@
 'use server'
 import { db } from "@/lib/db"
 import { ObjectId } from "mongodb"
-import { Valuable } from "@/types/collections"
+import { Valuable, ValueSchema, KVValueSchema } from "@/types/collections"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 
@@ -10,24 +10,37 @@ const InputSchema = z.object({
     instanceId: z.string().nullable().optional(),
     stepId: z.string().nullable().optional(),
     fieldId: z.string(),
-    value: z.union([
-        z.string(),
-        z.array(z.string()),
-        z.record(z.string(), z.union([z.string(), z.undefined()]))
-    ]).optional(),
-})
+    value: ValueSchema.optional(),
+    kv_value: KVValueSchema.optional(),
+}).refine((data) => {
+    return (data.value !== undefined && data.kv_value === undefined) || 
+           (data.value === undefined && data.kv_value !== undefined);
+}, {
+    message: "Either value or kv_value must be provided, but not both"
+});
 
 export async function updateRouteFieldValue(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { modelId, instanceId, stepId, fieldId, value } = InputSchema.parse(input)
+    const { modelId, instanceId, stepId, fieldId, value, kv_value } = InputSchema.parse(input)
 
     if (!instanceId) throw new Error('Cannot update field value without an instance id')
     if (!stepId) throw new Error('Cannot update field value without a step id')
-    if (!value) return
+    if (!value && !kv_value) return
 
     const instanceCollection = db.collection<Valuable>(modelId)
+
+    const updateFields: any = {
+        updatedAt: new Date(),
+        updatedById: user._id
+    };
+
+    if (value !== undefined) {
+        updateFields[`route.nodes.$.values.${fieldId}`] = value;
+    } else if (kv_value !== undefined) {
+        updateFields[`route.nodes.$.kv_values.${fieldId}`] = kv_value;
+    }
 
     // Update the value in the node's values object
     await instanceCollection.updateOne(
@@ -36,11 +49,7 @@ export async function updateRouteFieldValue(input: z.input<typeof InputSchema>) 
             "route.nodes.id": stepId
         }, 
         { 
-            $set: { 
-                [`route.nodes.$.values.${fieldId}`]: value,
-                updatedAt: new Date(),
-                updatedById: user._id
-            }
+            $set: updateFields
         }
     );
 }

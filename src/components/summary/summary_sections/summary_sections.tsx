@@ -8,11 +8,10 @@ import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useQuery } from "@tanstack/react-query";
 import { sectionKeys } from "@/lib/query_keys";
 import { getSections } from "@/server/sections/get_sections";
-import { mergeValues } from "@/lib/merge_values";
 
 type SummarySectionsProps = Valuable;
 
-export default function SummarySections({ values }: SummarySectionsProps) {
+export default function SummarySections({ values, kv_values }: SummarySectionsProps) {
     const { context, id } = useInstanceURL();
 
     const { data: sections } = useQuery({
@@ -22,13 +21,11 @@ export default function SummarySections({ values }: SummarySectionsProps) {
 
     if (!sections || sections.length === 0) return null;
 
-    const mergedSections = mergeValues(sections, values);
-
     return (
         <SummaryBase title='Details'>
             <Tabs defaultValue={sections[0]._id}>
                 <TabsList>
-                    {mergedSections.map(section => (
+                    {sections.map(section => (
                         <TabsTrigger
                             key={section._id}
                             value={section._id}>
@@ -36,9 +33,13 @@ export default function SummarySections({ values }: SummarySectionsProps) {
                         </TabsTrigger>
                     ))}
                 </TabsList>
-                {mergedSections.map(section => (
+                {sections.map(section => (
                     <TabsContent key={section._id} value={section._id}>
-                        <SummarySection section={section} />
+                        <SummarySection 
+                            section={section}
+                            values={values}
+                            kv_values={kv_values}
+                        />
                     </TabsContent>
                 ))}
             </Tabs>

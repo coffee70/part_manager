@@ -4,7 +4,7 @@ import { Field, KVValue } from "@/types/collections"
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateRouteFieldValue } from "@/server/routes/update_route_field_value";
 import { routeKeys } from "@/lib/query_keys";
-import KVField from "../fields/kv_field";
+import KVField from "@/components/summary/summary_sections/fields/kv_field/kv_field";
 
 type Props = {
     field: Field & {
@@ -35,7 +35,7 @@ export default function KVFieldProvider({ field }: Props) {
             instanceId,
             stepId,
             fieldId: field._id,
-            value
+            kv_value: value
         });
     }
 

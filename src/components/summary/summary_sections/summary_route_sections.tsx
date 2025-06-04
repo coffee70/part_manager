@@ -11,18 +11,20 @@ import SummaryRouteSection from "@/components/summary/summary_sections/summary_r
 export default function SummaryRouteSections() {
     const { modelId, instanceId, stepId } = useModelInstanceRoutingURL();
 
-    const { data: routeFieldSections } = useQuery({
+    const { data: routeFieldData } = useQuery({
         queryKey: routeKeys.routeFieldValues(modelId, instanceId, stepId),
         queryFn: () => getRouteFieldValues({ modelId, modelInstanceId: instanceId, stepId }),
     })
 
-    if (!routeFieldSections || routeFieldSections.length === 0) return null;
+    if (!routeFieldData || !routeFieldData.sections || routeFieldData.sections.length === 0) return null;
+
+    const { sections, values, kv_values } = routeFieldData;
 
     return (
         <SummaryBase title='Details'>
-            <Tabs defaultValue={routeFieldSections[0]._id}>
+            <Tabs defaultValue={sections[0]._id}>
                 <TabsList>
-                    {routeFieldSections.map(section => (
+                    {sections.map(section => (
                         <TabsTrigger
                             key={section._id}
                             value={section._id}>
@@ -30,9 +32,13 @@ export default function SummaryRouteSections() {
                         </TabsTrigger>
                     ))}
                 </TabsList>
-                {routeFieldSections.map(section => (
+                {sections.map(section => (
                     <TabsContent key={section._id} value={section._id}>
-                        <SummaryRouteSection section={section} />
+                        <SummaryRouteSection 
+                            section={section} 
+                            values={values}
+                            kv_values={kv_values}
+                        />
                     </TabsContent>
                 ))}
             </Tabs>

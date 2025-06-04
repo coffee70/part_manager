@@ -1,10 +1,4 @@
-type Valuable = {
-    values?: Values;
-}
-
-type Values = {
-    [key: string]: string | string[] | undefined;
-}
+import { Valuable } from "@/types/collections";
 
 export type RouteFormState = {
     route: Route;
@@ -23,7 +17,7 @@ export interface Router {
 export type Node = {
     id: string;
     instanceId: string;
-} & Valuable
+} & Partial<Valuable>
 
 export type Route = {
     state: RouteState;

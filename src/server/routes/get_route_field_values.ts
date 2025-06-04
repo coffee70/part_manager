@@ -2,7 +2,7 @@
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
-import { fieldtypes, InstanceDoc } from "@/types/collections";
+import { FieldSchema, InstanceDoc, ValuesSchema, KVValuesSchema } from "@/types/collections";
 
 const InputSchema = z.object({
     stepId: z.string().nullable(),
@@ -10,27 +10,15 @@ const InputSchema = z.object({
     modelInstanceId: z.string(),
 });
 
-const OutputSchema = z.array(z.object({
-    _id: z.string(),
-    name: z.string(),
-    fields: z.array(z.object({
+const OutputSchema = z.object({
+    sections: z.array(z.object({
         _id: z.string(),
-        sectionId: z.string(),
-        type: z.enum(fieldtypes),
         name: z.string(),
-        description: z.string(),
-        options: z.array(z.string()).optional(),
-        multiple: z.boolean().optional(),
-        creative: z.boolean().optional(),
-        default: z.string().optional(),
-        keys: z.array(z.string()).optional(),
-        value: z.union([
-            z.string(),
-            z.array(z.string()),
-            z.record(z.string(), z.union([z.string(), z.undefined()]))
-        ]).optional(),
+        fields: z.array(FieldSchema),
     })),
-}));
+    values: ValuesSchema,
+    kv_values: KVValuesSchema,
+});
 
 export type RouteFieldValues = z.infer<typeof OutputSchema>;
 
@@ -77,23 +65,30 @@ export async function getRouteFieldValues(input: z.input<typeof InputSchema>): P
 
     // Extract route_fields from the router
     if (!routerInstance.route_fields) {
-        return [];
+        return OutputSchema.parse({
+            sections: [],
+            values: {},
+            kv_values: {},
+        });
     }
 
-    // Combine route_fields with values from the node
-    const result = routerInstance.route_fields.map((section) => {
+    // Format sections without attaching values
+    const sections = routerInstance.route_fields.map((section) => {
         return {
             ...section,
             _id: section._id.toString(),
-            fields: section.fields.map((field) => {
-                return {
-                    ...field,
-                    _id: field._id.toString(),
-                    value: matchingNode.values?.[field._id.toString()]
-                };
-            })
+            fields: section.fields.map((field) => ({
+                ...field,
+                _id: field._id.toString(),
+            }))
         };
     });
+
+    const result = {
+        sections,
+        values: matchingNode.values || {},
+        kv_values: matchingNode.kv_values || {},
+    };
 
     // Validate result against OutputSchema
     return OutputSchema.parse(result);

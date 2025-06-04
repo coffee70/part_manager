@@ -1,6 +1,6 @@
 'use client'
 import React from "react";
-import KVField from "../fields/kv_field";
+import KVField from "@/components/summary/summary_sections/fields/kv_field/kv_field";
 import { Field, KVValue } from "@/types/collections";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -36,7 +36,7 @@ export default function KVFieldProvider({ field }: Props) {
             id,
             instanceId,
             fieldId: field._id,
-            value
+            kv_value: value
         });
     }
 

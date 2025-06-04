@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
 import { Route } from "@/components/route_builder/list_view/types";
+import { z } from "zod";
 
 export const contexts = ['models', 'routers', 'users'] as const;
 
@@ -64,15 +65,24 @@ export interface AttachableDoc {
 
 export interface Valuable {
     values: Values;
+    kv_values: KVValues;
 }
 
-export type Values = {
-    [key: string]: string | string[] | KVValue | undefined;
-}
+export const KVValueSchema = z.record(z.string(), z.string());
+export type KVValue = z.infer<typeof KVValueSchema>;
 
-export type KVValue = {
-    [key: string]: string;
-}
+export const ValueSchema = z.union([
+    z.string(),
+    z.array(z.string()),
+    z.undefined()
+]);
+export type Value = z.infer<typeof ValueSchema>;
+
+export const ValuesSchema = z.record(z.string(), ValueSchema);
+export type Values = z.infer<typeof ValuesSchema>;
+
+export const KVValuesSchema = z.record(z.string(), KVValueSchema);
+export type KVValues = z.infer<typeof KVValuesSchema>;
 
 export type Section = {
     _id: string;
@@ -88,18 +98,20 @@ export type SectionDoc = {
     name: string;
 }
 
-export type Field = {
-    _id: string;
-    sectionId: string;
-    type: FieldType;
-    name: string;
-    description: string;
-    options?: string[];
-    multiple?: boolean;
-    creative?: boolean;
-    default?: string;
-    keys?: string[];
-}
+export const FieldSchema = z.object({
+    _id: z.string(),
+    sectionId: z.string().min(1, { message: 'Section ID is required.' }),
+    type: z.enum(fieldtypes),
+    name: z.string().min(1, { message: 'Field name is required.' }),
+    description: z.string(),
+    options: z.array(z.string()).optional(),
+    multiple: z.boolean().optional(),
+    creative: z.boolean().optional(),
+    default: z.string().optional(),
+    keys: z.array(z.string()).optional(),
+})
+
+export type Field = z.infer<typeof FieldSchema>;
 
 export type FieldDoc = {
     _id: ObjectId;

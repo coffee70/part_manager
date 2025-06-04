@@ -1,22 +1,13 @@
 'use server'
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session"
-import { FieldDoc, fieldtypes } from "@/types/collections";
+import { FieldDoc, FieldSchema } from "@/types/collections";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
 import { ObjectId, WithoutId } from "mongodb";
 
-const InputSchema = z.object({
+const InputSchema = FieldSchema.extend({
     _id: z.string().optional(),
-    name: z.string().min(1, { message: 'Field name is required.' }),
-    sectionId: z.string().min(1, { message: 'Section ID is required.' }),
-    type: z.enum(fieldtypes),
-    description: z.string(),
-    multiple: z.boolean().optional(),
-    creative: z.boolean().optional(),
-    default: z.string().optional(),
-    options: z.array(z.string()).optional(),
-    keys: z.array(z.string()).optional(),
 }).refine(data => {
     if (data.type === 'select') {
         if (data.options) return data.options.length > 0;
@@ -26,7 +17,7 @@ const InputSchema = z.object({
 }, {
     message: 'Select fields must have options.',
     path: ['options']
-});
+});;
 
 export async function upsertField(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema>> {
     const { user } = await getCurrentSession();

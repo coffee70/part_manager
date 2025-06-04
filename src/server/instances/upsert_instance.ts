@@ -2,7 +2,7 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { contexts, InstanceDoc, priorities } from "@/types/collections";
+import { contexts, InstanceDoc, priorities, ValuesSchema, KVValuesSchema } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { router } from "@/lib/url";
@@ -14,7 +14,8 @@ const InputSchema = z.object({
     number: z.string().min(1, { message: 'Number is required.' }),
     priority: z.enum(priorities),
     notes: z.string(),
-    values: z.record(z.string(), z.union([z.string(), z.array(z.string()), z.undefined()])),
+    values: ValuesSchema,
+    kv_values: KVValuesSchema,
 })
 
 const OutputSchema = z.object({

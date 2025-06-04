@@ -3,7 +3,7 @@ import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
-import { InstanceDoc, priorities } from "@/types/collections";
+import { InstanceDoc, priorities, ValuesSchema, KVValuesSchema } from "@/types/collections";
 
 const InputSchema = z.object({
     id: z.string(),
@@ -15,14 +15,8 @@ const OutputSchema = z.object({
     number: z.string(),
     priority: z.enum(priorities).catch('Medium'),
     notes: z.string(),
-    values: z.record(
-        z.string(),
-        z.union([
-            z.string(),
-            z.array(z.string()),
-            z.record(z.string(), z.union([z.string(), z.undefined()]))
-        ]).optional()
-    ),
+    values: ValuesSchema,
+    kv_values: KVValuesSchema,
 })
 
 export async function getInstance(input: z.input<typeof InputSchema>) {

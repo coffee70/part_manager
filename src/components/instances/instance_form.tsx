@@ -5,12 +5,11 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { priorities, Priority, Values } from "@/types/collections"
+import { priorities, Priority, Values, KVValues } from "@/types/collections"
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { contextKeys, instanceKeys, modelKeys } from '@/lib/query_keys';
+import { contextKeys, instanceKeys } from '@/lib/query_keys';
 import Fields from '@/components/models/fields';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
-import { getModel } from '@/server/models/get_model';
 import { upsertInstance } from '@/server/instances/upsert_instance';
 import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
@@ -25,6 +24,7 @@ type Props = {
         priority: Priority;
         notes: string;
         values: Values;
+        kv_values: KVValues;
     };
     children: React.ReactNode;
 }
@@ -62,6 +62,7 @@ export default function InstanceForm({ instance, children }: Props) {
                 notes: instance.notes,
             })
             setFieldState(instance.values)
+            setKvFieldState(instance.kv_values)
         }
     }, [instance])
 
@@ -84,6 +85,8 @@ export default function InstanceForm({ instance, children }: Props) {
 
     const [fieldState, setFieldState] = React.useState<Values>({})
 
+    const [kvFieldState, setKvFieldState] = React.useState<KVValues>({})
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         mutate({
@@ -91,6 +94,7 @@ export default function InstanceForm({ instance, children }: Props) {
             id,
             instanceId: instance?._id,
             values: fieldState,
+            kv_values: kvFieldState,
             ...attributeState
         })
     }
@@ -148,6 +152,8 @@ export default function InstanceForm({ instance, children }: Props) {
                         <Fields
                             fieldState={fieldState}
                             setFieldState={setFieldState}
+                            kvFieldState={kvFieldState}
+                            setKvFieldState={setKvFieldState}
                         />
                     </div>
                     <Button
