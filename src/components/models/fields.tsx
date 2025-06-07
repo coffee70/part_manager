@@ -74,6 +74,8 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                     /> 
                                 ) : field.type === 'key_value' ? (
                                     <KVField
+                                        label={field.name}
+                                        description={field.description}
                                         field={field}
                                         value={kvFieldState[field._id] || {}}
                                         setValue={value => setKvFieldState(prev => ({
