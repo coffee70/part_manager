@@ -27,7 +27,6 @@ export type KVPairsListProps = {
     setState: (state: KVFieldState) => void;
     canAddLine: () => boolean;
     handleAddLine: () => void;
-    canDeleteLine: () => boolean;
     availableKeys: string[];
     setValueRef?: (index: number, ref: HTMLInputElement | null) => void;
 }
@@ -37,7 +36,6 @@ export type KVLineProps = {
     selectedKey: string;
     state: KVFieldState;
     onChange: (value: KVFieldState) => void;
-    canDeleteLine: () => boolean;
     availableKeys: string[];
     inputRef: (e: HTMLInputElement | null) => void;
 }
@@ -53,26 +51,29 @@ export const kvFieldStateToValue = (state: KVFieldState, keys: string[]): KVValu
 }
 
 export const kvValueToFieldState = (kvValue: KVValue): KVFieldState => {
-    const state: KVFieldState = [];
+    let state: KVFieldState = [];
     const entries = Object.entries(kvValue);
     for (const [key, value] of entries) {
-        state.push({
-            id: crypto.randomUUID(),
-            key,
-            value
-        });
+        state = addEntryToKVFieldState(state, key, value);
     }
 
     // if the kvValue is empty, add a default key-value pair so a field appears
     if (entries.length === 0) {
-        state.push({
-            id: crypto.randomUUID(),
-            key: DEFAULT_KEY,
-            value: ''
-        });
+        state = addEntryToKVFieldState(state);
     }
 
     return state;
+}
+
+export const addEntryToKVFieldState = (state: KVFieldState, key?: string, value?: string): KVFieldState => {
+    return [
+        ...state,
+        {
+            id: crypto.randomUUID(),
+            key: key || DEFAULT_KEY,
+            value: value || ''
+        }
+    ];
 }
 
 export const getAvailableKeys = (state: KVFieldState, keys: string[]): string[] => {
@@ -86,6 +87,7 @@ export const getAvailableKeys = (state: KVFieldState, keys: string[]): string[] 
 }
 
 export const compareKVFieldStates = (a: KVFieldState, b: KVFieldState): boolean => {
+    console.log('comparing kv field states', a, b);
     if (a.length !== b.length) return false;
 
     return a.every((item, index) =>

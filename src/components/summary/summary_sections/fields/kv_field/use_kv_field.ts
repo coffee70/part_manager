@@ -2,11 +2,11 @@ import React from "react";
 import { Field, KVValue } from "@/types/collections";
 import { 
     KVFieldState, 
-    DEFAULT_KEY,
     kvFieldStateToValue,
     kvValueToFieldState,
     getAvailableKeys,
-    compareKVValues
+    compareKVValues,
+    addEntryToKVFieldState
 } from "./types";
 
 type UseKVFieldProps = {
@@ -21,7 +21,6 @@ type UseKVFieldReturn = {
     availableKeys: string[];
     handleAddLine: () => void;
     canAddLine: () => boolean;
-    canDeleteLine: () => boolean;
 }
 
 export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFieldReturn {
@@ -47,15 +46,16 @@ export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFi
         setAvailableKeys(getAvailableKeys(state, field.keys || []));
     }, [state, field.keys]);
 
+    // always ensure the state has a default key-value pair if
+    // the state is empty
+    React.useEffect(() => {
+        if (state.length === 0) {
+            setState(addEntryToKVFieldState(state));
+        }
+    }, [state, setState]);
+
     const handleAddLine = () => {
-        setState([
-            ...state,
-            {
-                id: crypto.randomUUID(),
-                key: DEFAULT_KEY,
-                value: ''
-            }
-        ]);
+        setState(addEntryToKVFieldState(state));
     }
 
     const canAddLine = () => {
@@ -74,24 +74,11 @@ export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFi
         return true;
     }
 
-    const canDeleteLine = () => {
-        if (!field.multiple) {
-            return false;
-        }
-
-        if (state.length <= 1) {
-            return false;
-        }
-
-        return true;
-    }
-
     return {
         state,
         setState,
         availableKeys,
         handleAddLine,
         canAddLine,
-        canDeleteLine
     };
 } 

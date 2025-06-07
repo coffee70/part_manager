@@ -9,7 +9,6 @@ export default function KVPairsList({
     setState,
     canAddLine,
     handleAddLine,
-    canDeleteLine,
     availableKeys,
     setValueRef
 }: KVPairsListProps) {
@@ -23,7 +22,6 @@ export default function KVPairsList({
                         selectedKey={line.key}
                         state={state}
                         onChange={setState}
-                        canDeleteLine={canDeleteLine}
                         availableKeys={availableKeys}
                         inputRef={setValueRef ? (e) => setValueRef(index, e) : (_e) => {}}
                     />

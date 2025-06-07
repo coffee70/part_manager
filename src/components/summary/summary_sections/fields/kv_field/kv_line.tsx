@@ -11,7 +11,6 @@ export default function KVLine({
     selectedKey,
     state,
     onChange,
-    canDeleteLine,
     availableKeys,
     inputRef,
 }: KVLineProps) {
@@ -73,14 +72,14 @@ export default function KVLine({
                     Select a key to enter value
                 </div>
             )}
-            {canDeleteLine() && <button
+            <button
                 type="button"
                 className="p-1.5 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-50 active:text-red-600 active:bg-red-100 transition-colors"
                 aria-label="Delete key-value pair"
                 onClick={handleDeleteLine}
             >
                 <Trash2 className="h-4 w-4" />
-            </button>}
+            </button>
         </div>
     )
 } 

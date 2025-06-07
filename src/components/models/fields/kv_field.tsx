@@ -26,8 +26,7 @@ export default function KVField({
         setState,
         availableKeys,
         handleAddLine,
-        canAddLine,
-        canDeleteLine
+        canAddLine
     } = useKVField({ value, field, setValue });
 
     if (field.keys === undefined || field.keys.length === 0) {
@@ -44,7 +43,6 @@ export default function KVField({
                 setState={setState}
                 canAddLine={canAddLine}
                 handleAddLine={handleAddLine}
-                canDeleteLine={canDeleteLine}
                 availableKeys={availableKeys}
             />
             </div>

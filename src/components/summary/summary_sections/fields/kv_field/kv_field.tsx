@@ -32,8 +32,7 @@ export default function KVField(props: KVFieldProps) {
         setState,
         availableKeys,
         handleAddLine,
-        canAddLine,
-        canDeleteLine
+        canAddLine
     } = useKVField({ value, field, setValue });
 
     // keep track of initial state for comparison (editing/dirty state management)
@@ -100,7 +99,6 @@ export default function KVField(props: KVFieldProps) {
                     setState={setState}
                     canAddLine={canAddLine}
                     handleAddLine={handleAddLine}
-                    canDeleteLine={canDeleteLine}
                     availableKeys={availableKeys}
                     setValueRef={setValueRef}
                 />
