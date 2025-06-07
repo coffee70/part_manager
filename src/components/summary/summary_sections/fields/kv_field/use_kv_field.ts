@@ -11,7 +11,9 @@ import {
 
 type UseKVFieldProps = {
     value: KVValue;
-    field: Field;
+    field: Field & {
+        value?: KVValue;
+    };
     setValue: (value: KVValue) => void;
 }
 

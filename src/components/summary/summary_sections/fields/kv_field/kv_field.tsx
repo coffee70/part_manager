@@ -36,7 +36,7 @@ export default function KVField(props: KVFieldProps) {
     } = useKVField({ value, field, setValue });
 
     // keep track of initial state for comparison (editing/dirty state management)
-    const cleanState = React.useMemo(() => kvValueToFieldState(value), [value]);
+    const cleanState = React.useMemo(() => kvValueToFieldState(field.value || {}), [field.value]);
     const [isDirty, setIsDirty] = React.useState(false);
 
     // compare states and update editing status
@@ -44,8 +44,16 @@ export default function KVField(props: KVFieldProps) {
         if (!compareKVFieldStates(state, cleanState)) {
             setIsEditing(true);
             setIsDirty(true);
+        } else {
+            setIsEditing(false);
+            setIsDirty(false);
         }
     }, [state, cleanState, setIsEditing, setIsDirty]);
+
+    // update the state when the field value changes
+    React.useEffect(() => {
+        setState(kvValueToFieldState(field.value || {}));
+    }, [field.value, setState]);
 
     // Ref management for focus/blur behavior
     const valueRefs = React.useRef<HTMLInputElement[]>([]);
