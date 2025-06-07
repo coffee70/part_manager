@@ -87,7 +87,6 @@ export const getAvailableKeys = (state: KVFieldState, keys: string[]): string[] 
 }
 
 export const compareKVFieldStates = (a: KVFieldState, b: KVFieldState): boolean => {
-    console.log('comparing kv field states', a, b);
     if (a.length !== b.length) return false;
 
     return a.every((item, index) =>
