@@ -65,7 +65,7 @@ export interface AttachableDoc {
 
 export interface Valuable {
     values: Values;
-    kv_values: KVValues;
+    kv_values?: KVValues;
 }
 
 export const KVValueSchema = z.record(z.string(), z.string());

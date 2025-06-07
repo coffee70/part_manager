@@ -5,7 +5,8 @@ import {
     DEFAULT_KEY,
     kvFieldStateToValue,
     kvValueToFieldState,
-    getAvailableKeys
+    getAvailableKeys,
+    compareKVValues
 } from "./types";
 
 type UseKVFieldProps = {
@@ -32,8 +33,10 @@ export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFi
     // update the value when the state changes
     React.useEffect(() => {
         const newValue = kvFieldStateToValue(state, field.keys || []);
-        setValue(newValue);
-    }, [state, setValue, field.keys]);
+        if (!compareKVValues(value, newValue)) {
+            setValue(newValue);
+        }
+    }, [state, setValue, field.keys, value]);
 
     // keep track of available keys to select from
     const [availableKeys, setAvailableKeys] = React.useState<string[]>(

@@ -93,3 +93,15 @@ export const compareKVFieldStates = (a: KVFieldState, b: KVFieldState): boolean 
         item.value === b[index].value
     );
 }; 
+
+export const compareKVValues = (a: KVValue, b: KVValue): boolean => {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+
+    if (aKeys.length !== bKeys.length) return false;
+
+    return aKeys.every(key => 
+        a[key] === b[key] && 
+        bKeys.includes(key)
+    );
+};

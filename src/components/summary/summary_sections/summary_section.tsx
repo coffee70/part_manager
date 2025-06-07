@@ -10,7 +10,7 @@ type SummarySectionProps = {
         fields: Field[];
     };
     values: Values;
-    kv_values: KVValues;
+    kv_values?: KVValues;
 }
 
 export default function SummarySection({ section, values, kv_values }: SummarySectionProps) {
@@ -41,7 +41,7 @@ export default function SummarySection({ section, values, kv_values }: SummarySe
                         ) : field.type === 'key_value' ? (
                             <KVFieldProvider field={{
                                 ...field,
-                                value: kv_values[field._id]
+                                value: kv_values?.[field._id] || {}
                             }} />
                         ) : (
                             <InputFieldProvider field={{

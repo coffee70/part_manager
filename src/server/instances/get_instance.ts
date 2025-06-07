@@ -16,7 +16,7 @@ const OutputSchema = z.object({
     priority: z.enum(priorities).catch('Medium'),
     notes: z.string(),
     values: ValuesSchema,
-    kv_values: KVValuesSchema,
+    kv_values: KVValuesSchema.optional(),
 })
 
 export async function getInstance(input: z.input<typeof InputSchema>) {

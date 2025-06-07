@@ -9,12 +9,13 @@ import Select from '@/components/ui/fields/select';
 import { Textarea } from '@/components/ui/fields/textarea';
 import { Input } from '@/components/ui/fields/input';
 import KVField from './fields/kv_field';
+import React from 'react';
 
 type Props = {
     fieldState: Values;
-    setFieldState: (fieldState: Values) => void;
+    setFieldState: React.Dispatch<React.SetStateAction<Values>>;
     kvFieldState: KVValues;
-    setKvFieldState: (kvFieldState: KVValues) => void;
+    setKvFieldState: React.Dispatch<React.SetStateAction<KVValues>>;
 }
 
 export default function Fields({ fieldState, setFieldState, kvFieldState, setKvFieldState }: Props) {
@@ -55,10 +56,10 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                         creative={field.creative}
                                         options={field.options || []}
                                         value={fieldState[field._id] || (field.multiple ? [] : '')}
-                                        onChange={value => setFieldState({
-                                            ...fieldState,
+                                        onChange={value => setFieldState(prev => ({
+                                            ...prev,
                                             [field._id]: value,
-                                        })}
+                                        }))}
                                     />
                                 ) : field.type === 'paragraph' ? (
                                     <Textarea
@@ -66,19 +67,19 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                         label={field.name}
                                         description={field.description}
                                         value={fieldState[field._id] || ''}
-                                        onChange={e => setFieldState({
-                                            ...fieldState,
+                                        onChange={e => setFieldState(prev => ({
+                                            ...prev,
                                             [field._id]: e.target.value,
-                                        })}
+                                        }))}
                                     /> 
                                 ) : field.type === 'key_value' ? (
                                     <KVField
                                         field={field}
                                         value={kvFieldState[field._id] || {}}
-                                        setValue={value => setKvFieldState({
-                                            ...kvFieldState,
+                                        setValue={value => setKvFieldState(prev => ({
+                                            ...prev,
                                             [field._id]: value,
-                                        })}
+                                        }))}
                                     />
                                 ) : (
                                     <Input
@@ -87,10 +88,10 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                         description={field.description}
                                         type={field.type}
                                         value={fieldState[field._id] || ''}
-                                        onChange={e => setFieldState({
-                                            ...fieldState,
+                                        onChange={e => setFieldState(prev => ({
+                                            ...prev,
                                             [field._id]: e.target.value,
-                                        })}
+                                        }))}
                                     />
                                 )}
                             </div>

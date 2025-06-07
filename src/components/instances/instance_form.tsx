@@ -24,7 +24,7 @@ type Props = {
         priority: Priority;
         notes: string;
         values: Values;
-        kv_values: KVValues;
+        kv_values?: KVValues;
     };
     children: React.ReactNode;
 }
@@ -54,6 +54,16 @@ export default function InstanceForm({ instance, children }: Props) {
 
     const [open, setOpen] = React.useState(false);
 
+    const [attributeState, setAttributeState] = React.useState<AttributeState>({
+        number: '',
+        priority: 'Medium',
+        notes: '',
+    })
+
+    const [fieldState, setFieldState] = React.useState<Values>({})
+
+    const [kvFieldState, setKvFieldState] = React.useState<KVValues>({})
+
     React.useEffect(() => {
         if (instance) {
             setAttributeState({
@@ -62,7 +72,7 @@ export default function InstanceForm({ instance, children }: Props) {
                 notes: instance.notes,
             })
             setFieldState(instance.values)
-            setKvFieldState(instance.kv_values)
+            setKvFieldState(instance.kv_values || {})
         }
     }, [instance])
 
@@ -76,16 +86,6 @@ export default function InstanceForm({ instance, children }: Props) {
             }
         }
     })
-
-    const [attributeState, setAttributeState] = React.useState<AttributeState>({
-        number: '',
-        priority: 'Medium',
-        notes: '',
-    })
-
-    const [fieldState, setFieldState] = React.useState<Values>({})
-
-    const [kvFieldState, setKvFieldState] = React.useState<KVValues>({})
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
