@@ -22,7 +22,7 @@ export default function SummaryRouteSections() {
 
     return (
         <SummaryBase title='Details'>
-            <Tabs defaultValue={sections[0]._id}>
+            <Tabs key={sections[0]._id} defaultValue={sections[0]._id}>
                 <TabsList>
                     {sections.map(section => (
                         <TabsTrigger
