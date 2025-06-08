@@ -100,6 +100,7 @@ export default function KVField(props: KVFieldProps) {
         <form
             className={getFormClassName(isError, isPending, isEditing, true)}
             onSubmit={handleSubmit}
+            data-testid={`kv-field-${field.name}`}
         >
             <div className="flex flex-col gap-2 w-full p-0.5">
                 <KVPairsList

@@ -1,5 +1,5 @@
 'use client'
-import React, { use } from 'react';
+import React from 'react';
 import { ComboboxBadge } from '@/components/ui/badge';
 import { Input as BaseInput } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,7 @@ export default function TagInput({ value, onChange, className, ...props }: Props
             e.key === 'Backspace'
         ) {
             setTags(tags.slice(0, tags.length - 1));
+            onChange && onChange(tags.slice(0, tags.length - 1));
         }
 
         if (text && e.key === 'Enter') {
@@ -33,6 +34,7 @@ export default function TagInput({ value, onChange, className, ...props }: Props
 
     const handleRemove = (tag: string) => {
         setTags(tags.filter(t => t !== tag));
+        onChange && onChange(tags.filter(t => t !== tag));
     }
 
     return (

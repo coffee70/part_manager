@@ -35,16 +35,19 @@ export default function KVField({
     }
 
     return (
-        <div className="flex flex-col space-y-0.5">
+        <div
+            className="flex flex-col space-y-0.5"
+            data-testid={`kv-field-${field.name}`}
+        >
             {label && <label className='text-sm'>{label}</label>}
             <div className="flex flex-col p-0.5 gap-2">
-            <KVPairsList
-                state={state}
-                setState={setState}
-                canAddLine={canAddLine}
-                handleAddLine={handleAddLine}
-                availableKeys={availableKeys}
-            />
+                <KVPairsList
+                    state={state}
+                    setState={setState}
+                    canAddLine={canAddLine}
+                    handleAddLine={handleAddLine}
+                    availableKeys={availableKeys}
+                />
             </div>
             {description && <span className="text-xs text-muted-foreground">{description}</span>}
         </div>

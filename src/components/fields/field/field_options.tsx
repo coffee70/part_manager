@@ -38,8 +38,8 @@ export default function FieldOptions({ field }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => setEditOpen(true)}>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setDeleteOpen(true)}>Delete</DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>

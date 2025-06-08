@@ -14,7 +14,7 @@ import DateForm from "./forms/date";
 import TimeForm from "./forms/time";
 import TextForm from "./forms/text";
 import ParagraphForm from "./forms/paragraph";
-import { Field, FieldType, fieldtypes } from "@/types/collections";
+import { Field } from "@/types/collections";
 import { useSectionContext } from "../section.context";
 import { useAdminURL } from "@/hooks/url_metadata.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -37,10 +37,10 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
     const { context, id } = useAdminURL();
     const queryClient = useQueryClient();
 
-    const initialFormState = {
+    const createFormState = React.useCallback((field?: Field, sectionId?: string): FieldFormState => ({
         _id: field?._id,
         name: field?.name || '',
-        sectionId: field?.sectionId || section._id,
+        sectionId: field?.sectionId || sectionId || section._id,
         type: field?.type || 'text',
         description: field?.description || '',
         multiple: field?.multiple,
@@ -48,9 +48,14 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
         default: field?.default,
         options: field?.options,
         keys: field?.keys,
-    }
+    }), [section._id]);
 
-    const [formState, setFormState] = React.useState<FieldFormState>(initialFormState);
+    const [formState, setFormState] = React.useState<FieldFormState>(() => createFormState(field));
+
+    // Update form state when field prop changes
+    React.useEffect(() => {
+        setFormState(createFormState(field, section._id));
+    }, [field, section._id, createFormState]);
 
     const handleTypeChange = (label: string) => {
         setFormState(prev => ({ ...prev, type: labelToType(label) }));
@@ -63,7 +68,7 @@ export default function FieldForm({ field, open, onOpenChange }: Props) {
         onSuccess: ({ success }) => {
             if (success) {
                 queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) });
-                setFormState(initialFormState);
+                setFormState(createFormState());
                 onOpenChange(false);
             }
         }
