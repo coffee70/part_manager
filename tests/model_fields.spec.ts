@@ -112,16 +112,50 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type an option and press').fill('Option 3');
   await page.getByPlaceholder('Type an option and press').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('button', { name: 'New Field' }).click();
+  await page.locator('div').filter({ hasText: /^Key Value$/ }).click();
+  await page.getByPlaceholder('Enter the field name').click();
+  await page.getByPlaceholder('Enter the field name').fill('Test Single KV');
+  await page.getByPlaceholder('Enter the field description').click();
+  await page.getByPlaceholder('Enter the field description').fill('Test single kv');
+  await page.getByPlaceholder('Type a key and press Enter...').click();
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_001');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_002');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_003');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('button', { name: 'New Field' }).click();
+  await page.locator('div').filter({ hasText: /^Key Value$/ }).click();
+  await page.getByPlaceholder('Enter the field name').click();
+  await page.getByPlaceholder('Enter the field name').fill('Multiple KV Field');
+  await page.getByPlaceholder('Enter the field description').click();
+  await page.getByPlaceholder('Enter the field description').fill('Multiple kv field');
+  await page.locator('div').filter({ hasText: /^Multiple$/ }).click();
+  await page.getByPlaceholder('Type a key and press Enter...').click();
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_001');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_002');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_003');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_004');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  // check the fields
   await expect(page.locator('#section-name')).toHaveValue('Basic');
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
+  await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - table:
       - rowgroup:
-        - row "Type Name Description Default Values Options":
+        - row "Type Name Description Default Values Options Keys":
           - cell "Type"
           - cell "Name"
           - cell "Description"
           - cell "Default Values"
           - cell "Options"
+          - cell "Keys"
           - cell
       - rowgroup:
         - row "Text Field Text field description":
@@ -129,6 +163,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Text Field"
           - cell "Text field description"
+          - cell
           - cell
           - cell
           - cell:
@@ -141,6 +176,7 @@ test("test fields", async ({ page }) => {
           - cell "Number field description"
           - cell
           - cell
+          - cell
           - cell:
             - button:
               - img
@@ -149,6 +185,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Date Field"
           - cell "Date field description"
+          - cell
           - cell
           - cell
           - cell:
@@ -161,6 +198,7 @@ test("test fields", async ({ page }) => {
           - cell "Time field description"
           - cell
           - cell
+          - cell
           - cell:
             - button:
               - img
@@ -169,6 +207,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Paragraph Field"
           - cell "Paragraph field description"
+          - cell
           - cell
           - cell
           - cell:
@@ -181,6 +220,7 @@ test("test fields", async ({ page }) => {
           - cell "Single restricted select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
+          - cell
           - cell:
             - button:
               - img
@@ -191,6 +231,7 @@ test("test fields", async ({ page }) => {
           - cell "Single creative select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
+          - cell
           - cell:
             - button:
               - img
@@ -201,6 +242,7 @@ test("test fields", async ({ page }) => {
           - cell "Multiple restricted select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
+          - cell
           - cell:
             - button:
               - img
@@ -211,6 +253,29 @@ test("test fields", async ({ page }) => {
           - cell "Multiple creative select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
+          - cell
+          - cell:
+            - button:
+              - img
+        - row "Test Single KV Test single kv SIN_001 SIN_002 SIN_003":
+          - cell:
+            - img
+          - cell "Test Single KV"
+          - cell "Test single kv"
+          - cell
+          - cell
+          - cell "SIN_001 SIN_002 SIN_003"
+          - cell:
+            - button:
+              - img
+        - row "Multiple KV Field Multiple kv field MUL_001 MUL_002 MUL_003 MUL_004":
+          - cell:
+            - img
+          - cell "Multiple KV Field"
+          - cell "Multiple kv field"
+          - cell
+          - cell
+          - cell "MUL_001 MUL_002 MUL_003 MUL_004"
           - cell:
             - button:
               - img
@@ -229,46 +294,53 @@ test("test fields", async ({ page }) => {
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('textbox').nth(1)).toHaveValue('Another');
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
-      - table:
-        - rowgroup:
-          - row "Type Name Description Default Values Options":
-            - cell "Type"
-            - cell "Name"
-            - cell "Description"
-            - cell "Default Values"
-            - cell "Options"
-            - cell
-        - rowgroup:
-          - row "Some Text Field Some text field description":
-            - cell:
+    - table:
+      - rowgroup:
+        - row "Type Name Description Default Values Options Keys":
+          - cell "Type"
+          - cell "Name"
+          - cell "Description"
+          - cell "Default Values"
+          - cell "Options"
+          - cell "Keys"
+          - cell
+      - rowgroup:
+        - row "Some Text Field Some text field description":
+          - cell:
+            - img
+          - cell "Some Text Field"
+          - cell "Some text field description"
+          - cell
+          - cell
+          - cell
+          - cell:
+            - button:
               - img
-            - cell "Some Text Field"
-            - cell "Some text field description"
-            - cell
-            - cell
-            - cell:
-              - button:
-                - img
-      `);
+    `);
 
   // delete the new field
   await page.getByRole('row', { name: 'Some Text Field Some text' }).getByRole('button').click();
   await page.getByRole('menuitem', { name: 'Delete' }).click();
   await page.getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
-      - table:
-        - rowgroup:
-          - row "Type Name Description Default Values Options":
-            - cell "Type"
-            - cell "Name"
-            - cell "Description"
-            - cell "Default Values"
-            - cell "Options"
-            - cell
-        - rowgroup
-      `);
+    - table:
+      - rowgroup:
+        - row "Type Name Description Default Values Options Keys":
+          - cell "Type"
+          - cell "Name"
+          - cell "Description"
+          - cell "Default Values"
+          - cell "Options"
+          - cell "Keys"
+          - cell
+      - rowgroup
+    `);
+
+  // delete the new section
   await page.locator('div:nth-child(3) > div > button:nth-child(2)').click();
   await page.getByRole('button', { name: 'Delete' }).click();
+
+  // check the section is deleted
   await expect(page.getByRole('main')).not.toHaveText('Another');
 
   // update fields
@@ -398,15 +470,55 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type an option and press').fill('Option 15');
   await page.getByPlaceholder('Type an option and press').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
+  await page.getByRole('row', { name: 'Test Single KV Test single kv' }).getByRole('button').click();
+  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  await page.getByPlaceholder('Enter the field name').press('ArrowRight');
+  await page.getByPlaceholder('Enter the field name').fill('Test Single KV Edited');
+  await page.getByPlaceholder('Enter the field description').click();
+  await page.getByPlaceholder('Enter the field description').fill('Test single kv edited');
+  await page.getByPlaceholder('Type a key and press Enter...').click();
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_004');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_005');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('SIN_006');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('row', { name: 'Multiple KV Field Multiple kv' }).getByRole('button').click();
+  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  await page.getByPlaceholder('Enter the field name').press('ArrowRight');
+  await page.getByPlaceholder('Enter the field name').fill('Multiple KV Field Edited');
+  await page.getByPlaceholder('Enter the field description').click();
+  await page.getByPlaceholder('Enter the field description').fill('Multiple kv field edited');
+  await page.getByPlaceholder('Type a key and press Enter...').click();
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.keyboard.press('Backspace');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_005');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_006');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_007');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_008');
+  await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
+  await page.getByRole('button', { name: 'Save' }).click();
+
+  // check the updated fields
+  await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - table:
       - rowgroup:
-        - row "Type Name Description Default Values Options":
+        - row "Type Name Description Default Values Options Keys":
           - cell "Type"
           - cell "Name"
           - cell "Description"
           - cell "Default Values"
           - cell "Options"
+          - cell "Keys"
           - cell
       - rowgroup:
         - row "Text Field Edited Text field description edited":
@@ -414,6 +526,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Text Field Edited"
           - cell "Text field description edited"
+          - cell
           - cell
           - cell
           - cell:
@@ -426,6 +539,7 @@ test("test fields", async ({ page }) => {
           - cell "Number field description edited"
           - cell
           - cell
+          - cell
           - cell:
             - button:
               - img
@@ -434,6 +548,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Date Field Edited"
           - cell "Date field description edited"
+          - cell
           - cell
           - cell
           - cell:
@@ -446,6 +561,7 @@ test("test fields", async ({ page }) => {
           - cell "Time field description edited"
           - cell
           - cell
+          - cell
           - cell:
             - button:
               - img
@@ -454,6 +570,7 @@ test("test fields", async ({ page }) => {
             - img
           - cell "Paragraph Field Edited"
           - cell "Paragraph field description edited"
+          - cell
           - cell
           - cell
           - cell:
@@ -466,6 +583,7 @@ test("test fields", async ({ page }) => {
           - cell "Single restricted select field description edited"
           - cell
           - cell "Option 4 Option 5 Option 6"
+          - cell
           - cell:
             - button:
               - img
@@ -476,6 +594,7 @@ test("test fields", async ({ page }) => {
           - cell "Single creative select field description edited"
           - cell
           - cell "Option 7 Option 8 Option 9"
+          - cell
           - cell:
             - button:
               - img
@@ -486,6 +605,7 @@ test("test fields", async ({ page }) => {
           - cell "Multiple restricted select field description edited"
           - cell
           - cell /Option \\d+ Option \\d+ Option \\d+/
+          - cell
           - cell:
             - button:
               - img
@@ -496,6 +616,29 @@ test("test fields", async ({ page }) => {
           - cell "Multiple creative select field description edited"
           - cell
           - cell /Option \\d+ Option \\d+ Option \\d+/
+          - cell
+          - cell:
+            - button:
+              - img
+        - row "Test Single KV Edited Test single kv edited SIN_004 SIN_005 SIN_006":
+          - cell:
+            - img
+          - cell "Test Single KV Edited"
+          - cell "Test single kv edited"
+          - cell
+          - cell
+          - cell "SIN_004 SIN_005 SIN_006"
+          - cell:
+            - button:
+              - img
+        - row "Multiple KV Field Edited Multiple kv field edited MUL_005 MUL_006 MUL_007 MUL_008":
+          - cell:
+            - img
+          - cell "Multiple KV Field Edited"
+          - cell "Multiple kv field edited"
+          - cell
+          - cell
+          - cell "MUL_005 MUL_006 MUL_007 MUL_008"
           - cell:
             - button:
               - img
@@ -544,6 +687,55 @@ test("test fields", async ({ page }) => {
   await page.getByRole('option', { name: 'Option 13' }).click();
   await page.getByLabel("Multiple Creative Select Field Edited").fill('Option 16');
   await page.getByLabel("Multiple Creative Select Field Edited").press('Enter');
+  // fill in and check the single kv field
+  await page.getByTestId('kv-field-Test Single KV Edited').getByTestId('kv-line-key-select-trigger--0').click();
+  await page.getByLabel('SIN_004').click();
+  await page.getByTestId('kv-line-value-input-SIN_004-0').click();
+  await page.getByTestId('kv-line-value-input-SIN_004-0').fill('200');
+  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_004-0')).toContainText('SIN_004');
+  await expect(page.getByTestId('kv-line-value-input-SIN_004-0')).toHaveValue('200');
+  await page.getByTestId('delete-kv-line-button-SIN_004-0').click();
+  await expect(page.getByTestId('kv-field-Test Single KV Edited').getByTestId('kv-line-key-select-trigger--0')).toContainText('Select a key');
+  await expect(page.getByTestId('kv-field-Test Single KV Edited').getByTestId('kv-line-value-placeholder--0')).toContainText('Select a key to enter value');
+  await page.getByTestId('kv-field-Test Single KV Edited').getByTestId('kv-line-key-select-trigger--0').click();
+  await page.getByLabel('SIN_005').click();
+  await page.getByTestId('kv-line-value-input-SIN_005-0').click();
+  await page.getByTestId('kv-line-value-input-SIN_005-0').fill('300');
+  // fill in and check the multiple kv field
+  await page.getByTestId('kv-line-key-select-trigger--0').click();
+  await page.getByLabel('MUL_005').click();
+  await page.getByTestId('kv-line-value-input-MUL_005-0').click();
+  await page.getByTestId('kv-line-value-input-MUL_005-0').fill('500');
+  await page.getByLabel('Add new key-value pair').click();
+  await page.getByTestId('kv-line-key-select-trigger--1').click();
+  await page.getByLabel('MUL_007').click();
+  await page.getByTestId('kv-line-value-input-MUL_007-1').click();
+  await page.getByTestId('kv-line-value-input-MUL_007-1').fill('900');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_005-0')).toContainText('MUL_005');
+  await expect(page.getByTestId('kv-line-value-input-MUL_005-0')).toHaveValue('500');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_007-1')).toContainText('MUL_007');
+  await expect(page.getByTestId('kv-line-value-input-MUL_007-1')).toHaveValue('900');
+  await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
+  await page.getByTestId('delete-kv-line-button-MUL_005-0').click();
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_007-0')).toContainText('MUL_007');
+  await expect(page.getByTestId('kv-line-value-input-MUL_007-0')).toHaveValue('900');
+  await page.getByTestId('delete-kv-line-button-MUL_007-0').click();
+  await expect(page.getByTestId('kv-line-key-select-trigger--0')).toContainText('Select a key');
+  await expect(page.getByTestId('kv-line-value-placeholder--0')).toContainText('Select a key to enter value');
+  await page.getByLabel('Add new key-value pair').click();
+  await page.getByLabel('Add new key-value pair').click();
+  await page.getByLabel('Add new key-value pair').click();
+  await page.getByTestId('delete-kv-line-button--3').click();
+  await page.getByTestId('delete-kv-line-button--2').click();
+  await page.getByTestId('kv-line-key-select-trigger--0').click();
+  await page.getByLabel('MUL_006').click();
+  await page.getByTestId('kv-line-value-input-MUL_006-0').click();
+  await page.getByTestId('kv-line-value-input-MUL_006-0').fill('1000');
+  await page.getByTestId('kv-line-key-select-trigger--1').click();
+  await page.getByLabel('MUL_008').click();
+  await page.getByTestId('kv-line-value-input-MUL_008-1').click();
+  await page.getByTestId('kv-line-value-input-MUL_008-1').fill('2000');
+
   // save the instance
   await page.getByRole('button', { name: 'Save' }).click();
 
@@ -557,6 +749,14 @@ test("test fields", async ({ page }) => {
   await expect(page.getByRole('combobox').nth(1)).toHaveValue('Option 8');
   await expect(page.getByLabel('Basic')).toContainText('Option 10Option 11');
   await expect(page.getByLabel('Basic')).toContainText('Option 13Option 16');
+  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_005-0')).toContainText('SIN_005');
+  await expect(page.getByTestId('kv-line-value-input-SIN_005-0')).toHaveValue('300');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_006-0')).toContainText('MUL_006');
+  await expect(page.getByTestId('kv-line-value-input-MUL_006-0')).toHaveValue('1000');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_008-1')).toContainText('MUL_008');
+  await expect(page.getByTestId('kv-line-value-input-MUL_008-1')).toHaveValue('2000');
+  // check the add pair button is visible
+  await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
 
   // open the edit form
   await page.getByRole('button', { name: 'Edit' }).click();
@@ -574,6 +774,13 @@ test("test fields", async ({ page }) => {
   await expect(page.getByLabel('Single Creative Select Field Edited', { exact: true })).toHaveValue('Option 8');
   await expect(page.getByLabel('Edit Instance: Fields Test').getByLabel('Basic')).toContainText('Option 10Option 11');
   await expect(page.getByLabel('Edit Instance: Fields Test').getByLabel('Basic')).toContainText('Option 13Option 16');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-SIN_005-0')).toContainText('SIN_005');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-value-input-SIN_005-0')).toHaveValue('300');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-MUL_006-0')).toContainText('MUL_006');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-value-input-MUL_006-0')).toHaveValue('1000');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-MUL_008-1')).toContainText('MUL_008');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-value-input-MUL_008-1')).toHaveValue('2000');
+  await expect(page.getByLabel('Edit Instance: Fields Test').getByRole('button', { name: 'Add new key-value pair' })).toBeVisible();
 
   // edit the number field
   await page.getByLabel('Number', { exact: true }).click();
@@ -619,6 +826,25 @@ test("test fields", async ({ page }) => {
   await page.getByRole('option', { name: 'Option 14' }).click();
   await page.getByLabel('Multiple Creative Select Field Edited', { exact: true }).fill('Option 17');
   await page.getByLabel('Multiple Creative Select Field Edited', { exact: true }).press('Enter');
+  // edit the single kv field
+  await page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-SIN_005-0').click();
+  await page.getByLabel('SIN_006').click();
+  await page.getByTestId('kv-line-value-input-SIN_006-0').click();
+  await page.getByTestId('kv-line-value-input-SIN_006-0').fill('400');
+  // edit the multiple kv field
+  await page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-MUL_006-0').click();
+  await page.getByLabel('MUL_005').click();
+  await page.getByTestId('kv-line-value-input-MUL_005-0').click();
+  await page.getByTestId('kv-line-value-input-MUL_005-0').fill('5000');
+  await page.getByLabel('Edit Instance: Fields Test').getByTestId('kv-line-key-select-trigger-MUL_008-1').click();
+  await page.getByLabel('MUL_007').click();
+  await page.getByTestId('kv-line-value-input-MUL_007-1').click();
+  await page.getByTestId('kv-line-value-input-MUL_007-1').fill('4000');
+  await page.getByRole('button', { name: 'Add new key-value pair' }).click();
+  await page.getByTestId('kv-line-key-select-trigger--2').click();
+  await page.getByLabel('MUL_006').click();
+  await page.getByTestId('kv-line-value-input-MUL_006-2').click();
+  await page.getByTestId('kv-line-value-input-MUL_006-2').fill('1000');
   // save the instance
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByLabel('Edit Instance: Fields Test').waitFor({ state: 'detached' })
@@ -633,6 +859,15 @@ test("test fields", async ({ page }) => {
   await expect(page.getByLabel('Single Creative Select Field Edited:')).toHaveValue('Option 9');
   await expect(page.getByLabel('Basic')).toContainText('Option 10Option 12');
   await expect(page.getByLabel('Basic')).toContainText('Option 14Option 17');
+  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_006-0')).toContainText('SIN_006');
+  await expect(page.getByTestId('kv-line-value-input-SIN_006-0')).toHaveValue('400');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_005-0')).toContainText('MUL_005');
+  await expect(page.getByTestId('kv-line-value-input-MUL_005-0')).toHaveValue('5000');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_007-1')).toContainText('MUL_007');
+  await expect(page.getByTestId('kv-line-value-input-MUL_007-1')).toHaveValue('4000');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_006-2')).toContainText('MUL_006');
+  await expect(page.getByTestId('kv-line-value-input-MUL_006-2')).toHaveValue('1000');
+  await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
 
   // edit fields in the details section
   await page.getByLabel('Text Field Edited:').click();
@@ -681,6 +916,63 @@ test("test fields", async ({ page }) => {
   await page.getByLabel('Multiple Creative Select Field Edited:').fill('Option 33');
   await page.getByLabel('Multiple Creative Select Field Edited:').press('Enter');
   await page.getByLabel('Save field Multiple Creative').click();
+  // edit the kv single field
+  // check selecting a key makes field dirty
+  await page.getByTestId('kv-line-key-select-trigger-SIN_006-0').click();
+  await page.getByLabel('SIN_004').click();
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  await page.getByLabel('Save field Test Single KV').click();
+  // check changing a value makes the field dirty
+  await page.getByTestId('kv-line-value-input-SIN_004-0').click();
+  await page.getByTestId('kv-line-value-input-SIN_004-0').fill('300');
+  await page.getByTestId('kv-line-value-input-SIN_004-0').press('Tab');
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  await page.getByLabel('Save field Test Single KV').click();
+  await page.getByLabel('Saving field Test Single KV').waitFor({ state: "detached" })
+  // check deleting a line makes the field dirty
+  await page.getByTestId('delete-kv-line-button-SIN_004-0').click();
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  await page.getByLabel('Save field Test Single KV').click();
+  await page.getByLabel('Saving field Test Single KV').waitFor({ state: "detached" })
+  // check deleting an already empty line does not make the field dirty
+  await page.getByTestId('delete-kv-line-button--0').click();
+  await expect(page.getByLabel('Save field Test Single KV')).not.toBeVisible();
+  // check adding a new line with a value makes the field dirty
+  await page.getByTestId('kv-line-key-select-trigger--0').click();
+  await page.getByLabel('SIN_005').click();
+  await page.getByTestId('kv-line-value-input-SIN_005-0').click();
+  await page.getByTestId('kv-line-value-input-SIN_005-0').fill('300');
+  await page.getByTestId('kv-line-value-input-SIN_005-0').press('Tab');
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  await page.getByLabel('Save field Test Single KV').click();
+  // edit the multiple kv field
+  // check selecting a key makes the field dirty
+  await page.getByTestId('kv-line-key-select-trigger-MUL_006-2').click();
+  await page.getByLabel('MUL_008').click();
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  await page.getByLabel('Save field Multiple KV').click();
+  await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
+  // check changing a value makes the field dirty
+  await page.getByTestId('kv-line-value-input-MUL_008-2').click();
+  await page.getByTestId('kv-line-value-input-MUL_008-2').fill('5000');
+  await page.getByTestId('kv-line-value-input-MUL_008-2').press('Tab');
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  await page.getByLabel('Save field Multiple KV').click();
+  await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
+  // check deleting a line makes the field dirty
+  await page.getByTestId('delete-kv-line-button-MUL_008-2').click();
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  await page.getByLabel('Save field Multiple KV').click();
+  await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
+  // check adding a new line with a value makes the field dirty
+  await page.getByLabel('Add new key-value pair').click();
+  await page.getByTestId('kv-line-key-select-trigger--2').click();
+  await page.getByLabel('MUL_008').click();
+  await page.getByTestId('kv-line-value-input-MUL_008-2').fill('5000');
+  await page.getByTestId('kv-line-value-input-MUL_008-2').press('Tab');
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  await page.getByLabel('Save field Multiple KV').click();
+  await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
 
   // confirm after reload the field changes persist
   await page.goto('/');
@@ -695,4 +987,13 @@ test("test fields", async ({ page }) => {
   await expect(page.getByLabel('Single Creative Select Field Edited:')).toHaveValue('Option 100');
   await expect(page.getByLabel('Basic')).toContainText('Option 11Option 10');
   await expect(page.getByLabel('Basic')).toContainText('Option 16Option 22Option 33');
+  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_005-0')).toContainText('SIN_005');
+  await expect(page.getByTestId('kv-line-value-input-SIN_005-0')).toHaveValue('300');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_005-0')).toContainText('MUL_005');
+  await expect(page.getByTestId('kv-line-value-input-MUL_005-0')).toHaveValue('5000');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_007-1')).toContainText('MUL_007');
+  await expect(page.getByTestId('kv-line-value-input-MUL_007-1')).toHaveValue('4000');
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_008-2')).toContainText('MUL_008');
+  await expect(page.getByTestId('kv-line-value-input-MUL_008-2')).toHaveValue('5000');
+  await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
 })
