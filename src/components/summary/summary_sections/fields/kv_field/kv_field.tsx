@@ -116,7 +116,7 @@ export default function KVField(props: KVFieldProps) {
                 {isError ? (
                     error && <Error message={error.message} />
                 ) : isPending ? (
-                    <Loading />
+                    <Loading aria-label={`Saving field ${field.name}`} />
                 ) : isEditing ? (
                     <Editing aria-label={`Save field ${field.name}`} />
                 ) : (
