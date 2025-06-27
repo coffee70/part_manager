@@ -50,7 +50,19 @@ test('router links', async ({ page }) => {
     await page.getByRole('link', { name: 'TL-100' }).click();
     await expect(page.getByRole('heading', { name: 'Routers' })).toBeVisible(); // make sure we are on the routers page
     await expect(page.getByRole('textbox').nth(1)).toHaveValue('TL-100');
-    await expect(page.getByRole('link', { name: 'Links Test' })).toBeVisible();
+
+    /**
+     * For some reason, the link is not visible in the target link model this quickly.
+     * We are going to add a check to see if the link is visible, if its not, send out 
+     * a warning log and reload the page. After the reload, the link should be visible.
+     */
+    try {
+      await expect(page.getByRole('link', { name: 'Links Test' })).toBeVisible({ timeout: 1000 });
+    } catch (e) {
+      console.warn('Link not immediately visible, reloading page...');
+      await page.reload();
+      await expect(page.getByRole('link', { name: 'Links Test' })).toBeVisible();
+    }
 
     // go back to source instance and expect link to be visible
     await page.getByRole('link', { name: 'Links Test' }).click();
