@@ -1,11 +1,12 @@
 #!/bin/bash
 
-# Master backup script - runs database dump and uploads to OneDrive
+# Master backup script - runs database dump and uploads to Google Drive
 # Usage: ./backup.sh
 # Suitable for cron jobs
 
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$(dirname "$(dirname "$SCRIPT_DIR")")")"
 LOG_FILE="/tmp/backup_$(date +"%Y%m%d_%H%M%S").log"
 
 # Function to log messages with timestamp
@@ -22,6 +23,7 @@ error_exit() {
 # Start backup process
 log "=== Starting backup process ==="
 log "Script directory: $SCRIPT_DIR"
+log "Application root directory: $ROOT_DIR"
 log "Log file: $LOG_FILE"
 
 # Check if required files exist
@@ -29,12 +31,12 @@ if [ ! -f "$SCRIPT_DIR/dump_db.sh" ]; then
     error_exit "dump_db.sh not found in $SCRIPT_DIR"
 fi
 
-if [ ! -f "$SCRIPT_DIR/upload.js" ]; then
-    error_exit "upload.js not found in $SCRIPT_DIR"
+if [ ! -f "$SCRIPT_DIR/upload-googledrive.js" ]; then
+    error_exit "upload-googledrive.js not found in $SCRIPT_DIR"
 fi
 
-if [ ! -f "$SCRIPT_DIR/.env" ]; then
-    error_exit ".env file not found in $SCRIPT_DIR - OneDrive credentials required"
+if [ ! -f "$ROOT_DIR/.env" ]; then
+    error_exit ".env file not found in application root directory - Google Drive credentials required"
 fi
 
 # Step 1: Create database and files backup
@@ -45,12 +47,12 @@ if ! ./dump_db.sh >> "$LOG_FILE" 2>&1; then
 fi
 log "✓ Database backup completed successfully"
 
-# Step 2: Upload to OneDrive
-log "Step 2: Uploading backup to OneDrive..."
-if ! node upload.js >> "$LOG_FILE" 2>&1; then
-    error_exit "OneDrive upload failed - check .env credentials and network connection"
+# Step 2: Upload to Google Drive
+log "Step 2: Uploading backup to Google Drive..."
+if ! node upload-googledrive.js >> "$LOG_FILE" 2>&1; then
+    error_exit "Google Drive upload failed - check .env credentials and service account permissions"
 fi
-log "✓ OneDrive upload completed successfully"
+log "✓ Google Drive upload completed successfully"
 
 # Cleanup old log files (keep last 7 days)
 log "Cleaning up old log files..."
@@ -61,6 +63,6 @@ log "Full log available at: $LOG_FILE"
 
 # Optional: Clean up old backups (uncomment to keep only last 5 backups)
 # log "Cleaning up old backup files..."
-# ls -t /backups/*.tgz | tail -n +6 | xargs -r rm -f
+# ls -t ~/backups/*.tgz | tail -n +6 | xargs -r rm -f
 
 echo "Backup completed successfully! Check $LOG_FILE for details." 

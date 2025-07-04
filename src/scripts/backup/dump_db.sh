@@ -2,7 +2,7 @@
 
 # Create timestamp for backup directory
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
-BACKUP_DIR="/backups"
+BACKUP_DIR="$HOME/backups"
 TEMP_DIR="/tmp/backup_$TIMESTAMP"
 
 # Create backup and temporary directories
@@ -23,7 +23,7 @@ docker exec mongo rm -rf /tmp/mongodump
 
 # Copy uploaded files from file-service container to temp directory
 echo "Starting file uploads backup..."
-docker cp file-service:/uploads "$TEMP_DIR/uploads"
+docker cp file-service:/app/uploads "$TEMP_DIR/uploads"
 
 # Create gzipped tarball
 echo "Creating tarball..."

@@ -48,3 +48,6 @@ mongo
 /playwright-report/
 /blob-report/
 /playwright/
+
+# secrets
+secrets/

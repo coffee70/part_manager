@@ -3,13 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-require('dotenv').config();
+require('dotenv').config({ path: '../../../.env' });
 
 // Configuration from environment variables
 const CLIENT_ID = process.env.ONEDRIVE_CLIENT_ID;
 const CLIENT_SECRET = process.env.ONEDRIVE_CLIENT_SECRET;
 const TENANT_ID = process.env.ONEDRIVE_TENANT_ID;
-const BACKUP_DIR = '/backups';
+const USER_ID = process.env.ONEDRIVE_USER_ID;
+const BACKUP_DIR = require('os').homedir() + '/backups';
 
 // Microsoft Graph API endpoints
 const TOKEN_ENDPOINT = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`;
@@ -62,7 +63,7 @@ class OneDriveUploader {
 
     async uploadSmallFile(filePath, fileName) {
         const fileBuffer = fs.readFileSync(filePath);
-        const uploadUrl = `${GRAPH_API_BASE}/me/drive/root:/backups/${fileName}:/content`;
+        const uploadUrl = `${GRAPH_API_BASE}/users/${USER_ID}/drive/root:/backups/${fileName}:/content`;
 
         const response = await axios.put(uploadUrl, fileBuffer, {
             headers: {
@@ -76,7 +77,7 @@ class OneDriveUploader {
 
     async uploadLargeFile(filePath, fileName, fileSize) {
         // Create upload session
-        const createSessionUrl = `${GRAPH_API_BASE}/me/drive/root:/backups/${fileName}:/createUploadSession`;
+        const createSessionUrl = `${GRAPH_API_BASE}/users/${USER_ID}/drive/root:/backups/${fileName}:/createUploadSession`;
         
         const sessionResponse = await axios.post(createSessionUrl, {
             item: {
@@ -141,7 +142,7 @@ class OneDriveUploader {
             .sort((a, b) => b.mtime - a.mtime);
 
         if (files.length === 0) {
-            throw new Error('No backup files found in /backups directory');
+            throw new Error('No backup files found in ~/backups directory');
         }
 
         return files[0];
@@ -151,8 +152,8 @@ class OneDriveUploader {
 async function main() {
     try {
         // Validate environment variables
-        if (!CLIENT_ID || !CLIENT_SECRET || !TENANT_ID) {
-            throw new Error('Missing required environment variables: ONEDRIVE_CLIENT_ID, ONEDRIVE_CLIENT_SECRET, ONEDRIVE_TENANT_ID');
+        if (!CLIENT_ID || !CLIENT_SECRET || !TENANT_ID || !USER_ID) {
+            throw new Error('Missing required environment variables: ONEDRIVE_CLIENT_ID, ONEDRIVE_CLIENT_SECRET, ONEDRIVE_TENANT_ID, ONEDRIVE_USER_ID');
         }
 
         const uploader = new OneDriveUploader();
