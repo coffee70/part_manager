@@ -743,12 +743,12 @@ test("test fields", async ({ page }) => {
   await expect(page.getByRole('combobox').nth(1)).toHaveValue('Option 8');
   await expect(page.getByLabel('Basic')).toContainText('Option 10Option 11');
   await expect(page.getByLabel('Basic')).toContainText('Option 13Option 16');
-  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_005-0')).toContainText('SIN_005');
-  await expect(page.getByTestId('kv-line-value-input-SIN_005-0')).toHaveValue('300');
-  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_006-0')).toContainText('MUL_006');
-  await expect(page.getByTestId('kv-line-value-input-MUL_006-0')).toHaveValue('1000');
-  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_008-1')).toContainText('MUL_008');
-  await expect(page.getByTestId('kv-line-value-input-MUL_008-1')).toHaveValue('2000');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-SIN_005-0')).toContainText('SIN_005');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-SIN_005-0')).toHaveValue('300');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-MUL_006-0')).toContainText('MUL_006');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-MUL_006-0')).toHaveValue('1000');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-MUL_008-1')).toContainText('MUL_008');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-MUL_008-1')).toHaveValue('2000');
   // check the add pair button is visible
   await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
 
@@ -847,15 +847,15 @@ test("test fields", async ({ page }) => {
   await expect(page.getByLabel('Single Creative Select Field Edited:')).toHaveValue('Option 9');
   await expect(page.getByLabel('Basic')).toContainText('Option 10Option 12');
   await expect(page.getByLabel('Basic')).toContainText('Option 14Option 17');
-  await expect(page.getByTestId('kv-line-key-select-trigger-SIN_006-0')).toContainText('SIN_006');
-  await expect(page.getByTestId('kv-line-value-input-SIN_006-0')).toHaveValue('400');
-  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_005-0')).toContainText('MUL_005');
-  await expect(page.getByTestId('kv-line-value-input-MUL_005-0')).toHaveValue('5000');
-  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_007-1')).toContainText('MUL_007');
-  await expect(page.getByTestId('kv-line-value-input-MUL_007-1')).toHaveValue('4000');
-  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_006-2')).toContainText('MUL_006');
-  await expect(page.getByTestId('kv-line-value-input-MUL_006-2')).toHaveValue('1000');
-  await expect(page.getByLabel('Add new key-value pair')).toBeVisible();
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-SIN_006-0')).toContainText('SIN_006');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-SIN_006-0')).toHaveValue('400');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-MUL_005-0')).toContainText('MUL_005');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-MUL_005-0')).toHaveValue('5000');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-MUL_007-1')).toContainText('MUL_007');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-MUL_007-1')).toHaveValue('4000');
+  await expect(page.locator('main').getByTestId('kv-line-key-select-trigger-MUL_006-2')).toContainText('MUL_006');
+  await expect(page.locator('main').getByTestId('kv-line-value-input-MUL_006-2')).toHaveValue('1000');
+  await expect(page.locator('main').getByLabel('Add new key-value pair')).toBeVisible();
 
   // edit fields in the details section
   await page.getByLabel('Text Field Edited:').click();
