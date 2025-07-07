@@ -24,7 +24,7 @@ export function Section({ section, onAddField, onEditSection }: SectionComponent
     const [collapsed, setCollapsed] = useState(false);
 
     return (
-        <div>
+        <div data-testid={`route-fields-section-${section.name}`}>
             <SectionHeader
                 section={section}
                 onAddField={handleAddField}

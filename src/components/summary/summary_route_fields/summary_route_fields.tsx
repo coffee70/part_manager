@@ -67,7 +67,6 @@ export default function SummaryRouteFields() {
     return (
         <>
             <RouteFieldsSectionForm 
-                key={`section-form-${selectedSection?._id || "new"}`}
                 open={openDialog === "section"} 
                 setOpen={handleSectionDialogChange} 
                 section={getSectionForForm()}

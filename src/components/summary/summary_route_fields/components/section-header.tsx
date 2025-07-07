@@ -1,5 +1,4 @@
 import { ChevronDownIcon, MoreHorizontalIcon, PencilIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { SectionActionButton } from "./section-action-button";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
@@ -58,6 +57,7 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
                 onClick={() => onCollapse(!collapsed)}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                data-testid={`route-fields-section-header-${section.name}`}
             >
                 <div className="flex items-center gap-2">
                     <ChevronDownIcon className={cn(
@@ -73,7 +73,7 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
                     </span>
                 </div>
                 <DropdownMenu open={dropdownOpen} onOpenChange={onDropdownOpenChange}>
-                    <DropdownMenuTrigger asChild>
+                    <DropdownMenuTrigger asChild data-testid={`route-fields-section-header-dropdown-trigger-${section.name}`}>
                         {visibleOptions && <button type="button" className="rounded-full p-0.5 mr-1 hover:bg-stone-300">
                             <MoreHorizontalIcon className="w-4 h-4" />
                         </button>}
@@ -82,6 +82,7 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
                         <DropdownMenuItem
                             onClick={(e) => onClick(e, onAddField)}
                             className="flex items-center gap-2"
+                            data-testid={`route-fields-add-field-${section.name}`}
                         >
                             <PlusIcon className="w-4 h-4" />
                             <span>Add Field</span>
@@ -89,6 +90,7 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
                         <DropdownMenuItem
                             onClick={(e) => onClick(e, onEditSection)}
                             className="flex items-center gap-2"
+                            data-testid={`route-fields-edit-section-${section.name}`}
                         >
                             <PencilIcon className="w-4 h-4" />
                             <span>Edit Section</span>

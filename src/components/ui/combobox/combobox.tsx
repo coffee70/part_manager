@@ -68,12 +68,20 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         onBlur
     } = props;
 
+    // Normalize value - when multiple is true and value is undefined, use empty array
+    const normalizedValue = React.useMemo(() => {
+        if (multiple && (value === undefined || value === null)) {
+            return [];
+        }
+        return value;
+    }, [multiple, value]);
+
     const initalValue = React.useCallback(() => {
-        if (value && !Array.isArray(value)) {
-            return value
+        if (normalizedValue && !Array.isArray(normalizedValue)) {
+            return normalizedValue
         }
         else return ""
-    }, [value])
+    }, [normalizedValue])
 
     const [input, setInput] = React.useState(initalValue);
 
@@ -142,19 +150,19 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         );
 
     const onSelect = (selected: string) => {
-        if (multiple && Array.isArray(value)) {
+        if (multiple && Array.isArray(normalizedValue)) {
             if (creative) {
-                if (!value.includes(selected)) {
-                    _onChange && _onChange([...value, selected]);
+                if (!normalizedValue.includes(selected)) {
+                    _onChange && _onChange([...normalizedValue, selected]);
                 }
                 else {
-                    _onChange && _onChange(value.filter((v) => v !== selected));
+                    _onChange && _onChange(normalizedValue.filter((v) => v !== selected));
                 }
             } else {
-                if (value.includes(selected)) {
-                    _onChange && _onChange(value.filter((v) => v !== selected));
+                if (normalizedValue.includes(selected)) {
+                    _onChange && _onChange(normalizedValue.filter((v) => v !== selected));
                 } else if (options.some((option) => option === selected)) {
-                    _onChange && _onChange([...value, selected]);
+                    _onChange && _onChange([...normalizedValue, selected]);
                 }
             }
             setInput("");
@@ -171,8 +179,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
             setOpen(false);
         }
 
-        if (e.key === "Backspace" && multiple && Array.isArray(value) && value.length > 0 && input === "") {
-            _onChange && _onChange(value.slice(0, value.length - 1))
+        if (e.key === "Backspace" && multiple && Array.isArray(normalizedValue) && normalizedValue.length > 0 && input === "") {
+            _onChange && _onChange(normalizedValue.slice(0, normalizedValue.length - 1))
         }
 
         if (e.key === "Enter") {
@@ -189,8 +197,8 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
     }
 
     const onRemove = (v: string) => {
-        if (multiple && Array.isArray(value)) {
-            _onChange && _onChange(value.filter((value) => value !== v))
+        if (multiple && Array.isArray(normalizedValue)) {
+            _onChange && _onChange(normalizedValue.filter((value) => value !== v))
         }
     }
 
@@ -217,24 +225,24 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
 
     const onClickAway = () => {
         if (!creative) {
-            if (!multiple && !Array.isArray(value)) {
+            if (!multiple && !Array.isArray(normalizedValue)) {
                 // change the value if the input is in the options
                 if (options.includes(input)) {
                     setInput(input)
                     _onChange && _onChange(input)
                 }
                 // reset the input if the value is not in the options and value is not undefined
-                else if (value) {
-                    setInput(value)
+                else if (normalizedValue) {
+                    setInput(normalizedValue)
                 }
                 // reset the input if the value is undefined
                 else {
                     setInput("")
                 }
-            } else if (multiple && Array.isArray(value)) {
+            } else if (multiple && Array.isArray(normalizedValue)) {
                 // append the input to the value if the input is in the options and not in the value and reset the input
-                if (options.includes(input) && !value.includes(input)) {
-                    _onChange && _onChange([...value, input])
+                if (options.includes(input) && !normalizedValue.includes(input)) {
+                    _onChange && _onChange([...normalizedValue, input])
                     setInput("")
                 }
                 // if the options does not include the input reset the input
@@ -246,17 +254,17 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
         }
         else {
             // set the value to a nonempty input
-            if (!multiple && !Array.isArray(value) && input !== "") {
+            if (!multiple && !Array.isArray(normalizedValue) && input !== "") {
                 _onChange && _onChange(input)
             }
             // set the value to an empty input
-            else if (!multiple && !Array.isArray(value) && input === "") {
+            else if (!multiple && !Array.isArray(normalizedValue) && input === "") {
                 _onChange && _onChange(undefined)
             }
             // append the input to the value if the input is nonempty and reset the input
-            else if (multiple && Array.isArray(value) && input.trim() !== "") {
-                if (!value.includes(input)) {
-                    _onChange && _onChange([...value, input]);
+            else if (multiple && Array.isArray(normalizedValue) && input.trim() !== "") {
+                if (!normalizedValue.includes(input)) {
+                    _onChange && _onChange([...normalizedValue, input]);
                 }
                 setInput("");
             }
@@ -270,7 +278,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                 className='w-full inline-flex items-center flex-wrap cursor-text'
                 onClick={onClick}
             >
-                {multiple && Array.isArray(value) && value.length > 0 && value.map((v) => (
+                {multiple && Array.isArray(normalizedValue) && normalizedValue.length > 0 && normalizedValue.map((v) => (
                     <ComboboxBadge key={v} label={v} onRemove={() => onRemove(v)} />
                 ))}
                 <Input

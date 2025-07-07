@@ -18,6 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import Loader from '@/components/ui/loader';
 import { getContext } from '@/server/contexts/get_context';
+import { TrashIcon } from 'lucide-react';
 
 type Props = {
     id: string;
@@ -68,7 +69,13 @@ export default function DeleteInstance({ id: instanceId }: Props) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => setOpen(true)}>Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                            className="flex items-center gap-2 text-destructive hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100"
+                            onClick={() => setOpen(true)}
+                        >
+                            <TrashIcon className="w-4 h-4" />
+                            <span>Delete</span>
+                        </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -32,6 +32,14 @@ export default function RouteFieldsSectionForm({ section, open, setOpen }: Route
         name: section?.name || '',
     })
 
+    // if the section props changes, update the form state
+    React.useEffect(() => {
+        setFormState({
+            _id: section?._id,
+            name: section?.name || '',
+        })
+    }, [section]);
+
     const queryClient = useQueryClient();
 
     const { mutate, data } = useMutation({

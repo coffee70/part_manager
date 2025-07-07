@@ -48,6 +48,7 @@ export function SectionField({ sectionId, field, onEditField }: SectionFieldProp
                 className="group flex items-center justify-between p-1 h-8 border-b border-stone-200 hover:bg-stone-200 transition-all duration-200"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                data-testid={`route-fields-field-${field.name}`}
             >
                 <div className="flex items-center justify-start space-x-4 ml-1">
                     <div className="py-1">
@@ -59,13 +60,17 @@ export function SectionField({ sectionId, field, onEditField }: SectionFieldProp
                 </div>
                 <div className="flex items-center justify-center w-8 py-1">
                     <DropdownMenu open={dropdownOpen} onOpenChange={onDropdownOpenChange}>
-                        <DropdownMenuTrigger asChild>
+                        <DropdownMenuTrigger asChild data-testid={`route-fields-field-dropdown-trigger-${field.name}`}>
                             {visibleOptions && <button type="button" className="rounded-full p-0.5 hover:bg-stone-300">
                                 <MoreHorizontalIcon className="w-4 h-4" />
                             </button>}
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                            <DropdownMenuItem className="flex items-center gap-2" onClick={() => onEditField(field)}>
+                            <DropdownMenuItem 
+                                className="flex items-center gap-2" 
+                                onClick={() => onEditField(field)}
+                                data-testid={`route-fields-edit-field-${field.name}`}
+                            >
                                 <PencilIcon className="w-4 h-4" />
                                 <span>Edit Field</span>
                             </DropdownMenuItem>

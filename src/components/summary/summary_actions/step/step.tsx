@@ -56,7 +56,11 @@ export default function Step() {
 
     const handleViewRoute = () => {
         if (!instanceId) return;
-        nextRouter.push(router().models().instances().routing(modelId, instanceId));
+        if (currentStep?._id) {
+            nextRouter.push(router().models().instances().step(modelId, instanceId, currentStep._id));
+        } else {
+            nextRouter.push(router().models().instances().routing(modelId, instanceId));
+        }
     }
 
     const handleConfirmStopRoute = () => {
