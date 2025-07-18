@@ -64,3 +64,10 @@ export const routeKeys = {
     targetSteps: (modelId: string, instanceId?: string | null) => ['route', 'targetSteps', modelId, instanceId],
     routeFieldValues: (modelId: string, instanceId?: string | null, stepId?: string | null) => ['route', 'routeFieldValues', modelId, instanceId, stepId],
 }
+
+export const tableConfigurationKeys = {
+    all: ['tableConfiguration'] as const,
+    configuration: (context: string, contextId: string) => [...tableConfigurationKeys.all, context, contextId] as const,
+    fieldsByContext: (contextType: string, contextId: string) => ['fieldsByContext', contextType, contextId] as const,
+    contexts: (contextType: string) => ['contexts', contextType] as const,
+}; 

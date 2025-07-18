@@ -23,6 +23,8 @@ import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
 import Step from "../list/data_table/step";
 import StepFilter from "@/components/list/filters/filter_step";
+import TableConfiguration from "../list/table_configuration/table_configuration";
+import TableConfigurationModal from "../list/table_configuration/table_configuration_modal";
 
 export default function TableContainer() {
     const searchParams = useSearchParams();
@@ -65,6 +67,9 @@ export default function TableContainer() {
                         <StepFilter />
                     </Filter>
                     <Sort keys={sortKeys} />
+                    <TableConfigurationModal>
+                        <TableConfiguration />
+                    </TableConfigurationModal>
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>

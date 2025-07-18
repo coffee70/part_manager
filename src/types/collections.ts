@@ -204,6 +204,7 @@ export type ModelDoc = {
     color: string;
     updatedAt: Date;
     updatedBy: string;
+    tableConfiguration?: ModelTableConfigurationDoc;
 }
 
 export type Model = {
@@ -215,6 +216,7 @@ export type Model = {
     priority: boolean;
     color: string;
     route?: Route;
+    tableConfiguration?: ModelTableConfiguration;
 }
 
 export type RouterDoc = {
@@ -226,6 +228,7 @@ export type RouterDoc = {
     color: string;
     updatedAt: Date;
     updatedBy: string;
+    tableConfiguration?: RouterTableConfigurationDoc;
 }
 
 export type Router = {
@@ -235,6 +238,7 @@ export type Router = {
     linkable: boolean;
     commentable: boolean;
     color: string;
+    tableConfiguration?: RouterTableConfiguration;
 }
 
 export type InstanceDoc = {
@@ -246,11 +250,11 @@ export type InstanceDoc = {
     updatedAt: Date;
     updatedById: string;
 }
-& Valuable
-& CommentableDoc
-& AttachableDoc
-& LinkableDoc
-& RouteFieldDoc
+    & Valuable
+    & CommentableDoc
+    & AttachableDoc
+    & LinkableDoc
+    & RouteFieldDoc
 
 export type Instance = {
     _id: string;
@@ -261,8 +265,8 @@ export type Instance = {
     updatedAt: Date;
     updatedById: string;
 }
-& Valuable
-& RouteField
+    & Valuable
+    & RouteField
 
 // Utility function to get entries with preserved key types
 // this ensures the keys for links are typed as SectionCollection and not string
@@ -287,3 +291,218 @@ export type ServerActionState = {
     success: false;
     error: string;
 }
+
+const systemColumnOptions = ["priority", "number", "step", "updatedBy", "links"] as const;
+
+type SystemColumnOption = typeof systemColumnOptions[number];
+
+// Model system columns include all options
+type ModelSystemColumnOption = SystemColumnOption;
+
+// Router system columns exclude "step"
+const routerSystemColumnOptions = ["priority", "number", "updatedBy", "links"] as const;
+type RouterSystemColumnOption = typeof routerSystemColumnOptions[number];
+
+type SystemColumnInformation = Array<{
+    type: SystemColumnOption;
+    description: string;
+}>
+
+export const systemColumnInformation: SystemColumnInformation = [
+    {
+        type: "priority",
+        description: "The priority of the instance."
+    },
+    {
+        type: "number",
+        description: "The number of the instance."
+    },
+    {
+        type: "step",
+        description: "The current step of the instance."
+    },
+    {
+        type: "updatedBy",
+        description:
+            "The timestamp and user of the most recent update to the instance."
+    },
+    {
+        type: "links",
+        description: "The linked instances to the instance."
+    }
+]
+
+type LinksColumnDoc = {
+    _id: ObjectId;
+    column: "links";
+    contextIds: Array<string>;
+    maxLinksPerContext: number;
+    order: number;
+}
+
+type LinksColumn = {
+    _id: string;
+    column: "links";
+    contextIds: Array<string>;
+    maxLinksPerContext: number;
+    order: number;
+}
+
+type ModelBaseSystemColumnDoc = {
+    _id: ObjectId;
+    column: Exclude<ModelSystemColumnOption, "links">;
+    order: number;
+}
+
+type ModelBaseSystemColumn = {
+    _id: string;
+    column: Exclude<ModelSystemColumnOption, "links">;
+    order: number;
+}
+
+type RouterBaseSystemColumnDoc = {
+    _id: ObjectId;
+    column: Exclude<RouterSystemColumnOption, "links">;
+    order: number;
+}
+
+type RouterBaseSystemColumn = {
+    _id: string;
+    column: Exclude<RouterSystemColumnOption, "links">;
+    order: number;
+}
+
+type ModelSystemColumnDoc = ModelBaseSystemColumnDoc | LinksColumnDoc
+
+type ModelSystemColumn = ModelBaseSystemColumn | LinksColumn
+
+type RouterSystemColumnDoc = RouterBaseSystemColumnDoc | LinksColumnDoc
+
+type RouterSystemColumn = RouterBaseSystemColumn | LinksColumn
+
+type IntrinsicFieldColumnDoc = {
+    _id: ObjectId;
+    fieldId: string;
+    order: number;
+}
+
+type IntrinsicFieldColumn = {
+    _id: string;
+    fieldId: string;
+    order: number;
+}
+
+export type ModelTableConfigurationDoc = {
+    systemColumns: Array<ModelSystemColumnDoc>;
+    intrinsicFieldColumns: Array<IntrinsicFieldColumnDoc>;
+}
+
+export type ModelTableConfiguration = {
+    systemColumns: Array<ModelSystemColumn>;
+    intrinsicFieldColumns: Array<IntrinsicFieldColumn>;
+}
+
+export type RouterTableConfigurationDoc = {
+    systemColumns: Array<RouterSystemColumnDoc>;
+    intrinsicFieldColumns: Array<IntrinsicFieldColumnDoc>;
+}
+
+export type RouterTableConfiguration = {
+    systemColumns: Array<RouterSystemColumn>;
+    intrinsicFieldColumns: Array<IntrinsicFieldColumn>;
+}
+
+export const defaultModelConfiguration: ModelTableConfiguration = {
+    systemColumns: [
+        {
+            _id: "default-priority",
+            column: "priority",
+            order: 0
+        },
+        {
+            _id: "default-number",
+            column: "number",
+            order: 1
+        },
+        {
+            _id: "default-step",
+            column: "step",
+            order: 2
+        },
+        {
+            _id: "default-updatedBy",
+            column: "updatedBy",
+            order: 3
+        }
+    ],
+    intrinsicFieldColumns: []
+}
+
+export const defaultRouterConfiguration: RouterTableConfiguration = {
+    systemColumns: [
+        {
+            _id: "default-router-priority",
+            column: "priority",
+            order: 0
+        },
+        {
+            _id: "default-router-number",
+            column: "number",
+            order: 1
+        },
+        {
+            _id: "default-router-updatedBy",
+            column: "updatedBy",
+            order: 2
+        }
+    ],
+    intrinsicFieldColumns: []
+}
+
+// Zod Schemas for Table Configuration Types
+
+export const LinksColumnSchema = z.object({
+    _id: z.string(),
+    column: z.literal("links"),
+    contextIds: z.array(z.string()),
+    maxLinksPerContext: z.number(),
+    order: z.number(),
+});
+
+export const ModelBaseSystemColumnSchema = z.object({
+    _id: z.string(),
+    column: z.enum(["priority", "number", "step", "updatedBy"]),
+    order: z.number(),
+});
+
+export const RouterBaseSystemColumnSchema = z.object({
+    _id: z.string(),
+    column: z.enum(["priority", "number", "updatedBy"]),
+    order: z.number(),
+});
+
+export const ModelSystemColumnSchema = z.union([
+    ModelBaseSystemColumnSchema,
+    LinksColumnSchema,
+]);
+
+export const RouterSystemColumnSchema = z.union([
+    RouterBaseSystemColumnSchema,
+    LinksColumnSchema,
+]);
+
+export const IntrinsicFieldColumnSchema = z.object({
+    _id: z.string(),
+    fieldId: z.string(),
+    order: z.number(),
+});
+
+export const ModelTableConfigurationSchema = z.object({
+    systemColumns: z.array(ModelSystemColumnSchema),
+    intrinsicFieldColumns: z.array(IntrinsicFieldColumnSchema),
+});
+
+export const RouterTableConfigurationSchema = z.object({
+    systemColumns: z.array(RouterSystemColumnSchema),
+    intrinsicFieldColumns: z.array(IntrinsicFieldColumnSchema),
+});

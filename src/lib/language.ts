@@ -31,6 +31,25 @@ export function labelToCamelCase(label: string): string {
 }
 
 /**
+ * Converts a snake_case string to a readable label format with spaces and proper capitalization.
+ * Example: "snake_case_example" -> "Snake Case Example"
+ * 
+ * @param snakeCase - The snake_case string to convert
+ * @returns The formatted string with spaces between words and each word capitalized
+ * 
+ * @example
+ * snakeCaseToLabel("user_name") // returns "User Name"
+ * snakeCaseToLabel("first_last_name") // returns "First Last Name"
+ * snakeCaseToLabel("api_key") // returns "Api Key"
+ */
+export function snakeCaseToLabel(snakeCase: string): string {
+    return snakeCase
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}
+
+/**
  * Converts a plural English word to its singular form using common English rules.
  * 
  * Rules:
