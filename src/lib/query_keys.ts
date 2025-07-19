@@ -21,7 +21,8 @@ export const commentKeys = {
 
 export const linkKeys = {
     all: (context: Context, id: string, instanceId?: string | null) => ['links', context, id, instanceId],
-    one: (context: Context, id: string, linkId: string, instanceId?: string | null) => [...linkKeys.all(context, id, instanceId), linkId]
+    one: (context: Context, id: string, linkId: string, instanceId?: string | null) => [...linkKeys.all(context, id, instanceId), linkId],
+    byContextIds: (contextId: string, instanceId: string, contextIds: string[]) => ['links', 'byContextIds', contextId, instanceId, contextIds]
 }
 
 export const modelKeys = {

@@ -27,7 +27,7 @@ export default async function Page({
 
     await queryClient.prefetchQuery({
         queryKey: instanceKeys.all("models", id),
-        queryFn: () => getInstances({ id, searchParams }),
+        queryFn: () => getInstances({ id, context: "models", searchParams }),
     })
 
     await queryClient.prefetchQuery({

@@ -32,7 +32,7 @@ export default async function Page({
     const id = params.modelId
     const instanceId = searchParams.id
     if (!instanceId || Array.isArray(instanceId)) {
-        const instances = await getInstances({ id, searchParams })
+        const instances = await getInstances({ id, context: "models", searchParams })
         if (instances.length === 0) return <SummaryError />
         redirect(router().models().instances().instance(id, instances[0]._id));
     }

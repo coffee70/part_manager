@@ -2,13 +2,16 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, KVValuesSchema, priorities, stepTypes, UserDoc, ValuesSchema } from "@/types/collections";
+import { InstanceDoc, KVValuesSchema, priorities, stepTypes, UserDoc, ValuesSchema, contexts, ModelDoc, RouterDoc } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { RouteState } from "@/components/route_builder/list_view/types";
 import { getInstance } from "./get_instance";
+import { getLinksByContextIds } from "../links/get_links_by_context_ids";
+import { ObjectId } from "mongodb";
 
 const InputSchema = z.object({
     id: z.string(),
+    context: z.enum(contexts),
     searchParams: z.custom<SearchParams>().optional(),
 })
 
@@ -27,16 +30,55 @@ const OutputSchema = z.array(z.object({
     updatedAt: z.date(),
     updatedBy: z.string(),
     values: ValuesSchema,
-    kv_values: KVValuesSchema
+    kv_values: KVValuesSchema,
+    links: z.array(z.object({
+        _id: z.string(),
+        contextId: z.string(),
+        instanceId: z.string(),
+        number: z.string(),
+    })).optional(),
 }))
 
 export async function getInstances(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { id, searchParams } = InputSchema.parse(input)
+    const { id, context, searchParams } = InputSchema.parse(input)
 
     const { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder } = getSearchParams(searchParams);
+
+    // Get table configuration for links
+    let linksColumnConfig: { contextIds: string[], maxLinksPerContext: number } | null = null;
+    
+    if (context === 'models') {
+        const modelsCollection = db.collection<ModelDoc>('models');
+        const modelDoc = await modelsCollection.findOne({ _id: new ObjectId(id) });
+        if (modelDoc?.tableConfiguration?.systemColumns) {
+            const linksColumn = modelDoc.tableConfiguration.systemColumns.find(col => 
+                'column' in col && col.column === 'links'
+            );
+            if (linksColumn && 'contextIds' in linksColumn && 'maxLinksPerContext' in linksColumn) {
+                linksColumnConfig = {
+                    contextIds: linksColumn.contextIds,
+                    maxLinksPerContext: linksColumn.maxLinksPerContext
+                };
+            }
+        }
+    } else if (context === 'routers') {
+        const routersCollection = db.collection<RouterDoc>('routers');
+        const routerDoc = await routersCollection.findOne({ _id: new ObjectId(id) });
+        if (routerDoc?.tableConfiguration?.systemColumns) {
+            const linksColumn = routerDoc.tableConfiguration.systemColumns.find(col => 
+                'column' in col && col.column === 'links'
+            );
+            if (linksColumn && 'contextIds' in linksColumn && 'maxLinksPerContext' in linksColumn) {
+                linksColumnConfig = {
+                    contextIds: linksColumn.contextIds,
+                    maxLinksPerContext: linksColumn.maxLinksPerContext
+                };
+            }
+        }
+    }
 
     // filters
     const pipeline: any[] = [];
@@ -162,6 +204,22 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
             }
         }
 
+        // Fetch links if configuration exists
+        let links: any[] = [];
+        if (linksColumnConfig) {
+            try {
+                links = await getLinksByContextIds({
+                    contextId: id,
+                    instanceId: instance._id.toString(),
+                    contextIds: linksColumnConfig.contextIds,
+                    maxLinksPerContext: linksColumnConfig.maxLinksPerContext
+                });
+            } catch (error) {
+                console.error('Error fetching links for instance:', instance._id, error);
+                links = [];
+            }
+        }
+
         return {
             _id: instance._id.toString(),
             number: instance.number,
@@ -174,6 +232,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
             values: instance.values,
             kv_values: instance.kv_values,
+            links: links.length > 0 ? links : undefined,
         }
     }))
 

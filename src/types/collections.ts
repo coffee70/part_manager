@@ -336,7 +336,7 @@ type LinksColumnDoc = {
     order: number;
 }
 
-type LinksColumn = {
+export type LinksColumn = {
     _id: string;
     column: "links";
     contextIds: Array<string>;

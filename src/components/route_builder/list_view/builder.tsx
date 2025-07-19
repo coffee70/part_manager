@@ -62,7 +62,7 @@ export default function Builder({ children, route }: Props) {
   // Get instances for the selected router
   const { data: instances = [] } = useQuery({
     queryKey: instanceKeys.all('routers', formState.route.routerId || ''),
-    queryFn: () => getInstances({ id: formState.route.routerId || '' }),
+    queryFn: () => getInstances({ id: formState.route.routerId || '', context: "routers" }),
     enabled: !!formState.route.routerId && open
   });
 

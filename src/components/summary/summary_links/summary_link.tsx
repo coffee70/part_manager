@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteLink } from "@/server/links/delete_link";
-import { linkKeys } from "@/lib/query_keys";
+import { instanceKeys, linkKeys } from "@/lib/query_keys";
 import React from "react";
 import { router } from "@/lib/url";
 import { XIcon } from "lucide-react";
@@ -28,6 +28,7 @@ export default function SummaryLink({ link }: Props) {
         onSuccess: ({ linkContextId, linkInstanceId }) => {
             queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
             queryClient.invalidateQueries({ queryKey: linkKeys.all(context, linkContextId, linkInstanceId) })
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
         }
     })
 

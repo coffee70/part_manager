@@ -11,26 +11,27 @@ import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import Priority from "@/components/list/priority/priority";
-import { sortKeys, systemColumnInformation, Field } from "@/types/collections";
+import { sortKeys, systemColumnInformation } from "@/types/collections";
 import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
-import { instanceKeys, contextKeys, sectionKeys, tableConfigurationKeys } from "@/lib/query_keys";
+import { instanceKeys, contextKeys, tableConfigurationKeys } from "@/lib/query_keys";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
-import Step from "../list/data_table/step";
+import Step from "@/components/list/data_table/step";
 import StepFilter from "@/components/list/filters/filter_step";
-import TableConfiguration from "../list/table_configuration/table_configuration";
-import TableConfigurationModal from "../list/table_configuration/table_configuration_modal";
+import TableConfiguration from "@/components/list/table_configuration/table_configuration";
+import TableConfigurationModal from "@/components/list/table_configuration/table_configuration_modal";
 import { getTableConfiguration } from "@/server/configuration/get_table_configuration";
 import { camelCaseToLabel } from "@/lib/language";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
 import React from "react";
 import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
+import Links from "@/components/list/data_table/links";
 
 export default function TableContainer() {
     const searchParams = useSearchParams();
@@ -64,7 +65,7 @@ export default function TableContainer() {
 
     const { data, isError, isPending } = useQuery({
         queryKey: instanceKeys.all(context, id),
-        queryFn: () => getInstances({ id, searchParams }),
+        queryFn: () => getInstances({ id, context, searchParams }),
     })
 
     // Helper function to get system column description
@@ -140,12 +141,6 @@ export default function TableContainer() {
     const renderTableCell = (column: any, instance: any) => {
         if (column.isSystem) {
             switch (column.column) {
-                case 'priority':
-                    return (
-                        <TableCell key={column._id} className="px-1">
-                            <Priority priority={instance.priority} />
-                        </TableCell>
-                    );
                 case 'number':
                     return (
                         <TableCell key={column._id}>
@@ -169,7 +164,11 @@ export default function TableContainer() {
                 case 'links':
                     return (
                         <TableCell key={column._id}>
-                            <div className="text-sm text-muted-foreground">Links placeholder</div>
+                            {'contextIds' in column && 'maxLinksPerContext' in column ? (
+                                <Links column={column} links={instance.links} />
+                            ) : (
+                                <div className="text-sm text-muted-foreground">Invalid links configuration</div>
+                            )}
                         </TableCell>
                     );
                 default:

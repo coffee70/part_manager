@@ -47,7 +47,7 @@ export default function CloneView({ children }: Props) {
     const { data: instances = [], isLoading: isLoadingInstances } = useQuery({
         queryKey: ['instances', 'models', selectedModelId, 'withRoutes'],
         queryFn: async () => {
-            const allInstances = await getInstances({ id: selectedModelId });
+            const allInstances = await getInstances({ id: selectedModelId, context: "models" });
 
             // Filter instances to only those with routes
             const filteredInstances = [];

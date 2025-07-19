@@ -44,7 +44,7 @@ export default function AddLink({ open, onOpenChange }: Props) {
 
     const { data: instances = [] } = useQuery({
         queryKey: instanceKeys.all(context, linkedContextId),
-        queryFn: () => getInstances({ id: linkedContextId }),
+        queryFn: () => getInstances({ id: linkedContextId, context }),
         enabled: !!linkedContextId, // Only fetch instances if we have a selected context
     })  
 
@@ -58,6 +58,7 @@ export default function AddLink({ open, onOpenChange }: Props) {
             if (success) {
                 if (data) queryClient.invalidateQueries({ queryKey: linkKeys.all(context, data.linkedId, data.linkedInstanceId) })
                 queryClient.invalidateQueries({ queryKey: linkKeys.all(context, id, instanceId) })
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
                 onOpenChange(false);
             }
         }
