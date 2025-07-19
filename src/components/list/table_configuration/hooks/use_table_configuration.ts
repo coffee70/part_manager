@@ -5,9 +5,12 @@ import {
     defaultModelConfiguration,
     defaultRouterConfiguration
 } from '@/types/collections';
-import { TableConfigurationService } from '../services/table_configuration_service';
 import { TableConfigurationState } from '../column_management_utils';
 import { tableConfigurationKeys } from '@/lib/query_keys';
+import { getTableConfiguration } from '@/server/configuration/get_table_configuration';
+import { getFieldsByContextId } from '@/server/fields/get_fields_by_context_id';
+import { getContexts } from '@/server/contexts/get_contexts';
+import { upsertTableConfiguration } from '@/server/configuration/upsert_table_configuration';
 
 export const useTableConfiguration = (open: boolean) => {
     const { context, id } = useInstanceURL();
@@ -21,9 +24,9 @@ export const useTableConfiguration = (open: boolean) => {
     // Fetch current table configuration
     const { data: currentConfig, isLoading: configLoading } = useQuery({
         queryKey: tableConfigurationKeys.configuration(context, id),
-        queryFn: () => TableConfigurationService.getConfiguration({ 
-            context: context, // Collection name
-            contextId: id || '' // Document ID
+        queryFn: () => getTableConfiguration({ 
+            context,
+            contextId: id,
         }),
         enabled: open && !!id,
     });
@@ -31,14 +34,14 @@ export const useTableConfiguration = (open: boolean) => {
     // Fetch available intrinsic fields
     const { data: intrinsicFields = [], isLoading: fieldsLoading } = useQuery({
         queryKey: tableConfigurationKeys.fieldsByContext(context, id),
-        queryFn: () => TableConfigurationService.getFieldsByContext(context, id),
+        queryFn: () => getFieldsByContextId({ context, contextId: id }),
         enabled: open && !!id,
     });
 
     // Fetch available contexts for links column
     const { data: availableContexts = [], isLoading: contextsLoading } = useQuery({
         queryKey: tableConfigurationKeys.contexts(context),
-        queryFn: () => TableConfigurationService.getContexts(context),
+        queryFn: () => getContexts({ context }),
         enabled: open,
     });
 
@@ -47,11 +50,11 @@ export const useTableConfiguration = (open: boolean) => {
         if (currentConfig) {
             setFormState(currentConfig);
         }
-    }, [currentConfig]);
+    }, [currentConfig, context]);
 
     // Save mutation
     const { mutate: saveConfiguration, isPending: savePending, error: saveError } = useMutation({
-        mutationFn: TableConfigurationService.saveConfiguration,
+        mutationFn: upsertTableConfiguration,
         onSuccess: () => {
             queryClient.invalidateQueries({ 
                 queryKey: tableConfigurationKeys.configuration(context, id) 
@@ -60,10 +63,9 @@ export const useTableConfiguration = (open: boolean) => {
     });
 
     const handleSave = () => {
-        
         saveConfiguration({
-            context: context, // Collection name
-            contextId: id, // Document ID
+            context,
+            contextId: id,
             tableConfiguration: formState,
         });
     };

@@ -13,7 +13,7 @@ const InputSchema = z.object({
     contextId: z.string().min(1, { message: 'Context ID is required.' }),
 })
 
-export async function getFieldsByContext(input: z.input<typeof InputSchema>) {
+export async function getFieldsByContextId(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 

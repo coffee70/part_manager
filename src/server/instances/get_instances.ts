@@ -2,7 +2,7 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, priorities, stepTypes, UserDoc } from "@/types/collections";
+import { InstanceDoc, KVValuesSchema, priorities, stepTypes, UserDoc, ValuesSchema } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { RouteState } from "@/components/route_builder/list_view/types";
 import { getInstance } from "./get_instance";
@@ -26,6 +26,8 @@ const OutputSchema = z.array(z.object({
     }).optional(),
     updatedAt: z.date(),
     updatedBy: z.string(),
+    values: ValuesSchema,
+    kv_values: KVValuesSchema
 }))
 
 export async function getInstances(input: z.input<typeof InputSchema>) {
@@ -170,6 +172,8 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
             } : undefined,
             updatedAt: instance.updatedAt,
             updatedBy: updatedBy ? updatedBy.name : 'Unknown',
+            values: instance.values,
+            kv_values: instance.kv_values,
         }
     }))
 
