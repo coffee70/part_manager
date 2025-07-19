@@ -34,7 +34,7 @@ function LinkItem({ number }: LinkItemProps) {
 }
 
 export default function Links({ column, links = [] }: Props) {
-    const { context, id } = useInstanceURL()
+    const { context } = useInstanceURL()
     const [activeContextIndex, setActiveContextIndex] = React.useState(0)
 
     // Get context data for all contexts configured in this column
@@ -60,8 +60,7 @@ export default function Links({ column, links = [] }: Props) {
         if (!activeContext) return []
         return links
             .filter(link => link.contextId === activeContext._id)
-            .slice(0, column.maxLinksPerContext)
-    }, [links, activeContext, column.maxLinksPerContext])
+    }, [links, activeContext])
 
     // Get user-friendly context name (avoid using "context" term)
     const getContextDisplayName = (contextName: string) => {
@@ -87,7 +86,7 @@ export default function Links({ column, links = [] }: Props) {
     return (
         <div className="w-full max-w-32 min-w-24 flex gap-2">
             {/* Links Content */}
-            <div className="flex-1 rounded-md p-1 max-h-24 overflow-y-auto">
+            <div className="flex-1 rounded-md p-1 max-h-24 overflow-y-auto scrollbar-thin">
                 {displayedLinks.length > 0 ? (
                     <div className="space-y-1">
                         {displayedLinks.map((link: Link) => (
