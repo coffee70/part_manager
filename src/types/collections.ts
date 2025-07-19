@@ -292,7 +292,7 @@ export type ServerActionState = {
     error: string;
 }
 
-const systemColumnOptions = ["priority", "number", "step", "updatedBy", "links"] as const;
+const systemColumnOptions = ["number", "step", "updatedBy", "links"] as const;
 
 type SystemColumnOption = typeof systemColumnOptions[number];
 
@@ -300,7 +300,7 @@ type SystemColumnOption = typeof systemColumnOptions[number];
 type ModelSystemColumnOption = SystemColumnOption;
 
 // Router system columns exclude "step"
-const routerSystemColumnOptions = ["priority", "number", "updatedBy", "links"] as const;
+const routerSystemColumnOptions = ["number", "updatedBy", "links"] as const;
 type RouterSystemColumnOption = typeof routerSystemColumnOptions[number];
 
 type SystemColumnInformation = Array<{
@@ -309,10 +309,6 @@ type SystemColumnInformation = Array<{
 }>
 
 export const systemColumnInformation: SystemColumnInformation = [
-    {
-        type: "priority",
-        description: "The priority of the instance."
-    },
     {
         type: "number",
         description: "The number of the instance."
@@ -415,11 +411,6 @@ export type RouterTableConfiguration = {
 export const defaultModelConfiguration: ModelTableConfiguration = {
     systemColumns: [
         {
-            _id: "default-priority",
-            column: "priority",
-            order: 0
-        },
-        {
             _id: "default-number",
             column: "number",
             order: 1
@@ -440,11 +431,6 @@ export const defaultModelConfiguration: ModelTableConfiguration = {
 
 export const defaultRouterConfiguration: RouterTableConfiguration = {
     systemColumns: [
-        {
-            _id: "default-router-priority",
-            column: "priority",
-            order: 0
-        },
         {
             _id: "default-router-number",
             column: "number",

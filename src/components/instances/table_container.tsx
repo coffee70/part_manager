@@ -265,6 +265,8 @@ export default function TableContainer() {
             <Table>
                 <TableHeader>
                     <TableRow>
+                        {/* priority column header */}
+                        {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableHead></TableHead>}
                         {sortedColumns.map(column => renderHeaderCell(column))}
                         <TableHead className="h-8 w-12">
                             {/* Actions column header */}
@@ -278,6 +280,10 @@ export default function TableContainer() {
                             onClick={() => handleClick(instance._id)}
                             selected={instanceId === instance._id}
                         >
+                            {/* priority column */}
+                            {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableCell className="px-1">
+                                <Priority priority={instance.priority} />
+                            </TableCell>}
                             {sortedColumns.map(column => renderTableCell(column, instance))}
                             <TableCell>
                                 <DeleteInstance id={instance._id} />
