@@ -4,6 +4,7 @@ import { RouterDoc } from "@/types/collections"
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
+import { serializeObjectIds } from "@/lib/serialization"
 
 const InputSchema = z.object({
     routerId: z.string().nullable().optional(),
@@ -22,8 +23,5 @@ export async function getRouter(input: z.input<typeof InputSchema>) {
 
     if (!router) throw new Error('Model not found');
 
-    return {
-        ...router,
-        _id: router._id.toString(),
-    };
+    return serializeObjectIds(router);
 }

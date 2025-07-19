@@ -4,14 +4,13 @@ import { getCurrentSession } from "../auth/get_current_session"
 import { 
     ModelDoc,
     RouterDoc,
-    ModelTableConfigurationDoc,
-    RouterTableConfigurationDoc,
     defaultModelConfiguration,
     defaultRouterConfiguration,
     contexts
 } from "@/types/collections";
 import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
+import { serializeObjectIds } from "@/lib/serialization";
 
 const InputSchema = z.object({
     context: z.enum(contexts, 
@@ -22,37 +21,6 @@ const InputSchema = z.object({
     ),
     contextId: z.string().min(1, { message: 'Context ID is required.' }),
 })
-
-// Transform functions to convert database data to client format
-function transformModelTableConfigurationFromDoc(config: ModelTableConfigurationDoc) {
-    if (!config) return null;
-    
-    return {
-        systemColumns: config.systemColumns.map(col => ({
-            ...col,
-            _id: col._id.toString()
-        })),
-        intrinsicFieldColumns: config.intrinsicFieldColumns.map(col => ({
-            ...col,
-            _id: col._id.toString()
-        }))
-    };
-}
-
-function transformRouterTableConfigurationFromDoc(config: RouterTableConfigurationDoc) {
-    if (!config) return null;
-    
-    return {
-        systemColumns: config.systemColumns.map(col => ({
-            ...col,
-            _id: col._id.toString()
-        })),
-        intrinsicFieldColumns: config.intrinsicFieldColumns.map(col => ({
-            ...col,
-            _id: col._id.toString()
-        }))
-    };
-}
 
 export async function getTableConfiguration(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
@@ -73,11 +41,7 @@ export async function getTableConfiguration(input: z.input<typeof InputSchema>) 
                 : defaultModelConfiguration;
         }
         
-        if (context === 'routers') {
-            return transformRouterTableConfigurationFromDoc(document.tableConfiguration as RouterTableConfigurationDoc);
-        } else {
-            return transformModelTableConfigurationFromDoc(document.tableConfiguration as ModelTableConfigurationDoc);
-        }
+        return serializeObjectIds(document.tableConfiguration);
     } catch (error) {
         console.error('Error retrieving table configuration:', error);
         throw new Error('Failed to retrieve table configuration');

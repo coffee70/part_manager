@@ -4,6 +4,7 @@ import { ModelDoc } from "@/types/collections"
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
+import { serializeObjectIds } from "@/lib/serialization"
 
 const InputSchema = z.object({
     modelId: z.string().nullable().optional(),
@@ -22,8 +23,5 @@ export async function getModel(input: z.input<typeof InputSchema>) {
 
     if (!model) throw new Error('Model not found');
 
-    return {
-        ...model,
-        _id: model._id.toString(),
-    };
+    return serializeObjectIds(model);
 }
