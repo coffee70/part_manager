@@ -45,13 +45,13 @@ export default function KVLine({
     return (
         <div className="flex gap-1.5 items-center">
             <Select onValueChange={onKeyChange} value={selectedKey}>
-                <SelectTrigger 
-                    className="w-[200px]" 
+                <SelectTrigger
+                    className="w-[200px]"
                     data-testid={`kv-line-key-select-trigger-${selectedKey}-${index}`}
                 >
-                    <SelectValue 
-                        placeholder="Select a key" 
-                        data-testid={`kv-line-key-select-value-${selectedKey}-${index}`} 
+                    <SelectValue
+                        placeholder="Select a key"
+                        data-testid={`kv-line-key-select-value-${selectedKey}-${index}`}
                     />
                 </SelectTrigger>
                 <SelectContent>
@@ -75,8 +75,8 @@ export default function KVLine({
                     data-testid={`kv-line-value-input-${selectedKey}-${index}`}
                 />
             ) : (
-                <div 
-                    className="flex-1 h-8 bg-stone-100 rounded-md border border-stone-300 flex items-center px-3 text-stone-500 text-sm"
+                <div
+                    className="flex-1 h-8 bg-stone-100 rounded-md border border-stone-300 flex items-center px-3 text-stone-500 text-sm truncate"
                     data-testid={`kv-line-value-placeholder-${selectedKey}-${index}`}
                 >
                     Select a key to enter value
