@@ -32,6 +32,8 @@ import { InfoIcon } from "lucide-react";
 import React from "react";
 import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import Links from "@/components/list/data_table/links";
+import { Badge } from '@/components/ui/badge';
+import KeyValue from "@/components/list/data_table/key_value";
 
 export default function TableContainer() {
     const searchParams = useSearchParams();
@@ -212,7 +214,11 @@ export default function TableContainer() {
                     if (field.multiple && Array.isArray(value)) {
                         return (
                             <TableCell key={column._id}>
-                                <div className="text-sm text-muted-foreground">Multi-select placeholder</div>
+                                <div className="flex flex-wrap gap-1">
+                                    {field.options?.map(option => (
+                                        <Badge key={option} label={option} color='gray' className='px-2' />
+                                    ))}
+                                </div>
                             </TableCell>
                         );
                     } else {
@@ -225,7 +231,7 @@ export default function TableContainer() {
                 case 'key_value':
                     return (
                         <TableCell key={column._id}>
-                            <div className="text-sm text-muted-foreground">Key-value placeholder</div>
+                            <KeyValue kvValue={value} />
                         </TableCell>
                     );
                 default:
