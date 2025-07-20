@@ -2,9 +2,8 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, KVValuesSchema, priorities, stepTypes, UserDoc, ValuesSchema, contexts, ModelDoc, RouterDoc } from "@/types/collections";
+import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, InstanceSchema } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
-import { RouteState } from "@/components/route_builder/list_view/types";
 import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
 import { ObjectId } from "mongodb";
@@ -15,29 +14,7 @@ const InputSchema = z.object({
     searchParams: z.custom<SearchParams>().optional(),
 })
 
-const OutputSchema = z.array(z.object({
-    _id: z.string(),
-    number: z.string(),
-    priority: z.enum(priorities).catch('Medium'),
-    route: z.object({
-        state: z.nativeEnum(RouteState),
-        currentStep: z.object({
-            id: z.string(),
-            name: z.string(),
-            type: z.enum(stepTypes),
-        }).optional(),
-    }).optional(),
-    updatedAt: z.date(),
-    updatedBy: z.string(),
-    values: ValuesSchema,
-    kv_values: KVValuesSchema,
-    links: z.array(z.object({
-        _id: z.string(),
-        contextId: z.string(),
-        instanceId: z.string(),
-        number: z.string(),
-    })).optional(),
-}))
+const OutputSchema = z.array(InstanceSchema)
 
 export async function getInstances(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();

@@ -1,15 +1,14 @@
-import { dehydrate, HydrationBoundary, QueryClient, useQuery } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { NextServerSearchParams } from "@/types/collections";
 import TableContainer from "@/components/instances/table_container";
-import { instanceKeys, routerKeys, sectionKeys, contextKeys, tableConfigurationKeys, linkKeys } from "@/lib/query_keys";
+import { instanceKeys, sectionKeys, contextKeys, tableConfigurationKeys, userKeys } from "@/lib/query_keys";
 import { getInstances } from "@/server/instances/get_instances";
-import { getRouter } from "@/server/routers/get_router";
 import { getSections } from "@/server/sections/get_sections";
 import { getContext } from "@/server/contexts/get_context";
 import { getTableConfiguration } from "@/server/configuration/get_table_configuration";
 import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import { getContexts } from "@/server/contexts/get_contexts";
-import { getLinksByContextIds } from "@/server/links/get_links_by_context_ids";
+import { getCurrentUser } from "@/server/auth/get_current_user";
 
 export default async function Page({
     params,
@@ -37,6 +36,12 @@ export default async function Page({
             context: "routers",
             id: routerId
         }),
+    })
+
+    // current user
+    await queryClient.prefetchQuery({
+        queryKey: userKeys.current(),
+        queryFn: () => getCurrentUser(),
     })
 
     // table configuration

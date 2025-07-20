@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
-import { Route } from "@/components/route_builder/list_view/types";
+import { Route, RouteState } from "@/components/route_builder/list_view/types";
 import { z } from "zod";
 
 export const contexts = ['models', 'routers', 'users'] as const;
@@ -256,17 +256,31 @@ export type InstanceDoc = {
     & LinkableDoc
     & RouteFieldDoc
 
-export type Instance = {
-    _id: string;
-    number: string;
-    priority: Priority;
-    notes: string;
-    stepId?: string;
-    updatedAt: Date;
-    updatedById: string;
-}
-    & Valuable
-    & RouteField
+export const InstanceSchema = z.object({
+    _id: z.string(),
+    number: z.string(),
+    priority: z.enum(priorities).catch('Medium'),
+    route: z.object({
+        state: z.nativeEnum(RouteState),
+        currentStep: z.object({
+            id: z.string(),
+            name: z.string(),
+            type: z.enum(stepTypes),
+        }).optional(),
+    }).optional(),
+    updatedAt: z.date(),
+    updatedBy: z.string(),
+    values: ValuesSchema,
+    kv_values: KVValuesSchema,
+    links: z.array(z.object({
+        _id: z.string(),
+        contextId: z.string(),
+        instanceId: z.string(),
+        number: z.string(),
+    })).optional(),
+})
+
+export type Instance = z.infer<typeof InstanceSchema>;
 
 // Utility function to get entries with preserved key types
 // this ensures the keys for links are typed as SectionCollection and not string
@@ -350,7 +364,7 @@ type ModelBaseSystemColumnDoc = {
     order: number;
 }
 
-type ModelBaseSystemColumn = {
+export type ModelBaseSystemColumn = {
     _id: string;
     column: Exclude<ModelSystemColumnOption, "links">;
     order: number;
@@ -362,7 +376,7 @@ type RouterBaseSystemColumnDoc = {
     order: number;
 }
 
-type RouterBaseSystemColumn = {
+export type RouterBaseSystemColumn = {
     _id: string;
     column: Exclude<RouterSystemColumnOption, "links">;
     order: number;
@@ -370,11 +384,11 @@ type RouterBaseSystemColumn = {
 
 type ModelSystemColumnDoc = ModelBaseSystemColumnDoc | LinksColumnDoc
 
-type ModelSystemColumn = ModelBaseSystemColumn | LinksColumn
+export type ModelSystemColumn = ModelBaseSystemColumn | LinksColumn
 
 type RouterSystemColumnDoc = RouterBaseSystemColumnDoc | LinksColumnDoc
 
-type RouterSystemColumn = RouterBaseSystemColumn | LinksColumn
+export type RouterSystemColumn = RouterBaseSystemColumn | LinksColumn
 
 type IntrinsicFieldColumnDoc = {
     _id: ObjectId;
@@ -382,7 +396,7 @@ type IntrinsicFieldColumnDoc = {
     order: number;
 }
 
-type IntrinsicFieldColumn = {
+export type IntrinsicFieldColumn = {
     _id: string;
     fieldId: string;
     order: number;

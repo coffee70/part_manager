@@ -11,12 +11,19 @@ import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import Priority from "@/components/list/priority/priority";
-import { sortKeys, systemColumnInformation } from "@/types/collections";
+import { 
+    Instance, 
+    IntrinsicFieldColumn, 
+    ModelSystemColumn, 
+    RouterSystemColumn, 
+    sortKeys, 
+    systemColumnInformation,
+} from "@/types/collections";
 import DateRangeFilter from "@/components/list/filters/filter_date_range";
 import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
-import { instanceKeys, contextKeys, tableConfigurationKeys } from "@/lib/query_keys";
+import { instanceKeys, contextKeys, tableConfigurationKeys, userKeys } from "@/lib/query_keys";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
@@ -34,6 +41,11 @@ import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import Links from "@/components/list/data_table/links";
 import { Badge } from '@/components/ui/badge';
 import KeyValue from "@/components/list/data_table/key_value";
+import { getCurrentUser } from "@/server/auth/get_current_user";
+
+type Column = (ModelSystemColumn & { isSystem: true })
+| (RouterSystemColumn & { isSystem: true })
+| (IntrinsicFieldColumn & { isSystem: false })
 
 export default function TableContainer() {
     const searchParams = useSearchParams();
@@ -47,6 +59,11 @@ export default function TableContainer() {
         params.set('id', id)
         replace(`${pathname}?${params.toString()}`)
     }
+
+    const { data: user } = useQuery({
+        queryKey: userKeys.current(),
+        queryFn: () => getCurrentUser(),
+    })
 
     const { data: contextImpl } = useQuery({
         queryKey: contextKeys.id(context, id),
@@ -76,20 +93,22 @@ export default function TableContainer() {
         return columnInfo?.description || 'System column';
     };
 
+    const hasPriority = contextImpl && 'priority' in contextImpl && contextImpl.priority;
+
     // Get combined and sorted columns
     const sortedColumns = React.useMemo(() => {
         if (!tableConfiguration) return [];
         
-        const allColumns = [
-            ...tableConfiguration.systemColumns.map(col => ({ ...col, isSystem: true })),
-            ...tableConfiguration.intrinsicFieldColumns.map(col => ({ ...col, isSystem: false }))
+        const allColumns: Column[] = [
+            ...tableConfiguration.systemColumns.map(col => ({ ...col, isSystem: true as const })),
+            ...tableConfiguration.intrinsicFieldColumns.map(col => ({ ...col, isSystem: false as const }))
         ];
         
         return allColumns.sort((a, b) => a.order - b.order);
     }, [tableConfiguration]);
 
     // Helper function to render table header cell
-    const renderHeaderCell = (column: any) => {
+    const renderHeaderCell = (column: Column) => {
         if (column.isSystem) {
             const columnName = camelCaseToLabel(column.column);
             const description = getSystemColumnDescription(column.column);
@@ -140,7 +159,7 @@ export default function TableContainer() {
     };
 
     // Helper function to render table cell
-    const renderTableCell = (column: any, instance: any) => {
+    const renderTableCell = (column: Column, instance: Instance) => {
         if (column.isSystem) {
             switch (column.column) {
                 case 'number':
@@ -166,19 +185,11 @@ export default function TableContainer() {
                 case 'links':
                     return (
                         <TableCell key={column._id}>
-                            {'contextIds' in column && 'maxLinksPerContext' in column ? (
-                                <Links column={column} links={instance.links} />
-                            ) : (
-                                <div className="text-sm text-muted-foreground">Invalid links configuration</div>
-                            )}
+                            <Links column={column} links={instance.links} />
                         </TableCell>
                     );
                 default:
-                    return (
-                        <TableCell key={column._id}>
-                            <div className="text-sm text-muted-foreground">Unknown system column</div>
-                        </TableCell>
-                    );
+                    return null;
             }
         } else {
             const field = allFields.find(f => f._id === column.fieldId);
@@ -190,15 +201,9 @@ export default function TableContainer() {
                 );
             }
 
-            // Get the value from instance.values or instance.kv_values
-            let value;
-            if (field.type === 'key_value') {
-                value = instance.kv_values?.[field._id];
-            } else {
-                value = instance.values?.[field._id];
-            }
+            const kvValue = instance.kv_values?.[field._id];
+            const value = instance.values?.[field._id];
 
-            // Render based on field type
             switch (field.type) {
                 case 'text':
                 case 'number':
@@ -231,7 +236,7 @@ export default function TableContainer() {
                 case 'key_value':
                     return (
                         <TableCell key={column._id}>
-                            <KeyValue kvValue={value} />
+                            <KeyValue kvValue={kvValue} />
                         </TableCell>
                     );
                 default:
@@ -248,6 +253,12 @@ export default function TableContainer() {
 
     if (isError) return <div>Error...</div>
 
+    const filterLabels = [
+        'Updated At',
+        'Priority',
+        'Step',
+    ]
+
     return (
         <DataLayout>
             <FilterToolbar>
@@ -256,23 +267,25 @@ export default function TableContainer() {
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
                     <SearchInput />
-                    <Filter labels={['Updated At', 'Priority', 'Step']}>
+                    <Filter labels={filterLabels}>
                         <DateRangeFilter paramKey="updatedAt" />
-                        <PriorityFilter />
+                        {hasPriority && <PriorityFilter />}
                         <StepFilter />
                     </Filter>
                     <Sort keys={sortKeys} />
-                    <TableConfigurationModal>
-                        <TableConfiguration />
-                    </TableConfigurationModal>
+                    {user?.role === 'admin' && (
+                        <TableConfigurationModal>
+                            <TableConfiguration />
+                        </TableConfigurationModal>
+                    )}
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>
                 <TableHeader>
                     <TableRow>
                         {/* priority column header */}
-                        {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableHead></TableHead>}
-                        {sortedColumns.map(column => renderHeaderCell(column))}
+                        {hasPriority && <TableHead></TableHead>}
+                        {sortedColumns.map((column) => renderHeaderCell(column))}
                         <TableHead className="h-8 w-12">
                             {/* Actions column header */}
                         </TableHead>
@@ -286,10 +299,10 @@ export default function TableContainer() {
                             selected={instanceId === instance._id}
                         >
                             {/* priority column */}
-                            {contextImpl && 'priority' in contextImpl && contextImpl.priority && <TableCell className="px-1">
+                            {hasPriority && <TableCell className="px-1">
                                 <Priority priority={instance.priority} />
                             </TableCell>}
-                            {sortedColumns.map(column => renderTableCell(column, instance))}
+                            {sortedColumns.map((column) => renderTableCell(column, instance))}
                             <TableCell>
                                 <DeleteInstance id={instance._id} />
                             </TableCell>
