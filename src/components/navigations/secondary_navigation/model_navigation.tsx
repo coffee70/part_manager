@@ -2,11 +2,12 @@
 import React from "react";
 import { FieldIcon, SecondaryModelIcon } from "@/components/ui/icons/icons";
 import { SecondaryGenericItem, SecondaryGroup, SecondaryItem } from "./components";
-import { modelKeys } from "@/lib/query_keys";
+import { modelKeys, userKeys } from "@/lib/query_keys";
 import { getModels } from "@/server/models/get_models";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
+import { getCurrentUser } from "@/server/auth/get_current_user";
 
 export default function ModelNavigation() {
     const { contextId } = useURL();
@@ -15,6 +16,11 @@ export default function ModelNavigation() {
     const { data: models = [] } = useQuery({
         queryKey: modelKeys.all(),
         queryFn: () => getModels(),
+    })
+
+    const { data: user } = useQuery({
+        queryKey: userKeys.current(),
+        queryFn: () => getCurrentUser(),
     })
 
     return (
@@ -41,33 +47,35 @@ export default function ModelNavigation() {
                     />
                 ))}
             </SecondaryGroup>
-            <SecondaryGroup
-                label="Admin"
-                context="models"
-            >
-                <SecondaryItem
-                    id='models_fields_secondary_navigation'
-                    href={router().models().admin().fields().base()}
-                    onMouseEnter={() => setHoveredItem("Fields")}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    selected={contextId === "fields"}
-                    isHovered={hoveredItem === "Fields"}
+            {user?.role === "admin" && (
+                <SecondaryGroup
+                    label="Admin"
+                    context="models"
                 >
-                    <FieldIcon size={18} />
-                    <span>Fields</span>
-                </SecondaryItem>
-                <SecondaryItem
-                    id='models_models_secondary_navigation'
-                    href={router().models().admin().models()}
-                    onMouseEnter={() => setHoveredItem("Models")}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    selected={contextId === "models"}
-                    isHovered={hoveredItem === "Models"}
-                >
-                    <SecondaryModelIcon size={18} />
-                    <span>Models</span>
-                </SecondaryItem>
-            </SecondaryGroup>
+                    <SecondaryItem
+                        id='models_fields_secondary_navigation'
+                        href={router().models().admin().fields().base()}
+                        onMouseEnter={() => setHoveredItem("Fields")}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        selected={contextId === "fields"}
+                        isHovered={hoveredItem === "Fields"}
+                    >
+                        <FieldIcon size={18} />
+                        <span>Fields</span>
+                    </SecondaryItem>
+                    <SecondaryItem
+                        id='models_models_secondary_navigation'
+                        href={router().models().admin().models()}
+                        onMouseEnter={() => setHoveredItem("Models")}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        selected={contextId === "models"}
+                        isHovered={hoveredItem === "Models"}
+                    >
+                        <SecondaryModelIcon size={18} />
+                        <span>Models</span>
+                    </SecondaryItem>
+                </SecondaryGroup>
+            )}
         </div>
     )
 }

@@ -5,7 +5,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import ReactQueryProvider from "@/app/providers";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import PrimaryNavigation from "@/components/navigations/primary_navigation/primary_navigation";
 
 const fontSans = FontSans({
   subsets: ["latin"],

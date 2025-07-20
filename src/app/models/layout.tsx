@@ -17,7 +17,7 @@ export default async function Layout({
 
     return (
         <main className="flex h-screen w-full">
-            <PrimaryNavigation />
+            <PrimaryNavigation role={user.role} />
             <ModelNavigationProvider>
                 <ModelNavigation />
             </ModelNavigationProvider>

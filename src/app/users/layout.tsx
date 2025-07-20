@@ -17,7 +17,7 @@ export default async function Layout({ children }: Props) {
 
     return (
         <main className="flex h-screen w-full">
-            <PrimaryNavigation />
+            <PrimaryNavigation role={user.role} />
             {children}
         </main>
     )

@@ -2,11 +2,12 @@
 import React from "react";
 import { FieldIcon, SecondaryRouteIcon } from "@/components/ui/icons/icons";
 import { SecondaryGenericItem, SecondaryGroup, SecondaryItem } from "./components";
-import { routerKeys } from "@/lib/query_keys";
+import { routerKeys, userKeys } from "@/lib/query_keys";
 import { useQuery } from "@tanstack/react-query";
 import { router as appRouter } from "@/lib/url";
 import { useURL } from "@/hooks/url_metadata.hook";
 import { getRouters } from "@/server/routers/get_routers";
+import { getCurrentUser } from "@/server/auth/get_current_user";
 
 export default function RouterNavigation() {
     const { contextId } = useURL();
@@ -15,6 +16,11 @@ export default function RouterNavigation() {
     const { data: routers = [] } = useQuery({
         queryKey: routerKeys.all(),
         queryFn: () => getRouters(),
+    })
+
+    const { data: user } = useQuery({
+        queryKey: userKeys.current(),
+        queryFn: () => getCurrentUser(),
     })
 
     return (
@@ -41,33 +47,35 @@ export default function RouterNavigation() {
                     />
                 ))}
             </SecondaryGroup>
-            <SecondaryGroup
-                label="Admin"
-                context="routers"
-            >
-                <SecondaryItem
-                    id='routers_fields_secondary_navigation'
-                    href={appRouter().routers().admin().fields().base()}
-                    onMouseEnter={() => setHoveredItem("Fields")}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    selected={contextId === "fields"}
-                    isHovered={hoveredItem === "Fields"}
+            {user?.role === "admin" && (
+                <SecondaryGroup
+                    label="Admin"
+                    context="routers"
                 >
-                    <FieldIcon size={18} />
-                    <span>Fields</span>
-                </SecondaryItem>
-                <SecondaryItem
-                    id='routers_routerss_secondary_navigation'
-                    href={appRouter().routers().admin().routers()}
-                    onMouseEnter={() => setHoveredItem("Routers")}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    selected={contextId === "routers"}
-                    isHovered={hoveredItem === "Routers"}
-                >
-                    <SecondaryRouteIcon size={18} />
-                    <span>Routers</span>
-                </SecondaryItem>
-            </SecondaryGroup>
+                    <SecondaryItem
+                        id='routers_fields_secondary_navigation'
+                        href={appRouter().routers().admin().fields().base()}
+                        onMouseEnter={() => setHoveredItem("Fields")}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        selected={contextId === "fields"}
+                        isHovered={hoveredItem === "Fields"}
+                    >
+                        <FieldIcon size={18} />
+                        <span>Fields</span>
+                    </SecondaryItem>
+                    <SecondaryItem
+                        id='routers_routerss_secondary_navigation'
+                        href={appRouter().routers().admin().routers()}
+                        onMouseEnter={() => setHoveredItem("Routers")}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        selected={contextId === "routers"}
+                        isHovered={hoveredItem === "Routers"}
+                    >
+                        <SecondaryRouteIcon size={18} />
+                        <span>Routers</span>
+                    </SecondaryItem>
+                </SecondaryGroup>
+            )}
         </div>
     )
 }
