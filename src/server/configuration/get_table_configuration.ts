@@ -35,14 +35,32 @@ export async function getTableConfiguration(input: z.input<typeof InputSchema>):
     try {
         switch (context) {
             case 'models':
-                const model = await db.collection<ModelDoc>('models').findOne({ _id: new ObjectId(contextId) });
-                if (!model) throw new Error('Model not found');
-                if (!model.tableConfiguration) { return defaultModelConfiguration; }
+                const modelCollection = db.collection<ModelDoc>('models')
+                const model = await modelCollection.findOne({ _id: new ObjectId(contextId) });
+
+                if (!model) return defaultModelConfiguration;
+                if (!model.tableConfiguration) return defaultModelConfiguration;
+
+                // Check if the model is linkable, if it's not ensure it does not have a links column
+                if (!model.linkable) {
+                    model.tableConfiguration.systemColumns = 
+                        model.tableConfiguration.systemColumns.filter(col => col.column != 'links')
+                }
+
                 return serializeObjectIds(model.tableConfiguration);
             case 'routers':
-                const router = await db.collection<RouterDoc>('routers').findOne({ _id: new ObjectId(contextId) });
-                if (!router) throw new Error('Router not found');
-                if (!router.tableConfiguration) { return defaultRouterConfiguration; }
+                const routerCollection = db.collection<RouterDoc>('routers')
+                const router = await routerCollection.findOne({ _id: new ObjectId(contextId) });
+                
+                if (!router) return defaultRouterConfiguration;
+                if (!router.tableConfiguration) return defaultRouterConfiguration;
+
+                // Check if the router is linkable, if it's not ensure it does not have a links column
+                if (!router.linkable) {
+                    router.tableConfiguration.systemColumns = 
+                        router.tableConfiguration.systemColumns.filter(col => col.column != 'links')
+                }
+
                 return serializeObjectIds(router.tableConfiguration);
             default:
                 throw new Error('Invalid context');

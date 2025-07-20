@@ -12,7 +12,8 @@ import { getFieldsByContextId } from '@/server/fields/get_fields_by_context_id';
 import { getContexts } from '@/server/contexts/get_contexts';
 import { upsertTableConfiguration } from '@/server/configuration/upsert_table_configuration';
 
-export const useTableConfiguration = (open: boolean) => {
+export const useTableConfiguration = () => {
+    const [open, setOpen] = React.useState(false);
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
 
@@ -53,9 +54,17 @@ export const useTableConfiguration = (open: boolean) => {
     }, [currentConfig, context]);
 
     // Save mutation
-    const { mutate: saveConfiguration, isPending: savePending, error: saveError } = useMutation({
+    const { 
+        mutate: saveConfiguration, 
+        isPending: savePending, 
+        error: saveError, 
+        data: saveData
+    } = useMutation({
         mutationFn: upsertTableConfiguration,
-        onSuccess: () => {
+        onSuccess: ({ success }) => {
+            if (success) {
+                setOpen(false);
+            }
             queryClient.invalidateQueries({ 
                 queryKey: tableConfigurationKeys.configuration(context, id) 
             });
@@ -85,6 +94,9 @@ export const useTableConfiguration = (open: boolean) => {
         handleSave,
         savePending,
         saveError,
-        context
+        saveData,
+        context,
+        open,
+        setOpen
     };
 }; 

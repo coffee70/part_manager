@@ -8,6 +8,10 @@ import {
     Context
 } from '@/types/collections';
 import { snakeCaseToLabel } from '@/lib/language';
+import { contextKeys } from '@/lib/query_keys';
+import { useQuery } from '@tanstack/react-query';
+import { getContext } from '@/server/contexts/get_context';
+import { useInstanceURL } from '@/hooks/url_metadata.hook';
 
 type AvailableColumnsListProps = {
     formState: ModelTableConfiguration | RouterTableConfiguration;
@@ -29,9 +33,18 @@ export function AvailableColumnsList({
     onAddSystemColumn,
     onAddFieldColumn
 }: AvailableColumnsListProps) {
+    const { id } = useInstanceURL();
+
+    const { data: contextImpl } = useQuery({
+        queryKey: contextKeys.id(context, id),
+        queryFn: () => getContext({ context, id }),
+    })
+
     const availableSystemColumns = systemColumnInfo.filter(info => {
         // Filter out step for routers
         if (context === 'routers' && info.type === 'step') return false;
+        // Filter out links if the context is not linkable
+        if (info.type === 'links' && !contextImpl?.linkable) return false;
         // Filter out already added columns
         return !formState.systemColumns.some(col => col.column === info.type);
     });

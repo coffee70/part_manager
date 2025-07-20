@@ -20,7 +20,6 @@ type Props = {
 };
 
 export default function TableConfigurationModal({ children }: Props) {
-    const [open, setOpen] = React.useState(false);
     const [focusedColumn, setFocusedColumn] = React.useState<string | null>(null);
 
     // Use extracted hooks for business logic
@@ -33,8 +32,11 @@ export default function TableConfigurationModal({ children }: Props) {
         handleSave: handleSaveConfig,
         savePending,
         saveError,
-        context
-    } = useTableConfiguration(open);
+        saveData,
+        context,
+        open,
+        setOpen
+    } = useTableConfiguration();
 
     const handleColumnFocus = (columnId: string | null) => {
         setFocusedColumn(columnId);
@@ -60,14 +62,13 @@ export default function TableConfigurationModal({ children }: Props) {
 
     const handleSave = () => {
         handleSaveConfig();
-        setOpen(false);
     };
 
     // Find the focused links column for the form
-    const focusedLinksColumn = focusedColumn 
-        ? formState.systemColumns.find(col => 
-            col._id === focusedColumn && 
-            'column' in col && 
+    const focusedLinksColumn = focusedColumn
+        ? formState.systemColumns.find(col =>
+            col._id === focusedColumn &&
+            'column' in col &&
             col.column === 'links' &&
             'contextIds' in col &&
             'maxLinksPerContext' in col
@@ -89,12 +90,14 @@ export default function TableConfigurationModal({ children }: Props) {
                     </VisuallyHidden>
                 </DialogHeader>
 
-                {saveError && (
+                {(saveError || saveData?.success === false) && (
                     <Alert variant="destructive">
                         <AlertCircle className="h-4 w-4" />
                         <AlertTitle>Error</AlertTitle>
                         <AlertDescription>
-                            {saveError instanceof Error ? saveError.message : 'Failed to save configuration'}
+                            {saveError instanceof Error
+                                ? saveError.message
+                                : saveData?.error || 'Failed to save configuration'}
                         </AlertDescription>
                     </Alert>
                 )}

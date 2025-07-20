@@ -91,6 +91,18 @@ export async function upsertTableConfiguration(input: z.input<typeof InputSchema
             case 'models':
                 if (isModelTableConfiguration(context, tableConfiguration)) {
                     const modelCollection = db.collection<ModelDoc>('models');
+                    const model = await modelCollection.findOne({ _id: new ObjectId(contextId) });
+
+                    if (!model) return { success: false, error: "Model not found" };
+                    if (!model.linkable) {
+                        if (tableConfiguration.systemColumns.some(col => col.column == 'links')) {
+                            return { 
+                                success: false, 
+                                error: "This model is not linkable. Please remove the links column and try again.",
+                            }
+                        }
+                    }
+
                     const transformedModelConfig = transformModelTableConfiguration(tableConfiguration);
                     await modelCollection.updateOne(
                         { _id: new ObjectId(contextId) },
@@ -98,10 +110,22 @@ export async function upsertTableConfiguration(input: z.input<typeof InputSchema
                     );
                     return { success: true };
                 }
-                throw new Error('Invalid table configuration for models');
+                return { success: false, error: "Invalid table configuration for models" };
             case 'routers':
                 if (isRouterTableConfiguration(context, tableConfiguration)) {
                     const routerCollection = db.collection<RouterDoc>('routers');
+                    const router = await routerCollection.findOne({ _id: new ObjectId(contextId) });
+
+                    if (!router) return { success: false, error: "Router not found" };
+                    if (!router.linkable) {
+                        if (tableConfiguration.systemColumns.some(col => col.column == 'links')) {
+                            return { 
+                                success: false, 
+                                error: "This router is not linkable. Please remove the links column and try again.",
+                            }
+                        }
+                    }
+
                     const transformedRouterConfig = transformRouterTableConfiguration(tableConfiguration);
                     await routerCollection.updateOne(
                         { _id: new ObjectId(contextId) },
@@ -109,12 +133,12 @@ export async function upsertTableConfiguration(input: z.input<typeof InputSchema
                     );
                     return { success: true };
                 }
-                throw new Error('Invalid table configuration for routers');
+                return { success: false, error: "Invalid table configuration for routers" };
             default:
-                throw new Error('Invalid context');
+                return { success: false, error: "Invalid context" };
         }
     } catch (error) {
         console.error('Error updating table configuration:', error);
-        throw new Error('Failed to update table configuration');
+        return { success: false, error: "Failed to update table configuration" };
     }
 } 
