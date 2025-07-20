@@ -457,13 +457,13 @@ export const LinksColumnSchema = z.object({
 
 export const ModelBaseSystemColumnSchema = z.object({
     _id: z.string(),
-    column: z.enum(["priority", "number", "step", "updatedBy"]),
+    column: z.enum(["number", "step", "updatedBy"]),
     order: z.number(),
 });
 
 export const RouterBaseSystemColumnSchema = z.object({
     _id: z.string(),
-    column: z.enum(["priority", "number", "updatedBy"]),
+    column: z.enum(["number", "updatedBy"]),
     order: z.number(),
 });
 
