@@ -39,7 +39,7 @@ export async function getLinks(input: z.input<typeof InputSchema>) {
         return [];
     }
 
-    const links = await Promise.all(document.links.map(async link => {
+    let links = await Promise.all(document.links.map(async link => {
         const linkedInstanceCollection = db.collection<InstanceDoc>(link.contextId);
 
         const linkedInstance = await linkedInstanceCollection.findOne({ _id: new ObjectId(link.instanceId) });
@@ -48,12 +48,17 @@ export async function getLinks(input: z.input<typeof InputSchema>) {
         const linkedContext = await getContext({ context, id: link.contextId });
         if (!linkedContext) throw new Error('Linked context not found');
 
+        if (!linkedContext.linkable) return;
+
         return {
             ...link,
             number: linkedInstance.number,
             color: linkedContext.color,
         }
     }))
+
+    // Remove undefined links from the early return
+    links = links.filter(link => link !== undefined);
 
     return OutputSchema.parse(links);
 }
