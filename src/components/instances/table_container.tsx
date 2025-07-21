@@ -42,6 +42,7 @@ import Links from "@/components/list/data_table/links";
 import { Badge } from '@/components/ui/badge';
 import KeyValue from "@/components/list/data_table/key_value";
 import { getCurrentUser } from "@/server/auth/get_current_user";
+import ShowCompleted from "@/components/list/show_completed/show_completed";
 
 type Column = (ModelSystemColumn & { isSystem: true })
 | (RouterSystemColumn & { isSystem: true })
@@ -278,6 +279,9 @@ export default function TableContainer() {
                             <TableConfiguration />
                         </TableConfigurationModal>
                     )}
+                </FilterToolbarRow>
+                <FilterToolbarRow>
+                    <ShowCompleted />
                 </FilterToolbarRow>
             </FilterToolbar>
             <Table>
