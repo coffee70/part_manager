@@ -4,23 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
 import SearchInput from "@/components/list/filters/search_input";
-import Filter from "@/components/list/filters/filter";
-import Sort from "@/components/list/sorting/sort";
 import { Table, TableBody, TableRow, TableCell, TableHead, TableHeader } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
 import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import Priority from "@/components/list/priority/priority";
-import { 
-    Instance, 
-    IntrinsicFieldColumn, 
-    ModelSystemColumn, 
-    RouterSystemColumn, 
-    sortKeys, 
+import {
+    Instance,
+    IntrinsicFieldColumn,
+    ModelSystemColumn,
+    RouterSystemColumn,
     systemColumnInformation,
 } from "@/types/collections";
-import DateRangeFilter from "@/components/list/filters/filter_date_range";
-import PriorityFilter from "@/components/list/filters/filter_priority";
 import New from "@/components/list/new/new";
 import DeleteInstance from "@/components/list/data_table/delete_instance";
 import { instanceKeys, contextKeys, tableConfigurationKeys, userKeys } from "@/lib/query_keys";
@@ -29,7 +24,6 @@ import { getInstances } from "@/server/instances/get_instances";
 import InstanceForm from "./instance_form";
 import { getContext } from "@/server/contexts/get_context";
 import Step from "@/components/list/data_table/step";
-import StepFilter from "@/components/list/filters/filter_step";
 import TableConfiguration from "@/components/list/table_configuration/table_configuration";
 import TableConfigurationModal from "@/components/list/table_configuration/table_configuration_modal";
 import { getTableConfiguration } from "@/server/configuration/get_table_configuration";
@@ -43,10 +37,11 @@ import { Badge } from '@/components/ui/badge';
 import KeyValue from "@/components/list/data_table/key_value";
 import { getCurrentUser } from "@/server/auth/get_current_user";
 import ShowCompleted from "@/components/list/show_completed/show_completed";
+import ColumnActions from "@/components/list/data_table/column_actions";
 
 type Column = (ModelSystemColumn & { isSystem: true })
-| (RouterSystemColumn & { isSystem: true })
-| (IntrinsicFieldColumn & { isSystem: false })
+    | (RouterSystemColumn & { isSystem: true })
+    | (IntrinsicFieldColumn & { isSystem: false })
 
 export default function TableContainer() {
     const searchParams = useSearchParams();
@@ -99,12 +94,12 @@ export default function TableContainer() {
     // Get combined and sorted columns
     const sortedColumns = React.useMemo(() => {
         if (!tableConfiguration) return [];
-        
+
         const allColumns: Column[] = [
             ...tableConfiguration.systemColumns.map(col => ({ ...col, isSystem: true as const })),
             ...tableConfiguration.intrinsicFieldColumns.map(col => ({ ...col, isSystem: false as const }))
         ];
-        
+
         return allColumns.sort((a, b) => a.order - b.order);
     }, [tableConfiguration]);
 
@@ -113,7 +108,7 @@ export default function TableContainer() {
         if (column.isSystem) {
             const columnName = camelCaseToLabel(column.column);
             const description = getSystemColumnDescription(column.column);
-            
+
             return (
                 <TableHead key={column._id} className="h-8">
                     <div className="flex items-center gap-1">
@@ -130,13 +125,14 @@ export default function TableContainer() {
                             </Tooltip>
                         )}
                         <span className="text-xs font-medium">{columnName}</span>
+                        <ColumnActions />
                     </div>
                 </TableHead>
             );
         } else {
             const field = allFields.find(f => f._id === column.fieldId);
             if (!field) return <TableHead key={column._id} className="h-8">Unknown Field</TableHead>;
-            
+
             return (
                 <TableHead key={column._id} className="h-8">
                     <div className="flex items-center gap-1">
@@ -254,12 +250,6 @@ export default function TableContainer() {
 
     if (isError) return <div>Error...</div>
 
-    const filterLabels = [
-        'Updated At',
-        'Priority',
-        'Step',
-    ]
-
     return (
         <DataLayout>
             <FilterToolbar>
@@ -267,18 +257,12 @@ export default function TableContainer() {
                     <InstanceForm>
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
-                    <SearchInput />
-                    <Filter labels={filterLabels}>
-                        <DateRangeFilter paramKey="updatedAt" />
-                        {hasPriority && <PriorityFilter />}
-                        <StepFilter />
-                    </Filter>
-                    <Sort keys={sortKeys} />
                     {user?.role === 'admin' && (
                         <TableConfigurationModal>
                             <TableConfiguration />
                         </TableConfigurationModal>
                     )}
+                    <SearchInput />
                 </FilterToolbarRow>
                 <FilterToolbarRow>
                     <ShowCompleted />

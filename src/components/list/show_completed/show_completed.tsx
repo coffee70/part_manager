@@ -38,18 +38,22 @@ export default function ShowCompleted() {
     };
 
     return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 mt-1">
             <button
                 className={cn(
-                    "flex items-center rounded-lg h-3 w-8 relative transition-colors duration-200",
-                    localShowCompleted ? 'bg-primary' : 'bg-muted-foreground'
+                    "flex items-center rounded-lg h-4 w-8 relative transition-colors duration-200",
+                    localShowCompleted 
+                        ? context === 'models' 
+                            ? 'bg-gradient-to-br from-rose-500 to-red-700' 
+                            : 'bg-gradient-to-br from-violet-500 to-purple-700'
+                        : 'bg-muted-foreground'
                 )}
                 onClick={() => handleToggle(!localShowCompleted)}
             >
                 <div
                     className={cn(
-                        'bg-white rounded-full h-5 w-5 absolute left-0 transition-transform duration-300 ease-in-out shadow-lg border border-gray-300',
-                        localShowCompleted ? 'translate-x-3' : 'translate-x-0'
+                        'bg-white rounded-full h-3 w-3 absolute left-0.5 transition-transform duration-300 ease-in-out shadow-lg border border-gray-300',
+                        localShowCompleted ? 'translate-x-4' : 'translate-x-0'
                     )}
                 />
             </button>
