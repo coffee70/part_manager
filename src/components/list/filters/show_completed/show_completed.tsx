@@ -15,18 +15,8 @@ export default function ShowCompleted() {
     const queryClient = useQueryClient();
 
     const urlShowCompleted = searchParams.get('showCompleted') === 'true';
-    const [localShowCompleted, setLocalShowCompleted] = React.useState(urlShowCompleted);
-
-    // Sync local state with URL state
-    React.useEffect(() => {
-        setLocalShowCompleted(urlShowCompleted);
-    }, [urlShowCompleted]);
 
     const handleToggle = (value: boolean) => {
-        // Update local state immediately for responsive UI
-        setLocalShowCompleted(value);
-        
-        // Update URL state
         const params = new URLSearchParams(searchParams);
         if (value) {
             params.set('showCompleted', 'true');
@@ -42,18 +32,18 @@ export default function ShowCompleted() {
             <button
                 className={cn(
                     "flex items-center rounded-lg h-4 w-8 relative transition-colors duration-200",
-                    localShowCompleted 
+                    urlShowCompleted 
                         ? context === 'models' 
                             ? 'bg-gradient-to-br from-rose-500 to-red-700' 
                             : 'bg-gradient-to-br from-violet-500 to-purple-700'
                         : 'bg-muted-foreground'
                 )}
-                onClick={() => handleToggle(!localShowCompleted)}
+                onClick={() => handleToggle(!urlShowCompleted)}
             >
                 <div
                     className={cn(
                         'bg-white rounded-full h-3 w-3 absolute left-0.5 transition-transform duration-300 ease-in-out shadow-lg border border-gray-300',
-                        localShowCompleted ? 'translate-x-4' : 'translate-x-0'
+                        urlShowCompleted ? 'translate-x-4' : 'translate-x-0'
                     )}
                 />
             </button>

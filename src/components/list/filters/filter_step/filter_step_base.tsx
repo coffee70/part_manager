@@ -13,13 +13,13 @@ import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
 import { RouteState } from "@/components/route_builder/list_view/types";
 
-export default function StepFilter() {
+export default function StepFilterBase() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const initialSteps = searchParams.getAll('step');
-    const initialRouteStatus = searchParams.getAll('route-status');
+    const urlSteps = searchParams.getAll('step');
+    const urlRouteStatus = searchParams.getAll('route-status');
 
     const { id } = useInstanceURL();
     const queryClient = useQueryClient();
@@ -31,7 +31,7 @@ export default function StepFilter() {
 
     const handleStepChange = (instanceId: string) => {
         const params = new URLSearchParams(searchParams);
-        if (initialSteps.includes(instanceId)) {
+        if (urlSteps.includes(instanceId)) {
             params.delete('step', instanceId);
         } else {
             params.append('step', instanceId);
@@ -42,7 +42,7 @@ export default function StepFilter() {
 
     const handleRouteStatusChange = (routeStatus: RouteState) => {
         const params = new URLSearchParams(searchParams);
-        if (initialRouteStatus.includes(routeStatus)) {
+        if (urlRouteStatus.includes(routeStatus)) {
             params.delete('route-status', routeStatus);
         } else {
             params.append('route-status', routeStatus);
@@ -59,39 +59,40 @@ export default function StepFilter() {
                 <SelectItem
                     key={step.instanceId}
                     onClick={() => handleStepChange(step.instanceId)}
+                    className="flex items-center justify-between"
                 >
                     <StepBadge step={{
                         id: step.instanceId,
                         name: step.number,
                         type: step.type
                     }} />
-                    <CheckIcon className={cn(initialSteps.includes(step.instanceId) ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(urlSteps.includes(step.instanceId) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             ))}
             {data.includeDone && (
-                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Completed)}>
+                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Completed)} className="flex items-center justify-between">
                     <StepBadge step={{
                         id: RouteState.Completed,
                         name: "Done",
                         type: "Done"
                     }} />
-                    <CheckIcon className={cn(initialRouteStatus.includes(RouteState.Completed) ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Completed) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}
             {data.includePaused && (
-                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Paused)}>
+                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Paused)} className="flex items-center justify-between">
                     <Badge label={"PAUSED"} className="border border-stone-500 text-stone-500 px-2" />
-                    <CheckIcon className={cn(initialRouteStatus.includes(RouteState.Paused) ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Paused) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}
             {data.includeNotStarted && (
-                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Stopped)}>
+                <SelectItem onClick={() => handleRouteStatusChange(RouteState.Stopped)} className="flex items-center justify-between">
                     <StepBadge step={{
                         id: RouteState.Stopped,
                         name: "Not Started",
                         type: "To-do"
                     }} />
-                    <CheckIcon className={cn(initialRouteStatus.includes(RouteState.Stopped) ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Stopped) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}
         </SelectBase>

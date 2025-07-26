@@ -6,6 +6,7 @@ import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, Instan
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
+
 import { ObjectId } from "mongodb";
 
 const InputSchema = z.object({
@@ -22,7 +23,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     const { id, context, searchParams } = InputSchema.parse(input)
 
-    const { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link } = getSearchParams(searchParams);
 
     // Get table configuration for links
     let linksColumnConfig: { contextIds: string[], maxLinksPerContext: number } | null = null;
@@ -60,25 +61,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     // filters
     const pipeline: any[] = [];
 
-    const matchStage: any = {};
-    if (updatedAt) {
-        matchStage.updatedAt = {
-            $gte: updatedAt.from,
-            $lte: updatedAt.to
-        };
-    }
-
-    if (search) {
-        matchStage.number = { $regex: search, $options: 'i' }; // 'i' option makes the search case-insensitive
-    }
-
-    if (priority) {
-        matchStage.priority = priority;
-    }
-
-    // Create conditions for OR relationship
-    const orConditions = [];
-    
+    // Handle steps filtering first (needs to add fields before other matches)
     if (steps) {
         pipeline.push({
             $addFields: {
@@ -101,7 +84,86 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
                 }
             }
         });
+    }
 
+    // Handle link filtering lookups before main match
+    let linkMatchConditions: any[] = [];
+    if (link && Object.keys(link).length > 0) {
+        // Filter out empty values and prepare entries (keys are now context IDs)
+        const linkFilterEntries = Object.entries(link)
+            .map(([contextId, filterValue]) => ({
+                contextId,
+                filterValue: filterValue.trim()
+            }))
+            .filter(entry => entry.filterValue !== '');
+
+        if (linkFilterEntries.length > 0) {
+            // For each context we're filtering on, add lookup stages
+            for (const { contextId, filterValue } of linkFilterEntries) {
+                // Add lookup for this specific context
+                pipeline.push({
+                    $lookup: {
+                        from: contextId,
+                        let: { 
+                            linkIds: {
+                                $map: {
+                                    input: {
+                                        $filter: {
+                                            input: { $ifNull: ["$links", []] },
+                                            cond: { $eq: ["$$this.contextId", contextId] }
+                                        }
+                                    },
+                                    as: "link",
+                                    in: { $toObjectId: "$$link.instanceId" }
+                                }
+                            }
+                        },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: { $in: ["$_id", "$$linkIds"] },
+                                    number: { $regex: filterValue, $options: 'i' }
+                                }
+                            },
+                            { $project: { number: 1 } }
+                        ],
+                        as: `linkedInstances_${contextId}`
+                    }
+                });
+            }
+
+            // Prepare link match conditions for later use
+            linkMatchConditions = linkFilterEntries.map(({ contextId }) => ({
+                [`linkedInstances_${contextId}`]: { $ne: [] }
+            }));
+        }
+    }
+
+    // Build main match stage
+    const matchStage: any = {};
+    if (updatedAt) {
+        matchStage.updatedAt = {
+            $gte: updatedAt.from,
+            $lte: updatedAt.to
+        };
+    }
+
+    if (search) {
+        matchStage.number = { $regex: search, $options: 'i' };
+    }
+
+    if (number) {
+        matchStage.number = { $regex: number, $options: 'i' };
+    }
+
+    if (priority) {
+        matchStage.priority = priority;
+    }
+
+    // Create conditions for OR relationship
+    const orConditions = [];
+    
+    if (steps) {
         if (Array.isArray(steps)) {
             orConditions.push({ currentStepInstanceId: { $in: steps } });
         } else {
@@ -122,6 +184,12 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
         matchStage.$or = orConditions;
     }
 
+    // Add link match conditions to main match stage
+    if (linkMatchConditions.length > 0) {
+        matchStage.$and = matchStage.$and || [];
+        matchStage.$and.push({ $or: linkMatchConditions });
+    }
+
     // sort
     const sortStage: any = {};
     if (sortBy) {
@@ -132,6 +200,16 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const usersCollection = db.collection<UserDoc>('users');
 
     pipeline.push({ $match: matchStage });
+
+    // Remove temporary lookup fields used for link filtering
+    if (linkMatchConditions.length > 0) {
+        const fieldsToRemove: Record<string, number> = {};
+        for (const condition of linkMatchConditions) {
+            const fieldName = Object.keys(condition)[0];
+            fieldsToRemove[fieldName] = 0;
+        }
+        pipeline.push({ $project: fieldsToRemove });
+    }
 
     if (sortBy === 'priority') {
         pipeline.push(

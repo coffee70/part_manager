@@ -6,7 +6,7 @@ import {
     defaultRouterConfiguration
 } from '@/types/collections';
 import { TableConfigurationState } from '../column_management_utils';
-import { tableConfigurationKeys } from '@/lib/query_keys';
+import { instanceKeys, tableConfigurationKeys } from '@/lib/query_keys';
 import { getTableConfiguration } from '@/server/configuration/get_table_configuration';
 import { getFieldsByContextId } from '@/server/fields/get_fields_by_context_id';
 import { getContexts } from '@/server/contexts/get_contexts';
@@ -65,9 +65,8 @@ export const useTableConfiguration = () => {
             if (success) {
                 setOpen(false);
             }
-            queryClient.invalidateQueries({ 
-                queryKey: tableConfigurationKeys.configuration(context, id) 
-            });
+            queryClient.invalidateQueries({ queryKey: tableConfigurationKeys.configuration(context, id) });
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         },
     });
 

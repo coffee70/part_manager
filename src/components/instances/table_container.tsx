@@ -2,7 +2,7 @@
 import DataLayout from "@/layouts/data_layout"
 import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { FilterToolbar, FilterToolbarRow } from "@/components/list/filters/filter_toolbar";
+import { Toolbar, ToolbarRow } from "@/components/list/data_table/toolbar";
 import SearchInput from "@/components/list/filters/search_input";
 import { Table, TableBody, TableRow, TableCell, TableHead, TableHeader } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
@@ -36,8 +36,13 @@ import Links from "@/components/list/data_table/links";
 import { Badge } from '@/components/ui/badge';
 import KeyValue from "@/components/list/data_table/key_value";
 import { getCurrentUser } from "@/server/auth/get_current_user";
-import ShowCompleted from "@/components/list/show_completed/show_completed";
+import ShowCompleted from "@/components/list/filters/show_completed/show_completed";
+import PriorityFilter from "@/components/list/filters/filter_priority/filter_priority";
+import StepFilter from "@/components/list/filters/filter_step/filter_step";
 import ColumnActions from "@/components/list/data_table/column_actions";
+import NumberFilter from "@/components/list/filters/filter_number/filter_number";
+import UpdatedAtFilter from "../list/filters/filter_updated_at/filter_updated_at";
+import LinksFilter from "../list/filters/filter_links/filter_links";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
@@ -103,6 +108,22 @@ export default function TableContainer() {
         return allColumns.sort((a, b) => a.order - b.order);
     }, [tableConfiguration]);
 
+    const getSystemColumnFilterComponent = (column: Column) => {
+        if (column.isSystem) {
+            switch (column.column) {
+                case 'number':
+                    return <NumberFilter />;
+                case 'step':
+                    return <StepFilter />;
+                case 'updatedBy':
+                    return <UpdatedAtFilter />;
+                case 'links':
+                    return <LinksFilter />;
+            }
+        }
+        return null;
+    }
+
     // Helper function to render table header cell
     const renderHeaderCell = (column: Column) => {
         if (column.isSystem) {
@@ -125,7 +146,9 @@ export default function TableContainer() {
                             </Tooltip>
                         )}
                         <span className="text-xs font-medium">{columnName}</span>
-                        <ColumnActions />
+                        <ColumnActions>
+                            {getSystemColumnFilterComponent(column)}
+                        </ColumnActions>
                     </div>
                 </TableHead>
             );
@@ -252,8 +275,8 @@ export default function TableContainer() {
 
     return (
         <DataLayout>
-            <FilterToolbar>
-                <FilterToolbarRow>
+            <Toolbar>
+                <ToolbarRow>
                     <InstanceForm>
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
@@ -263,16 +286,20 @@ export default function TableContainer() {
                         </TableConfigurationModal>
                     )}
                     <SearchInput />
-                </FilterToolbarRow>
-                <FilterToolbarRow>
+                </ToolbarRow>
+                <ToolbarRow>
                     <ShowCompleted />
-                </FilterToolbarRow>
-            </FilterToolbar>
+                </ToolbarRow>
+            </Toolbar>
             <Table>
                 <TableHeader>
                     <TableRow>
                         {/* priority column header */}
-                        {hasPriority && <TableHead></TableHead>}
+                        {hasPriority && <TableHead className="h-8">
+                            <div className="flex items-center gap-1">
+                                <PriorityFilter />
+                            </div>
+                        </TableHead>}
                         {sortedColumns.map((column) => renderHeaderCell(column))}
                         <TableHead className="h-8 w-12">
                             {/* Actions column header */}

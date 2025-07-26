@@ -8,6 +8,8 @@ const UpdatedAt = z.object({
     from: z.coerce.date().optional(),
 });
 
+const LinkFilter = z.record(z.string(), z.string());
+
 export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
 export const getSearchParams = (searchParams?: SearchParams) => {
@@ -40,6 +42,12 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("search must be a string");
     }
 
+    // pull out number
+    const number = params.number;
+    if (Array.isArray(number)) {
+        throw new Error("number must be a string");
+    }
+
     // pull out priority
     const { data: priority, error: priorityError } = z.custom<Priority>().optional().safeParse(params.priority);
     if (priorityError) {
@@ -69,7 +77,18 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("sortOrder must be either 'asc' or 'desc'");
     }
 
-    return { updatedAt, search, priority, steps, routeStatus, sortBy, sortOrder };
+    // pull out link
+    const linkJson = params.link;
+    if (Array.isArray(linkJson)) {
+        throw new Error("link must be a json string");
+    }
+    const linkParsed = linkJson ? JSON.parse(linkJson) : undefined;
+    const { data: link, error: linkError } = LinkFilter.optional().safeParse(linkParsed);
+    if (linkError) {
+        throw new Error("link must be a valid link filter object");
+    }
+
+    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link };
 }
 
 export const convertSearchParams = (

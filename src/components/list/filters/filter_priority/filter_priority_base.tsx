@@ -10,19 +10,19 @@ import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { useQueryClient } from "@tanstack/react-query";
 import { instanceKeys } from "@/lib/query_keys";
 
-export default function PriorityFilter() {
+export default function PriorityFilterBase() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    const initialValue = searchParams.get('priority');
+    const urlPriority = searchParams.get('priority');
 
     const { id } = useInstanceURL();
     const queryClient = useQueryClient();
 
     const handlePriorityChange = (label: string) => {
         const params = new URLSearchParams(searchParams);
-        if (initialValue === label) {
+        if (urlPriority === label) {
             params.delete('priority');
         } else {
             params.set('priority', label);
@@ -37,12 +37,13 @@ export default function PriorityFilter() {
                 <SelectItem
                     key={label}
                     onClick={() => handlePriorityChange(label)}
+                    className="flex items-center justify-between"
                 >
                     <div className="flex items-center space-x-3">
                         <StatusIndicator color={info.color} />
                         <span>{label}</span>
                     </div>
-                    <CheckIcon className={cn(initialValue === label ? "" : "invisible")} strokeWidth={1.5} size={20} />
+                    <CheckIcon className={cn(urlPriority === label ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             ))}
         </SelectBase>

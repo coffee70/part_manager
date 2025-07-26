@@ -1,5 +1,5 @@
 import React from "react";
-import { Field, KVValue } from "@/types/collections";
+import { KVValue } from "@/types/collections";
 import { 
     KVFieldState, 
     kvFieldStateToValue,
@@ -11,8 +11,9 @@ import {
 
 type UseKVFieldProps = {
     value: KVValue;
-    field: Field & {
-        value?: KVValue;
+    field: {
+        keys?: string[];
+        multiple?: boolean;
     };
     setValue: (value: KVValue) => void;
 }

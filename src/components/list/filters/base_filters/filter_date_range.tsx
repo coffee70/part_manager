@@ -1,5 +1,5 @@
 'use client'
-import { Calendar } from "../../ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import { type DateRange } from 'react-day-picker';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
