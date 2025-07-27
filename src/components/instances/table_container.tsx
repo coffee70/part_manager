@@ -150,6 +150,25 @@ export default function TableContainer() {
         }
     }
 
+    // Helper function to convert military time to AM/PM format
+    const formatTimeToAmPm = (militaryTime: string): string => {
+        if (!militaryTime) return '';
+        
+        // Handle different time formats that might come in
+        const timeMatch = militaryTime.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+        if (!timeMatch) return militaryTime; // Return original if doesn't match expected format
+        
+        const hours = parseInt(timeMatch[1], 10);
+        const minutes = timeMatch[2];
+        
+        if (hours < 0 || hours > 23) return militaryTime; // Invalid hour
+        
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+        
+        return `${displayHours}:${minutes} ${ampm}`;
+    };
+
     // Helper function to render table header cell
     const renderHeaderCell = (column: Column) => {
         if (column.isSystem) {
@@ -257,11 +276,16 @@ export default function TableContainer() {
                 case 'text':
                 case 'number':
                 case 'date':
-                case 'time':
                 case 'paragraph':
                     return (
                         <TableCell key={column._id}>
                             <div className="text-sm">{value || ''}</div>
+                        </TableCell>
+                    );
+                case 'time':
+                    return (
+                        <TableCell key={column._id}>
+                            <div className="text-sm">{formatTimeToAmPm(typeof value === 'string' ? value : '') || ''}</div>
                         </TableCell>
                     );
                 case 'select':
