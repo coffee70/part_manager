@@ -240,7 +240,7 @@ export default function TableContainer() {
                         return (
                             <TableCell key={column._id}>
                                 <div className="flex flex-wrap gap-1">
-                                    {field.options?.map(option => (
+                                    {value.map((option: string) => (
                                         <Badge key={option} label={option} color='gray' className='px-2' />
                                     ))}
                                 </div>
