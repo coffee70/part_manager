@@ -27,7 +27,7 @@ function Calendar({
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0"
+          "h-7 w-7 bg-transparent p-0 hover:bg-gray-100"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
@@ -36,20 +36,20 @@ function Calendar({
         head_cell:
           "opacity-80 rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative cursor-pointer hover:bg-hover [&:has([aria-selected])]:bg-stone-500/70 focus-within:relative focus-within:z-20",
+        cell: "h-9 w-9 text-center text-sm p-0 relative cursor-pointer hover:bg-orange-50 hover:rounded-md [&:has([aria-selected])]:bg-orange-100 focus-within:relative focus-within:z-20",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 aria-selected:opacity-100"
+          "h-9 w-9 p-0 aria-selected:opacity-100 rounded-md"
         ),
-        day_range_end: "day-range-end",
+        day_range_end: "day-range-end rounded-md",
         day_selected:
-          "bg-hover focus:bg-primary focus:text-primary-foreground",
-        day_today: "text-primary font-black",
+          "bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600 rounded-md",
+        day_today: "text-orange-600 font-black border border-orange-200 rounded-md [&[aria-selected]]:bg-orange-600 [&[aria-selected]]:text-white [&[aria-selected]]:border-orange-800 [&[aria-selected]]:rounded-md",
         day_outside:
-          "day-outside opacity-50 aria-selected:bg-accent/10 aria-selected:text-muted-foreground",
-        day_disabled: "text-muted-foreground opacity-50",
+          "day-outside opacity-50 aria-selected:bg-orange-50 aria-selected:text-orange-400 rounded-md",
+        day_disabled: "text-stone-400 opacity-50",
         day_range_middle:
-          "aria-selected:bg-white/30",
+          "aria-selected:bg-orange-100 aria-selected:text-orange-800 rounded-none [&.rdp-day_today]:bg-transparent [&.rdp-day_today]:border-2 [&.rdp-day_today]:border-orange-600 [&.rdp-day_today]:text-orange-600 [&.rdp-day_today]:font-black [&.rdp-day_today]:rounded-md",
         day_hidden: "invisible",
         ...classNames,
       }}
