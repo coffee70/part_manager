@@ -23,7 +23,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     const { id, context, searchParams } = InputSchema.parse(input)
 
-    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField } = getSearchParams(searchParams);
 
     // Get table configuration for links
     let linksColumnConfig: { contextIds: string[], maxLinksPerContext: number } | null = null;
@@ -188,6 +188,85 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     if (linkMatchConditions.length > 0) {
         matchStage.$and = matchStage.$and || [];
         matchStage.$and.push({ $or: linkMatchConditions });
+    }
+
+    // Handle custom field filtering
+    if (customField && Object.keys(customField).length > 0) {
+        const customFieldConditions: any[] = [];
+        
+        for (const [fieldId, filterValue] of Object.entries(customField)) {
+            // Determine field type by trying to parse the filter value
+            let fieldCondition: any = {};
+            
+            try {
+                // Try to parse as JSON (all our filters should be valid JSON)
+                const parsedValue = JSON.parse(filterValue)
+                
+                if (parsedValue && typeof parsedValue === 'object' && !Array.isArray(parsedValue)) {
+                    // Check if it's a date range filter
+                    if ('from' in parsedValue || 'to' in parsedValue) {
+                        const conditions: any[] = [];
+                        if (parsedValue.from) {
+                            // Convert ISO date to YYYY-MM-DD format for string comparison
+                            const fromDate = new Date(parsedValue.from).toISOString().split('T')[0];
+                            conditions.push({ [`values.${fieldId}`]: { $gte: fromDate } });
+                        }
+                        if (parsedValue.to) {
+                            // Convert ISO date to YYYY-MM-DD format for string comparison
+                            const toDate = new Date(parsedValue.to).toISOString().split('T')[0];
+                            conditions.push({ [`values.${fieldId}`]: { $lte: toDate } });
+                        }
+                        if (conditions.length > 0) {
+                            fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
+                        }
+                    }
+                    // Check if it's a time range filter
+                    else if ('start' in parsedValue || 'end' in parsedValue) {
+                        const conditions: any[] = [];
+                        if (parsedValue.start) {
+                            conditions.push({ [`values.${fieldId}`]: { $gte: parsedValue.start } });
+                        }
+                        if (parsedValue.end) {
+                            conditions.push({ [`values.${fieldId}`]: { $lte: parsedValue.end } });
+                        }
+                        if (conditions.length > 0) {
+                            fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
+                        }
+                    }
+                } else if (Array.isArray(parsedValue)) {
+                    // Select field with multiple values (OR logic)
+                    fieldCondition = { [`values.${fieldId}`]: { $in: parsedValue } };
+                } else if (typeof parsedValue === 'string') {
+                    // Text field - use regex for partial matching
+                    fieldCondition = { [`values.${fieldId}`]: { $regex: parsedValue, $options: 'i' } };
+                } else if (typeof parsedValue === 'number') {
+                    // Number field - try both exact and string regex for flexibility
+                    fieldCondition = {
+                        $or: [
+                            { [`values.${fieldId}`]: parsedValue },
+                            { [`values.${fieldId}`]: { $regex: parsedValue.toString(), $options: 'i' } }
+                        ]
+                    };
+                } else {
+                    // Other primitive types (boolean, null) - exact match
+                    fieldCondition = { [`values.${fieldId}`]: parsedValue };
+                }
+            } catch (e) {
+                // Invalid JSON - skip this filter to avoid security issues
+                console.warn(`Invalid JSON in custom field filter for field ${fieldId}:`, filterValue);
+                continue;
+            }
+            
+            if (Object.keys(fieldCondition).length > 0) {
+                customFieldConditions.push(fieldCondition);
+            }
+        }
+        
+        // Add custom field conditions to match stage (AND logic between different fields)
+        if (customFieldConditions.length > 0) {
+            matchStage.$and = matchStage.$and || [];
+            matchStage.$and.push(...customFieldConditions);
+        }
     }
 
     // sort

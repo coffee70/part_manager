@@ -11,6 +11,7 @@ import TableSkeleton from "@/components/list/data_table/table_skeleton";
 import Priority from "@/components/list/priority/priority";
 import {
     Instance,
+    Field,
     IntrinsicFieldColumn,
     ModelSystemColumn,
     RouterSystemColumn,
@@ -41,8 +42,13 @@ import PriorityFilter from "@/components/list/filters/filter_priority/filter_pri
 import StepFilter from "@/components/list/filters/filter_step/filter_step";
 import ColumnActions from "@/components/list/data_table/column_actions";
 import NumberFilter from "@/components/list/filters/filter_number/filter_number";
-import UpdatedAtFilter from "../list/filters/filter_updated_at/filter_updated_at";
-import LinksFilter from "../list/filters/filter_links/filter_links";
+import UpdatedAtFilter from "@/components/list/filters/filter_updated_at/filter_updated_at";
+import LinksFilter from "@/components/list/filters/filter_links/filter_links";
+import TextFieldFilter from "@/components/list/filters/filter_text_field/filter_text_field";
+import NumberFieldFilter from "@/components/list/filters/filter_number_field/filter_number_field";
+import DateFieldFilter from "@/components/list/filters/filter_date_field/filter_date_field";
+import TimeFieldFilter from "@/components/list/filters/filter_time_field/filter_time_field";
+import SelectFieldFilter from "../list/filters/filter_select_field/filter_select_field";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
@@ -124,6 +130,26 @@ export default function TableContainer() {
         return null;
     }
 
+    const getIntrinsicFieldFilterComponent = (field: Field) => {
+        switch (field.type) {
+            case 'text':
+                return <TextFieldFilter fieldId={field._id} />;
+            case 'number':
+                return <NumberFieldFilter fieldId={field._id} />;
+            case 'date':
+                return <DateFieldFilter fieldId={field._id} />;
+            case 'time':
+                return <TimeFieldFilter fieldId={field._id} />;
+            case 'select':
+                return <SelectFieldFilter
+                    fieldId={field._id}
+                    options={field.options || []}
+                    multiple={field.multiple}
+                    creative={field.creative}
+                />;
+        }
+    }
+
     // Helper function to render table header cell
     const renderHeaderCell = (column: Column) => {
         if (column.isSystem) {
@@ -172,6 +198,9 @@ export default function TableContainer() {
                             </Tooltip>
                         )}
                         <span className="text-xs font-medium">{field.name}</span>
+                        <ColumnActions>
+                            {getIntrinsicFieldFilterComponent(field)}
+                        </ColumnActions>
                     </div>
                 </TableHead>
             );

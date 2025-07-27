@@ -10,6 +10,8 @@ const UpdatedAt = z.object({
 
 const LinkFilter = z.record(z.string(), z.string());
 
+const CustomFieldFilter = z.record(z.string(), z.string());
+
 export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
 export const getSearchParams = (searchParams?: SearchParams) => {
@@ -88,7 +90,18 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("link must be a valid link filter object");
     }
 
-    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link };
+    // pull out custom-field
+    const customFieldJson = params['custom-field'];
+    if (Array.isArray(customFieldJson)) {
+        throw new Error("custom-field must be a json string");
+    }
+    const customFieldParsed = customFieldJson ? JSON.parse(customFieldJson) : undefined;
+    const { data: customField, error: customFieldError } = CustomFieldFilter.optional().safeParse(customFieldParsed);
+    if (customFieldError) {
+        throw new Error("custom-field must be a valid custom field filter object");
+    }
+
+    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField };
 }
 
 export const convertSearchParams = (
