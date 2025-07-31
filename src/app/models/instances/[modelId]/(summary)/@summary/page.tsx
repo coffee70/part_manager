@@ -31,8 +31,17 @@ export default async function Page({
 }) {
     const id = params.modelId
     const instanceId = searchParams.id
+    const instances = await getInstances({ id, context: "models", searchParams })
+
     if (!instanceId || Array.isArray(instanceId)) {
-        const instances = await getInstances({ id, context: "models", searchParams })
+        if (instances.length === 0) return <SummaryError />
+        redirect(router().models().instances().instance(id, instances[0]._id));
+    }
+
+    // check the instance id is in the instances array
+    // this ensures a user cannot view an instance that is not
+    // on the instance table 
+    if (!instances.find((instance) => instance._id === instanceId)) {
         if (instances.length === 0) return <SummaryError />
         redirect(router().models().instances().instance(id, instances[0]._id));
     }

@@ -101,7 +101,10 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("custom-field must be a valid custom field filter object");
     }
 
-    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField };
+    // pull out showCompleted
+    const showCompleted = params.showCompleted === 'true';
+
+    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, showCompleted };
 }
 
 export const convertSearchParams = (

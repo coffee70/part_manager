@@ -8,6 +8,7 @@ import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
 
 import { ObjectId } from "mongodb";
+import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     id: z.string(),
@@ -23,7 +24,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     const { id, context, searchParams } = InputSchema.parse(input)
 
-    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, showCompleted } = getSearchParams(searchParams);
 
     // Get table configuration for links
     let linksColumnConfig: { contextIds: string[], maxLinksPerContext: number } | null = null;
@@ -141,6 +142,12 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     // Build main match stage
     const matchStage: any = {};
+    
+    // Filter out completed instances by default unless showCompleted is true
+    if (!showCompleted) {
+        matchStage['route.state'] = { $ne: RouteState.Completed };
+    }
+    
     if (updatedAt) {
         matchStage.updatedAt = {
             $gte: updatedAt.from,
