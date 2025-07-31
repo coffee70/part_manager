@@ -1,13 +1,18 @@
 import { Skeleton } from "@/components/ui/skeleton"
+import DataLayout from "@/layouts/data_layout"
+import { Toolbar, ToolbarRow } from "./toolbar"
+
 export default function TableSkeleton() {
     return (
-        <div className="flex flex-col space-y-4">
-            <div className="flex space-x-2">
-                <Skeleton className="grow h-10" />
-                <Skeleton className="h-10 w-10 rounded-md" />
-                <Skeleton className="h-10 w-10 rounded-md" />
-            </div>
+        <DataLayout>
+            <Toolbar>
+                <ToolbarRow>
+                    <Skeleton className="h-10 w-24 rounded-md" />
+                    <Skeleton className="h-10 w-10 rounded-md" />
+                    <Skeleton className="grow h-10 rounded-md" />
+                </ToolbarRow>
+            </Toolbar>
             <Skeleton className="h-[500px] w-full rounded-md" />
-        </div>
+        </DataLayout>
     )
 }

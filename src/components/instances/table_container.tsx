@@ -31,7 +31,7 @@ import { getTableConfiguration } from "@/server/configuration/get_table_configur
 import { camelCaseToLabel } from "@/lib/language";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import Links from "@/components/list/data_table/links";
 import { Badge } from '@/components/ui/badge';
@@ -59,6 +59,7 @@ export default function TableContainer() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
+    const [isClient, setIsClient] = useState(false);
 
     const { context, id, instanceId } = useInstanceURL();
 
@@ -94,6 +95,10 @@ export default function TableContainer() {
         queryKey: instanceKeys.all(context, id),
         queryFn: () => getInstances({ id, context, searchParams }),
     })
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     // Helper function to get system column description
     const getSystemColumnDescription = (columnType: string): string => {
@@ -339,7 +344,7 @@ export default function TableContainer() {
                     <InstanceForm>
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
-                    {user?.role === 'admin' && (
+                    {isClient && user?.role === 'admin' && (
                         <TableConfigurationModal>
                             <TableConfiguration />
                         </TableConfigurationModal>
