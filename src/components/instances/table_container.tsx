@@ -346,9 +346,11 @@ export default function TableContainer() {
                     )}
                     <SearchInput />
                 </ToolbarRow>
-                <ToolbarRow>
-                    <ShowCompleted />
-                </ToolbarRow>
+                {context === 'models' && (
+                    <ToolbarRow>
+                        <ShowCompleted />
+                    </ToolbarRow>
+                )}
             </Toolbar>
             <Table>
                 <TableHeader>
