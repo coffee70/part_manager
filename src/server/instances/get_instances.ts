@@ -203,8 +203,24 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
                 const parsedValue = JSON.parse(filterValue)
                 
                 if (parsedValue && typeof parsedValue === 'object' && !Array.isArray(parsedValue)) {
+                    // Check if it's a KV field filter (object with key-value pairs, not date/time ranges)
+                    if (!('from' in parsedValue) && !('to' in parsedValue) && !('start' in parsedValue) && !('end' in parsedValue)) {
+                        // This is a KV field filter - each key-value pair should match
+                        const kvConditions: any[] = [];
+                        
+                        for (const [key, value] of Object.entries(parsedValue)) {
+                            if (value && typeof value === 'string' && value.trim() !== '') {
+                                // For KV fields, we need to match the exact key-value pair in kv_values
+                                kvConditions.push({ [`kv_values.${fieldId}.${key}`]: { $regex: value, $options: 'i' } });
+                            }
+                        }
+                        
+                        if (kvConditions.length > 0) {
+                            fieldCondition = kvConditions.length === 1 ? kvConditions[0] : { $and: kvConditions };
+                        }
+                    }
                     // Check if it's a date range filter
-                    if ('from' in parsedValue || 'to' in parsedValue) {
+                    else if ('from' in parsedValue || 'to' in parsedValue) {
                         const conditions: any[] = [];
                         if (parsedValue.from) {
                             // Convert ISO date to YYYY-MM-DD format for string comparison

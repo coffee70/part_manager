@@ -49,6 +49,7 @@ import NumberFieldFilter from "@/components/list/filters/filter_number_field/fil
 import DateFieldFilter from "@/components/list/filters/filter_date_field/filter_date_field";
 import TimeFieldFilter from "@/components/list/filters/filter_time_field/filter_time_field";
 import SelectFieldFilter from "../list/filters/filter_select_field/filter_select_field";
+import KVFieldFilter from "@/components/list/filters/filter_kv_field/filter_kv_field";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
@@ -146,6 +147,11 @@ export default function TableContainer() {
                     options={field.options || []}
                     multiple={field.multiple}
                     creative={field.creative}
+                />;
+            case 'key_value':
+                return <KVFieldFilter
+                    fieldId={field._id}
+                    keys={field.keys || []}
                 />;
         }
     }
