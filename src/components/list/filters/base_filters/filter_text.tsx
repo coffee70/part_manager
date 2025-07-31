@@ -137,7 +137,7 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
             <Input
                 ref={inputRef}
                 type={inputType}
-                className="bg-transparent border-none shadow-none text-stone-700 font-medium placeholder:text-stone-500 focus-visible:ring-0 p-0 h-auto"
+                className="bg-transparent border-none shadow-none text-stone-700 font-medium placeholder:text-stone-500 placeholder:text-sm focus-visible:ring-0 p-0 h-auto"
                 onChange={e => onImmediateChange(e.target.value)}
                 value={value}
                 placeholder={placeholder}
