@@ -2,16 +2,26 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import KVLine from "./kv_line";
-import { KVPairsListProps } from "./types";
+import { KVPairsListProps, DEFAULT_KEY } from "./types";
 
 export default function KVPairsList({
     state,
     setState,
     canAddLine,
-    handleAddLine,
     availableKeys,
-    setValueRef
+    setValueRef,
+    addButtonText = "Add pair"
 }: KVPairsListProps) {
+    
+    const handleAddLine = () => {
+        const newState = [...state, {
+            id: crypto.randomUUID(),
+            key: DEFAULT_KEY,
+            value: ''
+        }];
+        setState(newState);
+    };
+    
     return (
         <>
             <div className="flex flex-col gap-2">
@@ -34,7 +44,7 @@ export default function KVPairsList({
                 onClick={handleAddLine}
             >
                 <Plus className="h-3.5 w-3.5 group-hover:scale-110 transition-transform duration-200" />
-                <span className="text-xs font-medium">Add pair</span>
+                <span className="text-xs font-medium">{addButtonText}</span>
             </button>}
         </>
     );

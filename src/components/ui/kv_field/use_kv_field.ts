@@ -1,13 +1,16 @@
 import React from "react";
 import { KVValue } from "@/types/collections";
 import { 
-    KVFieldState, 
+    KVFieldState,
+    Key
+} from "./types";
+import {
     kvFieldStateToValue,
     kvValueToFieldState,
     getAvailableKeys,
     compareKVValues,
     addEntryToKVFieldState
-} from "./types";
+} from "./helpers";
 
 type UseKVFieldProps = {
     value: KVValue;
@@ -16,38 +19,40 @@ type UseKVFieldProps = {
         multiple?: boolean;
     };
     setValue: (value: KVValue) => void;
+    availableKeys: Key[];
 }
 
 type UseKVFieldReturn = {
     state: KVFieldState;
     setState: (state: KVFieldState) => void;
-    availableKeys: string[];
+    availableKeys: Key[];
     handleAddLine: () => void;
     canAddLine: () => boolean;
 }
 
-export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFieldReturn {
+export function useKVField({ value, field, setValue, availableKeys: initialAvailableKeys }: UseKVFieldProps): UseKVFieldReturn {
     // keep track of the state of the field
     const [state, setState] = React.useState<KVFieldState>(
-        kvValueToFieldState(value)
+        kvValueToFieldState(value, initialAvailableKeys)
     );
 
     // update the value when the state changes
     React.useEffect(() => {
-        const newValue = kvFieldStateToValue(state, field.keys || []);
+        const keys = initialAvailableKeys.map(k => k.value);
+        const newValue = kvFieldStateToValue(state, keys);
         if (!compareKVValues(value, newValue)) {
             setValue(newValue);
         }
-    }, [state, setValue, field.keys, value]);
+    }, [state, setValue, initialAvailableKeys, value]);
 
     // keep track of available keys to select from
-    const [availableKeys, setAvailableKeys] = React.useState<string[]>(
-        getAvailableKeys(state, field.keys || [])
+    const [availableKeys, setAvailableKeys] = React.useState<Key[]>(
+        getAvailableKeys(state, initialAvailableKeys)
     );
 
     React.useEffect(() => {
-        setAvailableKeys(getAvailableKeys(state, field.keys || []));
-    }, [state, field.keys]);
+        setAvailableKeys(getAvailableKeys(state, initialAvailableKeys));
+    }, [state, initialAvailableKeys]);
 
     // always ensure the state has a default key-value pair if
     // the state is empty
@@ -66,11 +71,11 @@ export function useKVField({ value, field, setValue }: UseKVFieldProps): UseKVFi
             return false;
         }
 
-        if (field.keys === undefined || field.keys.length === 0) {
+        if (initialAvailableKeys.length === 0) {
             return false;
         }
 
-        if (state.length >= field.keys.length) {
+        if (state.length >= initialAvailableKeys.length) {
             return false;
         }
 

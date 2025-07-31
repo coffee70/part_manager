@@ -6,7 +6,7 @@ import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { instanceKeys, contextKeys } from "@/lib/query_keys";
 import { getContexts } from "@/server/contexts/get_contexts";
 import { KVValue } from "@/types/collections";
-import LinksSystemKVField from "./links_system_kvfield";
+import LinksKVField from "./links_kv_field";
 
 export default function LinksFilterBase() {
     const searchParams = useSearchParams();
@@ -45,8 +45,9 @@ export default function LinksFilterBase() {
     const currentValue: KVValue = linkParam ? JSON.parse(linkParam) : {};
 
     // Handle value changes
-    const handleValueChange = (value: KVValue) => {
+    const handleValueChange = React.useCallback((value: KVValue) => {
         const params = new URLSearchParams(searchParams);
+        const originalParamsString = params.toString();
         
         // Check if value has any non-empty entries
         const hasValues = Object.values(value).some(v => v && v.trim() !== '');
@@ -57,13 +58,17 @@ export default function LinksFilterBase() {
             params.delete('link');
         }
         
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
-    };
+        // Only update URL and invalidate queries if parameters actually changed
+        const newParamsString = params.toString();
+        if (originalParamsString !== newParamsString) {
+            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
+            replace(`${pathname}?${newParamsString}`);
+        }
+    }, [searchParams, queryClient, context, id, pathname, replace]);
 
     return (
         <div className="p-3 min-w-80">
-            <LinksSystemKVField
+            <LinksKVField
                 field={{
                     keys: contextKeys_array,
                     multiple: true
