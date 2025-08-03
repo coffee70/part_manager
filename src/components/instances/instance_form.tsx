@@ -83,6 +83,14 @@ export default function InstanceForm({ instance, children }: Props) {
                 if (data?.redirect) router.push(data.redirect)
                 queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
                 setOpen(false)
+                // reset the form
+                setAttributeState({
+                    number: '',
+                    priority: 'Medium',
+                    notes: '',
+                })
+                setFieldState({})
+                setKvFieldState({})
             }
         }
     })

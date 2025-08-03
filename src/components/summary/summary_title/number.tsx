@@ -99,6 +99,7 @@ export default function Number({ initialValue }: Props) {
                     className='text-3xl font-bold'
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
+                    data-testid="summary-number-input"
                 />
                 {data?.success === false && <Tooltip>
                     <TooltipTrigger>

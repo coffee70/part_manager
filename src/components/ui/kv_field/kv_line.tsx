@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select-kv";
 import { Trash2 } from "lucide-react";
 import { DEFAULT_KEY, KVLineProps } from "./types";
+import { addEntryToKVFieldState } from "./helpers";
 
 export default function KVLine({
     id,
@@ -33,7 +34,13 @@ export default function KVLine({
     const handleDeleteLine = () => {
         const newState = [...state];
         newState.splice(index, 1);
-        onChange(newState);
+        
+        // Handle deletion of last line - add default empty entry if this was the last one
+        if (newState.length === 0) {
+            onChange(addEntryToKVFieldState(newState));
+        } else {
+            onChange(newState);
+        }
     }
 
     const keys = selectedKey.value === DEFAULT_KEY.value 

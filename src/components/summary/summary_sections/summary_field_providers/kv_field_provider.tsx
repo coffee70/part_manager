@@ -16,8 +16,9 @@ type Props = {
 export default function KVFieldProvider({ field }: Props) {
     const { context, id, instanceId } = useInstanceURL();
 
+    console.log('field', field);
+
     const [isEditing, setIsEditing] = React.useState(false);
-    const [value, setValue] = React.useState(field.value ?? {});
 
     const queryClient = useQueryClient();
 
@@ -30,13 +31,12 @@ export default function KVFieldProvider({ field }: Props) {
         }
     });
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = (newValue: KVValue) => {
         mutate({
             id,
             instanceId,
             fieldId: field._id,
-            kv_value: value
+            kv_value: newValue
         });
     }
 
@@ -44,11 +44,9 @@ export default function KVFieldProvider({ field }: Props) {
         <div>
             <KVField
                 field={field}
-                value={value}
                 isEditing={isEditing}
                 setIsEditing={setIsEditing}
-                setValue={setValue}
-                handleSubmit={handleSubmit}
+                onSubmit={handleSubmit}
                 isError={isError}
                 isPending={isPending}
                 error={error}

@@ -10,7 +10,9 @@ import { useKVField } from "@/components/ui/kv_field/use_kv_field";
 
 import {
     kvValueToFieldState,
-    compareKVFieldStates
+    kvFieldStateToValue,
+    compareKVFieldStates,
+    compareKVValues
 } from "@/components/ui/kv_field/helpers";
 import { Field, KVValue } from "@/types/collections";
 
@@ -18,11 +20,9 @@ type Props = {
     field: Field & {
         value?: KVValue;
     };
-    value: KVValue;
     isEditing: boolean;
     setIsEditing: (isEditing: boolean) => void;
-    setValue: (value: KVValue) => void;
-    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: (value: KVValue) => void;
     isError: boolean;
     isPending: boolean;
     error: Error | null;
@@ -31,18 +31,16 @@ type Props = {
 export default function KVField(props: Props) {
     const {
         field,
-        value,
         isEditing,
         setIsEditing,
-        setValue,
-        handleSubmit,
+        onSubmit,
         isError,
         isPending,
         error
     } = props;
 
-    // Create available keys with component and value structure (both are the same for summary)
-    const availableKeys = React.useMemo(() => {
+    // Create keys with component and value structure (both are the same for summary)
+    const keys = React.useMemo(() => {
         if (!field.keys) return [];
 
         return field.keys.map((key: string) => ({
@@ -51,33 +49,57 @@ export default function KVField(props: Props) {
         }));
     }, [field.keys]);
 
+    // Base value from field.value (server source of truth)
+    const baseValue = React.useMemo(() => field.value || {}, [field.value]);
+    
+    // Convert to field state for editing
+    const baseState = React.useMemo(() => {
+        const state = kvValueToFieldState(baseValue, keys);
+        return state.length === 0 ? kvValueToFieldState({ '': '' }, keys) : state;
+    }, [baseValue, keys]);
+
+    // Local editing state - resets when baseState changes and not editing
+    const [editingState, setEditingState] = React.useState(() => baseState);
+
+    // Reset editing state when base changes (but only when not actively editing)
+    const resetKey = React.useMemo(() => 
+        JSON.stringify(baseValue), [baseValue]
+    );
+    
+    const [lastResetKey, setLastResetKey] = React.useState(resetKey);
+    
+    if (resetKey !== lastResetKey && !isEditing) {
+        setEditingState(baseState);
+        setLastResetKey(resetKey);
+    }
+
+    // Use base state when not editing, editing state when editing
+    const currentState = isEditing ? editingState : baseState;
+
+    // Handle state changes during editing
+    const handleStateChange = React.useCallback((newState: typeof currentState) => {
+        setEditingState(newState);
+        if (!isEditing) {
+            setIsEditing(true);
+        }
+    }, [isEditing, setIsEditing]);
+
+    // Check if current editing state is different from base
+    const isDirty = !compareKVFieldStates(editingState, baseState);
+
+    // Handle form submission
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const keyValues = keys.map(k => k.value);
+        const newValue = kvFieldStateToValue(editingState, keyValues);
+        onSubmit(newValue);
+    }
+
     // Use the custom hook for core KV field logic
     const {
-        state,
-        setState,
-        availableKeys: filteredAvailableKeys,
+        availableKeys,
         canAddLine
-    } = useKVField({ value, field, setValue, availableKeys });
-
-    // keep track of initial state for comparison (editing/dirty state management)
-    const cleanState = React.useMemo(() => kvValueToFieldState(field.value || {}, availableKeys), [field.value, availableKeys]);
-    const [isDirty, setIsDirty] = React.useState(false);
-
-    // compare states and update editing status
-    React.useEffect(() => {
-        if (!compareKVFieldStates(state, cleanState)) {
-            setIsEditing(true);
-            setIsDirty(true);
-        } else {
-            setIsEditing(false);
-            setIsDirty(false);
-        }
-    }, [state, cleanState, setIsEditing, setIsDirty]);
-
-    // update the state when the field value changes
-    React.useEffect(() => {
-        setState(kvValueToFieldState(field.value || {}, availableKeys));
-    }, [field.value, setState, availableKeys]);
+    } = useKVField({ state: currentState, field, keys });
 
     // Ref management for focus/blur behavior
     const valueRefs = React.useRef<HTMLInputElement[]>([]);
@@ -113,7 +135,7 @@ export default function KVField(props: Props) {
                 }
             });
         };
-    }, [valueRefs, setIsEditing, isDirty]);
+    }, [setIsEditing, isDirty]);
 
     if (field.keys === undefined || field.keys.length === 0) {
         console.error('No keys for field, cannot render kv field', field.name);
@@ -128,10 +150,10 @@ export default function KVField(props: Props) {
         >
             <div className="flex flex-col gap-2 w-full p-0.5">
                 <KVPairsList
-                    state={state}
-                    setState={setState}
+                    state={currentState}
+                    setState={handleStateChange}
                     canAddLine={canAddLine}
-                    availableKeys={filteredAvailableKeys}
+                    availableKeys={availableKeys}
                     setValueRef={setValueRef}
                 />
             </div>
