@@ -5,9 +5,10 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
     fieldId: string;
+    fieldName: string;
 }
 
-export default function TimeFieldFilter({ fieldId }: Props) {
+export default function TimeFieldFilter({ fieldId, fieldName }: Props) {
     const searchParams = useSearchParams();
     
     // Check if this specific field has an active filter
@@ -26,7 +27,12 @@ export default function TimeFieldFilter({ fieldId }: Props) {
     const isActive = getIsActive();
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid={`time-field-filter-trigger-${fieldName}`} 
+            />
+        }>
             <TimeFieldFilterBase fieldId={fieldId} />
         </Filter>
     )

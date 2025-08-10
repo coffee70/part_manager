@@ -45,16 +45,19 @@ type Props = {
     setOpen: (open: boolean) => void;
 }
 
+const initialState = (model?: Model) => ({
+    _id: model?._id,
+    name: model?.name || '',
+    color: model?.color || colors[0],
+    attachable: model?.attachable || false,
+    linkable: model?.linkable || false,
+    commentable: model?.commentable || false,
+    priority: model?.priority || false,
+})
+
 export default function ModelForm({ model, open, setOpen }: Props) {
-    const [formState, setFormState] = React.useState({
-        _id: model?._id,
-        name: model?.name || '',
-        color: model?.color || colors[0],
-        attachable: model?.attachable || false,
-        linkable: model?.linkable || false,
-        commentable: model?.commentable || false,
-        priority: model?.priority || false,
-    });
+
+    const [formState, setFormState] = React.useState(initialState(model));
 
     const queryClient = useQueryClient();
 
@@ -63,6 +66,9 @@ export default function ModelForm({ model, open, setOpen }: Props) {
         onSuccess: ({ success }) => {
             if (success) {
                 queryClient.invalidateQueries({ queryKey: modelKeys.all() });
+                if (!model) {
+                    setFormState(initialState());
+                }
                 setOpen(false);
             }
         }

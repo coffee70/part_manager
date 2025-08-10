@@ -36,7 +36,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Number$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Number$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Number Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -47,7 +47,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Date$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Date$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Date Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -58,7 +58,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Time$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Time$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Time Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -69,7 +69,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Paragraph$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Paragraph$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Paragraph Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -80,7 +80,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Single Restricted Select Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -98,7 +98,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Single Creative Select Field');
     await page.getByPlaceholder('Enter the field name').press('Tab');
@@ -117,7 +117,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Multiple Restricted Select Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -136,7 +136,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+    await page.locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Multiple Creative Select Field');
     await page.getByPlaceholder('Enter the field description').click();

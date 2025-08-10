@@ -9,7 +9,12 @@ export default function NumberFilter() {
     const isActive = !!numberFilter;
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid='number-filter-trigger' 
+            />
+        }>
             <NumberFilterBase />
         </Filter>
     )

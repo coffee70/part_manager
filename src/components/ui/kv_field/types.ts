@@ -36,7 +36,9 @@ export type KVPairsListProps = {
     setState: (state: KVFieldState) => void;
     canAddLine: () => boolean;
     availableKeys: Key[];
-    setValueRef?: (index: number, ref: HTMLInputElement | null) => void;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onMouseDown?: (e: React.MouseEvent<HTMLInputElement>) => void;
     addButtonText?: string;
 }
 
@@ -46,5 +48,7 @@ export type KVLineProps = {
     state: KVFieldState;
     onChange: (value: KVFieldState) => void;
     availableKeys: Key[];
-    inputRef: (e: HTMLInputElement | null) => void;
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    onMouseDown?: (e: React.MouseEvent<HTMLInputElement>) => void;
 } 

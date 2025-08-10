@@ -68,6 +68,7 @@ export function AvailableColumnsList({
                                 variant="outline"
                                 onClick={() => onAddSystemColumn(info.type)}
                                 className="w-full h-auto min-h-[60px] p-3 justify-start items-start hover:bg-blue-50 hover:border-blue-300 text-stone-700 border-stone-200"
+                                data-testid='table-configuration-available-system-column-button'
                             >
                                 <Plus className="h-4 w-4 mr-3 mt-0.5 flex-shrink-0 text-stone-600" />
                                 <div className="text-left flex-1 min-w-0">
@@ -95,6 +96,7 @@ export function AvailableColumnsList({
                                 variant="outline"
                                 onClick={() => onAddFieldColumn(field._id)}
                                 className="w-full h-auto min-h-[60px] p-3 justify-start items-start hover:bg-green-50 hover:border-green-300 text-stone-700 border-stone-200"
+                                data-testid='table-configuration-available-field-column-button'
                             >
                                 <Plus className="h-4 w-4 mr-3 mt-0.5 flex-shrink-0 text-stone-600" />
                                 <div className="text-left flex-1 min-w-0">

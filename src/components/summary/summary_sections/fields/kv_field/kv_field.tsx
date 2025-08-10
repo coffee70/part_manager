@@ -15,6 +15,7 @@ import {
     compareKVValues
 } from "@/components/ui/kv_field/helpers";
 import { Field, KVValue } from "@/types/collections";
+import { KVFieldState } from "@/components/ui/kv_field/types";
 
 type Props = {
     field: Field & {
@@ -26,6 +27,8 @@ type Props = {
     isError: boolean;
     isPending: boolean;
     error: Error | null;
+    isDirty: boolean;
+    setIsDirty: (isDirty: boolean) => void;
 }
 
 export default function KVField(props: Props) {
@@ -36,7 +39,9 @@ export default function KVField(props: Props) {
         onSubmit,
         isError,
         isPending,
-        error
+        error,
+        isDirty,
+        setIsDirty
     } = props;
 
     // Create keys with component and value structure (both are the same for summary)
@@ -58,34 +63,29 @@ export default function KVField(props: Props) {
         return state.length === 0 ? kvValueToFieldState({ '': '' }, keys) : state;
     }, [baseValue, keys]);
 
-    // Local editing state - resets when baseState changes and not editing
+    // Local editing state
     const [editingState, setEditingState] = React.useState(() => baseState);
 
-    // Reset editing state when base changes (but only when not actively editing)
-    const resetKey = React.useMemo(() => 
-        JSON.stringify(baseValue), [baseValue]
-    );
-    
-    const [lastResetKey, setLastResetKey] = React.useState(resetKey);
-    
-    if (resetKey !== lastResetKey && !isEditing) {
-        setEditingState(baseState);
-        setLastResetKey(resetKey);
-    }
+    // Reset editing state when base state changes
+    React.useEffect(() => {
+        setEditingState(() => baseState);
+    }, [baseState]);
 
-    // Use base state when not editing, editing state when editing
-    const currentState = isEditing ? editingState : baseState;
+    const [isFocused, setIsFocused] = React.useState(false);
 
     // Handle state changes during editing
-    const handleStateChange = React.useCallback((newState: typeof currentState) => {
+    const handleStateChange = React.useCallback((newState: KVFieldState) => {
         setEditingState(newState);
-        if (!isEditing) {
+        if (!compareKVFieldStates(newState, baseState)) {
+            setIsDirty(true);
             setIsEditing(true);
+        } else {
+            setIsDirty(false);
+            if (!isFocused) {
+                setIsEditing(false);
+            }
         }
-    }, [isEditing, setIsEditing]);
-
-    // Check if current editing state is different from base
-    const isDirty = !compareKVFieldStates(editingState, baseState);
+    }, [baseState, setIsEditing, isFocused, setIsDirty]);
 
     // Handle form submission
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -99,43 +99,21 @@ export default function KVField(props: Props) {
     const {
         availableKeys,
         canAddLine
-    } = useKVField({ state: currentState, field, keys });
+    } = useKVField({ state: editingState, field, keys });
 
-    // Ref management for focus/blur behavior
-    const valueRefs = React.useRef<HTMLInputElement[]>([]);
-
-    const setValueRef = (index: number, ref: HTMLInputElement | null) => {
-        if (ref) {
-            valueRefs.current[index] = ref;
-        }
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        setIsFocused(true);
+        setIsEditing(true);
     }
 
-    // Watch for focus on any value input to set editing state
-    React.useEffect(() => {
-        const handleFocus = () => setIsEditing(true);
-        const handleBlur = () => {
-            if (!isDirty) {
-                setIsEditing(false);
-            }
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        if (!isDirty) {
+            setIsEditing(false);
         }
-        const inputs = valueRefs.current;
+        setIsFocused(false);
+    }
 
-        inputs.forEach(ref => {
-            if (ref) {
-                ref.addEventListener('focus', handleFocus);
-                ref.addEventListener('blur', handleBlur);
-            }
-        });
-
-        return () => {
-            inputs.forEach(ref => {
-                if (ref) {
-                    ref.removeEventListener('focus', handleFocus);
-                    ref.removeEventListener('blur', handleBlur);
-                }
-            });
-        };
-    }, [setIsEditing, isDirty]);
+    // Intentionally do not toggle editing on mouse down to avoid pre-focus rerenders that remount inputs
 
     if (field.keys === undefined || field.keys.length === 0) {
         console.error('No keys for field, cannot render kv field', field.name);
@@ -150,11 +128,12 @@ export default function KVField(props: Props) {
         >
             <div className="flex flex-col gap-2 w-full p-0.5">
                 <KVPairsList
-                    state={currentState}
+                    state={editingState}
                     setState={handleStateChange}
                     canAddLine={canAddLine}
                     availableKeys={availableKeys}
-                    setValueRef={setValueRef}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                 />
             </div>
             <div className="flex flex-col">

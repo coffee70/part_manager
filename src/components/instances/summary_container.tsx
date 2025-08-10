@@ -28,7 +28,7 @@ import SummaryRouteFields from '@/components/summary/summary_route_fields/summar
 
 export default function SummaryContainer() {
     const { context, id, instanceId } = useInstanceURL();
-
+    
     const { data: instance, isError, isPending } = useQuery({
         queryKey: instanceKeys.id(context, id, instanceId),
         queryFn: () => getInstance({ id, instanceId }),
@@ -54,11 +54,17 @@ export default function SummaryContainer() {
         queryFn: () => hasPriority({ context, id }),
     })
 
-    if (isPending) return <SummarySkeleton />
+    if (isPending) {
+        return <SummarySkeleton />
+    }
 
-    if (isError) return <SummaryError />
+    if (isError) {
+        return <SummaryError />
+    }
 
-    if (!instance) return <SummaryError />
+    if (!instance) {
+        return <SummaryError />
+    }
 
     return (
         <MoreProvider>

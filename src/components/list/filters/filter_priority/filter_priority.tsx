@@ -9,7 +9,12 @@ export default function PriorityFilter() {
     const isActive = !!priorityFilter;
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid='priority-filter-trigger' 
+            />
+        }>
             <PriorityFilterBase />
         </Filter>
     )

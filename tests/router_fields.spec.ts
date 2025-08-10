@@ -29,35 +29,35 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Enter the field description').fill('Text field description');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Number$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Number$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Number Field');
   await page.getByPlaceholder('Enter the field description').click();
   await page.getByPlaceholder('Enter the field description').fill('Number field description');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Date$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Date$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Date Field');
   await page.getByPlaceholder('Enter the field description').click();
   await page.getByPlaceholder('Enter the field description').fill('Date field description');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Time$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Time$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Time Field');
   await page.getByPlaceholder('Enter the field description').click();
   await page.getByPlaceholder('Enter the field description').fill('Time field description');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Paragraph$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Paragraph$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Paragraph Field');
   await page.getByPlaceholder('Enter the field description').click();
   await page.getByPlaceholder('Enter the field description').fill('Paragraph field description');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Select$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Single Restricted Select Field');
   await page.getByPlaceholder('Enter the field description').click();
@@ -71,10 +71,9 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type an option and press').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Select$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Single Creative Select Field');
-  await page.getByPlaceholder('Enter the field name').press('Tab');
   await page.getByPlaceholder('Enter the field description').fill('Single creative select field description');
   await page.locator('div').filter({ hasText: /^Creative$/ }).click();
   await page.getByPlaceholder('Type an option and press').click();
@@ -86,7 +85,7 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type an option and press').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Select$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Multiple Restricted Select Field');
   await page.getByPlaceholder('Enter the field description').click();
@@ -101,7 +100,7 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type an option and press').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
   await page.getByRole('button', { name: 'New Field' }).click();
-  await page.locator('div').filter({ hasText: /^Select$/ }).getByRole('img').click();
+  await page.locator('div').filter({ hasText: /^Select$/ }).click();
   await page.getByPlaceholder('Enter the field name').click();
   await page.getByPlaceholder('Enter the field name').fill('Multiple Creative Select Field');
   await page.getByPlaceholder('Enter the field description').click();
@@ -148,7 +147,7 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.locator('#section-name')).toHaveValue('Basic');
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
+  await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - table:
       - rowgroup:
         - row "Type Name Description Default Values Options Keys":
@@ -161,126 +160,104 @@ test("test fields", async ({ page }) => {
           - cell
       - rowgroup:
         - row "Text Field Text field description":
-          - cell:
-            - img
+          - cell
           - cell "Text Field"
           - cell "Text field description"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Number Field Number field description":
-          - cell:
-            - img
+          - cell
           - cell "Number Field"
           - cell "Number field description"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Date Field Date field description":
-          - cell:
-            - img
+          - cell
           - cell "Date Field"
           - cell "Date field description"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Time Field Time field description":
-          - cell:
-            - img
+          - cell
           - cell "Time Field"
           - cell "Time field description"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Paragraph Field Paragraph field description":
-          - cell:
-            - img
+          - cell
           - cell "Paragraph Field"
           - cell "Paragraph field description"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Single Restricted Select Field Single restricted select field description Option 1 Option 2 Option 3":
-          - cell:
-            - img
+          - cell
           - cell "Single Restricted Select Field"
           - cell "Single restricted select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Single Creative Select Field Single creative select field description Option 1 Option 2 Option 3":
-          - cell:
-            - img
+          - cell
           - cell "Single Creative Select Field"
           - cell "Single creative select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Multiple Restricted Select Field Multiple restricted select field description Option 1 Option 2 Option 3":
-          - cell:
-            - img
+          - cell
           - cell "Multiple Restricted Select Field"
           - cell "Multiple restricted select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Multiple Creative Select Field Multiple creative select field description Option 1 Option 2 Option 3":
-          - cell:
-            - img
+          - cell
           - cell "Multiple Creative Select Field"
           - cell "Multiple creative select field description"
           - cell
           - cell "Option 1 Option 2 Option 3"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Test Single KV Test single kv SIN_001 SIN_002 SIN_003":
-          - cell:
-            - img
+          - cell
           - cell "Test Single KV"
           - cell "Test single kv"
           - cell
           - cell
           - cell "SIN_001 SIN_002 SIN_003"
           - cell:
-            - button:
-              - img
+            - button
         - row "Multiple KV Field Multiple kv field MUL_001 MUL_002 MUL_003 MUL_004":
-          - cell:
-            - img
+          - cell
           - cell "Multiple KV Field"
           - cell "Multiple kv field"
           - cell
           - cell
           - cell "MUL_001 MUL_002 MUL_003 MUL_004"
           - cell:
-            - button:
-              - img
+            - button
     `);
 
   // create a new section
@@ -296,29 +273,27 @@ test("test fields", async ({ page }) => {
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByRole('textbox').nth(1)).toHaveValue('Another');
   await expect(page.getByRole('main')).toMatchAriaSnapshot(`
-      - table:
-        - rowgroup:
-          - row "Type Name Description Default Values Options Keys":
-            - cell "Type"
-            - cell "Name"
-            - cell "Description"
-            - cell "Default Values"
-            - cell "Options"
-            - cell "Keys"
-            - cell
-        - rowgroup:
-          - row "Some Text Field Some text field description":
-            - cell:
-              - img
-            - cell "Some Text Field"
-            - cell "Some text field description"
-            - cell
-            - cell
-            - cell
-            - cell:
-              - button:
-                - img
-      `);
+    - table:
+      - rowgroup:
+        - row "Type Name Description Default Values Options Keys":
+          - cell "Type"
+          - cell "Name"
+          - cell "Description"
+          - cell "Default Values"
+          - cell "Options"
+          - cell "Keys"
+          - cell
+      - rowgroup:
+        - row "Some Text Field Some text field description":
+          - cell
+          - cell "Some Text Field"
+          - cell "Some text field description"
+          - cell
+          - cell
+          - cell
+          - cell:
+            - button
+    `);
 
   // delete the new field
   await page.getByRole('row', { name: 'Some Text Field Some text' }).getByRole('button').click();
@@ -505,7 +480,7 @@ test("test fields", async ({ page }) => {
   await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_008');
   await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
   await page.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('table')).toMatchAriaSnapshot(`
+  await expect(page.getByRole('main')).toMatchAriaSnapshot(`
     - table:
       - rowgroup:
         - row "Type Name Description Default Values Options Keys":
@@ -518,126 +493,104 @@ test("test fields", async ({ page }) => {
           - cell
       - rowgroup:
         - row "Text Field Edited Text field description edited":
-          - cell:
-            - img
+          - cell
           - cell "Text Field Edited"
           - cell "Text field description edited"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Number Field Edited Number field description edited":
-          - cell:
-            - img
+          - cell
           - cell "Number Field Edited"
           - cell "Number field description edited"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Date Field Edited Date field description edited":
-          - cell:
-            - img
+          - cell
           - cell "Date Field Edited"
           - cell "Date field description edited"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Time Field Edited Time field description edited":
-          - cell:
-            - img
+          - cell
           - cell "Time Field Edited"
           - cell "Time field description edited"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Paragraph Field Edited Paragraph field description edited":
-          - cell:
-            - img
+          - cell
           - cell "Paragraph Field Edited"
           - cell "Paragraph field description edited"
           - cell
           - cell
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Single Restricted Select Field Edited Single restricted select field description edited Option 4 Option 5 Option 6":
-          - cell:
-            - img
+          - cell
           - cell "Single Restricted Select Field Edited"
           - cell "Single restricted select field description edited"
           - cell
           - cell "Option 4 Option 5 Option 6"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Single Creative Select Field Edited Single creative select field description edited Option 7 Option 8 Option 9":
-          - cell:
-            - img
+          - cell
           - cell "Single Creative Select Field Edited"
           - cell "Single creative select field description edited"
           - cell
           - cell "Option 7 Option 8 Option 9"
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row /Multiple Restricted Select Field Edited Multiple restricted select field description edited Option \\d+ Option \\d+ Option \\d+/:
-          - cell:
-            - img
+          - cell
           - cell "Multiple Restricted Select Field Edited"
           - cell "Multiple restricted select field description edited"
           - cell
           - cell /Option \\d+ Option \\d+ Option \\d+/
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row /Multiple Creative Select Field Edited Multiple creative select field description edited Option \\d+ Option \\d+ Option \\d+/:
-          - cell:
-            - img
+          - cell
           - cell "Multiple Creative Select Field Edited"
           - cell "Multiple creative select field description edited"
           - cell
           - cell /Option \\d+ Option \\d+ Option \\d+/
           - cell
           - cell:
-            - button:
-              - img
+            - button
         - row "Test Single KV Edited Test single kv edited SIN_004 SIN_005 SIN_006":
-          - cell:
-            - img
+          - cell
           - cell "Test Single KV Edited"
           - cell "Test single kv edited"
           - cell
           - cell
           - cell "SIN_004 SIN_005 SIN_006"
           - cell:
-            - button:
-              - img
+            - button
         - row "Multiple KV Field Edited Multiple kv field edited MUL_005 MUL_006 MUL_007 MUL_008":
-          - cell:
-            - img
+          - cell
           - cell "Multiple KV Field Edited"
           - cell "Multiple kv field edited"
           - cell
           - cell
           - cell "MUL_005 MUL_006 MUL_007 MUL_008"
           - cell:
-            - button:
-              - img
+            - button
     `);
 
   // create a Fields Test instance
@@ -913,10 +866,18 @@ test("test fields", async ({ page }) => {
   // check changing a value makes the field dirty
   await page.getByTestId('kv-line-value-input-SIN_004-0').click();
   await page.getByTestId('kv-line-value-input-SIN_004-0').fill('300');
-  await page.getByTestId('kv-line-value-input-SIN_004-0').press('Tab');
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  // while the field is dirty, check that blurring the input keeps the field dirty
+  await page.getByTestId('kv-line-value-input-SIN_004-0').blur();
   await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
   await page.getByLabel('Save field Test Single KV').click();
   await page.getByLabel('Saving field Test Single KV').waitFor({ state: "detached" })
+  // check that focusing the input on a clean field turns it dirty
+  await page.getByTestId('kv-line-value-input-SIN_004-0').click();
+  await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
+  // check that blurring the input on a clean field turns it clean
+  await page.getByTestId('kv-line-value-input-SIN_004-0').blur();
+  await expect(page.getByLabel('Save field Test Single KV')).not.toBeVisible();
   // check deleting a line makes the field dirty
   await page.getByTestId('delete-kv-line-button-SIN_004-0').click();
   await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
@@ -930,7 +891,6 @@ test("test fields", async ({ page }) => {
   await page.getByLabel('SIN_005').click();
   await page.getByTestId('kv-line-value-input-SIN_005-0').click();
   await page.getByTestId('kv-line-value-input-SIN_005-0').fill('300');
-  await page.getByTestId('kv-line-value-input-SIN_005-0').press('Tab');
   await expect(page.getByLabel('Save field Test Single KV')).toBeVisible();
   await page.getByLabel('Save field Test Single KV').click();
   // edit the multiple kv field
@@ -943,12 +903,21 @@ test("test fields", async ({ page }) => {
   // check changing a value makes the field dirty
   await page.getByTestId('kv-line-value-input-MUL_008-2').click();
   await page.getByTestId('kv-line-value-input-MUL_008-2').fill('5000');
-  await page.getByTestId('kv-line-value-input-MUL_008-2').press('Tab');
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  // while the field is dirty, check that blurring the input keeps the field dirty
+  await page.getByTestId('kv-line-value-input-MUL_008-2').blur();
   await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
   await page.getByLabel('Save field Multiple KV').click();
   await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
+  // check that focusing the input on a clean field turns it dirty
+  await page.getByTestId('kv-line-value-input-MUL_008-2').click();
+  await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
+  // check that blurring the input on a clean field turns it clean
+  await page.getByTestId('kv-line-value-input-MUL_008-2').blur();
+  await expect(page.getByLabel('Save field Multiple KV')).not.toBeVisible();
   // check deleting a line makes the field dirty
   await page.getByTestId('delete-kv-line-button-MUL_008-2').click();
+  await expect(page.getByTestId('kv-line-key-select-trigger-MUL_008-2')).not.toBeVisible();
   await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
   await page.getByLabel('Save field Multiple KV').click();
   await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" })
@@ -957,7 +926,6 @@ test("test fields", async ({ page }) => {
   await page.getByTestId('kv-line-key-select-trigger--2').click();
   await page.getByLabel('MUL_008').click();
   await page.getByTestId('kv-line-value-input-MUL_008-2').fill('5000');
-  await page.getByTestId('kv-line-value-input-MUL_008-2').press('Tab');
   await expect(page.getByLabel('Save field Multiple KV')).toBeVisible();
   await page.getByLabel('Save field Multiple KV').click();
   await page.getByLabel('Saving field Multiple KV').waitFor({ state: "detached" });

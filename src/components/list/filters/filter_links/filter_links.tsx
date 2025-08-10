@@ -9,7 +9,12 @@ export default function LinksFilter() {
     const isActive = !!linksFilter;
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid='links-filter-trigger' 
+            />
+        }>
             <LinksFilterBase />
         </Filter>
     )

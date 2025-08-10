@@ -9,6 +9,7 @@ const TableConfiguration = React.forwardRef<HTMLButtonElement, Props>((props, re
         <DataAction
             ref={ref}
             label='Table Configuration'
+            data-testid='table-configuration-trigger'
             {...props}
         >
             <Columns3CogIcon width={24} height={24} />

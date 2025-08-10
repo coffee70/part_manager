@@ -5,16 +5,17 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
     fieldId: string;
+    fieldName: string;
 }
 
-export default function DateFieldFilter({ fieldId }: Props) {
+export default function DateFieldFilter({ fieldId, fieldName }: Props) {
     const searchParams = useSearchParams();
-    
+
     // Check if this specific field has an active filter
     const getIsActive = () => {
         const customFieldParam = searchParams.get('custom-field');
         if (!customFieldParam) return false;
-        
+
         try {
             const customFields = JSON.parse(customFieldParam);
             return !!customFields[fieldId];
@@ -22,11 +23,16 @@ export default function DateFieldFilter({ fieldId }: Props) {
             return false;
         }
     };
-    
+
     const isActive = getIsActive();
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton
+                active={isActive}
+                data-testid={`date-field-filter-trigger-${fieldName}`}
+            />
+        }>
             <DateFieldFilterBase fieldId={fieldId} />
         </Filter>
     )

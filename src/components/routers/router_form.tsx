@@ -45,15 +45,18 @@ type Props = {
     setOpen: (open: boolean) => void;
 }
 
-export default function ModelForm({ router, open, setOpen }: Props) {
-    const [formState, setFormState] = React.useState({
-        _id: router?._id,
-        name: router?.name || '',
-        color: router?.color || colors[0],
-        attachable: router?.attachable || false,
-        linkable: router?.linkable || false,
-        commentable: router?.commentable || false,
-    });
+const initialState = (router?: Router) => ({
+    _id: router?._id,
+    name: router?.name || '',
+    color: router?.color || colors[0],
+    attachable: router?.attachable || false,
+    linkable: router?.linkable || false,
+    commentable: router?.commentable || false,
+})
+
+export default function RouterForm({ router, open, setOpen }: Props) {
+
+    const [formState, setFormState] = React.useState(initialState(router));
 
     const queryClient = useQueryClient();
 
@@ -62,6 +65,9 @@ export default function ModelForm({ router, open, setOpen }: Props) {
         onSuccess: ({ success }) => {
             if (success) {
                 queryClient.invalidateQueries({ queryKey: routerKeys.all() });
+                if (!router) {
+                    setFormState(initialState());
+                }
                 setOpen(false);
             }
         }

@@ -6,9 +6,10 @@ import { useSearchParams } from "next/navigation";
 type Props = {
     fieldId: string;
     placeholder?: string;
+    fieldName: string;
 }
 
-export default function NumberFieldFilter({ fieldId, placeholder }: Props) {
+export default function NumberFieldFilter({ fieldId, placeholder, fieldName }: Props) {
     const searchParams = useSearchParams();
     
     // Check if this specific field has an active filter
@@ -27,7 +28,12 @@ export default function NumberFieldFilter({ fieldId, placeholder }: Props) {
     const isActive = getIsActive();
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid={`number-field-filter-trigger-${fieldName}`} 
+            />
+        }>
             <NumberFieldFilterBase fieldId={fieldId} placeholder={placeholder} />
         </Filter>
     )

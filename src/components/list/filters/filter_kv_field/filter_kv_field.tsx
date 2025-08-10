@@ -6,9 +6,10 @@ import { useSearchParams } from "next/navigation";
 type Props = {
     fieldId: string;
     keys: string[];
+    fieldName: string;
 }
 
-export default function KVFieldFilter({ fieldId, keys }: Props) {
+export default function KVFieldFilter({ fieldId, keys, fieldName }: Props) {
     const searchParams = useSearchParams();
     
     // Check if this specific field has an active filter
@@ -27,7 +28,12 @@ export default function KVFieldFilter({ fieldId, keys }: Props) {
     const isActive = getIsActive();
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid={`kv-field-filter-trigger-${fieldName}`} 
+            />
+        }>
             <KVFieldFilterBase fieldId={fieldId} keys={keys} />
         </Filter>
     )

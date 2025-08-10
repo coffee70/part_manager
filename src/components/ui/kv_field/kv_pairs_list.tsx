@@ -9,7 +9,9 @@ export default function KVPairsList({
     setState,
     canAddLine,
     availableKeys,
-    setValueRef,
+    onFocus,
+    onBlur,
+    onMouseDown,
     addButtonText = "Add pair"
 }: KVPairsListProps) {
     
@@ -25,7 +27,7 @@ export default function KVPairsList({
     return (
         <>
             <div className="flex flex-col gap-2">
-                {state.map((line, index) => (
+                {state.map((line) => (
                     <KVLine
                         key={line.id}
                         id={line.id}
@@ -33,7 +35,9 @@ export default function KVPairsList({
                         state={state}
                         onChange={setState}
                         availableKeys={availableKeys}
-                        inputRef={setValueRef ? (e) => setValueRef(index, e) : (_e) => {}}
+                        onFocus={onFocus}
+                        onBlur={onBlur}
+                        onMouseDown={onMouseDown}
                     />
                 ))}
             </div>

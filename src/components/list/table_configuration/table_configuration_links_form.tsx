@@ -80,7 +80,11 @@ export default function LinksColumnForm({
                     
                     <div className="space-y-2 max-h-60 overflow-y-auto rounded-md border border-stone-200 bg-white p-3">
                         {availableContexts.map((contextItem) => (
-                            <div key={contextItem._id} className="flex items-center space-x-3 group hover:bg-stone-50 rounded-md p-1 transition-colors">
+                            <div 
+                                key={contextItem._id} 
+                                className="flex items-center space-x-3 group hover:bg-stone-50 rounded-md p-1 transition-colors"
+                                data-testid='table-configuration-links-form-context-item'
+                            >
                                 <input
                                     type="checkbox"
                                     id={`item-${contextItem._id}`}
@@ -130,6 +134,7 @@ export default function LinksColumnForm({
                             onChange={(e) => handleMaxLinksChange(e.target.value)}
                             className="w-20 text-center font-medium"
                             placeholder="5"
+                            data-testid='table-configuration-links-form-max-links-input'
                         />
                         <p className="text-sm text-stone-600">
                             items per {contextSingular}

@@ -9,7 +9,12 @@ export default function UpdatedAtFilter() {
     const isActive = !!updatedAtFilter;
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid='updated-at-filter-trigger' 
+            />
+        }>
             <UpdatedAtFilterBase />
         </Filter>
     )

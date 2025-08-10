@@ -139,16 +139,29 @@ export default function TableContainer() {
     const getIntrinsicFieldFilterComponent = (field: Field) => {
         switch (field.type) {
             case 'text':
-                return <TextFieldFilter fieldId={field._id} />;
+                return <TextFieldFilter 
+                    fieldId={field._id} 
+                    fieldName={field.name} 
+                />;
             case 'number':
-                return <NumberFieldFilter fieldId={field._id} />;
+                return <NumberFieldFilter 
+                    fieldId={field._id} 
+                    fieldName={field.name} 
+                />;
             case 'date':
-                return <DateFieldFilter fieldId={field._id} />;
+                return <DateFieldFilter 
+                    fieldId={field._id} 
+                    fieldName={field.name} 
+                />;
             case 'time':
-                return <TimeFieldFilter fieldId={field._id} />;
+                return <TimeFieldFilter 
+                    fieldId={field._id} 
+                    fieldName={field.name} 
+                />;
             case 'select':
                 return <SelectFieldFilter
                     fieldId={field._id}
+                    fieldName={field.name}
                     options={field.options || []}
                     multiple={field.multiple}
                     creative={field.creative}
@@ -156,6 +169,7 @@ export default function TableContainer() {
             case 'key_value':
                 return <KVFieldFilter
                     fieldId={field._id}
+                    fieldName={field.name}
                     keys={field.keys || []}
                 />;
         }

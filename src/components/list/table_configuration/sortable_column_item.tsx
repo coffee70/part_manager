@@ -58,6 +58,7 @@ export function SortableColumnItem({
                 ${isDragging ? 'z-0' : 'transition-all hover:shadow-md'}
                 ${isFocused && !isDragging ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-stone-200 hover:border-stone-300'}
             `}
+            data-testid='table-configuration-sortable-column-item'
         >
             {/* Header section with drag handle and remove button */}
             <div className="flex items-center justify-between p-2 border-b border-stone-200 flex-shrink-0">
@@ -68,6 +69,7 @@ export function SortableColumnItem({
                     role="button"
                     aria-label="Drag to reorder column"
                     tabIndex={0}
+                    data-testid='table-configuration-sortable-column-item-drag-handle'
                 >
                     <GripVertical className="h-4 w-4 text-stone-400 hover:text-stone-600" />
                 </div>
@@ -79,6 +81,7 @@ export function SortableColumnItem({
                         onRemove();
                     }}
                     className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    data-testid='table-configuration-sortable-column-item-remove-button'
                 >
                     <Trash2 className="h-3 w-3" />
                 </Button>

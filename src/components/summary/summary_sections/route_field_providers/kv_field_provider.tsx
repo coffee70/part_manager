@@ -16,6 +16,7 @@ export default function KVFieldProvider({ field }: Props) {
     const { modelId, instanceId, stepId } = useModelInstanceRoutingURL();
 
     const [isEditing, setIsEditing] = React.useState(false);
+    const [isDirty, setIsDirty] = React.useState(false);
 
     const queryClient = useQueryClient();
 
@@ -24,6 +25,7 @@ export default function KVFieldProvider({ field }: Props) {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: routeKeys.routeFieldValues(modelId, instanceId, stepId) })
             setIsEditing(false);
+            setIsDirty(false);
         }
     });
 
@@ -46,6 +48,8 @@ export default function KVFieldProvider({ field }: Props) {
             isError={isError}
             isPending={isPending}
             error={error}
+            isDirty={isDirty}
+            setIsDirty={setIsDirty}
         />
     )
 }

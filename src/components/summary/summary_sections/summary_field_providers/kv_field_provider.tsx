@@ -16,9 +16,8 @@ type Props = {
 export default function KVFieldProvider({ field }: Props) {
     const { context, id, instanceId } = useInstanceURL();
 
-    console.log('field', field);
-
     const [isEditing, setIsEditing] = React.useState(false);
+    const [isDirty, setIsDirty] = React.useState(false);
 
     const queryClient = useQueryClient();
 
@@ -28,6 +27,7 @@ export default function KVFieldProvider({ field }: Props) {
             queryClient.invalidateQueries({ queryKey: sectionKeys.all(context, id) })
             queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
             setIsEditing(false);
+            setIsDirty(false);
         }
     });
 
@@ -50,6 +50,8 @@ export default function KVFieldProvider({ field }: Props) {
                 isError={isError}
                 isPending={isPending}
                 error={error}
+                isDirty={isDirty}
+                setIsDirty={setIsDirty}
             />
         </div>
     )

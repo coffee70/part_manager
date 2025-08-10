@@ -31,19 +31,18 @@ export default async function Page({
 }) {
     const id = params.modelId
     const instanceId = searchParams.id
+
     const instances = await getInstances({ id, context: "models", searchParams })
 
-    if (!instanceId || Array.isArray(instanceId)) {
-        if (instances.length === 0) return <SummaryError />
-        redirect(router().models().instances().instance(id, instances[0]._id));
-    }
+    // Combine the logic for missing/invalid instanceId and not found in instances
+    const invalidInstanceId = !instanceId || Array.isArray(instanceId) || !instances.find((instance) => instance._id === instanceId);
 
-    // check the instance id is in the instances array
-    // this ensures a user cannot view an instance that is not
-    // on the instance table 
-    if (!instances.find((instance) => instance._id === instanceId)) {
-        if (instances.length === 0) return <SummaryError />
-        redirect(router().models().instances().instance(id, instances[0]._id));
+    if (invalidInstanceId) {
+        if (instances.length === 0) {
+            return <SummaryError />;
+        }
+        const redirectUrl = router().models().instances().instance(id, instances[0]._id);
+        redirect(redirectUrl);
     }
 
     const queryClient = new QueryClient();
@@ -119,7 +118,7 @@ export default async function Page({
         queryKey: routeKeys.currentStep(id, instanceId),
         queryFn: () => getCurrentStep({ modelId: id, instanceId }),
     })
-    
+
     await queryClient.prefetchQuery({
         queryKey: routeKeys.targetSteps(id, instanceId),
         queryFn: () => getTargetSteps({ modelId: id, instanceId }),

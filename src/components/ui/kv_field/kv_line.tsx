@@ -12,7 +12,9 @@ export default function KVLine({
     state,
     onChange,
     availableKeys,
-    inputRef,
+    onFocus,
+    onBlur,
+    onMouseDown,
 }: KVLineProps) {
 
     const index = state.findIndex((line) => line.id === id);
@@ -20,27 +22,22 @@ export default function KVLine({
     const onKeyChange = (newKeyValue: string) => {
         // Find the Key object that corresponds to this value
         const newKey = availableKeys.find(k => k.value === newKeyValue) || selectedKey;
-        const newState = [...state];
-        newState[index].key = newKey;
+        const newState = state.map((line, i) =>
+            i === index ? { ...line, key: newKey } : line
+        );
         onChange(newState);
     }
 
     const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newState = [...state];
-        newState[index].value = e.target.value;
+        const newState = state.map((line, i) =>
+            i === index ? { ...line, value: e.target.value } : line
+        );
         onChange(newState);
     }
 
     const handleDeleteLine = () => {
-        const newState = [...state];
-        newState.splice(index, 1);
-        
-        // Handle deletion of last line - add default empty entry if this was the last one
-        if (newState.length === 0) {
-            onChange(addEntryToKVFieldState(newState));
-        } else {
-            onChange(newState);
-        }
+        const newState = state.filter((line) => line.id !== id);
+        onChange(newState.length === 0 ? addEntryToKVFieldState([]) : newState);
     }
 
     const keys = selectedKey.value === DEFAULT_KEY.value 
@@ -78,8 +75,10 @@ export default function KVLine({
                     value={state[index].value}
                     onChange={onValueChange}
                     placeholder="Enter value"
-                    ref={inputRef}
                     data-testid={`kv-line-value-input-${selectedKey.value}-${index}`}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onMouseDown={onMouseDown}
                 />
             ) : (
                 <div

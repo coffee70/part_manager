@@ -8,9 +8,10 @@ type Props = {
     options: string[];
     multiple?: boolean;
     creative?: boolean;
+    fieldName: string;
 }
 
-export default function SelectFieldFilter({ fieldId, options, multiple, creative }: Props) {
+export default function SelectFieldFilter({ fieldId, options, multiple, creative, fieldName }: Props) {
     const searchParams = useSearchParams();
     
     // Check if this specific field has an active filter
@@ -37,7 +38,12 @@ export default function SelectFieldFilter({ fieldId, options, multiple, creative
     const isActive = getIsActive();
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid={`select-field-filter-trigger-${fieldName}`} 
+            />
+        }>
             <SelectFieldFilterBase 
                 fieldId={fieldId} 
                 options={options}

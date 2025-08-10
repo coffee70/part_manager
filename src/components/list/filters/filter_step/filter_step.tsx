@@ -10,7 +10,12 @@ export default function StepFilter() {
     const isActive = stepFilter.length > 0 || routeStatusFilter.length > 0;
 
     return (
-        <Filter trigger={<FilterButton active={isActive} />}>
+        <Filter trigger={
+            <FilterButton 
+                active={isActive} 
+                data-testid='step-filter-trigger' 
+            />
+        }>
             <StepFilterBase />
         </Filter>
     )

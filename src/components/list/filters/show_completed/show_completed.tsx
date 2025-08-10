@@ -39,6 +39,7 @@ export default function ShowCompleted() {
                         : 'bg-muted-foreground'
                 )}
                 onClick={() => handleToggle(!urlShowCompleted)}
+                data-testid='show-completed-filter-trigger'
             >
                 <div
                     className={cn(

@@ -337,6 +337,223 @@ test("test model table configuration", async ({ page }) => {
     await page.getByLabel('Notes').fill('Notes');
     await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByTestId('summary-number-input')).toHaveValue('L-101');
+
+
+    await page.getByRole('link', { name: 'Table Configuration Test' }).click();
+    await page.waitForTimeout(5000);
+
+
+    // check initial table configuration
+
+    // await expect(page.getByTestId('summary-number-input')).toHaveValue('S-100');
+    // await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+    //     - table:
+    //       - rowgroup:
+    //         - row "Number Step Updated By":
+    //           - cell:
+    //             - button
+    //           - cell "Number":
+    //             - img
+    //             - button
+    //           - cell "Step":
+    //             - img
+    //             - button
+    //           - cell "Updated By":
+    //             - img
+    //             - button
+    //           - cell
+    //       - rowgroup:
+    //         - row /S-100 Today by Test Admin/:
+    //           - cell
+    //           - cell /S-100/
+    //           - cell
+    //           - cell "Today by Test Admin"
+    //           - cell:
+    //             - button
+    //         - row /S-101 Today by Test Admin/:
+    //           - cell
+    //           - cell /S-101/
+    //           - cell
+    //           - cell "Today by Test Admin"
+    //           - cell:
+    //             - button
+    //         - row /S-102 Today by Test Admin/:
+    //           - cell
+    //           - cell /S-102/
+    //           - cell
+    //           - cell "Today by Test Admin"
+    //           - cell:
+    //             - button
+    //     `);
+
+    // // test drag and drop
+    // await page.getByTestId('table-configuration-trigger').click();
+    // await page.getByRole('button', { name: 'Time Field Time field' }).click();
+    // await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(1).click();
+    // await page.getByRole('button', { name: 'Multiple Restricted Select' }).click();
+
+    // // test horizontal drag and drop - move 4th item to 2nd position
+    // const fourthItemHandle = page.getByTestId('table-configuration-sortable-column-item-drag-handle').nth(3);
+    // const secondItemDropZone = page.getByTestId('table-configuration-sortable-column-item-drag-handle').nth(1);
+
+    // let fourthHandleBox = await fourthItemHandle.boundingBox();
+    // if (!fourthHandleBox) throw new Error("Bounding box for 4th handle not found");
+
+    // await fourthItemHandle.hover();
+    // await page.mouse.down();
+    // // Small move to activate drag (critical for dnd-kit PointerSensor with activationConstraint)
+    // await page.mouse.move(fourthHandleBox.x + fourthHandleBox.width / 2 + 5, fourthHandleBox.y + fourthHandleBox.height / 2, { steps: 5 });
+    // await page.waitForTimeout(100); // Allow dnd-kit to process drag start
+
+    // // Move to the target drop zone (center of the 2nd item) - horizontal movement
+    // let secondItemDropZoneBox = await secondItemDropZone.boundingBox();
+    // if (!secondItemDropZoneBox) throw new Error("Bounding box for 2nd drop zone not found");
+    // await page.mouse.move(secondItemDropZoneBox.x + secondItemDropZoneBox.width / 2, secondItemDropZoneBox.y + secondItemDropZoneBox.height / 2, { steps: 10 });
+    // await page.waitForTimeout(100); // Allow dnd-kit to process drag over
+
+    // await page.mouse.up();
+    // await page.waitForTimeout(300); // Allow for DOM updates and event processing
+
+    // // test horizontal drag and drop - move 1st item to 3rd position  
+    // const firstItemHandle = page.getByTestId('table-configuration-sortable-column-item-drag-handle').nth(0);
+    // const thirdItemDropZone = page.getByTestId('table-configuration-sortable-column-item-drag-handle').nth(2);
+
+    // let firstHandleBox = await firstItemHandle.boundingBox();
+    // if (!firstHandleBox) throw new Error("Bounding box for 1st handle not found");
+
+    // await firstItemHandle.hover();
+    // await page.mouse.down();
+    // await page.mouse.move(firstHandleBox.x + firstHandleBox.width / 2 + 5, firstHandleBox.y + firstHandleBox.height / 2, { steps: 5 });
+    // await page.waitForTimeout(100);
+
+    // let thirdItemDropZoneBox = await thirdItemDropZone.boundingBox();
+    // if (!thirdItemDropZoneBox) throw new Error("Bounding box for 3rd drop zone not found");
+    // await page.mouse.move(thirdItemDropZoneBox.x + thirdItemDropZoneBox.width / 2, thirdItemDropZoneBox.y + thirdItemDropZoneBox.height / 2, { steps: 10 });
+    // await page.waitForTimeout(100);
+
+    // await page.mouse.up();
+    // await page.waitForTimeout(300);
+
+    // await page.getByRole('button', { name: 'Save Configuration' }).click();
+
+    // // check the updated table configuration
+    // await expect(page.getByRole('main')).toMatchAriaSnapshot(`
+    //     - table:
+    //       - rowgroup:
+    //         - row "Multiple Restricted Select Field Updated By Number Time Field":
+    //           - cell:
+    //             - button
+    //           - cell "Multiple Restricted Select Field":
+    //             - img
+    //             - button
+    //           - cell "Updated By":
+    //             - img
+    //             - button
+    //           - cell "Number":
+    //             - img
+    //             - button
+    //           - cell "Time Field":
+    //             - img
+    //             - button
+    //           - cell
+    //       - rowgroup:
+    //         - row /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/:
+    //           - cell
+    //           - cell "Option 2 Option 3"
+    //           - cell "Today by Test Admin"
+    //           - cell /S-100/
+    //           - cell /10:10 AM/
+    //           - cell:
+    //             - button
+    //         - row /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/:
+    //           - cell
+    //           - cell "Option 3 Option 4"
+    //           - cell "Today by Test Admin"
+    //           - cell /S-101/
+    //           - cell /11:11 AM/
+    //           - cell:
+    //             - button
+    //         - row /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/:
+    //           - cell
+    //           - cell "Option 4 Option 5"
+    //           - cell "Today by Test Admin"
+    //           - cell /S-102/
+    //           - cell /12:12 PM/
+    //           - cell:
+    //             - button
+    //     `);
+
+    // // test number system column filter
+    // await page.getByTestId('number-filter-trigger').click();
+    // // Fill the input and wait for the filter to apply (URL to update and table to filter)
+    // const input = page.getByPlaceholder('Filter by instance number...');
+    // await input.fill('S-100');
+    // // Wait for the table to update: only the filtered row should be present
+    // await page.waitForURL(url => url.searchParams.get('number') === 'S-100');
+    // await expect(page.getByTestId('summary-number-input')).toHaveValue('S-100');
+    // await page.keyboard.press('Escape');
+    // await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).toBeVisible();
+    // // Ensure the other rows are not present
+    // await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).not.toBeVisible();
+    // await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).not.toBeVisible();
+    // // Now clear the filter
+    // await page.getByTestId('number-filter-trigger').click();
+    // // Wait for the clear button to be visible and click it
+    // const clearButton = page.getByRole('button');
+    // await expect(clearButton).toBeVisible();
+    // await clearButton.click();
+    // // wait for url to not contain number
+    // await page.waitForURL(url => !url.searchParams.get('number'));
+    // // Wait for the table to return to its unfiltered state (all rows visible)
+    // await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).toBeVisible();
+    // await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).toBeVisible();
+
+    // // filter updated by
+    // await page.getByTestId('updated-at-filter-trigger').click();
+    // // Select a date range that does not include today, to avoid test flakiness.
+    // // We'll pick two days in the past, e.g., 3 and 5 days ago.
+    // const today = new Date();
+    // const day3 = new Date(today);
+    // day3.setDate(today.getDate() - 3);
+    // const day5 = new Date(today);
+    // day5.setDate(today.getDate() - 5);
+    // // Format as day of month (assuming the gridcell names are day numbers)
+    // const day3Num = day3.getDate().toString();
+    // const day5Num = day5.getDate().toString();
+    // await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    // await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
+    // // wait for url to contain updatedAt
+    // await page.waitForURL(url => {
+    //     const updatedAtRaw = url.searchParams.get('updatedAt');
+    //     if (!updatedAtRaw) return false;
+    //     const updatedAtParsed = JSON.parse(updatedAtRaw);
+    //     // the format is YYYY-MM-DD
+    //     return updatedAtParsed.from === day3.toISOString().split('T')[0]
+    //         && updatedAtParsed.to === day5.toISOString().split('T')[0];
+    // });
+    // await page.keyboard.press('Escape');
+    // await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).not.toBeVisible();
+    // await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).not.toBeVisible();
+    // await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).not.toBeVisible();
+    // await page.getByTestId('updated-at-filter-trigger').click();
+    // await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    // await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
+    // // wait for url to not contain updatedAt
+    // await page.waitForURL(url => {
+    //     const updatedAtRaw = url.searchParams.get('updatedAt');
+    //     if (!updatedAtRaw) return true;
+    //     return false;
+    // });
+    // await page.keyboard.press('Escape');
+
+    // // add text field to the table configuration
+    // await page.getByTestId('table-configuration-trigger').click();
+    // await page.getByTestId('table-configuration-sortable-column-item-remove-button').first().click();
+    // await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    // await page.getByRole('button', { name: 'Text Field Text field' }).click();
+    // await page.getByRole('button', { name: 'Save Configuration' }).click();
+
+    // // filter by text field
 });
 
 test("test router table configuration", async ({ page }) => {
