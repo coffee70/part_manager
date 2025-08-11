@@ -297,7 +297,8 @@ export type Create<T> = Omit<T, '_id' | 'updatedAt' | 'updatedBy'>;
 
 export type Doc<T> = Omit<T, '_id'> & { _id: string };
 
-export type NextServerSearchParams = { [key: string]: string | string[] | undefined }
+export const NextServerSearchParamsSchema = z.record(z.string(), z.string().or(z.array(z.string())).or(z.undefined()));
+export type NextServerSearchParams = z.infer<typeof NextServerSearchParamsSchema>;
 
 export type ServerActionState = {
     success: true;

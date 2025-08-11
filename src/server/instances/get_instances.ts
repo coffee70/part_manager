@@ -2,18 +2,17 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, InstanceSchema } from "@/types/collections";
+import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, InstanceSchema, NextServerSearchParamsSchema } from "@/types/collections";
 import { getSearchParams, SearchParams } from "@/lib/search_params";
 import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
-
 import { ObjectId } from "mongodb";
 import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     id: z.string(),
     context: z.enum(contexts),
-    searchParams: z.custom<SearchParams>().optional(),
+    searchParams: NextServerSearchParamsSchema.optional(),
 })
 
 const OutputSchema = z.array(InstanceSchema)

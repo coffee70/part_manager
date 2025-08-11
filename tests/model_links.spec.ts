@@ -16,7 +16,6 @@ test('links', async ({ page }) => {
     await page.getByRole('button', { name: 'New Model' }).click();
     await page.getByRole('textbox').fill('Target Link');
     await page.getByLabel('Create Model').getByText('Links').click();
-    await page.getByRole('img').nth(1).click();
     await modelFormColor(page, 24).click();
     await page.getByRole('button', { name: 'Save' }).click();
 

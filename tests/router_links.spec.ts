@@ -17,7 +17,6 @@ test('router links', async ({ page }) => {
     await page.getByRole('button', { name: 'New Router' }).click();
     await page.getByRole('textbox').fill('Target Link');
     await page.getByLabel('Create Router').getByText('Links').click();
-    await page.getByRole('img').nth(1).click();
     await routerFormColor(page, 24).click();
     await page.getByRole('button', { name: 'Save' }).click();
 

@@ -50,6 +50,7 @@ import DateFieldFilter from "@/components/list/filters/filter_date_field/filter_
 import TimeFieldFilter from "@/components/list/filters/filter_time_field/filter_time_field";
 import SelectFieldFilter from "../list/filters/filter_select_field/filter_select_field";
 import KVFieldFilter from "@/components/list/filters/filter_kv_field/filter_kv_field";
+import { convertSearchParams } from "@/lib/search_params";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
@@ -64,7 +65,7 @@ export default function TableContainer() {
     const { context, id, instanceId } = useInstanceURL();
 
     const handleClick = (id: string) => {
-        const params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(readOnlySearchParams);
         params.set('id', id)
         replace(`${pathname}?${params.toString()}`)
     }
