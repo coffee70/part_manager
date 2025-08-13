@@ -100,6 +100,10 @@ export async function getCurrentStep(
             instanceId: node.instanceId
         });
 
+        if (!routerInstance) {
+            throw new Error("Router instance not found");
+        }
+
         return OutputSchema.parse({
             _id: node.id,
             instanceId: node.instanceId,

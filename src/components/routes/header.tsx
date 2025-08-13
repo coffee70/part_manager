@@ -17,6 +17,7 @@ export default function Header() {
 
     if (isPending) return <div>Loading...</div>
     if (isError) return <div>Error</div>
+    if (!instance) return <div>Instance not found</div>
 
     return (
         <div className="flex items-center space-x-4 py-4 px-8 bg-stone-100 border-b border-stone-300 shadow-sm">
