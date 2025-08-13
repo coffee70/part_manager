@@ -7,7 +7,7 @@ import { InstanceDoc, priorities, ValuesSchema, KVValuesSchema, NextServerSearch
 import { getSearchParams } from "@/lib/search_params";
 import { filterSteps } from "@/lib/db_filter_sort/filter_steps";
 import { filterLink } from "@/lib/db_filter_sort/filter_link";
-import { filterShowCompleted } from "@/lib/db_filter_sort/filter_show_completed";
+import { filterHideCompleted } from "@/lib/db_filter_sort/filter_hide_completed";
 import { filterUpdatedAt } from "@/lib/db_filter_sort/filter_updated_at";
 import { filterSearch } from "@/lib/db_filter_sort/filter_search";
 import { filterNumber } from "@/lib/db_filter_sort/filter_number";
@@ -38,7 +38,7 @@ export async function getInstance(input: z.input<typeof InputSchema>) {
     const { id, instanceId, searchParams } = InputSchema.parse(input);
     if (!instanceId) throw new Error('Instance ID is required');
 
-    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, showCompleted } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);
 
     const instanceCollection = db.collection<InstanceDoc>(id);
 
@@ -57,8 +57,8 @@ export async function getInstance(input: z.input<typeof InputSchema>) {
 
     // Build match stage
     const matchStage: any = {};
-    const showCompletedBuild = filterShowCompleted(showCompleted, pipeline);
-    if (showCompletedBuild.match) Object.assign(matchStage, showCompletedBuild.match);
+    const hideCompletedBuild = filterHideCompleted(hideCompleted, pipeline);
+    if (hideCompletedBuild.match) Object.assign(matchStage, hideCompletedBuild.match);
 
     const updatedAtBuild = filterUpdatedAt(updatedAt, pipeline);
     if (updatedAtBuild.match) Object.assign(matchStage, updatedAtBuild.match);

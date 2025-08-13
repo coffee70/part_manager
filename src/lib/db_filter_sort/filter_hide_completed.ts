@@ -8,11 +8,11 @@ export type FilterBuild = {
   cleanupProjectFields?: string[];
 };
 
-export function filterShowCompleted(showCompleted: boolean | undefined, _pipeline: any[]): FilterBuild {
-  if (showCompleted) return {};
+export function filterHideCompleted(hideCompleted: boolean | undefined, _pipeline: any[]): FilterBuild {
+  if (!hideCompleted) return {};
   return {
     match: {
-      "route.state": { $ne: RouteState.Completed },
+      "route.state": { $ne: RouteState.Completed }
     },
   };
 }

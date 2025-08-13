@@ -37,7 +37,7 @@ import Links from "@/components/list/data_table/links";
 import { Badge } from '@/components/ui/badge';
 import KeyValue from "@/components/list/data_table/key_value";
 import { getCurrentUser } from "@/server/auth/get_current_user";
-import ShowCompleted from "@/components/list/filters/show_completed/show_completed";
+import ShowCompleted from "@/components/list/filters/hide_completed/hide_completed";
 import PriorityFilter from "@/components/list/filters/filter_priority/filter_priority";
 import StepFilter from "@/components/list/filters/filter_step/filter_step";
 import ColumnActions from "@/components/list/data_table/column_actions";

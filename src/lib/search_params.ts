@@ -101,10 +101,10 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("custom-field must be a valid custom field filter object");
     }
 
-    // pull out showCompleted
-    const showCompleted = params.showCompleted === 'true';
+    // pull out hideCompleted
+    const hideCompleted = params.hideCompleted === 'true';
 
-    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, showCompleted };
+    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted };
 }
 
 // Client → Server: convert ReadonlyURLSearchParams to NextServerSearchParams
