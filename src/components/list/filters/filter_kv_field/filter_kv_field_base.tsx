@@ -15,7 +15,7 @@ type Props = {
 export default function KVFieldFilterBase({ fieldId, keys }: Props) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
@@ -73,9 +73,10 @@ export default function KVFieldFilterBase({ fieldId, keys }: Props) {
         const newParamsString = params.toString();
         if (originalParamsString !== newParamsString) {
             queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-            replace(`${pathname}?${newParamsString}`);
+            const newUrl = `${pathname}?${newParamsString}`;
+            push(newUrl);
         }
-    }, [searchParams, queryClient, context, id, pathname, replace, fieldId]);
+    }, [searchParams, queryClient, context, id, pathname, push, fieldId]);
 
     return (
         <div className="p-3 min-w-80">

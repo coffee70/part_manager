@@ -3,7 +3,17 @@ import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
 import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, InstanceSchema, NextServerSearchParamsSchema } from "@/types/collections";
-import { getSearchParams, SearchParams } from "@/lib/search_params";
+import { getSearchParams } from "@/lib/search_params";
+import { filterSteps } from "@/lib/db_filter_sort/filter_steps";
+import { filterLink } from "@/lib/db_filter_sort/filter_link";
+import { filterShowCompleted } from "@/lib/db_filter_sort/filter_show_completed";
+import { filterUpdatedAt } from "@/lib/db_filter_sort/filter_updated_at";
+import { filterSearch } from "@/lib/db_filter_sort/filter_search";
+import { filterNumber } from "@/lib/db_filter_sort/filter_number";
+import { filterPriority } from "@/lib/db_filter_sort/filter_priority";
+import { filterRouteStatus } from "@/lib/db_filter_sort/filter_route_status";
+import { filterCustomField } from "@/lib/db_filter_sort/filter_custom_field";
+import { sort as applySort } from "@/lib/db_filter_sort/sort";
 import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
 import { ObjectId } from "mongodb";
@@ -61,240 +71,52 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     // filters
     const pipeline: any[] = [];
 
-    // Handle steps filtering first (needs to add fields before other matches)
-    if (steps) {
-        pipeline.push({
-            $addFields: {
-                currentStepInstanceId: {
-                    $let: {
-                        vars: {
-                            matchingNode: {
-                                $arrayElemAt: [
-                                    { $filter: { 
-                                        input: "$route.nodes", 
-                                        as: "node", 
-                                        cond: { $eq: ["$$node.id", "$route.currentStepId"] } 
-                                    }},
-                                    0
-                                ]
-                            }
-                        },
-                        in: "$$matchingNode.instanceId"
-                    }
-                }
-            }
-        });
-    }
+    // Apply modular filters
+    // Steps (pre-match addFields + or)
+    const stepsBuild = filterSteps(steps, pipeline);
+    if (stepsBuild.addFieldsStages) pipeline.push(...stepsBuild.addFieldsStages);
 
-    // Handle link filtering lookups before main match
-    let linkMatchConditions: any[] = [];
-    if (link && Object.keys(link).length > 0) {
-        // Filter out empty values and prepare entries (keys are now context IDs)
-        const linkFilterEntries = Object.entries(link)
-            .map(([contextId, filterValue]) => ({
-                contextId,
-                filterValue: filterValue.trim()
-            }))
-            .filter(entry => entry.filterValue !== '');
+    // Link (pre-match lookups)
+    const linkBuild = filterLink(link, pipeline);
+    if (linkBuild.preMatchStages) pipeline.push(...linkBuild.preMatchStages);
 
-        if (linkFilterEntries.length > 0) {
-            // For each context we're filtering on, add lookup stages
-            for (const { contextId, filterValue } of linkFilterEntries) {
-                // Add lookup for this specific context
-                pipeline.push({
-                    $lookup: {
-                        from: contextId,
-                        let: { 
-                            linkIds: {
-                                $map: {
-                                    input: {
-                                        $filter: {
-                                            input: { $ifNull: ["$links", []] },
-                                            cond: { $eq: ["$$this.contextId", contextId] }
-                                        }
-                                    },
-                                    as: "link",
-                                    in: { $toObjectId: "$$link.instanceId" }
-                                }
-                            }
-                        },
-                        pipeline: [
-                            {
-                                $match: {
-                                    $expr: { $in: ["$_id", "$$linkIds"] },
-                                    number: { $regex: filterValue, $options: 'i' }
-                                }
-                            },
-                            { $project: { number: 1 } }
-                        ],
-                        as: `linkedInstances_${contextId}`
-                    }
-                });
-            }
-
-            // Prepare link match conditions for later use
-            linkMatchConditions = linkFilterEntries.map(({ contextId }) => ({
-                [`linkedInstances_${contextId}`]: { $ne: [] }
-            }));
-        }
-    }
-
-    // Build main match stage
+    // Build main match stage from all simple filters
     const matchStage: any = {};
-    
-    // Filter out completed instances by default unless showCompleted is true
-    if (!showCompleted) {
-        matchStage['route.state'] = { $ne: RouteState.Completed };
-    }
-    
-    if (updatedAt) {
-        matchStage.updatedAt = {
-            $gte: updatedAt.from,
-            $lte: updatedAt.to
-        };
-    }
 
-    if (search) {
-        matchStage.number = { $regex: search, $options: 'i' };
-    }
+    const showCompletedBuild = filterShowCompleted(showCompleted, pipeline);
+    if (showCompletedBuild.match) Object.assign(matchStage, showCompletedBuild.match);
 
-    if (number) {
-        matchStage.number = { $regex: number, $options: 'i' };
-    }
+    const updatedAtBuild = filterUpdatedAt(updatedAt, pipeline);
+    if (updatedAtBuild.match) Object.assign(matchStage, updatedAtBuild.match);
 
-    if (priority) {
-        matchStage.priority = priority;
-    }
+    const searchBuild = filterSearch(search, pipeline);
+    if (searchBuild.match) Object.assign(matchStage, searchBuild.match);
 
-    // Create conditions for OR relationship
-    const orConditions = [];
-    
-    if (steps) {
-        if (Array.isArray(steps)) {
-            orConditions.push({ currentStepInstanceId: { $in: steps } });
-        } else {
-            orConditions.push({ currentStepInstanceId: steps });
-        }
-    }
+    const numberBuild = filterNumber(number, pipeline);
+    if (numberBuild.match) Object.assign(matchStage, numberBuild.match);
 
-    if (routeStatus) {
-        if (Array.isArray(routeStatus)) {
-            orConditions.push({ 'route.state': { $in: routeStatus } });
-        } else {
-            orConditions.push({ 'route.state': routeStatus });
-        }
-    }
+    const priorityBuild = filterPriority(priority, pipeline);
+    if (priorityBuild.match) Object.assign(matchStage, priorityBuild.match);
 
-    // Add OR conditions to match stage if any exist
-    if (orConditions.length > 0) {
-        matchStage.$or = orConditions;
-    }
+    const routeStatusBuild = filterRouteStatus(routeStatus, pipeline);
 
-    // Add link match conditions to main match stage
-    if (linkMatchConditions.length > 0) {
+    // OR conditions from steps and route status
+    const orConditions: any[] = [];
+    if (stepsBuild.orConditions) orConditions.push(...stepsBuild.orConditions);
+    if (routeStatusBuild.orConditions) orConditions.push(...routeStatusBuild.orConditions);
+    if (orConditions.length > 0) matchStage.$or = orConditions;
+
+    // Link match conditions
+    if (linkBuild.linkMatchConditions && linkBuild.linkMatchConditions.length > 0) {
         matchStage.$and = matchStage.$and || [];
-        matchStage.$and.push({ $or: linkMatchConditions });
+        matchStage.$and.push({ $or: linkBuild.linkMatchConditions });
     }
 
-    // Handle custom field filtering
-    if (customField && Object.keys(customField).length > 0) {
-        const customFieldConditions: any[] = [];
-        
-        for (const [fieldId, filterValue] of Object.entries(customField)) {
-            // Determine field type by trying to parse the filter value
-            let fieldCondition: any = {};
-            
-            try {
-                // Try to parse as JSON (all our filters should be valid JSON)
-                const parsedValue = JSON.parse(filterValue)
-                
-                if (parsedValue && typeof parsedValue === 'object' && !Array.isArray(parsedValue)) {
-                    // Check if it's a KV field filter (object with key-value pairs, not date/time ranges)
-                    if (!('from' in parsedValue) && !('to' in parsedValue) && !('start' in parsedValue) && !('end' in parsedValue)) {
-                        // This is a KV field filter - each key-value pair should match
-                        const kvConditions: any[] = [];
-                        
-                        for (const [key, value] of Object.entries(parsedValue)) {
-                            if (value && typeof value === 'string' && value.trim() !== '') {
-                                // For KV fields, we need to match the exact key-value pair in kv_values
-                                kvConditions.push({ [`kv_values.${fieldId}.${key}`]: { $regex: value, $options: 'i' } });
-                            }
-                        }
-                        
-                        if (kvConditions.length > 0) {
-                            fieldCondition = kvConditions.length === 1 ? kvConditions[0] : { $and: kvConditions };
-                        }
-                    }
-                    // Check if it's a date range filter
-                    else if ('from' in parsedValue || 'to' in parsedValue) {
-                        const conditions: any[] = [];
-                        if (parsedValue.from) {
-                            // Convert ISO date to YYYY-MM-DD format for string comparison
-                            const fromDate = new Date(parsedValue.from).toISOString().split('T')[0];
-                            conditions.push({ [`values.${fieldId}`]: { $gte: fromDate } });
-                        }
-                        if (parsedValue.to) {
-                            // Convert ISO date to YYYY-MM-DD format for string comparison
-                            const toDate = new Date(parsedValue.to).toISOString().split('T')[0];
-                            conditions.push({ [`values.${fieldId}`]: { $lte: toDate } });
-                        }
-                        if (conditions.length > 0) {
-                            fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
-                        }
-                    }
-                    // Check if it's a time range filter
-                    else if ('start' in parsedValue || 'end' in parsedValue) {
-                        const conditions: any[] = [];
-                        if (parsedValue.start) {
-                            conditions.push({ [`values.${fieldId}`]: { $gte: parsedValue.start } });
-                        }
-                        if (parsedValue.end) {
-                            conditions.push({ [`values.${fieldId}`]: { $lte: parsedValue.end } });
-                        }
-                        if (conditions.length > 0) {
-                            fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
-                        }
-                    }
-                } else if (Array.isArray(parsedValue)) {
-                    // Select field with multiple values (OR logic)
-                    fieldCondition = { [`values.${fieldId}`]: { $in: parsedValue } };
-                } else if (typeof parsedValue === 'string') {
-                    // Text field - use regex for partial matching
-                    fieldCondition = { [`values.${fieldId}`]: { $regex: parsedValue, $options: 'i' } };
-                } else if (typeof parsedValue === 'number') {
-                    // Number field - try both exact and string regex for flexibility
-                    fieldCondition = {
-                        $or: [
-                            { [`values.${fieldId}`]: parsedValue },
-                            { [`values.${fieldId}`]: { $regex: parsedValue.toString(), $options: 'i' } }
-                        ]
-                    };
-                } else {
-                    // Other primitive types (boolean, null) - exact match
-                    fieldCondition = { [`values.${fieldId}`]: parsedValue };
-                }
-            } catch (e) {
-                // Invalid JSON - skip this filter to avoid security issues
-                console.warn(`Invalid JSON in custom field filter for field ${fieldId}:`, filterValue);
-                continue;
-            }
-            
-            if (Object.keys(fieldCondition).length > 0) {
-                customFieldConditions.push(fieldCondition);
-            }
-        }
-        
-        // Add custom field conditions to match stage (AND logic between different fields)
-        if (customFieldConditions.length > 0) {
-            matchStage.$and = matchStage.$and || [];
-            matchStage.$and.push(...customFieldConditions);
-        }
-    }
-
-    // sort
-    const sortStage: any = {};
-    if (sortBy) {
-        sortStage[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    // Custom field conditions (AND)
+    const customFieldBuild = filterCustomField(customField, pipeline);
+    if (customFieldBuild.andConditions && customFieldBuild.andConditions.length > 0) {
+        matchStage.$and = matchStage.$and || [];
+        matchStage.$and.push(...customFieldBuild.andConditions);
     }
 
     const instanceCollection = db.collection<InstanceDoc>(id);
@@ -302,39 +124,15 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
 
     pipeline.push({ $match: matchStage });
 
-    // Remove temporary lookup fields used for link filtering
-    if (linkMatchConditions.length > 0) {
+    // Cleanup temporary link fields
+    if (linkBuild.cleanupProjectFields && linkBuild.cleanupProjectFields.length > 0) {
         const fieldsToRemove: Record<string, number> = {};
-        for (const condition of linkMatchConditions) {
-            const fieldName = Object.keys(condition)[0];
-            fieldsToRemove[fieldName] = 0;
-        }
+        for (const field of linkBuild.cleanupProjectFields) fieldsToRemove[field] = 0;
         pipeline.push({ $project: fieldsToRemove });
     }
 
-    if (sortBy === 'priority') {
-        pipeline.push(
-            {
-                $addFields: {
-                    priorityOrder: {
-                        $indexOfArray: [priorities, '$priority']
-                    }
-                }
-            },
-            {
-                $sort: { priorityOrder: sortOrder === 'asc' ? 1 : -1 }
-            },
-            {
-                $project: {
-                    priorityOrder: 0
-                }
-            }
-        );
-    } else if (sortBy) {
-        pipeline.push({
-            $sort: { [sortBy]: sortOrder === 'asc' ? 1 : -1 }
-        });
-    }
+    // Sorting
+    applySort(sortBy, sortOrder, pipeline);
 
     const instances = await instanceCollection
         .aggregate<InstanceDoc>(pipeline)
@@ -348,7 +146,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
             const route = instance.route;
             let currentNode = route.nodes.find(node => node.id === route.currentStepId);
             if (currentNode) {
-                let routerInstance = await getInstance({ id: route.routerId, instanceId: currentNode.instanceId })
+                let routerInstance = await getInstance({ id: route.routerId, instanceId: currentNode.instanceId, searchParams })
                 if (routerInstance) {
                     currentStep = {
                         id: currentNode.id,

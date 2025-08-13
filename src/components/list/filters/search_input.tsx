@@ -11,7 +11,7 @@ import { instanceKeys } from "@/lib/query_keys";
 const SearchInput = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const { context, id } = useInstanceURL();
   const queryClient = useQueryClient();
@@ -25,7 +25,8 @@ const SearchInput = () => {
     const params = new URLSearchParams(searchParams);
     params.delete('search');
     queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-    replace(`${pathname}?${params.toString()}`);
+    const newUrl = `${pathname}?${params.toString()}`;
+    push(newUrl);
     setValue('');
     if (inputRef.current) {
       inputRef.current.focus();
@@ -40,7 +41,8 @@ const SearchInput = () => {
       params.delete('search');
     }
     queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-    replace(`${pathname}?${params.toString()}`);
+    const newUrl = `${pathname}?${params.toString()}`;
+    push(newUrl);
   }, 300);
 
   const onImmediateChange = (text: string) => {

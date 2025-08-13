@@ -76,7 +76,10 @@ class ModelsInstancesRouterBuilder {
     model(modelId: string) {
         return `${this._base}/${modelId}`;
     }
-    instance(modelId: string, instanceId: string) {
+    instance(modelId: string, instanceId: string, params?: URLSearchParams) {
+        if (params && params.size > 0) {
+            return `${this._base}/${modelId}?id=${instanceId}&${params.toString()}`;
+        }
         return `${this._base}/${modelId}?id=${instanceId}`;
     }
     routing(modelId: string, instanceId: string) {
@@ -128,7 +131,10 @@ class RoutersInstancesRouterBuilder {
     router(routerId: string) {
         return `${this._base}/${routerId}`;
     }
-    instance(routerId: string, instanceId: string) {
+    instance(routerId: string, instanceId: string, params?: URLSearchParams) {
+        if (params && params.size > 0) {
+            return `${this._base}/${routerId}?id=${instanceId}&${params.toString()}`;
+        }
         return `${this._base}/${routerId}?id=${instanceId}`;
     }
 }
@@ -178,10 +184,16 @@ class ContextInstancesRouterBuilder {
     base() {
         return this._base;
     }
-    context(id: string) {
+    context(id: string, params?: URLSearchParams) {
+        if (params && params.size > 0) {
+            return `${this._base}/${id}?${params.toString()}`;
+        }
         return `${this._base}/${id}`;
     }
-    instance(id: string, instanceId: string) {
+    instance(id: string, instanceId: string, params?: URLSearchParams) {
+        if (params && params.size > 0) {
+            return `${this._base}/${id}?id=${instanceId}&${params.toString()}`;
+        }
         return `${this._base}/${id}?id=${instanceId}`;
     }
 }

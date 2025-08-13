@@ -18,7 +18,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
     // convert client side ReadOnlySearchParams to server side type
     let params: NextServerSearchParams;
     if (searchParams instanceof ReadonlyURLSearchParams) {
-        params = convertSearchParams(searchParams)
+        params = clientToServerSearchParams(searchParams)
     }
     else if (searchParams === undefined) {
         params = {};
@@ -107,7 +107,8 @@ export const getSearchParams = (searchParams?: SearchParams) => {
     return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, showCompleted };
 }
 
-export const convertSearchParams = (
+// Client → Server: convert ReadonlyURLSearchParams to NextServerSearchParams
+export const clientToServerSearchParams = (
     searchParams: ReadonlyURLSearchParams
 ): NextServerSearchParams => (
     Array.from(searchParams.keys()).reduce<NextServerSearchParams>((acc, key) => {
@@ -120,3 +121,17 @@ export const convertSearchParams = (
         return acc;
     }, {})
 )
+
+// Server → Client-like: convert NextServerSearchParams to a ReadonlyURLSearchParams-compatible object
+export const serverToReadonlySearchParams = (
+    params: NextServerSearchParams
+): ReadonlyURLSearchParams => {
+    const usp = new URLSearchParams();
+    for (const [key, raw] of Object.entries(params)) {
+        if (raw === undefined) continue;
+        if (Array.isArray(raw)) raw.forEach(v => usp.append(key, String(v)));
+        else usp.set(key, String(raw));
+    }
+    // Cast to ReadonlyURLSearchParams for compatibility; URLSearchParams implements the same API used.
+    return usp as unknown as ReadonlyURLSearchParams;
+}

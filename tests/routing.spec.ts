@@ -36,7 +36,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Number$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Number$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Number Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -47,7 +47,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Date$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Date$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Date Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -58,7 +58,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Time$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Time$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Time Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -69,7 +69,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Paragraph$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Paragraph$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Paragraph Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -80,7 +80,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Single Restricted Select Field');
     await page.getByPlaceholder('Enter the field description').click();
@@ -98,12 +98,12 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Single Creative Select Field');
     await page.getByPlaceholder('Enter the field name').press('Tab');
     await page.getByPlaceholder('Enter the field description').fill('Single creative select field description');
-    await page.locator('div').filter({ hasText: /^Creative$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Creative$/ }).click();
     await page.getByPlaceholder('Type an option and press').click();
     await page.getByPlaceholder('Type an option and press').fill('Option 1');
     await page.getByPlaceholder('Type an option and press').press('Enter');
@@ -117,12 +117,12 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Multiple Restricted Select Field');
     await page.getByPlaceholder('Enter the field description').click();
     await page.getByPlaceholder('Enter the field description').fill('Multiple restricted select field description');
-    await page.locator('div').filter({ hasText: /^Multiple$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Multiple$/ }).click();
     await page.getByPlaceholder('Type an option and press').click();
     await page.getByPlaceholder('Type an option and press').fill('Option 1');
     await page.getByPlaceholder('Type an option and press').press('Enter');
@@ -136,13 +136,13 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Select$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Select$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Multiple Creative Select Field');
     await page.getByPlaceholder('Enter the field description').click();
     await page.getByPlaceholder('Enter the field description').fill('Multiple creative select field description');
-    await page.locator('div').filter({ hasText: /^Multiple$/ }).click();
-    await page.locator('div').filter({ hasText: /^Creative$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Multiple$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Creative$/ }).click();
     await page.getByPlaceholder('Type an option and press').click();
     await page.getByPlaceholder('Type an option and press').fill('Option 1');
     await page.getByPlaceholder('Type an option and press').press('Enter');
@@ -156,7 +156,7 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Key Value$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Key Value$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Test Single KV');
     await page.getByPlaceholder('Enter the field description').click();
@@ -174,12 +174,12 @@ test('routing', async ({ page }) => {
     await page.getByTestId('route-fields-section-header-Basic').hover();
     await page.getByTestId('route-fields-section-header-dropdown-trigger-Basic').click();
     await page.getByTestId('route-fields-add-field-Basic').click();
-    await page.locator('div').filter({ hasText: /^Key Value$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Key Value$/ }).click();
     await page.getByPlaceholder('Enter the field name').click();
     await page.getByPlaceholder('Enter the field name').fill('Multiple KV Field');
     await page.getByPlaceholder('Enter the field description').click();
     await page.getByPlaceholder('Enter the field description').fill('Multiple kv field');
-    await page.locator('div').filter({ hasText: /^Multiple$/ }).click();
+    await page.getByLabel('New Field').locator('div').filter({ hasText: /^Multiple$/ }).click();
     await page.getByPlaceholder('Type a key and press Enter...').click();
     await page.getByPlaceholder('Type a key and press Enter...').fill('MUL_001');
     await page.getByPlaceholder('Type a key and press Enter...').press('Enter');
@@ -508,7 +508,7 @@ test('routing', async ({ page }) => {
     await page.getByRole('button', { name: 'Save' }).click();
 
     // check the route is not started
-    await expect(page.getByRole('row')).toContainText('NOT STARTED');
+    await expect(page.getByRole('cell', { name: 'NOT STARTED' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Not Started');
 
     // view the routing page
@@ -549,7 +549,7 @@ test('routing', async ({ page }) => {
     // move the route forwards to green machine
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'GREEN MACHINE' }).locator('div').first().click();
-    await expect(page.getByRole('row')).toContainText('GREEN MACHINE');
+    await expect(page.getByRole('cell', { name: 'GREEN MACHINE' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Green Machine');
 
     // navigate to routing page to access route fields
@@ -733,7 +733,7 @@ test('routing', async ({ page }) => {
     // move the route forwards to inspection
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
-    await expect(page.getByRole('row')).toContainText('INSPECTION');
+    await expect(page.getByRole('cell', { name: 'INSPECTION' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Inspection');
 
     // confirm the routing page is at inspection
@@ -766,7 +766,7 @@ test('routing', async ({ page }) => {
     // test route field persistence - go back to green machine to verify values persist through route progression
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'GREEN MACHINE' }).click();
-    await expect(page.getByRole('row')).toContainText('GREEN MACHINE');
+    await expect(page.getByRole('cell', { name: 'GREEN MACHINE' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Green Machine');
 
     // navigate to routing page to access route fields
@@ -796,13 +796,13 @@ test('routing', async ({ page }) => {
     // return to inspection step to continue testing
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
-    await expect(page.getByRole('row')).toContainText('INSPECTION');
+    await expect(page.getByRole('cell', { name: 'INSPECTION' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Inspection');
 
     // move the route forwards to isopress
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'ISOPRESS' }).click();
-    await expect(page.getByRole('row')).toContainText('ISOPRESS');
+    await expect(page.getByRole('cell', { name: 'ISOPRESS' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Isopress');
 
     // confirm the routing page is at isopress
@@ -835,7 +835,7 @@ test('routing', async ({ page }) => {
     // move the route forwards to fpi
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'FPI' }).click();
-    await expect(page.getByRole('row')).toContainText('FPI');
+    await expect(page.getByRole('cell', { name: 'FPI' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('FPI');
 
     // confirm the routing page is at fpi
@@ -868,7 +868,7 @@ test('routing', async ({ page }) => {
     // move the route forwards to inspection
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'INSPECTION' }).click();
-    await expect(page.getByRole('row')).toContainText('INSPECTION');
+    await expect(page.getByRole('cell', { name: 'INSPECTION' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Inspection');
 
     // confirm the routing page is at inspection
@@ -901,7 +901,7 @@ test('routing', async ({ page }) => {
     // move the route backwards to fpi
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'FPI' }).click();
-    await expect(page.getByRole('row')).toContainText('FPI');
+    await expect(page.getByRole('cell', { name: 'FPI' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('FPI');
 
     // confirm the routing page is at fpi
@@ -934,7 +934,7 @@ test('routing', async ({ page }) => {
     // move the route backwards to isopress
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'ISOPRESS' }).click();
-    await expect(page.getByRole('row')).toContainText('ISOPRESS');
+    await expect(page.getByRole('cell', { name: 'ISOPRESS' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Isopress');
 
     // confirm the routing page is at isopress
@@ -982,14 +982,14 @@ test('routing', async ({ page }) => {
 
     // go to the next step
     await page.getByRole('menuitem', { name: 'FPI' }).click();
-    await expect(page.getByRole('row')).toContainText('FPI');
+    await expect(page.getByRole('cell', { name: 'FPI' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('FPI');
 
     // stop the route
     await page.locator('#more-button-dropdown-trigger').click();
     await page.getByRole('menuitem', { name: 'Stop Route' }).click();
     await page.getByRole('button', { name: 'Stop Route' }).click();
-    await expect(page.getByRole('row')).toContainText('NOT STARTED');
+    await expect(page.getByRole('cell', { name: 'NOT STARTED' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Not Started');
 
     // confirm the routing page is at not started
@@ -1061,6 +1061,7 @@ test('routing', async ({ page }) => {
     await page.getByRole('link', { name: 'Routing Test Instance' }).click();
 
     // check the route is complete
-    await expect(page.getByRole('row')).toContainText('DONE');
+    await page.getByTestId('show-completed-filter-trigger').click();
+    await expect(page.getByRole('cell', { name: 'DONE' })).toBeVisible();
     await expect(page.locator('#step-button')).toContainText('Done');
 });

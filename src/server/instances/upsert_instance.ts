@@ -2,10 +2,11 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { contexts, InstanceDoc, priorities, ValuesSchema, KVValuesSchema } from "@/types/collections";
+import { contexts, InstanceDoc, priorities, ValuesSchema, KVValuesSchema, NextServerSearchParamsSchema } from "@/types/collections";
 import { ObjectId, WithoutId } from "mongodb";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { router } from "@/lib/url";
+import { serverToReadonlySearchParams } from "@/lib/search_params";
 
 const InputSchema = z.object({
     context: z.enum(contexts),
@@ -16,10 +17,11 @@ const InputSchema = z.object({
     notes: z.string(),
     values: ValuesSchema,
     kv_values: KVValuesSchema,
+    searchParams: NextServerSearchParamsSchema.optional(),
 })
 
 const OutputSchema = z.object({
-    redirect: z.string().optional(),
+    url: z.string(),
 })
 
 export async function upsertInstance(
@@ -30,11 +32,11 @@ export async function upsertInstance(
 
     const validation = validate(InputSchema, input);
     if (!validation.success) return validation;
-    const { context, id, instanceId, ...instance } = validation.data;
+    const { context, id, instanceId, searchParams, ...instance } = validation.data;
 
     const instanceCollection = db.collection<WithoutId<InstanceDoc>>(id);
 
-    let redirectInstanceId;
+    let redirectInstanceId: string | undefined;
 
     if (instanceId) {
         await instanceCollection.updateOne({ _id: new ObjectId(instanceId) }, { $set: instance });
@@ -52,13 +54,13 @@ export async function upsertInstance(
         redirectInstanceId = insertedId.toString();
     }
 
-    return {
-        success: true,
-        data: {
-            redirect:
-                redirectInstanceId
-                    ? router().context(context).instances().instance(id, redirectInstanceId)
-                    : undefined
-        }
-    };
+    if (redirectInstanceId) {
+        const roParams = searchParams ? serverToReadonlySearchParams(searchParams) : undefined;
+        const params = new URLSearchParams(roParams);
+        params.delete('id');
+        const urlWithParams = router().context(context).instances().instance(id, redirectInstanceId, params);
+        return { success: true, data: { url: urlWithParams } };
+    }
+
+    return { success: true };
 }

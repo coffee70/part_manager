@@ -18,7 +18,7 @@ type Props = {
 export default function TextFilter({ paramKey, fieldId, inputType = 'text', placeholder = "Filter..." }: Props) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
@@ -82,7 +82,8 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
         }
         
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
         setValue('');
         if (inputRef.current) {
             inputRef.current.focus();
@@ -124,7 +125,8 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
         }
         
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }, 300);
 
     const onImmediateChange = (text: string) => {

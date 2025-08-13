@@ -14,8 +14,9 @@ import { upsertInstance } from '@/server/instances/upsert_instance';
 import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
 import { Textarea } from '@/components/ui/fields/textarea';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { getContext } from '@/server/contexts/get_context';
+import { clientToServerSearchParams } from '@/lib/search_params';
 
 type Props = {
     instance?: {
@@ -36,7 +37,6 @@ type AttributeState = {
 }
 
 export default function InstanceForm({ instance, children }: Props) {
-    const router = useRouter();
     const { context, id } = useInstanceURL();
 
     const { data: contextImpl } = useQuery({
@@ -76,11 +76,14 @@ export default function InstanceForm({ instance, children }: Props) {
         }
     }, [instance])
 
+    const readOnlySearchParams = useSearchParams();
+
+    const { push } = useRouter();
+
     const { mutate, data } = useMutation({
         mutationFn: upsertInstance,
         onSuccess: ({ success, data }) => {
             if (success) {
-                if (data?.redirect) router.push(data.redirect)
                 queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
                 setOpen(false)
                 // reset the form
@@ -91,18 +94,24 @@ export default function InstanceForm({ instance, children }: Props) {
                 })
                 setFieldState({})
                 setKvFieldState({})
+                if (data?.url) {
+                    console.log('redirecting to', data.url);
+                    push(data.url);
+                }
             }
         }
     })
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const convertedSearchParams = clientToServerSearchParams(readOnlySearchParams);
         mutate({
             context,
             id,
             instanceId: instance?._id,
             values: fieldState,
             kv_values: kvFieldState,
+            searchParams: convertedSearchParams,
             ...attributeState
         })
     }

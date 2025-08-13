@@ -6,6 +6,7 @@ import { contextKeys, instanceKeys } from "@/lib/query_keys";
 import { deleteInstance } from "@/server/instances/delete_instance";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { More } from "@/components/ui/more";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
     AlertDialog,
     AlertDialogDescription,
@@ -19,6 +20,7 @@ import { Button } from '@/components/ui/button';
 import Loader from '@/components/ui/loader';
 import { getContext } from '@/server/contexts/get_context';
 import { TrashIcon } from 'lucide-react';
+import { clientToServerSearchParams } from '@/lib/search_params';
 
 type Props = {
     id: string;
@@ -31,10 +33,20 @@ export default function DeleteInstance({ id: instanceId }: Props) {
 
     const queryClient = useQueryClient();
 
+    const readOnlySearchParams = useSearchParams();
+
+    const { push } = useRouter();
+
     const { mutate, isPending } = useMutation({
-        mutationFn: () => deleteInstance({ context, id, instanceId, urlInstanceId }),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
+        mutationFn: deleteInstance,
+        onSuccess: ({ success, data }) => {
+            if (success) {
+                queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) })
+                setOpen(false);
+                if (data?.url) {
+                    push(data.url);
+                }
+            }
         }
     })
 
@@ -42,6 +54,17 @@ export default function DeleteInstance({ id: instanceId }: Props) {
         queryKey: contextKeys.id(context, id),
         queryFn: () => getContext({ context, id }),
     })
+
+    const handleClick = () => {
+        const convertedSearchParams = clientToServerSearchParams(readOnlySearchParams);
+        mutate({
+            context,
+            id,
+            instanceId,
+            urlInstanceId,
+            searchParams: convertedSearchParams,
+        })
+    }
 
     return (
         <>
@@ -54,7 +77,7 @@ export default function DeleteInstance({ id: instanceId }: Props) {
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <Button
-                            onClick={() => mutate()}
+                            onClick={handleClick}
                             disabled={isPending}
                         >
                             {isPending ? <Loader /> : 'Delete'}

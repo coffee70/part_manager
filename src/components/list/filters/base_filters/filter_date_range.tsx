@@ -14,7 +14,7 @@ type Props = {
 export default function DateRangeFilter({ paramKey, fieldId }: Props) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     // Determine if we're using custom field filtering or regular param filtering
     const isCustomField = !!fieldId;
@@ -90,7 +90,8 @@ export default function DateRangeFilter({ paramKey, fieldId }: Props) {
         }
         
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }
 
     return (

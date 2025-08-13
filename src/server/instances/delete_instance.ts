@@ -1,28 +1,34 @@
 'use server'
-import { AttachableDoc, InstanceDoc, LinkableDoc, contexts } from "@/types/collections";
+import { AttachableDoc, InstanceDoc, LinkableDoc, contexts, NextServerSearchParamsSchema } from "@/types/collections";
 import { getCurrentSession } from "../auth/get_current_session";
 import { ObjectId } from "mongodb";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 import { deleteAttachment } from "../attachments/delete_attachment";
 import { deleteLink } from "../links/delete_link";
 import { z } from "zod";
 import { router } from "@/lib/url";
+import { serverToReadonlySearchParams } from "@/lib/search_params";
+import { ActionState } from "@/lib/validators/server_actions";
 
 const InputSchema = z.object({
     context: z.enum(contexts),
     id: z.string(),
     instanceId: z.string().nullable().optional(),
     urlInstanceId: z.string().nullable().optional(),
+    searchParams: NextServerSearchParamsSchema.optional(),
+})
+
+const OutputSchema = z.object({
+    url: z.string(),
 })
 
 type Potentials = Partial<AttachableDoc & LinkableDoc>;
 
-export async function deleteInstance(input: z.input<typeof InputSchema>) {
+export async function deleteInstance(input: z.input<typeof InputSchema>): Promise<ActionState<typeof InputSchema, typeof OutputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    const { context, id, instanceId, urlInstanceId } = InputSchema.parse(input);
+    const { context, id, instanceId, urlInstanceId, searchParams } = InputSchema.parse(input);
 
     if (!instanceId) throw new Error('Instance ID is required');
 
@@ -30,7 +36,7 @@ export async function deleteInstance(input: z.input<typeof InputSchema>) {
 
     // get the document
     const document = await instanceCollection.findOne<Potentials>({ _id: new ObjectId(instanceId) });
-    if (!document) return;
+    if (!document) return { success: false };
 
     // delete the attachments
     if (document.attachments) {
@@ -57,6 +63,12 @@ export async function deleteInstance(input: z.input<typeof InputSchema>) {
     await instanceCollection.deleteOne({ _id: new ObjectId(instanceId) });
 
     if (urlInstanceId === instanceId) {
-        redirect(router().context(context).instances().context(id));
+        const roParams = searchParams ? serverToReadonlySearchParams(searchParams) : undefined;
+        const params = new URLSearchParams(roParams);
+        params.delete('id');
+        const urlWithParams = router().context(context).instances().context(id, params);
+        return { success: true, data: { url: urlWithParams } };
     }
+
+    return { success: true };
 }

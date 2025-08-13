@@ -11,7 +11,7 @@ import LinksKVField from "./links_kv_field";
 export default function LinksFilterBase() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
@@ -62,9 +62,10 @@ export default function LinksFilterBase() {
         const newParamsString = params.toString();
         if (originalParamsString !== newParamsString) {
             queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-            replace(`${pathname}?${newParamsString}`);
+            const newUrl = `${pathname}?${newParamsString}`;
+            push(newUrl);
         }
-    }, [searchParams, queryClient, context, id, pathname, replace]);
+    }, [searchParams, queryClient, context, id, pathname, push]);
 
     return (
         <div className="p-3 min-w-80">

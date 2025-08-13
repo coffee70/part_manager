@@ -13,7 +13,7 @@ import { instanceKeys } from "@/lib/query_keys";
 export default function PriorityFilterBase() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const urlPriority = searchParams.get('priority');
 
@@ -28,7 +28,8 @@ export default function PriorityFilterBase() {
             params.set('priority', label);
         }
         queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }
 
     return (

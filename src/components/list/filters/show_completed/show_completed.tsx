@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 export default function ShowCompleted() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
-
+    
     const urlShowCompleted = searchParams.get('showCompleted') === 'true';
 
     const handleToggle = (value: boolean) => {
@@ -24,7 +24,8 @@ export default function ShowCompleted() {
             params.delete('showCompleted');
         }
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     };
 
     return (

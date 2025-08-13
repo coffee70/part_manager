@@ -16,7 +16,7 @@ import { RouteState } from "@/components/route_builder/list_view/types";
 export default function StepFilterBase() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const urlSteps = searchParams.getAll('step');
     const urlRouteStatus = searchParams.getAll('route-status');
@@ -37,7 +37,8 @@ export default function StepFilterBase() {
             params.append('step', instanceId);
         }
         queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }
 
     const handleRouteStatusChange = (routeStatus: RouteState) => {
@@ -48,7 +49,8 @@ export default function StepFilterBase() {
             params.append('route-status', routeStatus);
         }
         queryClient.invalidateQueries({ queryKey: instanceKeys.all("models", id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }
 
     if (isPending || isError) return null;

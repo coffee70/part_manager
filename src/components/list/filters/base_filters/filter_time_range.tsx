@@ -21,7 +21,7 @@ type TimeRange = {
 export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const { replace } = useRouter();
+    const { push } = useRouter();
 
     const { context, id } = useInstanceURL();
     const queryClient = useQueryClient();
@@ -102,7 +102,8 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
         }
         
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
-        replace(`${pathname}?${params.toString()}`);
+        const newUrl = `${pathname}?${params.toString()}`;
+        push(newUrl);
     }, 300);
 
     const onStartTimeChange = (time: string) => {

@@ -21,6 +21,7 @@ import { getCurrentStep } from "@/server/routes/get_current_step";
 import { hasRoute } from "@/server/routes/has_route";
 import { getTargetSteps } from "@/server/routes/get_target_steps";
 import { getContexts } from "@/server/contexts/get_contexts";
+import { serverToReadonlySearchParams } from "@/lib/search_params";
 
 export default async function Page({
     params,
@@ -41,8 +42,12 @@ export default async function Page({
         if (instances.length === 0) {
             return <SummaryError />;
         }
-        const redirectUrl = router().models().instances().instance(id, instances[0]._id);
-        redirect(redirectUrl);
+        const roParams = searchParams ? serverToReadonlySearchParams(searchParams) : undefined;
+        const params = new URLSearchParams(roParams);
+        // here instanceId is invalid, so we should remove it from the params
+        params.delete('id');
+        const urlWithParams = router().models().instances().instance(id, instances[0]._id, params);
+        redirect(urlWithParams);
     }
 
     const queryClient = new QueryClient();
@@ -54,7 +59,7 @@ export default async function Page({
 
     await queryClient.prefetchQuery({
         queryKey: instanceKeys.id("models", id, instanceId),
-        queryFn: () => getInstance({ id, instanceId }),
+        queryFn: () => getInstance({ id, instanceId, searchParams }),
     })
 
     await queryClient.prefetchQuery({

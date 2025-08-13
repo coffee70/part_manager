@@ -17,6 +17,7 @@ import { isCommentable } from "@/server/contexts/is_commentable";
 import { hasPriority } from "@/server/contexts/has_priority";
 import { getContext } from "@/server/contexts/get_context";
 import { getRouteFields } from "@/server/routers/get_route_fields";
+import { serverToReadonlySearchParams } from "@/lib/search_params";
 
 export default async function Page({
     params,
@@ -27,10 +28,22 @@ export default async function Page({
 }) {
     const routerId = params.routerId
     const instanceId = searchParams.id
-    if (!instanceId || Array.isArray(instanceId)) {
-        const instances = await getInstances({ id: routerId, context: "routers", searchParams })
-        if (instances.length === 0) return <SummaryError />
-        redirect(router().routers().instances().instance(routerId, instances[0]._id));
+
+    const instances = await getInstances({ id: routerId, context: "routers", searchParams })
+
+    // Combine the logic for missing/invalid instanceId and not found in instances
+    const invalidInstanceId = !instanceId || Array.isArray(instanceId) || !instances.find((instance) => instance._id === instanceId);
+
+    if (invalidInstanceId) {
+        if (instances.length === 0) {
+            return <SummaryError />
+        }
+        const roParams = searchParams ? serverToReadonlySearchParams(searchParams) : undefined;
+        const params = new URLSearchParams(roParams);
+        // here instanceId is invalid, so we should remove it from the params
+        params.delete('id');
+        const urlWithParams = router().routers().instances().instance(routerId, instances[0]._id, params);
+        redirect(urlWithParams);
     }
 
     const queryClient = new QueryClient();
@@ -42,7 +55,7 @@ export default async function Page({
 
     await queryClient.prefetchQuery({
         queryKey: instanceKeys.id("routers", routerId, instanceId),
-        queryFn: () => getInstance({ id: routerId, instanceId }),
+        queryFn: () => getInstance({ id: routerId, instanceId, searchParams }),
     })
 
     await queryClient.prefetchQuery({

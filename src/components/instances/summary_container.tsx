@@ -25,13 +25,17 @@ import More from '../summary/summary_actions/more/more';
 import { MoreProvider } from '../summary/summary_actions/more/more_context';
 import Step from '@/components/summary/summary_actions/step/step';
 import SummaryRouteFields from '@/components/summary/summary_route_fields/summary_route_fields';
+import { useSearchParams } from 'next/navigation';
+import { clientToServerSearchParams } from '@/lib/search_params';
 
 export default function SummaryContainer() {
     const { context, id, instanceId } = useInstanceURL();
-    
+    const readOnlySearchParams = useSearchParams();
+    const searchParams = clientToServerSearchParams(readOnlySearchParams);
+
     const { data: instance, isError, isPending } = useQuery({
         queryKey: instanceKeys.id(context, id, instanceId),
-        queryFn: () => getInstance({ id, instanceId }),
+        queryFn: () => getInstance({ id, instanceId, searchParams }),
     })
 
     const { data: attachable } = useQuery({

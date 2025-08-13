@@ -50,14 +50,15 @@ import DateFieldFilter from "@/components/list/filters/filter_date_field/filter_
 import TimeFieldFilter from "@/components/list/filters/filter_time_field/filter_time_field";
 import SelectFieldFilter from "../list/filters/filter_select_field/filter_select_field";
 import KVFieldFilter from "@/components/list/filters/filter_kv_field/filter_kv_field";
-import { convertSearchParams } from "@/lib/search_params";
+import { clientToServerSearchParams } from "@/lib/search_params";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
     | (IntrinsicFieldColumn & { isSystem: false })
 
 export default function TableContainer() {
-    const searchParams = useSearchParams();
+    const readOnlySearchParams = useSearchParams();
+    const searchParams = clientToServerSearchParams(readOnlySearchParams);
     const pathname = usePathname();
     const { replace } = useRouter();
     const [isClient, setIsClient] = useState(false);
