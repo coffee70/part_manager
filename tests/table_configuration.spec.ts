@@ -517,15 +517,34 @@ test("test model table configuration", async ({ page }) => {
     const day3Num = day3.getDate().toString();
     const day5Num = day5.getDate().toString();
     await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
-    await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
-    // wait for url to contain updatedAt
+    // wait for url to contain updatedAt - from day 5
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
         if (!updatedAtRaw) return false;
-        const updatedAtParsed = JSON.parse(updatedAtRaw);
-        // the format is YYYY-MM-DD
-        return updatedAtParsed.from === day3.toISOString().split('T')[0]
-            && updatedAtParsed.to === day5.toISOString().split('T')[0];
+        try {
+            const { from } = JSON.parse(updatedAtRaw);
+            const fromYMD = new Date(from).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const day5YMD = day5.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return fromYMD === day5YMD;
+        } catch (e) {
+            return false;
+        }
+    });
+    await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
+    // wait for url to contain updatedAt - from today - 3 days ago to today - 5 days ago
+    await page.waitForURL(url => {
+        const updatedAtRaw = url.searchParams.get('updatedAt');
+        if (!updatedAtRaw) return false;
+        try {
+            const { from, to } = JSON.parse(updatedAtRaw);
+            const fromYMD = new Date(from).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const toYMD = new Date(to).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const day3YMD = day3.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const day5YMD = day5.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return fromYMD === day5YMD && toYMD === day3YMD;
+        } catch (e) {
+            return false;
+        }
     });
     await page.keyboard.press('Escape');
     await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).not.toBeVisible();
@@ -533,14 +552,15 @@ test("test model table configuration", async ({ page }) => {
     await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).not.toBeVisible();
     await page.getByTestId('updated-at-filter-trigger').click();
     await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
-    await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
     // wait for url to not contain updatedAt
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
-        if (!updatedAtRaw) return true;
-        return false;
+        return !updatedAtRaw;
     });
     await page.keyboard.press('Escape');
+    await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).toBeVisible();
+    await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).toBeVisible();
+    await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).toBeVisible();
 
     // add text field to the table configuration
     await page.getByTestId('table-configuration-trigger').click();
