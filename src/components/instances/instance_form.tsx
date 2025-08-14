@@ -95,7 +95,6 @@ export default function InstanceForm({ instance, children }: Props) {
                 setFieldState({})
                 setKvFieldState({})
                 if (data?.url) {
-                    console.log('redirecting to', data.url);
                     push(data.url);
                 }
             }
