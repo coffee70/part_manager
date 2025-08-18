@@ -167,6 +167,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                                 <label
                                     key={option}
                                     className="flex items-center space-x-3 p-2 rounded-md hover:bg-stone-100 cursor-pointer transition-colors duration-150"
+                                    data-testid={`filter-select-field-option-${option}`}
                                 >
                                     <div className={`flex items-center justify-center w-4 h-4 border-2 rounded transition-colors ${
                                         isSelected 

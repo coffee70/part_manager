@@ -36,6 +36,15 @@ const multipleKVKeys = [
     'MUL_010',
 ];
 
+const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
+const dayBeforeYesterday = new Date(new Date().setDate(new Date().getDate() - 2));
+const dayBeforeDayBeforeYesterday = new Date(new Date().setDate(new Date().getDate() - 3));
+const toYYYYMMDD = (date: Date) =>
+  date.toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
+const yesterdayString = toYYYYMMDD(yesterday);
+const dayBeforeYesterdayString = toYYYYMMDD(dayBeforeYesterday);
+const dayBeforeDayBeforeYesterdayString = toYYYYMMDD(dayBeforeDayBeforeYesterday);
+
 const instances = [
     {
         number: 'S-100',
@@ -43,7 +52,7 @@ const instances = [
         notes: 'Some notes on something',
         textField: 'Some text',
         numberField: '10',
-        dateField: '2022-10-12',
+        dateField: yesterdayString,
         timeField: '10:10',
         paragraphField: 'Some paragraph',
         singleRestrictedSelectField: restrictedOptions[0],
@@ -74,7 +83,7 @@ const instances = [
         notes: 'Some notes on something else',
         textField: 'Some other text',
         numberField: '11',
-        dateField: '2022-10-13',
+        dateField: dayBeforeYesterdayString,
         timeField: '11:11',
         paragraphField: 'Some other paragraph',
         singleRestrictedSelectField: restrictedOptions[1],
@@ -105,7 +114,7 @@ const instances = [
         notes: 'Some notes on something else',
         textField: 'Some other text',
         numberField: '12',
-        dateField: '2022-10-14',
+        dateField: dayBeforeDayBeforeYesterdayString,
         timeField: '12:12',
         paragraphField: 'Some other paragraph',
         singleRestrictedSelectField: restrictedOptions[2],
@@ -272,16 +281,11 @@ test("test model table configuration", async ({ page }) => {
         await page.getByLabel('Priority').click();
         await page.getByLabel('Priority').fill('');
         await page.getByRole('option', { name: instance.priority, exact: true }).click();
-        await page.getByLabel('Notes').click();
         await page.getByLabel('Notes').fill(instance.notes);
-        await page.getByLabel('Text Field', { exact: true }).click();
-        await page.getByLabel('Text Field', { exact: true }).fill('Some text');
-        await page.getByLabel("Number Field", { exact: true }).click();
+        await page.getByLabel('Text Field', { exact: true }).fill(instance.textField);
         await page.getByLabel("Number Field", { exact: true }).fill(instance.numberField);
         await page.getByLabel("Date Field", { exact: true }).fill(instance.dateField);
-        await page.getByLabel("Time Field", { exact: true }).click();
         await page.getByLabel("Time Field", { exact: true }).fill(instance.timeField);
-        await page.getByLabel("Paragraph Field", { exact: true }).click();
         await page.getByLabel("Paragraph Field", { exact: true }).fill(instance.paragraphField);
         await page.getByLabel("Single Restricted Select Field", { exact: true }).click();
         await page.getByRole('option', { name: instance.singleRestrictedSelectField, exact: true }).click();
@@ -488,10 +492,10 @@ test("test model table configuration", async ({ page }) => {
     await page.waitForURL(url => url.searchParams.get('number') === 'S-100');
     await expect(page.getByTestId('summary-number-input')).toHaveValue('S-100');
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
     // Ensure the other rows are not present
-    await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).not.toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     // Now clear the filter
     await page.getByTestId('number-filter-trigger').click();
     // Wait for the clear button to be visible and click it
@@ -501,8 +505,8 @@ test("test model table configuration", async ({ page }) => {
     await page.waitForURL(url => !url.searchParams.get('number'));
     await page.keyboard.press('Escape');
     // Wait for the table to return to its unfiltered state (all rows visible)
-    await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
 
     // filter updated by
     await page.getByTestId('updated-at-filter-trigger').click();
@@ -547,9 +551,9 @@ test("test model table configuration", async ({ page }) => {
         }
     });
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).not.toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).not.toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-100' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     await page.getByTestId('updated-at-filter-trigger').click();
     await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
     // wait for url to not contain updatedAt
@@ -558,9 +562,9 @@ test("test model table configuration", async ({ page }) => {
         return !updatedAtRaw;
     });
     await page.keyboard.press('Escape');
-    await expect(page.getByRole('row', { name: /Option 2 Option 3 Today by Test Admin S-100 10:10 AM/ })).toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 3 Option 4 Today by Test Admin S-101 11:11 AM/ })).toBeVisible();
-    await expect(page.getByRole('row', { name: /Option 4 Option 5 Today by Test Admin S-102 12:12 PM/ })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
 
     // add text field to the table configuration
     await page.getByTestId('table-configuration-trigger').click();
@@ -570,6 +574,435 @@ test("test model table configuration", async ({ page }) => {
     await page.getByRole('button', { name: 'Save Configuration' }).click();
 
     // filter by text field
+    await page.getByTestId('text-field-filter-trigger-Text Field').click();
+    await page.getByPlaceholder('Filter...').fill('Some text');
+    await page.waitForURL(url => !!url.searchParams.get('custom-field'));
+    await page.getByPlaceholder('Filter...').press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    // clear the filter
+    await page.getByTestId('text-field-filter-trigger-Text Field').click();
+    await page.getByRole('button').click();
+    await page.waitForURL(url => !url.searchParams.get('custom-field'));
+    await page.getByPlaceholder('Filter...').press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by number field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Number Field Number field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('number-field-filter-trigger-Number Field').click();
+    await page.getByPlaceholder('Filter by number...').fill('11');
+    await page.waitForURL(url => !!url.searchParams.get('custom-field'));
+    await page.getByPlaceholder('Filter by number...').press('Escape');
+    // check the summay page updates to the next filtered instance
+    await expect(page.getByTestId('summary-number-input')).toHaveValue('S-101');
+    await expect(page.getByRole('cell', { name: 'S-100' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    // clear the filter
+    await page.getByTestId('number-field-filter-trigger-Number Field').click();
+    await page.getByRole('button').click();
+    await page.waitForURL(url => !url.searchParams.get('custom-field'));
+    await page.getByPlaceholder('Filter by number...').press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by date field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Date Field Date field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('date-field-filter-trigger-Date Field').click();
+    const yesterdayNum = yesterday.getDate().toString();
+    const todayNum = today.getDate().toString();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.waitForURL(url => {
+        const dateFieldRaw = url.searchParams.get('custom-field');
+        if (!dateFieldRaw) return false;
+        const dateField = JSON.parse(dateFieldRaw);
+        const entries = Object.entries(dateField);
+        if (entries.length === 0) return false;
+        const [fieldId, filterValue] = entries[0];
+        if (typeof filterValue !== 'string') return false;
+        const dateRange = JSON.parse(filterValue);
+        if (dateRange && 'from' in dateRange && typeof dateRange.from === 'string') {
+            const fromYMD = new Date(dateRange.from).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const yesterdayYMD = yesterday.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return fromYMD === yesterdayYMD;
+        }
+        return false;
+    });
+    await page.getByRole('gridcell', { name: todayNum, exact: true }).click();
+    await page.waitForURL(url => {
+        const dateFieldRaw = url.searchParams.get('custom-field');
+        if (!dateFieldRaw) return false;
+        const dateField = JSON.parse(dateFieldRaw);
+        const entries = Object.entries(dateField);
+        if (entries.length === 0) return false;
+        const [fieldId, filterValue] = entries[0];
+        if (typeof filterValue !== 'string') return false;
+        const dateRange = JSON.parse(filterValue);
+        if (dateRange && 'from' in dateRange && typeof dateRange.from === 'string') {
+            const fromYMD = new Date(dateRange.from).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const toYMD = new Date(dateRange.to).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const yesterdayYMD = yesterday.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const todayYMD = today.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            return fromYMD === yesterdayYMD && toYMD === todayYMD;
+        }
+        return false;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('date-field-filter-trigger-Date Field').click();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.waitForURL(url => {
+        const dateFieldRaw = url.searchParams.get('custom-field');
+        return !dateFieldRaw;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by time field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Time Field Time field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('time-field-filter-trigger-Time Field').click();
+    await page.locator('div').filter({ hasText: /^From:$/ }).getByRole('textbox').fill('10:00');
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const timeRange = JSON.parse(filterValue);
+        if (timeRange && 'start' in timeRange) {
+            return timeRange.start === '10:00';
+        }
+        return false;
+    });
+    await page.locator('div').filter({ hasText: /^To:$/ }).getByRole('textbox').fill('11:00');
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const timeRange = JSON.parse(filterValue);
+        if (timeRange && 'start' in timeRange && 'end' in timeRange) {
+            return timeRange.start === '10:00' && timeRange.end === '11:00';
+        }
+        return false;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('time-field-filter-trigger-Time Field').click();
+    await page.locator('div').filter({ hasText: /^From:$/ }).getByRole('button').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const timeRange = JSON.parse(filterValue);
+        if (timeRange && 'end' in timeRange && !('start' in timeRange)) {
+            return timeRange.end === '11:00';
+        }
+        return false;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('time-field-filter-trigger-Time Field').click();
+    await page.locator('div').filter({ hasText: /^To:$/ }).getByRole('button').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // ensure you can't filter by paragraph field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Paragraph Field Paragraph' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await expect(page.getByTestId('paragraph-field-filter-trigger-Paragraph Field')).not.toBeVisible();
+
+    // filter by single restricted select field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Single Restricted Select' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('select-field-filter-trigger-Single Restricted Select Field').click();
+    await page.getByPlaceholder('Search options...').fill('Option 1');
+    await expect(page.getByTestId('filter-select-field-option-Option 1')).toBeVisible();
+    await expect(page.getByTestId('filter-select-field-option-Option 2')).not.toBeVisible();
+    await expect(page.getByTestId('filter-select-field-option-Option 3')).not.toBeVisible();
+    await expect(page.getByTestId('filter-select-field-option-Option 4')).not.toBeVisible();
+    await expect(page.getByTestId('filter-select-field-option-Option 5')).not.toBeVisible();
+    await page.getByTestId('filter-select-field-option-Option 1').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOption = JSON.parse(filterValue);
+        return selectedOption === 'Option 1';
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    // check that multiple options are allowed
+    await page.getByTestId('select-field-filter-trigger-Single Restricted Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 2').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOptions = JSON.parse(filterValue);
+        return selectedOptions.length === 2 
+            && selectedOptions.includes('Option 1')
+            && selectedOptions.includes('Option 2');
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('select-field-filter-trigger-Single Restricted Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 1').click();
+    await page.getByTestId('filter-select-field-option-Option 2').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by single creative select field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Single Creative Select Field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('select-field-filter-trigger-Single Creative Select Field').click();
+    await page.getByPlaceholder('Search or add new option...').fill('Option 100');
+    await page.getByRole('button', { name: 'Add new option' }).click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOption = JSON.parse(filterValue);
+        return selectedOption === 'Option 100';
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('select-field-filter-trigger-Single Creative Select Field').click();
+    await page.getByPlaceholder('Search or add new option...').fill('Option 200');
+    await page.getByRole('button', { name: 'Add new option' }).click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOptions = JSON.parse(filterValue);
+        return selectedOptions.length === 2 
+            && selectedOptions.includes('Option 100')
+            && selectedOptions.includes('Option 200');
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('select-field-filter-trigger-Single Creative Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 100').click();
+    await page.getByTestId('filter-select-field-option-Option 200').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by multiple restricted select field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Multiple Restricted Select' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('select-field-filter-trigger-Multiple Restricted Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 3').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOptions = JSON.parse(filterValue);
+        return selectedOptions.length === 1 
+            && selectedOptions.includes('Option 3');
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('select-field-filter-trigger-Multiple Restricted Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 3').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by multiple creative select field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Multiple Creative Select Field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('select-field-filter-trigger-Multiple Creative Select Field').click();
+    await page.getByPlaceholder('Search or add new option...').fill('Option 300');
+    await page.getByRole('button', { name: 'Add new option' }).click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const selectedOptions = JSON.parse(filterValue);
+        return selectedOptions.length === 1 
+            && selectedOptions.includes('Option 300');
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('select-field-filter-trigger-Multiple Creative Select Field').click();
+    await page.getByTestId('filter-select-field-option-Option 300').click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by single key value field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Test Single KV' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('kv-field-filter-trigger-Test Single KV').click();
+    await page.getByTestId('kv-line-key-select-trigger--0').click();
+    await page.getByLabel('SIN_005').click();
+    await page.getByRole('textbox', { name: 'Enter value' }).fill('300');
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const kvField = JSON.parse(filterValue);
+        return kvField.SIN_005 === '300';
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('kv-field-filter-trigger-Test Single KV').click();
+    await page.getByRole('button', { name: 'Delete key-value pair' }).click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
+
+    // filter by multiple key value field
+    await page.getByTestId('table-configuration-trigger').click();
+    await page.getByTestId('table-configuration-sortable-column-item-remove-button').nth(2).click();
+    await page.getByRole('button', { name: 'Multiple KV Field' }).click();
+    await page.getByRole('button', { name: 'Save Configuration' }).click();
+    await page.getByTestId('kv-field-filter-trigger-Multiple KV Field').click();
+    await page.getByTestId('kv-line-key-select-trigger--0').click();
+    await page.getByLabel('MUL_001').click();
+    await page.getByRole('textbox', { name: 'Enter value' }).fill('500');
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        if (!customFieldParam) return false;
+        const customFieldObj = JSON.parse(customFieldParam);
+        const customFieldEntries = Object.entries(customFieldObj);
+        if (customFieldEntries.length === 0) return false;
+        const [fieldId, filterValue] = customFieldEntries[0];
+        if (typeof filterValue !== 'string') return false;
+        const kvField = JSON.parse(filterValue);
+        return kvField.MUL_001 === '500';
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
+    await page.getByTestId('kv-field-filter-trigger-Multiple KV Field').click();
+    await page.getByRole('button', { name: 'Delete key-value pair' }).click();
+    await page.waitForURL(url => {
+        const customFieldParam = url.searchParams.get('custom-field');
+        return !customFieldParam;
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('cell', { name: 'S-100' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-101' })).toBeVisible();
+    await expect(page.getByRole('cell', { name: 'S-102' })).toBeVisible();
 });
 
 test("test router table configuration", async ({ page }) => {
