@@ -46,7 +46,8 @@ export default function LinksKVField({
                     {contextIdToName[key] || key}
                 </div>
             ),
-            value: key
+            value: key,
+            testId: contextIdToName[key] || key
         }));
     }, [field.keys, contextColors, contextIdToName]);
 

@@ -4,11 +4,12 @@ import React from "react";
 export type Key = {
     component: React.ReactNode;
     value: string;
+    testId?: string;
 }
 
 export const DEFAULT_KEY: Key = {
     component: '',
-    value: ''
+    value: '',
 };
 
 export type KVFieldState = {
