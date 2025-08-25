@@ -271,7 +271,7 @@ export const InstanceSchema = z.object({
     updatedAt: z.date(),
     updatedBy: z.string(),
     values: ValuesSchema,
-    kv_values: KVValuesSchema,
+    kv_values: KVValuesSchema.optional(),
     links: z.array(z.object({
         _id: z.string(),
         contextId: z.string(),
