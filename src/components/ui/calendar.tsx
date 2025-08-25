@@ -37,19 +37,18 @@ function Calendar({
           "opacity-80 rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: "h-9 w-9 text-center text-sm p-0 relative cursor-pointer hover:bg-orange-50 hover:rounded-md [&:has([aria-selected])]:bg-orange-100 focus-within:relative focus-within:z-20",
-        day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 aria-selected:opacity-100 rounded-md"
-        ),
-        day_range_end: "day-range-end rounded-md",
+        day:
+          "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 w-9 p-0 aria-selected:opacity-100 rounded-md",
+        day_range_start: "day-range-start rounded-md bg-orange-500 text-white",
+        day_range_end: "day-range-end rounded-md bg-orange-500 text-white",
         day_selected:
-          "bg-orange-500 text-white hover:bg-orange-600 focus:bg-orange-600 rounded-md",
+          "hover:bg-orange-600 focus:bg-orange-600 rounded-md",
         day_today: "text-orange-600 font-black border border-orange-200 rounded-md [&[aria-selected]]:bg-orange-600 [&[aria-selected]]:text-white [&[aria-selected]]:border-orange-800 [&[aria-selected]]:rounded-md",
         day_outside:
           "day-outside opacity-50 aria-selected:bg-orange-50 aria-selected:text-orange-400 rounded-md",
         day_disabled: "text-stone-400 opacity-50",
         day_range_middle:
-          "aria-selected:bg-orange-100 aria-selected:text-orange-800 rounded-none [&.rdp-day_today]:bg-transparent [&.rdp-day_today]:border-2 [&.rdp-day_today]:border-orange-600 [&.rdp-day_today]:text-orange-600 [&.rdp-day_today]:font-black [&.rdp-day_today]:rounded-md",
+          "rounded-none [&[aria-selected]]:bg-orange-100 [&[aria-selected]]:text-orange-800 hover:bg-orange-200 [&[aria-selected]:hover]:bg-orange-200 [&.rdp-day_today]:bg-transparent [&.rdp-day_today]:border-2 [&.rdp-day_today]:border-orange-600 [&.rdp-day_today]:text-orange-600 [&.rdp-day_today]:font-black [&.rdp-day_today]:rounded-md",
         day_hidden: "invisible",
         ...classNames,
       }}
