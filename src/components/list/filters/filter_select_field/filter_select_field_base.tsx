@@ -24,7 +24,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
     const queryClient = useQueryClient();
 
     // Get initial value from custom-field URL parameter
-    const getInitialValue = (): string[] => {
+    const getInitialValue = React.useCallback((): string[] => {
         const customFieldParam = searchParams.get('custom-field');
         if (!customFieldParam) return [];
         
@@ -40,7 +40,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
         } catch {
             return [];
         }
-    };
+    }, [searchParams, fieldId]);
 
     const [selectedValues, setSelectedValues] = React.useState<string[]>(getInitialValue);
     const [filterText, setFilterText] = React.useState('');
@@ -49,7 +49,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
     // Update selected values when URL changes
     React.useEffect(() => {
         setSelectedValues(getInitialValue());
-    }, [searchParams, fieldId]);
+    }, [searchParams, fieldId, getInitialValue]);
 
     // Update available options when new options are added
     React.useEffect(() => {
