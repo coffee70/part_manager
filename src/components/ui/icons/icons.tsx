@@ -11,7 +11,10 @@ import {
     KeyRoundIcon,
     MousePointerClickIcon,
     CalendarIcon,
-    HashIcon
+    HashIcon,
+    CircleIcon,
+    CircleXIcon,
+    CircleCheckIcon
 } from "lucide-react"
 import { type FieldType } from "@/types/collections";
 
@@ -130,7 +133,7 @@ function TitleFieldIcon({ size }: Props) {
         <div
             className={cn(
                 "p-1 rounded-md bg-gradient-to-br from-slate-800 to-black text-white shadow-md",
-            )}  
+            )}
         >
             <AlignLeftIcon size={size} />
         </div>
@@ -182,6 +185,68 @@ function FieldType({ type, size }: { type: FieldType, size: number }) {
     }
 }
 
+function CompletedIcon() {
+    return (
+        <CircleCheckIcon
+            className="w-6 h-6 fill-green-500 text-green-50 rounded-full"
+            data-testid="completed-icon"
+        />
+    )
+}
+
+function FailedIcon() {
+    return (
+        <CircleXIcon
+            className="w-6 h-6 fill-red-500 text-red-50 rounded-full"
+            data-testid="failed-icon"
+        />
+    )
+}
+
+function CompletedIdleIcon() {
+    return (
+        <CircleCheckIcon
+            className="w-6 h-6 text-green-500 rounded-full"
+            data-testid="completed-idle-icon"
+        />
+    )
+}
+
+function FailedIdleIcon() {
+    return (
+        <CircleXIcon
+            className="w-6 h-6 text-red-500 rounded-full"
+            data-testid="failed-idle-icon"
+        />
+    )
+}
+
+function NotStartedIcon() {
+    return (
+        <div className="flex items-center justify-center w-6 h-6">
+            <CircleIcon
+                className="w-5 h-5 text-stone-400 rounded-full"
+                data-testid="not-started-icon"
+                strokeWidth={2}
+                fill="none"
+            />
+        </div>
+    );
+}
+
+function PausedIcon() {
+    return (
+        <div className="flex items-center justify-center w-6 h-6">
+            <CircleIcon
+                className="w-5 h-5 text-stone-400 fill-stone-400 rounded-full"
+                data-testid="paused-icon"
+                strokeWidth={2}
+                fill="none"
+            />
+        </div>
+    );
+}
+
 export {
     PrimaryModelIcon,
     SecondaryModelIcon,
@@ -194,5 +259,11 @@ export {
     FieldIcon,
     TitleFieldIcon,
     NotFoundIcon,
-    FieldType
+    FieldType,
+    CompletedIcon,
+    FailedIcon,
+    NotStartedIcon,
+    CompletedIdleIcon,
+    FailedIdleIcon,
+    PausedIcon
 }

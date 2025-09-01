@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Route, Instance, Node } from './types';
+import { Route, Instance, Node } from '@/types/collections';
 import { DndContext, DragEndEvent, PointerSensor, closestCenter, useSensor, useSensors, DragStartEvent } from '@dnd-kit/core';
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import SortableRow from './sortable_row';

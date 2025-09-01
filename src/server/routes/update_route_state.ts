@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { getCurrentSession } from "../auth/get_current_session";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { ObjectId } from "mongodb";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 const InputSchema = z.object({
     modelId: z.string(),

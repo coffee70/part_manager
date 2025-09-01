@@ -1,4 +1,4 @@
-import Header from "@/components/routes/header";
+import Header from "@/components/routes/header/header";
 import { instanceKeys } from "@/lib/query_keys";
 import { getInstance } from "@/server/instances/get_instance";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";

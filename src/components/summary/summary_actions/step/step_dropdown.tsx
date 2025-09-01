@@ -1,6 +1,5 @@
 'use client'
 import React from 'react';
-import { StepType } from "@/types/collections";
 import StepButton from "./step_button";
 import {
     DropdownMenu,
@@ -14,7 +13,6 @@ import {
     DropdownMenuSub,
     DropdownMenuSubTrigger
 } from '@/components/ui/dropdown-menu'
-import StepItem from "./step_item";
 import {
     RouteIcon,
     TrashIcon,
@@ -25,20 +23,15 @@ import {
     PlayIcon,
     PencilIcon
 } from "lucide-react";
-
-interface TargetStep {
-    id: string;
-    instanceId: string;
-    number: string;
-    type: StepType;
-}
+import TargetActions from './target_actions';
+import { TargetSteps } from './types';
 
 interface StepDropdownProps {
-    currentStep: any;
-    targetSteps?: TargetStep[] | null;
+    targetSteps?: TargetSteps;
     isPaused: boolean;
     isCompleted: boolean;
     isStopped: boolean;
+    isIdle: boolean;
     isOnLastStep: boolean;
     onStepChange: (id: string) => void;
     onDeleteClick: () => void;
@@ -49,17 +42,19 @@ interface StepDropdownProps {
     onStopRoute: () => void;
     onResumeRoute: () => void;
     onCompleteRoute: () => void;
+    onCompleteStep: () => void;
+    onFailStep: () => void;
 }
 
 /**
  * A dropdown menu component for the Step UI
  */
 export default function StepDropdown({
-    currentStep,
     targetSteps,
     isPaused,
     isCompleted,
     isStopped,
+    isIdle,
     isOnLastStep,
     onStepChange,
     onDeleteClick,
@@ -69,52 +64,29 @@ export default function StepDropdown({
     onPauseRoute,
     onStopRoute,
     onResumeRoute,
-    onCompleteRoute
+    onCompleteRoute,
+    onCompleteStep,
+    onFailStep
 }: StepDropdownProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <StepButton step={currentStep} isPaused={isPaused} />
+                <StepButton />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48">
+            <DropdownMenuContent className="min-w-48">
                 <DropdownMenuGroup>
-                    {isOnLastStep && (
-                        <DropdownMenuItem
-                            onSelect={onCompleteRoute}
-                            disabled={isPaused}
-                        >
-                            <StepItem
-                                step={{
-                                    id: "done",
-                                    name: "Done",
-                                    type: "Done" as StepType
-                                }}
-                            />
-                        </DropdownMenuItem>
-                    )}
-                    {targetSteps && targetSteps.length > 0 ? (
-                        targetSteps.map((targetStep) => (
-                            <DropdownMenuItem
-                                key={targetStep.id}
-                                onClick={() => onStepChange(targetStep.id)}
-                                disabled={isPaused}
-                            >
-                                <StepItem
-                                    step={{
-                                        id: targetStep.id,
-                                        name: targetStep.number,
-                                        type: targetStep.type
-                                    }}
-                                />
-                            </DropdownMenuItem>
-                        ))
-                    ) : (
-                        !isOnLastStep && (
-                            <DropdownMenuItem disabled>
-                                There are no further steps
-                            </DropdownMenuItem>
-                        )
-                    )}
+                    <TargetActions
+                        targetSteps={targetSteps}
+                        isOnLastStep={isOnLastStep}
+                        isPaused={isPaused}
+                        isIdle={isIdle}
+                        isCompleted={isCompleted}
+                        onStepChange={onStepChange}
+                        onCompleteRoute={onCompleteRoute}
+                        onPauseRoute={onPauseRoute}
+                        onCompleteStep={onCompleteStep}
+                        onFailStep={onFailStep}
+                    />
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
@@ -158,7 +130,7 @@ export default function StepDropdown({
                     </DropdownMenuSub>
                     {!isStopped && (
                         <>
-                            {!isCompleted && (isPaused ? (
+                            {!isCompleted && !isIdle && (isPaused ? (
                                 <DropdownMenuItem onSelect={onResumeRoute}>
                                     <div className='flex items-center space-x-2'>
                                         <PlayIcon className='h-4 w-4' />

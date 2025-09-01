@@ -1,9 +1,9 @@
 'use server'
 import { z } from "zod"
 import { db } from "@/lib/db"
-import { InstanceDoc, stepTypes } from "@/types/collections"
+import { InstanceDoc, StepState } from "@/types/collections"
 import { getInstance } from "@/server/instances/get_instance"
-import { RouteState } from "@/components/route_builder/list_view/types"
+import { RouteState } from "@/types/collections"
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -17,7 +17,7 @@ const OutputSchema = z.object({
         routerId: z.string(),
         instanceId: z.string(),
         number: z.string(),
-        type: z.enum(stepTypes),
+        type: z.nativeEnum(StepState),
     }))
 })
 
@@ -65,7 +65,7 @@ export async function getCurrentSteps(input: z.input<typeof InputSchema>): Promi
                         routerId: route.routerId,
                         instanceId: node.instanceId,
                         number: routerInstance.number,
-                        type: "In-progress"
+                        type: node.state ?? StepState.Completed
                     });
                 }
             } catch (error) {

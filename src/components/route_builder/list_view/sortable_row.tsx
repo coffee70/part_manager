@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Instance, Node } from './types';
+import { Instance, Node } from '@/types/collections';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
 import { cn } from '@/lib/utils';

@@ -2,21 +2,20 @@
 import { useBuilderContext } from "@/components/route_builder/builder_view/builder.context";
 import useDragger from "@/components/route_builder/builder_view/draggable.hook";
 import React, { useImperativeHandle } from "react"
-import Handle from "./handle";
-import { type Node as NodeType, Position } from "./types";
+import { type Node as NodeType } from "./types";
 import StepForm from "./step_form";
 import { cva } from "class-variance-authority";
-import { StepType } from "@/types/collections";
+import { StepState } from "@/types/collections";
 import { useHoverField } from "./hover_field.hook";
 import { useObserver } from "./observer.hook";
 import { STAGE_BORDER_WIDTH } from "./stage";
 import Handles from "./handles";
 
-type SelectedType = StepType | "None";
+type SelectedType = StepState | "None";
 
 type Variants = {
     variant: {
-        [key in StepType]: string
+        [key in StepState]: string
     };
     selected: {
         [key in SelectedType]: string;
@@ -31,23 +30,25 @@ const nodeVariants = cva<Variants>(
     {
         variants: {
             variant: {
-                "To-do": "bg-gray-100 text-gray-800 border border-gray-600",
-                "In-progress": "bg-blue-100 text-blue-800 border border-blue-600",
-                "Done": "bg-green-100 text-green-800 border border-green-600",
+                [StepState.NotStarted]: "bg-gray-100 text-gray-800 border border-gray-600",
+                [StepState.InProgress]: "bg-blue-100 text-blue-800 border border-blue-600",
+                [StepState.Completed]: "bg-green-100 text-green-800 border border-green-600",
+                [StepState.Failed]: "bg-red-100 text-red-800 border border-red-600",
             },
             selected: {
-                "To-do": "ring-2 ring-gray-600",
-                "In-progress": "ring-2 ring-blue-600",
-                "Done": "ring-2 ring-green-600",
+                [StepState.NotStarted]: "ring-2 ring-gray-600",
+                [StepState.InProgress]: "ring-2 ring-blue-600",
+                [StepState.Completed]: "ring-2 ring-green-600",
+                [StepState.Failed]: "ring-2 ring-red-600",
                 "None": "ring-0",
-            },
+            },  
             dragging: {
                 true: "cursor-grabbing",
                 false: "cursor-grab",
             }
         },
         defaultVariants: {
-            variant: "To-do",
+            variant: StepState.NotStarted,
             selected: "None",
         }
     }

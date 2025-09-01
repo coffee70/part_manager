@@ -1,22 +1,20 @@
 'use server'
 import { db } from "@/lib/db"
-import { InstanceDoc, stepTypes } from "@/types/collections"
+import { InstanceDoc, NodeSchema, StepState } from "@/types/collections"
 import { ObjectId } from "mongodb"
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
-import { RouteState } from "@/components/route_builder/list_view/types"
+import { RouteSchema } from "@/types/collections"
 
-const OutputSchema = z.object({
-    routerId: z.string(),
-    currentStepId: z.string().nullable(),
-    nodes: z.array(z.object({
-        id: z.string(),
-        instanceId: z.string(),
-        name: z.string(),
-        type: z.enum(stepTypes),
-    })),
-    state: z.nativeEnum(RouteState).default(RouteState.Stopped),
-}).nullable();
+const NodeSchemaWithRouterInstanceNumber = NodeSchema.extend({
+    name: z.string(),
+})
+
+const RouteSchemaWithRouterInstanceNumber = RouteSchema.extend({
+    nodes: z.array(NodeSchemaWithRouterInstanceNumber),
+})
+
+const OutputSchema = RouteSchemaWithRouterInstanceNumber.nullable();
 
 const InputSchema = z.object({
     modelId: z.string(),
@@ -46,11 +44,11 @@ export async function getRoute(input: z.input<typeof InputSchema>) {
                 return {
                     ...node,
                     name: routerInstance.number,
-                    type: 'In-progress'
+                    type: node.state ?? StepState.Completed
                 }
             }))
         })
     }
 
-    return OutputSchema.parse(null);
+    return null;
 }

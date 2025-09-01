@@ -4,7 +4,7 @@ import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
 import { InstanceDoc } from "@/types/collections";
 import { ObjectId } from "mongodb";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 const InputSchema = z.object({
   targetModelId: z.string(),

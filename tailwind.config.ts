@@ -62,6 +62,11 @@ const config = {
           DEFAULT: "var(--alert)",
           foreground: "var(--alert-foreground)",
         },
+        warning: {
+          DEFAULT: "var(--warning)",
+          secondary: "var(--warning-secondary)",
+          foreground: "var(--warning-foreground)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

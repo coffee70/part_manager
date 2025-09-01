@@ -2,15 +2,15 @@
 import React, { useState } from "react";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStepQueries } from "./use_step_queries";
-import { useRouteActions } from "./use_route_actions";
-import DeleteRouteDialog from "./delete_route_dialog";
-import StopRouteDialog from "./stop_route_dialog";
+import { useStepQueries } from "@/components/routes/hooks/use_step_queries";
+import { useRouteActions } from "@/components/routes/hooks/use_route_actions";
+import DeleteRouteDialog from "../../../routes/components/delete_route_dialog";
+import StopRouteDialog from "../../../routes/components/stop_route_dialog";
 import StepDropdown from "./step_dropdown";
 import Builder from "@/components/route_builder/list_view/builder";
 import { useRouter } from "next/navigation";
 import { router } from "@/lib/url";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 /**
  * Main Step component that orchestrates the queries and actions
@@ -30,7 +30,7 @@ export default function Step() {
         currentStep,
         targetSteps,
         route,
-        isOnLastStep
+        routeIsOnLastStep
     } = useStepQueries(context, modelId, instanceId);
 
     // Get route actions
@@ -42,31 +42,10 @@ export default function Step() {
         handleStopRoute,
         handleResumeRoute,
         handleCompleteRoute,
+        handleCompleteStep,
+        handleFailStep,
         updateRouteStateMutation
-    } = useRouteActions(context, modelId, instanceId, () => setDeleteDialogOpen(false));
-
-    const handleOpenRouteListView = () => {
-        routeListViewTriggerRef.current?.click();
-    }
-
-    const handleViewCurrentStep = () => {
-        if (!route?.routerId || !currentStep?._id) return;
-        nextRouter.push(router().routers().instances().instance(route.routerId, currentStep.instanceId));
-    }
-
-    const handleViewRoute = () => {
-        if (!instanceId) return;
-        if (currentStep?._id) {
-            nextRouter.push(router().models().instances().step(modelId, instanceId, currentStep._id));
-        } else {
-            nextRouter.push(router().models().instances().routing(modelId, instanceId));
-        }
-    }
-
-    const handleConfirmStopRoute = () => {
-        handleStopRoute();
-        setStopDialogOpen(false);
-    }
+    } = useRouteActions(context, modelId, instanceId);
 
     // Return null if not in 'models' context
     if (context !== "models") return null;
@@ -79,9 +58,37 @@ export default function Step() {
     // Return null if hasRoute is false
     if (!hasRoute || !route) return null;
 
-    // Return null if currentStep is null or undefined
-    if (!currentStep && route.state !== RouteState.Completed) return null;
+    const handleOpenRouteListView = () => {
+        routeListViewTriggerRef.current?.click();
+    }
 
+    const handleViewCurrentStep = () => {
+        if (!currentStep) return;
+        nextRouter.push(router().routers().instances().instance(route.routerId, currentStep.instanceId));
+    }
+
+    const handleViewRoute = () => {
+        if (!instanceId) return;
+        if (currentStep?.id) {
+            nextRouter.push(router().models().instances().step(modelId, instanceId, currentStep.id));
+        } else if (route.state === RouteState.Completed) {
+            nextRouter.push(router().models().instances().step(modelId, instanceId, RouteState.Completed));
+        } else if (route.state === RouteState.Stopped) {
+            nextRouter.push(router().models().instances().step(modelId, instanceId, RouteState.Stopped));
+        } else {
+            nextRouter.push(router().models().instances().routing(modelId, instanceId));
+        }
+    }
+
+    const handleConfirmStopRoute = () => {
+        handleStopRoute();
+        setStopDialogOpen(false);
+    }
+
+    const handleConfirmDeleteRoute = () => {
+        handleDeleteRoute();
+        setDeleteDialogOpen(false);
+    }
 
     return (
         <>
@@ -98,7 +105,7 @@ export default function Step() {
             <DeleteRouteDialog
                 open={deleteDialogOpen}
                 onOpenChange={setDeleteDialogOpen}
-                onDelete={handleDeleteRoute}
+                onDelete={handleConfirmDeleteRoute}
                 isPending={deleteRouteMutation.isPending}
                 isError={deleteRouteMutation.isError}
                 error={deleteRouteMutation.error}
@@ -114,12 +121,12 @@ export default function Step() {
             />
 
             <StepDropdown
-                currentStep={currentStep}
                 targetSteps={targetSteps}
                 isPaused={route.state === RouteState.Paused}
                 isCompleted={route.state === RouteState.Completed}
                 isStopped={route.state === RouteState.Stopped}
-                isOnLastStep={isOnLastStep}
+                isIdle={route.state === RouteState.Idle}
+                isOnLastStep={routeIsOnLastStep}
                 onStepChange={handleStepChange}
                 onDeleteClick={() => setDeleteDialogOpen(true)}
                 onOpenRouteListView={handleOpenRouteListView}
@@ -129,6 +136,8 @@ export default function Step() {
                 onStopRoute={() => setStopDialogOpen(true)}
                 onResumeRoute={handleResumeRoute}
                 onCompleteRoute={handleCompleteRoute}
+                onCompleteStep={handleCompleteStep}
+                onFailStep={handleFailStep}
             />
         </>
     );

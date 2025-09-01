@@ -2,23 +2,27 @@
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, StepType } from "@/types/collections";
+import { InstanceDoc, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "@/server/instances/get_instance";
-import { Node, RouteState } from "@/components/route_builder/list_view/types";
+import { Node, NodeSchema, RouteState } from "@/types/collections";
 
 const InputSchema = z.object({
     modelId: z.string(),
     instanceId: z.string().nullable(),
 });
 
-type TargetStep = {
-    id: string;
-    instanceId: string;
-    number: string;
-    routerId: string;
-    type: StepType;
-};
+const NodeSchemaWithTargetStepDetails = NodeSchema.extend({
+    type: z.nativeEnum(StepState),
+    routerId: z.string(),
+    number: z.string(),
+}).nullable();
+
+const OutputSchema = z.object({
+    previous: NodeSchemaWithTargetStepDetails,
+    last: NodeSchemaWithTargetStepDetails,
+    next: NodeSchemaWithTargetStepDetails
+});
 
 /**
  * Determines the next possible steps for a model instance based on its route
@@ -29,12 +33,11 @@ type TargetStep = {
  */
 export async function getTargetSteps(
     input: z.input<typeof InputSchema>
-): Promise<TargetStep[] | null> {
+): Promise<z.infer<typeof OutputSchema>> {
     const { user } = await getCurrentSession();
     if (!user) throw new Error("Unauthorized");
 
     const { modelId, instanceId } = InputSchema.parse(input);
-    if (!modelId) throw new Error("Model ID is required");
     if (!instanceId) throw new Error("Instance ID is required");
 
     // Get the model instance to access its route information
@@ -49,7 +52,11 @@ export async function getTargetSteps(
 
     // Check if route exists
     if (!instance.route) {
-        return null;
+        return {
+            previous: null,
+            last: null,
+            next: null
+        }
     }
 
     const { routerId, currentStepId, nodes, state } = instance.route;
@@ -58,84 +65,72 @@ export async function getTargetSteps(
         throw new Error("Route does not have a router ID");
     }
 
-    if (!currentStepId 
-        && state !== RouteState.Completed
-        && state !== RouteState.Stopped) {
-        throw new Error("Route does not have a current step");
-    }
-
-    if (!nodes || !Array.isArray(nodes)) {
-        return []; // No edges means no target steps
-    }
-
-    // Find the current node
-    let currentNodeIndex = nodes.findIndex(node => node.id === currentStepId);
-
-    // If no current node and route is completed, set currentNodeIndex to out of bounds
-    if (currentNodeIndex === -1 && state === RouteState.Completed) {
-        currentNodeIndex = nodes.length;
-    }
-    // if no current node and route is stopped, set currentNodeIndex to out of bounds
-    else if (currentNodeIndex === -1 && state === RouteState.Stopped) {
-        currentNodeIndex = -1;
-    }
-    // If no current node, return empty array
-    else if (currentNodeIndex === -1) {
-        return [];
-    }
-
-    // Get unique target IDs
-    let nextNode: Node | undefined = nodes[currentNodeIndex + 1];
-    let previousNode: Node | undefined = nodes[currentNodeIndex - 1];
-
-    // Fetch all target router instances
-    const targetSteps: TargetStep[] = [];
-
-    if (nextNode) {
-        try {
-            // Get the router instance
-            const routerInstance = await getInstance({
-                id: routerId,
-                instanceId: nextNode.instanceId
-            });
-
-            if (routerInstance) {
-                targetSteps.push({
-                    id: nextNode.id,
-                    instanceId: routerInstance._id,
-                    number: routerInstance.number || '',
-                    routerId,
-                    type: 'In-progress'
-                });
-            }
-        } catch (error) {
-            console.error(`Error fetching target step ${nextNode.instanceId}:`, error);
-            // Continue with other steps even if one fails
+    if (!nodes || !Array.isArray(nodes) || nodes.length === 0) {
+        return {
+            previous: null,
+            last: null,
+            next: null
         }
     }
 
-    if (previousNode) {
-        try {
-            // Get the router instance
-            const routerInstance = await getInstance({
-                id: routerId,
-                instanceId: previousNode.instanceId
-            });
-
-            if (routerInstance) {
-                targetSteps.push({
-                    id: previousNode.id,
-                    instanceId: routerInstance._id,
-                    number: routerInstance.number || '',
-                    routerId,
-                    type: 'In-progress'
-                });
-            }
-        } catch (error) {
-            console.error(`Error fetching previous step ${previousNode.instanceId}:`, error);
-            // Continue with other steps even if one fails
+    const makeNodeWithDetails = async (node: Node, defaultState: StepState): Promise<z.infer<typeof NodeSchemaWithTargetStepDetails>> => {
+        const routerInstance = await getInstance({ id: routerId, instanceId: node.instanceId });
+        if (!routerInstance) throw new Error(`Router instance ${node.instanceId} not found`);
+        return {
+            id: node.id,
+            instanceId: node.instanceId,
+            number: routerInstance.number || '',
+            routerId,
+            type: node.state ?? defaultState
         }
     }
+
+    // Completed: previous is the last node
+    if (state === RouteState.Completed) {
+        const index = nodes.length - 1;
+        const node = nodes[index];
+        return {
+            previous: await makeNodeWithDetails(node, StepState.Completed),
+            last: null,
+            next: null,
+        };
+    }
+
+    // Stopped: next is node at index 1
+    if (state === RouteState.Stopped) {
+        const node = nodes[1];
+        return {
+            previous: null,
+            last: null,
+            next: node ? await makeNodeWithDetails(node, StepState.NotStarted) : null,
+        };
+    }
+
+    const targetSteps: z.infer<typeof OutputSchema> = {
+        previous: null,
+        last: null,
+        next: null
+    }
+
+    // Idle: last is the current step
+    if (state === RouteState.Idle) {
+        if (!currentStepId) throw new Error("Route is malformed: currentStepId is missing for Idle state");
+        const index = nodes.findIndex(n => n.id === currentStepId);
+        if (index === -1) throw new Error("Route is malformed: current step not found in nodes");
+        const node = nodes[index];
+        targetSteps.last = await makeNodeWithDetails(node, StepState.Completed);
+    }
+
+    // Other states (e.g., Started, Paused): compute previous and next around current step
+    if (!currentStepId) throw new Error("Route is malformed: currentStepId is missing");
+    const currentIndex = nodes.findIndex(n => n.id === currentStepId);
+    if (currentIndex === -1) throw new Error("Route is malformed: current step not found in nodes");
+
+    const previousNode = currentIndex > 0 ? nodes[currentIndex - 1] : undefined;
+    const nextNode = currentIndex < nodes.length - 1 ? nodes[currentIndex + 1] : undefined;
+
+    targetSteps.previous = previousNode ? await makeNodeWithDetails(previousNode, StepState.Completed) : null;
+    targetSteps.next = nextNode ? await makeNodeWithDetails(nextNode, StepState.NotStarted) : null;
 
     return targetSteps;
 } 

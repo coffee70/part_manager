@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden'
 import { Input } from '@/components/ui/fields/input';
 import Select from '@/components/ui/fields/select';
-import { StepType, stepTypes } from "@/types/collections";
+import { StepState } from "@/types/collections";
 import { Button } from "../../ui/button";
 import { Node } from "./types";
 import { useBuilderContext } from "./builder.context";
@@ -11,7 +11,7 @@ import React from "react";
 
 type FormState = {
     name: string;
-    type: StepType;
+    type: StepState;
 }
 
 type Props = {
@@ -39,7 +39,7 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
 
     const initialState = React.useCallback(() => ({
         name: step ? step.name : '',
-        type: step ? step.type : 'To-do',
+        type: step ? step.type : StepState.NotStarted,
     }), [step]);
 
     React.useEffect(() => {
@@ -119,9 +119,9 @@ export default function StepForm({ step, open, setOpen, children }: Props) {
                             id='type'
                             label='Type'
                             description='The type of step'
-                            options={[...stepTypes]}
+                            options={Object.values(StepState)}
                             value={formState.type}
-                            onChange={(v) => setFormState({ ...formState, type: v as StepType })}
+                            onChange={(v) => setFormState({ ...formState, type: v as StepState })}
                         />
                     </div>
                     <Button

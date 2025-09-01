@@ -10,6 +10,8 @@ import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import { getTableConfiguration } from "@/server/configuration/get_table_configuration";
 import { getContexts } from "@/server/contexts/get_contexts";
 import { getCurrentUser } from "@/server/auth/get_current_user";
+import { getCurrentStep } from "@/server/routes/get_current_step";
+import { getRoute } from "@/server/routes/get_route";
 
 export default async function Page({
     params,
@@ -30,6 +32,19 @@ export default async function Page({
         queryKey: instanceKeys.all("models", id),
         queryFn: () => getInstances({ id, context: "models", searchParams }),
     })
+
+    // fetch current step and route for all instances displayed
+    const instances = await getInstances({ id, context: "models", searchParams });
+    for (const instance of instances) {
+        await queryClient.prefetchQuery({
+            queryKey: routeKeys.currentStep(id, instance._id.toString()),
+            queryFn: () => getCurrentStep({ modelId: id, instanceId: instance._id.toString() }),
+        })
+        await queryClient.prefetchQuery({
+            queryKey: routeKeys.id(id, instance._id.toString()),
+            queryFn: () => getRoute({ modelId: id, instanceId: instance._id.toString() }),
+        })
+    }
 
     await queryClient.prefetchQuery({
         queryKey: sectionKeys.all("models", id),

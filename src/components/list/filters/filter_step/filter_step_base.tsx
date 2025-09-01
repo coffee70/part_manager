@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState, StepState } from "@/types/collections";
 
 export default function StepFilterBase() {
     const searchParams = useSearchParams();
@@ -63,21 +63,29 @@ export default function StepFilterBase() {
                     onClick={() => handleStepChange(step.instanceId)}
                     className="flex items-center justify-between"
                 >
-                    <StepBadge step={{
-                        id: step.instanceId,
-                        name: step.number,
-                        type: step.type
-                    }} />
+                    <StepBadge
+                        step={{
+                            id: step.instanceId,
+                            name: step.number,
+                            type: step.type
+                        }}
+                        pausedStyle={false}
+                        idleStyle={false}
+                    />
                     <CheckIcon className={cn(urlSteps.includes(step.instanceId) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             ))}
             {data.includeDone && (
                 <SelectItem onClick={() => handleRouteStatusChange(RouteState.Completed)} className="flex items-center justify-between">
-                    <StepBadge step={{
-                        id: RouteState.Completed,
-                        name: "Done",
-                        type: "Done"
-                    }} />
+                    <StepBadge
+                        step={{
+                            id: RouteState.Completed,
+                            name: "Done",
+                            type: StepState.Completed
+                        }}
+                        pausedStyle={false}
+                        idleStyle={false}
+                    />
                     <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Completed) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}
@@ -89,11 +97,15 @@ export default function StepFilterBase() {
             )}
             {data.includeNotStarted && (
                 <SelectItem onClick={() => handleRouteStatusChange(RouteState.Stopped)} className="flex items-center justify-between">
-                    <StepBadge step={{
-                        id: RouteState.Stopped,
-                        name: "Not Started",
-                        type: "To-do"
-                    }} />
+                    <StepBadge
+                        step={{
+                            id: RouteState.Stopped,
+                            name: "Not Started",
+                            type: StepState.NotStarted
+                        }}
+                        pausedStyle={false}
+                        idleStyle={false}
+                    />
                     <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Stopped) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}

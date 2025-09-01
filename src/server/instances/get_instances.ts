@@ -2,7 +2,16 @@
 import { z } from "zod"
 import { getCurrentSession } from "../auth/get_current_session"
 import { db } from "@/lib/db";
-import { InstanceDoc, priorities, UserDoc, contexts, ModelDoc, RouterDoc, InstanceSchema, NextServerSearchParamsSchema } from "@/types/collections";
+import { 
+    InstanceDoc, 
+    UserDoc, 
+    contexts, 
+    ModelDoc, 
+    RouterDoc, 
+    InstanceSchema, 
+    NextServerSearchParamsSchema,
+    StepState,
+} from "@/types/collections";
 import { getSearchParams } from "@/lib/search_params";
 import { filterSteps } from "@/lib/db_filter_sort/filter_steps";
 import { filterLink } from "@/lib/db_filter_sort/filter_link";
@@ -17,7 +26,6 @@ import { sort as applySort } from "@/lib/db_filter_sort/sort";
 import { getInstance } from "./get_instance";
 import { getLinksByContextIds } from "../links/get_links_by_context_ids";
 import { ObjectId } from "mongodb";
-import { RouteState } from "@/components/route_builder/list_view/types";
 
 const InputSchema = z.object({
     id: z.string(),
@@ -152,7 +160,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
                         id: currentNode.id,
                         instanceId: routerInstance._id.toString(),
                         name: routerInstance.number,
-                        type: 'In-progress',
+                        type: currentNode.state ?? StepState.Completed,
                     }
                 }
             }

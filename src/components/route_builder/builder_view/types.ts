@@ -1,4 +1,4 @@
-import { StepType } from "@/types/collections";
+import { StepState } from "@/types/collections";
 
 export const START_NODE_ID = "start" as const;
 
@@ -38,7 +38,7 @@ export type Edge = {
 export type Node = {
     id: string;
     name: string;
-    type: StepType;
+    type: StepState;
     x: number;
     y: number;
 }

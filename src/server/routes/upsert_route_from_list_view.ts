@@ -3,9 +3,9 @@ import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { ActionState, validate } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
-import { InstanceDoc, stepTypes } from "@/types/collections";
+import { InstanceDoc, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 const InputSchema = z.object({
   modelId: z.string(),
@@ -94,7 +94,10 @@ export async function upsertRouteFromListView(
         route: {
           routerId: route.routerId,
           currentStepId: currentStepId,
-          nodes: route.nodes,
+          nodes: route.nodes.map(node => ({
+            ...node,
+            state: StepState.NotStarted
+          })),
           state: routeState
         },
         updatedAt: new Date(),

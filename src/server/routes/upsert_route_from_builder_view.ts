@@ -1,11 +1,10 @@
 'use server'
 import { HandlePosition } from "@/components/route_builder/builder_view/types";
-import { ModelDoc, stepTypes } from "@/types/collections";
+import { ModelDoc, StepState } from "@/types/collections";
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
-import { ActionState, validate } from "@/lib/validators/server_actions";
+import { ActionState } from "@/lib/validators/server_actions";
 import { db } from "@/lib/db";
-import { ObjectId } from "mongodb";
 
 const InputSchema = z.object({
     modelId: z.string().optional(),
@@ -13,7 +12,7 @@ const InputSchema = z.object({
         nodes: z.array(z.object({
             id: z.string(),
             name: z.string(),
-            type: z.enum([...stepTypes]),
+            type: z.enum([StepState.NotStarted, StepState.Completed, StepState.Failed, StepState.InProgress]),
             x: z.number(),
             y: z.number(),
         })),

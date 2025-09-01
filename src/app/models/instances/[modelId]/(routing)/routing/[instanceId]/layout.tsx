@@ -1,4 +1,4 @@
-import Header from "@/components/routes/header";
+import Header from "@/components/routes/header/header";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 export default async function Layout({

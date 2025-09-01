@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils"
 import { XIcon } from "lucide-react"
 import { stepBackgroundVariants } from "./step";
-import { StepType } from "@/types/collections";
+import { StepState } from "@/types/collections";
 
 type BadgeProps = {
     label: string;
@@ -27,14 +27,20 @@ type StatusBadgeProps = {
     step: {
         id: string;
         name: string;
-        type: StepType;
+        type: StepState;
     }
+    pausedStyle: boolean;
+    idleStyle: boolean;
 }
 
-export function StepBadge({ step }: StatusBadgeProps) {
+export function StepBadge({ step, pausedStyle, idleStyle }: StatusBadgeProps) {
     return <Badge
         label={step.name.toUpperCase()}
-        className={cn("px-2", stepBackgroundVariants({ variant: step.type }))}
+        className={cn("px-2", stepBackgroundVariants({ 
+            variant: step.type,
+            paused: pausedStyle,
+            idle: idleStyle
+        }))}
     />
 }
 

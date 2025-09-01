@@ -1,4 +1,4 @@
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 export type FilterBuild = { orConditions?: any[] };
 

@@ -1,4 +1,4 @@
-import TableContainer from "@/components/routes/table_container"
+import TableContainer from "@/components/routes/table/table_container"
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query"

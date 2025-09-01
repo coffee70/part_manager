@@ -2,22 +2,22 @@
 import { z } from "zod";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, stepTypes } from "@/types/collections";
+import { InstanceDoc, NodeSchema, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { getInstance } from "@/server/instances/get_instance";
-import { RouteState } from "@/components/route_builder/list_view/types";
+import { RouteState } from "@/types/collections";
 
 const InputSchema = z.object({
     modelId: z.string(),
     instanceId: z.string().nullable(),
 });
 
-const OutputSchema = z.object({
-    _id: z.string(),
-    instanceId: z.string(),
+const NodeSchemaWithRouterInstanceName = NodeSchema.extend({
     name: z.string(),
-    type: z.enum(stepTypes),
-}).nullable();
+    type: z.nativeEnum(StepState),
+});
+
+const OutputSchema = NodeSchemaWithRouterInstanceName.nullable();
 
 /**
  * Gets the current step of a model instance by retrieving its routerId and stepId,
@@ -32,7 +32,6 @@ export async function getCurrentStep(
     if (!user) throw new Error("Unauthorized");
 
     const { modelId, instanceId } = InputSchema.parse(input);
-    if (!modelId) throw new Error("Model ID is required");
     if (!instanceId) throw new Error("Instance ID is required");
 
     // Get the model instance to access its route information
@@ -43,13 +42,13 @@ export async function getCurrentStep(
 
     // This is an actual error, do not return null
     if (!instance) {
-        throw new Error("Model instance not found");
+        throw new Error(`Model instance not found: ${modelId} ${instanceId}`);
     }
 
     // This is not an actual error, and is a possible state of the instance
     // thus we return null
     if (!instance.route) {
-        return OutputSchema.parse(null);
+        return null;
     }
 
     // Access routerId and currentStepId from the route object
@@ -61,28 +60,19 @@ export async function getCurrentStep(
         throw new Error("Route does not have a router ID");
     }
 
+    // This state will occur when the route is completed
     if (!currentStepId && state === RouteState.Completed) {
-        return OutputSchema.parse({
-            _id: RouteState.Completed,
-            instanceId: "done",
-            name: "Done",
-            type: "Done",
-        });
+        return null;
     }
 
+    // This state will occur when the route is stopped/not started
     if (!currentStepId && state === RouteState.Stopped) {
-        return OutputSchema.parse({
-            _id: RouteState.Stopped,
-            instanceId: "not-started",
-            name: "Not Started",
-            type: "To-do",
-        });
+        return null;
     }
 
-    // This is not an actual error, and is a possible state of the instance
-    // thus we return null
+    // All other states will have a current step ID
     if (!currentStepId) {
-        return OutputSchema.parse(null);
+        throw new Error("Current step ID not found");
     }
 
     const node = instance.route.nodes.find(node => node.id === currentStepId);
@@ -103,14 +93,24 @@ export async function getCurrentStep(
         if (!routerInstance) {
             throw new Error("Router instance not found");
         }
-
-        return OutputSchema.parse({
-            _id: node.id,
-            instanceId: node.instanceId,
-            name: routerInstance.number,
-            // TODO: Remove this once we have a proper type for the step type
-            type: 'In-progress',
-        });
+        
+        switch (state) {
+            case RouteState.Paused:
+            case RouteState.Idle:
+                return {
+                    ...node,
+                    name: routerInstance.number,
+                    type: node.state ?? StepState.Completed
+                };
+            case RouteState.Started:
+                return {
+                    ...node,
+                    name: routerInstance.number,
+                    type: node.state ?? StepState.InProgress
+                };
+            default:
+                throw new Error("Invalid route state");
+        }
     } catch (error) {
         console.error("Error fetching current step:", error);
         throw new Error("Failed to fetch current step");

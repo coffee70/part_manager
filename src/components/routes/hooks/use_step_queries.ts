@@ -39,16 +39,17 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     enabled: context === "models" && !!modelId && !!instanceId && !!hasRouteQuery.data,
   });
 
+  // Get the current step data
+  const currentStep = currentStepQuery.data || null;
 
-  const isOnLastStep = React.useMemo(() => {
-    if (currentStepQuery && currentStepQuery.data && routeQuery && routeQuery.data) {
-      if (currentStepQuery.data._id === routeQuery.data.nodes[routeQuery.data.nodes.length - 1].id) {
+  const routeIsOnLastStep = React.useMemo(() => {
+    if (currentStep && routeQuery && routeQuery.data) {
+      if (currentStep && currentStep.id === routeQuery.data.nodes[routeQuery.data.nodes.length - 1].id) {
         return true;
       }
     }
     return false;
-  }, [currentStepQuery, routeQuery]);
-
+  }, [currentStep, routeQuery]);
 
   // Combined loading state
   const isLoading = 
@@ -56,17 +57,27 @@ export function useStepQueries(context: string, modelId: string, instanceId: str
     currentStepQuery.isLoading || 
     targetStepsQuery.isLoading || 
     routeQuery.isLoading;
+
+  const isPending = 
+    hasRouteQuery.isPending || 
+    currentStepQuery.isPending || 
+    targetStepsQuery.isPending || 
+    routeQuery.isPending;
+
+  const isError = 
+    hasRouteQuery.isError || 
+    currentStepQuery.isError || 
+    targetStepsQuery.isError || 
+    routeQuery.isError;
     
   return {
-    hasRoute: hasRouteQuery.data,
-    isLoadingHasRoute: hasRouteQuery.isLoading,
-    currentStep: currentStepQuery.data,
-    isLoadingCurrentStep: currentStepQuery.isLoading,
-    targetSteps: targetStepsQuery.data,
-    isLoadingTargetSteps: targetStepsQuery.isLoading,
     route: routeQuery.data,
-    isLoadingRoute: routeQuery.isLoading,
+    currentStep,
+    targetSteps: targetStepsQuery.data,
+    routeIsOnLastStep,
+    hasRoute: hasRouteQuery.data,
     isLoading,
-    isOnLastStep,
+    isPending,
+    isError,
   };
 } 

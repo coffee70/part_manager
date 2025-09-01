@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb"
 import { ChevronDownIcon, ChevronsDownIcon, ChevronsUpIcon, ChevronUpIcon, CircleMinusIcon, LucideIcon } from 'lucide-react'
-import { Route, RouteState } from "@/components/route_builder/list_view/types";
 import { z } from "zod";
 
 export const contexts = ['models', 'routers', 'users'] as const;
@@ -14,10 +13,6 @@ export type FieldType = typeof fieldtypes[number];
 export const priorities = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as const;
 
 export type Priority = typeof priorities[number];
-
-export const stepTypes = ['To-do', 'In-progress', 'Done'] as const;
-
-export type StepType = typeof stepTypes[number];
 
 export type PriorityInfo = {
     color: string;
@@ -63,11 +58,6 @@ export interface AttachableDoc {
     }[];
 };
 
-export interface Valuable {
-    values: Values;
-    kv_values?: KVValues;
-}
-
 export const KVValueSchema = z.record(z.string(), z.string());
 export type KVValue = z.infer<typeof KVValueSchema>;
 
@@ -83,6 +73,60 @@ export type Values = z.infer<typeof ValuesSchema>;
 
 export const KVValuesSchema = z.record(z.string(), KVValueSchema);
 export type KVValues = z.infer<typeof KVValuesSchema>;
+
+export const ValuableSchema = z.object({
+    values: ValuesSchema,
+    kv_values: KVValuesSchema.optional()
+})
+
+export type Valuable = z.infer<typeof ValuableSchema>;
+
+export enum RouteState {
+    Started = "started",
+    Paused = "paused",
+    Idle = "idle",
+    Completed = "completed",
+    Stopped = "stopped",
+}
+
+export enum StepState {
+    Completed = "completed",
+    Failed = "failed",
+    InProgress = "in_progress",
+    NotStarted = "not_started",
+}
+
+export const NotStartedStepSchema = z.object({
+    id: z.literal("not-started"),
+    name: z.literal("Not Started"),
+})
+
+export const DoneStepSchema = z.object({
+    id: z.literal("done"),
+    name: z.literal("Done"),
+})
+
+export const NodeSchema = z.object({
+    id: z.string(),
+    instanceId: z.string(),
+    // deprecated, but we need to keep it for backwards compatibility
+    // name: z.string().optional(),
+    // deprecated, but we need to keep it for backwards compatibility
+    // type: z.enum(stepTypes).optional(),
+    state: z.nativeEnum(StepState).default(StepState.Completed).optional(),
+}).merge(ValuableSchema.partial())
+
+
+export const RouteSchema = z.object({
+    state: z.nativeEnum(RouteState),
+    routerId: z.string(),
+    currentStepId: z.string().nullable(),
+    nodes: z.array(NodeSchema)
+})
+
+export type Route = z.infer<typeof RouteSchema>;
+
+export type Node = z.infer<typeof NodeSchema>;
 
 export type Section = {
     _id: string;
@@ -265,7 +309,7 @@ export const InstanceSchema = z.object({
         currentStep: z.object({
             id: z.string(),
             name: z.string(),
-            type: z.enum(stepTypes),
+            type: z.nativeEnum(StepState),
         }).optional(),
     }).optional(),
     updatedAt: z.date(),

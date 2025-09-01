@@ -266,9 +266,7 @@ export default function TableContainer() {
                 case 'step':
                     return (
                         <TableCell key={column._id} align="left">
-                            {instance.route && (
-                                <Step state={instance.route.state} currentStep={instance.route.currentStep} />
-                            )}
+                            <Step instanceId={instance._id} />
                         </TableCell>
                     );
                 case 'updatedBy':
