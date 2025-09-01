@@ -67,7 +67,7 @@ export default function StepFilterBase() {
                         step={{
                             id: step.instanceId,
                             name: step.number,
-                            type: step.type
+                            type: StepState.InProgress
                         }}
                         pausedStyle={false}
                         idleStyle={false}
