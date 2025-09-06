@@ -58,6 +58,7 @@ export default function SummaryContainer() {
                             idleStyle={true}
                             pausedStyle={false}
                             onClick={() => handleStepChange(stepId)}
+                            data-testid="redo-step-button"
                         />
                         {isLastStep(stepId) && (
                             <ActionButton
@@ -66,6 +67,7 @@ export default function SummaryContainer() {
                                 idleStyle={false}
                                 pausedStyle={false}
                                 onClick={handleCompleteRoute}
+                                data-testid="complete-route-button"
                             />
                         )}
                     </SummaryToolbar>
@@ -78,6 +80,7 @@ export default function SummaryContainer() {
                             idleStyle={false}
                             pausedStyle={false}
                             onClick={() => handleStepChange(stepId)}
+                            data-testid="start-step-button"
                         />
                     </SummaryToolbar>
                 )}
@@ -89,6 +92,7 @@ export default function SummaryContainer() {
                             idleStyle={false}
                             pausedStyle={false}
                             onClick={() => handleStepChange(stepId)}
+                            data-testid="start-step-button"
                         />
                     </SummaryToolbar>
                 )}
@@ -100,6 +104,7 @@ export default function SummaryContainer() {
                             idleStyle={true}
                             pausedStyle={false}
                             onClick={() => handleStepChange(stepId)}
+                            data-testid="start-step-button"
                         />
                     </SummaryToolbar>
                 )}

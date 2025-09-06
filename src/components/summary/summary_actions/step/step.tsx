@@ -44,6 +44,7 @@ export default function Step() {
         handleCompleteRoute,
         handleCompleteStep,
         handleFailStep,
+        handleStartRoute,
         updateRouteStateMutation
     } = useRouteActions(context, modelId, instanceId);
 
@@ -135,6 +136,7 @@ export default function Step() {
                 onPauseRoute={handlePauseRoute}
                 onStopRoute={() => setStopDialogOpen(true)}
                 onResumeRoute={handleResumeRoute}
+                onStartRoute={handleStartRoute}
                 onCompleteRoute={handleCompleteRoute}
                 onCompleteStep={handleCompleteStep}
                 onFailStep={handleFailStep}

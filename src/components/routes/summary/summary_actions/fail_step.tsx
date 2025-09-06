@@ -9,6 +9,7 @@ export default function FailStep({ onFailStep }: { onFailStep: () => void }) {
             idleStyle={false}
             pausedStyle={false}
             onClick={onFailStep}
+            data-testid="fail-step-button"
         />
     );
 }

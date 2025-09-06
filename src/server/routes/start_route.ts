@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, RouteState } from "@/types/collections";
+import { InstanceDoc, RouteState, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
 
 const InputSchema = z.object({
@@ -30,6 +30,7 @@ export async function startRoute(input: z.input<typeof InputSchema>) {
     }
 
     instance.route.currentStepId = instance.route.nodes[0].id;
+    instance.route.nodes[0].state = StepState.InProgress;
 
     await instanceCollection.updateOne(
         {

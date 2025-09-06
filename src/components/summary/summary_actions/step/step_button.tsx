@@ -6,7 +6,7 @@ import { getCurrentStep } from "@/server/routes/get_current_step";
 import { RouteState, StepState } from "@/types/collections";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import ActionButton from "@/components/summary/summary_actions/action_dropdown_trigger";
+import ActionDropdownTrigger from "@/components/summary/summary_actions/action_dropdown_trigger";
 
 type Props = React.ButtonHTMLAttributes<HTMLButtonElement>
 
@@ -35,21 +35,25 @@ const StepButton = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
     if (!currentStep) {
         switch (route.state) {
             case RouteState.Stopped:
-                return <ActionButton
+                return <ActionDropdownTrigger
                     ref={ref}
                     name="Not Started"
                     state={StepState.NotStarted}
                     idleStyle={false}
                     pausedStyle={false}
+                    divProps={{ id: 'step-button' }}
+                    data-testid="step-button-trigger"
                     {...props}
                 />
             case RouteState.Completed:
-                return <ActionButton
+                return <ActionDropdownTrigger
                     ref={ref}
                     name="Done"
                     state={StepState.Completed}
                     idleStyle={false}
                     pausedStyle={false}
+                    divProps={{ id: 'step-button' }}
+                    data-testid="step-button-trigger"
                     {...props}
                 />
             default:
@@ -57,12 +61,14 @@ const StepButton = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         }
     }
 
-    return <ActionButton
+    return <ActionDropdownTrigger
         ref={ref}
         name={currentStep.name}
         state={currentStep.type}
         idleStyle={route.state === RouteState.Idle}
         pausedStyle={route.state === RouteState.Paused}
+        divProps={{ id: 'step-button' }}
+        data-testid="step-button-trigger"
         {...props}
     />
 

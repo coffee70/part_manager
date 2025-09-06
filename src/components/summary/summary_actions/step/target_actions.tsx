@@ -1,7 +1,7 @@
 import StepItem from "./step_item";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { TargetSteps } from "./types";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, PlayIcon, XIcon } from "lucide-react";
 import { StepState } from "@/types/collections";
 import { stepDropdownItemBackgroundVariants } from "@/components/ui/step";
 
@@ -11,21 +11,25 @@ type Props = {
     isPaused: boolean;
     isIdle: boolean;
     isCompleted: boolean;
+    isStopped: boolean;
     onStepChange: (id: string) => void;
     onCompleteRoute: () => void;
+    onStartRoute: () => void;
     onPauseRoute: () => void;
     onCompleteStep: () => void;
     onFailStep: () => void;
 }
 
-export default function TargetActions({ 
-    targetSteps, 
-    isOnLastStep, 
-    isPaused, 
+export default function TargetActions({
+    targetSteps,
+    isOnLastStep,
+    isPaused,
     isIdle,
     isCompleted,
-    onStepChange, 
+    isStopped,
+    onStepChange,
     onCompleteRoute,
+    onStartRoute,
     onCompleteStep,
     onFailStep
 }: Props) {
@@ -33,7 +37,7 @@ export default function TargetActions({
     const lastStep = targetSteps?.last ?? null;
     const previousStep = targetSteps?.previous ?? null;
 
-    if (!isIdle && !isCompleted) return (
+    if (!isIdle && !isCompleted && !isStopped) return (
         <>
             <DropdownMenuItem
                 onSelect={onCompleteStep}
@@ -60,6 +64,21 @@ export default function TargetActions({
                 </div>
             </DropdownMenuItem>
         </>
+    )
+
+    if (isStopped) return (
+        <DropdownMenuItem
+            onSelect={onStartRoute}
+            disabled={isPaused}
+            className="group hover:bg-green-600 active:bg-green-700 focus:bg-green-600 transition-colors duration-150"
+        >
+            <div className="flex items-center justify-center space-x-6">
+                <div className="bg-green-100 p-1.5 rounded-full group-hover:bg-white/20 transition-colors duration-150">
+                    <PlayIcon size={18} className="text-green-600 group-hover:text-white transition-colors duration-150" />
+                </div>
+                <span className="text-sm font-semibold text-slate-700 group-hover:text-white transition-colors duration-150">Start Route</span>
+            </div>
+        </DropdownMenuItem>
     )
 
     return (

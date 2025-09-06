@@ -9,6 +9,7 @@ export default function CompleteStep({ onCompleteStep }: { onCompleteStep: () =>
             idleStyle={false}
             pausedStyle={false}
             onClick={onCompleteStep}
+            data-testid="complete-step-button"
         />
     );
 }

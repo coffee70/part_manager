@@ -21,7 +21,6 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({
 }, ref) => {
     return (
         <button
-            id='step-button'
             ref={ref}
             className={cn(
                 "flex rounded-sm border text-white font-bold",

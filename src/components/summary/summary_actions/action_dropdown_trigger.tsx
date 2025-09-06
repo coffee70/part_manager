@@ -9,6 +9,7 @@ type ActionDropdownTriggerProps = {
     state: StepState;
     idleStyle: boolean;
     pausedStyle: boolean;
+    divProps?: React.HTMLAttributes<HTMLDivElement>
 } & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const ActionDropdownTrigger = React.forwardRef<HTMLDivElement, ActionDropdownTriggerProps>(({
@@ -16,11 +17,11 @@ const ActionDropdownTrigger = React.forwardRef<HTMLDivElement, ActionDropdownTri
     state,
     idleStyle,
     pausedStyle,
-    ...props
+    divProps,
+    ...buttonProps
 }, ref) => {
     return (
         <div
-            id='step-button'
             ref={ref}
             className={cn(
                 "flex rounded-sm border text-white font-bold",
@@ -30,6 +31,7 @@ const ActionDropdownTrigger = React.forwardRef<HTMLDivElement, ActionDropdownTri
                     idle: idleStyle
                 }),
             )}
+            {...divProps}
         >
             <div className='px-2 py-1 rounded-l-sm'>
                 <span>{name}</span>
@@ -42,7 +44,7 @@ const ActionDropdownTrigger = React.forwardRef<HTMLDivElement, ActionDropdownTri
                 })
             )}></div>
             <button
-                {...props}
+                {...buttonProps}
                 className={cn(
                     'px-1 rounded-r-sm',
                     stepSummaryTriggerButtonHoverVariants({

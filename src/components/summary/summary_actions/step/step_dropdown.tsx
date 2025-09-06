@@ -41,6 +41,7 @@ interface StepDropdownProps {
     onPauseRoute: () => void;
     onStopRoute: () => void;
     onResumeRoute: () => void;
+    onStartRoute: () => void;
     onCompleteRoute: () => void;
     onCompleteStep: () => void;
     onFailStep: () => void;
@@ -64,6 +65,7 @@ export default function StepDropdown({
     onPauseRoute,
     onStopRoute,
     onResumeRoute,
+    onStartRoute,
     onCompleteRoute,
     onCompleteStep,
     onFailStep
@@ -81,8 +83,10 @@ export default function StepDropdown({
                         isPaused={isPaused}
                         isIdle={isIdle}
                         isCompleted={isCompleted}
+                        isStopped={isStopped}
                         onStepChange={onStepChange}
                         onCompleteRoute={onCompleteRoute}
+                        onStartRoute={onStartRoute}
                         onPauseRoute={onPauseRoute}
                         onCompleteStep={onCompleteStep}
                         onFailStep={onFailStep}
