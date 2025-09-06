@@ -14,7 +14,7 @@ const pulseAnimation = `@keyframes pulse {
 
 export default function Pulse() {
     return (
-        <div className="w-6 h-6 flex items-center justify-center" data-testid="pulse">
+        <div className="w-6 h-6 flex items-center justify-center" data-testid="in-progress-pulse">
             <div className="w-4 h-4 rounded-full bg-blue-600 relative"
                 style={{ animation: "pulse 2s infinite", boxShadow: "0 0 0 0 rgba(37, 99, 235, 0.7)" }} />
             <PulseAnimation />

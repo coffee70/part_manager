@@ -57,7 +57,7 @@ export default function Header() {
                 />
             </div>
             {isRoutePaused() && (
-                <Alert variant="warning">
+                <Alert variant="warning" data-testid="paused-warning-banner">
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>Warning</AlertTitle>
                     <AlertDescription>

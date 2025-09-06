@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc, RouteState } from "@/types/collections";
+import { InstanceDoc, RouteState, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
 
 const InputSchema = z.object({
@@ -26,6 +26,10 @@ export async function stopRoute(input: z.input<typeof InputSchema>) {
     instance.route.state = RouteState.Stopped;
 
     instance.route.currentStepId = null;
+
+    instance.route.nodes.forEach(node => {
+        node.state = StepState.NotStarted;
+    });
 
     await instanceCollection.updateOne(
         {
