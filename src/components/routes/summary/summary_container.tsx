@@ -1,6 +1,6 @@
 'use client'
 import SummaryRouteFieldValues from "@/components/summary/summary_sections/summary_route_sections";
-import SummaryTitle from "@/components/summary/summary_title/summary_title";
+import SummaryTitle from "@/components/routes/summary/summary_title";
 import { SummaryContent, SummaryHeader } from "@/layouts/summary_layout";
 import SummaryToolbar from "@/components/summary/summary_toolbar";
 import FailStep from "@/components/routes/summary/summary_actions/fail_step";
@@ -10,16 +10,18 @@ import { useModelInstanceRoutingURL } from "@/hooks/url_metadata.hook";
 import { useStepQueries } from "@/components/routes/hooks/use_step_queries";
 import { useRouteHelpers } from "@/components/routes/hooks/use_route_helpers";
 import ActionButton from "@/components/summary/summary_actions/action_button";
-import { StepState } from "@/types/collections";
+import { RouteState, StepState } from "@/types/collections";
+import { router } from "@/lib/url";
+import { useRouter } from "next/navigation";
 
 export default function SummaryContainer() {
     const { modelId, instanceId, stepId } = useModelInstanceRoutingURL();
-
+    const nextRouter = useRouter();
     const {
         handleCompleteStep,
         handleFailStep,
         handleStepChange,
-        handleCompleteRoute,
+        handleCompleteRoute: _handleCompleteRoute,
     } = useRouteActions("models", modelId, instanceId);
 
     const {
@@ -39,16 +41,28 @@ export default function SummaryContainer() {
         isRouteCompleted,
         isPreviousStep,
         isNextStep,
-        isLastStep
+        isLastStep,
+        isRoutePaused
     } = routeHelpers;
+
+    const handleCompleteRoute = () => {
+        _handleCompleteRoute();
+        nextRouter.push(router().models().instances().step(modelId, instanceId, RouteState.Completed));
+    };
 
     return (
         <>
             <SummaryHeader>
                 <SummaryTitle />
                 {isCurrentStep(stepId) && !isRouteIdle() && <SummaryToolbar>
-                    <CompleteStep onCompleteStep={handleCompleteStep} />
-                    <FailStep onFailStep={handleFailStep} />
+                    <CompleteStep 
+                        onCompleteStep={handleCompleteStep} 
+                        isPaused={isRoutePaused()}
+                    />
+                    <FailStep
+                        onFailStep={handleFailStep}
+                        isPaused={isRoutePaused()}
+                    />
                 </SummaryToolbar>}
                 {isRouteIdle() && isCurrentStep(stepId) && (
                     <SummaryToolbar>

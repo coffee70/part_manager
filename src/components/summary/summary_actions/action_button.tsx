@@ -9,7 +9,7 @@ type ActionButtonProps = {
     idleStyle: boolean
     pausedStyle: boolean
     onClick: () => void
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({
     name,
@@ -17,25 +17,28 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({
     idleStyle,
     pausedStyle,
     onClick,
+    disabled,
     ...props
 }, ref) => {
     return (
         <button
             ref={ref}
             className={cn(
-                "flex rounded-sm border text-white font-bold",
+                "flex rounded-sm border text-white font-bold disabled:cursor-not-allowed disabled:opacity-50",
                 stepBackgroundVariants({
                     variant: state,
                     paused: pausedStyle,
-                    idle: idleStyle
+                    idle: idleStyle,
                 }),
                 stepSummaryTriggerButtonHoverVariants({
                     variant: state,
                     paused: pausedStyle,
-                    idle: idleStyle
+                    idle: idleStyle,
+                    disabled: disabled
                 })
             )}
             onClick={onClick}
+            disabled={disabled}
             {...props}
         >
             <div className='px-2 py-1 rounded-l-sm'>

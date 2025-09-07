@@ -28,8 +28,8 @@ export default function TableContainer() {
     const {
         handleFailStep,
         handleCompleteStep,
-        handleStartRoute,
-        handleCompleteRoute,
+        handleStartRoute: _handleStartRoute,
+        handleCompleteRoute: _handleCompleteRoute,
         updateStepMutation,
     } = useRouteActions("models", modelId, instanceId);
 
@@ -60,6 +60,16 @@ export default function TableContainer() {
 
     const handleClick = (stepId: string) => {
         nextRouter.push(router().models().instances().step(modelId, instanceId, stepId));
+    };
+
+    const handleStartRoute = () => {
+        _handleStartRoute();
+        nextRouter.push(router().models().instances().step(modelId, instanceId, route.nodes[0].id));
+    };
+
+    const handleCompleteRoute = () => {
+        _handleCompleteRoute();
+        nextRouter.push(router().models().instances().step(modelId, instanceId, RouteState.Completed));
     };
 
     return (

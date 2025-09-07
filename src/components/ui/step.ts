@@ -12,6 +12,10 @@ export type Variants = {
     idle: {
         true: string,
         false: string
+    },
+    disabled: {
+        true: string,
+        false: string
     }
 }
 
@@ -31,6 +35,10 @@ export const stepBackgroundVariants = cva<Variants>(
             },
             idle: {
                 true: "bg-transparent border",
+                false: ""
+            },
+            disabled: {
+                true: "bg-gray-600",
                 false: ""
             }
         },
@@ -118,11 +126,17 @@ export function stepSummaryTriggerButtonHoverVariants({
     variant,
     paused,
     idle,
+    disabled,
 }: {
     variant: StepState;
     paused: boolean;
     idle: boolean;
+    disabled?: boolean;
 }) {
+    if (disabled) {
+        return "";
+    }
+
     if (paused) {
         return "hover:bg-gray-50";
     }

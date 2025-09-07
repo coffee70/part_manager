@@ -2,7 +2,12 @@
 import { ExtendedRoute, RouteHelpers } from "@/components/routes/hooks/use_route_helpers";
 import RouteTable from "@/components/ui/route_table";
 import { StepState } from "@/types/collections";
-import { InProgressController, NextStepController, PreviousStepController, RedoStepController } from "@/components/routes/table/step_controller";
+import { 
+    InProgressController, 
+    NextStepController, 
+    PreviousStepController, 
+    RedoStepController,
+} from "@/components/routes/table/step_controller";
 
 // Component for step action controls
 export function StepActionControls({

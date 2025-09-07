@@ -18,7 +18,7 @@ export default function SummaryTitle() {
     const title = route?.nodes.find(node => node.id === stepId)?.name ?? '';
     
     return (
-        <div>
+        <div data-testid="route-summary-title">
             <span className="text-2xl font-bold">
                 {title}
             </span>

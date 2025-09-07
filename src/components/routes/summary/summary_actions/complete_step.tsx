@@ -1,7 +1,12 @@
 import ActionButton from "@/components/summary/summary_actions/action_button";
 import { StepState } from "@/types/collections";
 
-export default function CompleteStep({ onCompleteStep }: { onCompleteStep: () => void }) {
+type Props = {
+    onCompleteStep: () => void;
+    isPaused: boolean;
+}
+
+export default function CompleteStep({ onCompleteStep, isPaused }: Props) {
     return (
         <ActionButton
             name="Complete Step"
@@ -9,6 +14,7 @@ export default function CompleteStep({ onCompleteStep }: { onCompleteStep: () =>
             idleStyle={false}
             pausedStyle={false}
             onClick={onCompleteStep}
+            disabled={isPaused}
             data-testid="complete-step-button"
         />
     );

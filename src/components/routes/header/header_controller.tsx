@@ -1,4 +1,4 @@
-import { StepState } from "@/types/collections";
+import { RouteState, StepState } from "@/types/collections";
 import { ActionButton } from "../components/action_button";
 import { PauseIcon, PlayIcon, TrashIcon, CircleXIcon } from "lucide-react";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export function HeaderController({
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [stopDialogOpen, setStopDialogOpen] = useState(false);
 
-    const { replace } = useRouter();
+    const nextRouter = useRouter();
 
     const {
         handlePauseRoute,
@@ -37,6 +37,7 @@ export function HeaderController({
     const handleConfirmStopRoute = () => {
         handleStopRoute();
         setStopDialogOpen(false);
+        nextRouter.push(router().models().instances().step(modelId, instanceId, RouteState.Stopped));
     }
 
     const handleConfirmDeleteRoute = () => {
@@ -44,7 +45,7 @@ export function HeaderController({
         setDeleteDialogOpen(false);
         // now the route is deleted so redirect back to the model instance
         const redirectUrl = router().models().instances().instance(modelId, instanceId);
-        replace(redirectUrl);
+        nextRouter.push(redirectUrl);
     }
 
     return (

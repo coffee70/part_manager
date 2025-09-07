@@ -60,17 +60,24 @@ export default defineConfig({
       teardown: 'teardown',
     },
     {
+      name: 'routing setup',
+      testMatch: 'routing.setup.ts',
+      teardown: 'teardown',
+      use: { storageState: STORAGE_STATE },
+      dependencies: ['auth setup'],
+    },
+    {
       name: 'teardown',
       testMatch: 'global.teardown.ts',
       use: { storageState: STORAGE_STATE },
     },
     {
       name: 'chromium',
-      use: { 
+      use: {
         ...devices['Desktop Chrome'],
         storageState: STORAGE_STATE,
       },
-      dependencies: ['auth setup'],
+      dependencies: ['routing setup'],
     },
 
     // {

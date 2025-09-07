@@ -10,9 +10,7 @@ test('edit profile name and title', async ({ page }) => {
     await expect(page.locator('div').filter({ hasText: /^Name$/ }).getByRole('textbox')).toHaveValue('Test Admin');
     await expect(page.getByRole('textbox').nth(1)).toHaveValue('test');
     await expect(page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox')).toHaveValue('Tester');
-    await page.locator('div').filter({ hasText: /^Name$/ }).getByRole('textbox').click();
     await page.locator('div').filter({ hasText: /^Name$/ }).getByRole('textbox').fill('Test Admin Edited');
-    await page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox').click();
     await page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox').fill('Tester Edited');
     await page.getByRole('button', { name: 'Save' }).click();
 
@@ -30,9 +28,7 @@ test('edit profile name and title', async ({ page }) => {
     await expect(page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox')).toHaveValue('Tester Edited');
 
     // change the values back to the original values
-    await page.locator('div').filter({ hasText: /^Name$/ }).getByRole('textbox').click();
     await page.locator('div').filter({ hasText: /^Name$/ }).getByRole('textbox').fill('Test Admin');
-    await page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox').click();
     await page.locator('div').filter({ hasText: /^Title$/ }).getByRole('textbox').fill('Tester');
     await page.getByRole('button', { name: 'Save' }).click();
 })

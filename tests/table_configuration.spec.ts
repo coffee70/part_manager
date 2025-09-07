@@ -317,6 +317,7 @@ test("test model table configuration", async ({ page }) => {
         await page.getByTestId(`kv-line-value-input-${instance.multipleKV[1].key}-1`).click();
         await page.getByTestId(`kv-line-value-input-${instance.multipleKV[1].key}-1`).fill(instance.multipleKV[1].value);
         await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByLabel('Create Instance: Table Configuration Test')).not.toBeVisible();
     }
 
     // create a model for links
@@ -520,7 +521,7 @@ test("test model table configuration", async ({ page }) => {
     // Format as day of month (assuming the gridcell names are day numbers)
     const day3Num = day3.getDate().toString();
     const day5Num = day5.getDate().toString();
-    await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day5Num, exact: true }).first().click();
     // wait for url to contain updatedAt - from day 5
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -534,7 +535,7 @@ test("test model table configuration", async ({ page }) => {
             return false;
         }
     });
-    await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day3Num, exact: true }).first().click();
     // wait for url to contain updatedAt - from today - 3 days ago to today - 5 days ago
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -555,7 +556,7 @@ test("test model table configuration", async ({ page }) => {
     await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
     await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     await page.getByTestId('updated-at-filter-trigger').click();
-    await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day5Num, exact: true }).first().click();
     // wait for url to not contain updatedAt
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -621,7 +622,7 @@ await page.waitForURL(url => !url.searchParams.get('custom-field'));
     await page.getByTestId('date-field-filter-trigger-Date Field').click();
     const yesterdayNum = yesterday.getDate().toString();
     const todayNum = today.getDate().toString();
-    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         if (!dateFieldRaw) return false;
@@ -638,7 +639,7 @@ await page.waitForURL(url => !url.searchParams.get('custom-field'));
         }
         return false;
     });
-    await page.getByRole('gridcell', { name: todayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: todayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         if (!dateFieldRaw) return false;
@@ -662,7 +663,7 @@ await page.waitForURL(url => !url.searchParams.get('custom-field'));
     await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
     await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     await page.getByTestId('date-field-filter-trigger-Date Field').click();
-    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         return !dateFieldRaw;
@@ -1262,6 +1263,7 @@ test("test router table configuration", async ({ page }) => {
         await page.getByTestId(`kv-line-value-input-${instance.multipleKV[1].key}-1`).click();
         await page.getByTestId(`kv-line-value-input-${instance.multipleKV[1].key}-1`).fill(instance.multipleKV[1].value);
         await page.getByRole('button', { name: 'Save' }).click();
+        await expect(page.getByLabel('Create Instance: Table Configuration Test')).not.toBeVisible();
     }
 
     // create a router for links
@@ -1448,7 +1450,7 @@ test("test router table configuration", async ({ page }) => {
     // Format as day of month (assuming the gridcell names are day numbers)
     const day3Num = day3.getDate().toString();
     const day5Num = day5.getDate().toString();
-    await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day5Num, exact: true }).first().click();
     // wait for url to contain updatedAt - from day 5
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -1462,7 +1464,7 @@ test("test router table configuration", async ({ page }) => {
             return false;
         }
     });
-    await page.getByRole('gridcell', { name: day3Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day3Num, exact: true }).first().click();
     // wait for url to contain updatedAt - from today - 3 days ago to today - 5 days ago
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -1483,7 +1485,7 @@ test("test router table configuration", async ({ page }) => {
     await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
     await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     await page.getByTestId('updated-at-filter-trigger').click();
-    await page.getByRole('gridcell', { name: day5Num, exact: true }).click();
+    await page.getByRole('gridcell', { name: day5Num, exact: true }).first().click();
     // wait for url to not contain updatedAt
     await page.waitForURL(url => {
         const updatedAtRaw = url.searchParams.get('updatedAt');
@@ -1549,7 +1551,7 @@ test("test router table configuration", async ({ page }) => {
     await page.getByTestId('date-field-filter-trigger-Date Field').click();
     const yesterdayNum = yesterday.getDate().toString();
     const todayNum = today.getDate().toString();
-    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         if (!dateFieldRaw) return false;
@@ -1566,7 +1568,7 @@ test("test router table configuration", async ({ page }) => {
         }
         return false;
     });
-    await page.getByRole('gridcell', { name: todayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: todayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         if (!dateFieldRaw) return false;
@@ -1590,7 +1592,7 @@ test("test router table configuration", async ({ page }) => {
     await expect(page.getByRole('cell', { name: 'S-101' })).not.toBeVisible();
     await expect(page.getByRole('cell', { name: 'S-102' })).not.toBeVisible();
     await page.getByTestId('date-field-filter-trigger-Date Field').click();
-    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).click();
+    await page.getByRole('gridcell', { name: yesterdayNum, exact: true }).first().click();
     await page.waitForURL(url => {
         const dateFieldRaw = url.searchParams.get('custom-field');
         return !dateFieldRaw;
