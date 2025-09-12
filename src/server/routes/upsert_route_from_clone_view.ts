@@ -2,7 +2,7 @@
 import { z } from "zod";
 import { getCurrentSession } from "../auth/get_current_session";
 import { db } from "@/lib/db";
-import { InstanceDoc } from "@/types/collections";
+import { InstanceDoc, StepState } from "@/types/collections";
 import { ObjectId } from "mongodb";
 import { RouteState } from "@/types/collections";
 
@@ -70,6 +70,14 @@ export async function upsertRouteFromCloneView(input: z.input<typeof InputSchema
         $set: {
           route: {
             ...sourceInstance.route,
+            nodes: sourceInstance.route.nodes.map(node => ({
+              ...node,
+              // we need to set the state to not started
+              state: StepState.NotStarted,
+              // we need to clear the values and kv_values
+              values: {},
+              kv_values: {},
+            })),
             state: RouteState.Stopped,
             currentStepId: null
           },
