@@ -1,10 +1,12 @@
 'use client'
 import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
 import { type DateRange } from 'react-day-picker';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useInstanceURL } from '@/hooks/url_metadata.hook';
 import { useQueryClient } from '@tanstack/react-query';
 import { instanceKeys } from '@/lib/query_keys';
+import { Trash2 } from 'lucide-react';
 
 type Props = {
     paramKey?: string;
@@ -94,11 +96,24 @@ export default function DateRangeFilter({ paramKey, fieldId }: Props) {
         push(newUrl);
     }
 
+    const hasSelection = Boolean(initDate?.from || initDate?.to);
+
     return (
-        <Calendar
-            mode="range"
-            selected={initDate}
-            onSelect={onChange}
-        />
+        <div>
+            <Calendar
+                mode="range"
+                selected={initDate}
+                onSelect={onChange}
+            />
+            <Button
+                className="w-full mt-2 border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:border-red-300 active:bg-red-200 active:text-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => onChange(undefined)}
+                aria-label="Clear selection"
+                disabled={!hasSelection}
+            >
+                <Trash2 className="mr-2 h-4 w-4" />
+                <span>Clear Selection</span>
+            </Button>
+        </div>
     )
 }
