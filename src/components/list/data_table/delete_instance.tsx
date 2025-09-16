@@ -93,7 +93,7 @@ export default function DeleteInstance({ id: instanceId }: Props) {
                 <DropdownMenuContent>
                     <DropdownMenuGroup>
                         <DropdownMenuItem
-                            className="flex items-center gap-2 text-destructive hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100"
+                            className="flex items-center gap-2 text-destructive hover:bg-destructive-focus focus:bg-destructive-focus"
                             onClick={() => setOpen(true)}
                         >
                             <TrashIcon className="w-4 h-4" />

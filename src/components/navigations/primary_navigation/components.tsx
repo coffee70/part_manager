@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getContextColor } from "../lib";
 import Link from "next/link";
 import { Context } from "@/types/collections";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 function PrimaryHeader() {
     return (
@@ -14,13 +15,13 @@ function PrimaryHeader() {
 
 function PrimaryDivider() {
     return (
-        <div className="border-b border-stone-300 mx-1 my-3" />
+        <div className="border-b border-subtle mx-1 my-3" />
     )
 }
 
 function PrimarySeparator() {
     return (
-        <div className="border-r border-stone-300 mt-auto" />
+        <div className="border-r border-subtle mt-auto" />
     )
 }
 
@@ -62,9 +63,9 @@ function PrimaryItem({
                 </Link>
             </TooltipTrigger>
             <TooltipContent className="relative">
-                <div className="bg-black text-white text-xs px-2 py-1 rounded-md">
+                <TooltipWrapper>
                     <span>{context.charAt(0).toUpperCase() + context.slice(1)}</span>
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     )

@@ -9,7 +9,7 @@ const Edit = React.forwardRef<HTMLButtonElement, Props>((props, ref) => {
         <Button
             ref={ref}
             variant='secondary'
-            className="py-4 px rounded-sm border text-base font-bold"
+            className="py-4 px rounded-sm border border-secondary-border text-base font-bold"
             {...props}
         >
             <div className="flex items-center space-x-2">

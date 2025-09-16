@@ -19,6 +19,7 @@ import { useAdminURL } from '@/hooks/url_metadata.hook';
 import { sectionKeys } from '@/lib/query_keys';
 import { useSectionContext } from '../section.context';
 import Loader from '@/components/ui/loader';
+import { TooltipWrapper } from '@/components/ui/tooltip_wrapper';
 
 export default function DeleteSection() {
     const { section } = useSectionContext();
@@ -39,7 +40,7 @@ export default function DeleteSection() {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <AlertDialogTrigger asChild>
-                        <Button variant='icon' size='icon'>
+                        <Button variant='icon' size='icon' className='bg-secondary interactive-subtle'>
                             <div className="flex items-center">
                                 <Trash2Icon size={16} />
                             </div>
@@ -47,9 +48,9 @@ export default function DeleteSection() {
                     </AlertDialogTrigger>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                    <TooltipWrapper>
                         <span>Delete Section</span>
-                    </div>
+                    </TooltipWrapper>
                 </TooltipContent>
             </Tooltip>
             <AlertDialogContent>

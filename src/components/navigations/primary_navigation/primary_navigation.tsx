@@ -14,7 +14,7 @@ type Props = {
 export default function PrimaryNavigation({ role }: Props) {
     const { context } = useURL();
     return (
-        <div className="h-screen w-fit bg-stone-100 border-r border-stone-200 px-1.5 py-4 flex flex-col shadow-sm">
+        <div className="h-screen w-fit nav-surface px-1.5 py-4 flex flex-col">
             <PrimaryHeader />
             <PrimaryDivider />
             <PrimaryGroup>

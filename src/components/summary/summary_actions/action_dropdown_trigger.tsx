@@ -24,7 +24,7 @@ const ActionDropdownTrigger = React.forwardRef<HTMLDivElement, ActionDropdownTri
         <div
             ref={ref}
             className={cn(
-                "flex rounded-sm border text-white font-bold",
+                "flex rounded-sm border border-secondary-border font-bold",
                 stepBackgroundVariants({
                     variant: state,
                     paused: pausedStyle,

@@ -27,7 +27,7 @@ export default function Login() {
 
     return (
         <div className="flex w-full h-full items-center justify-center">
-            <div className="flex flex-col space-y-4 shadow-md rounded-md border border-gray-200 p-4 w-1/4">
+            <div className="flex flex-col space-y-4 shadow-md rounded-md border border-subtle p-4 w-1/4 bg-background">
                 <h1 className="font-bold text-xl">Log in</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col space-y-4 w-full">
                     {data?.success === false && <Alert variant='destructive'>

@@ -47,7 +47,7 @@ export default function Save() {
     }
     return (
         <button
-            className="flex items-center justify-center bg-primary text-white text-sm font-bold shadow-md rounded-full h-10 px-4 disabled:opacity-50"
+            className="flex items-center justify-center bg-primary text-primary-foreground text-sm font-bold shadow-md rounded-full h-10 px-4 disabled:opacity-50"
             disabled={!isEditing}
             onClick={onSave}
         >

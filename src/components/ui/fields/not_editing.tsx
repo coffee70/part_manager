@@ -9,7 +9,7 @@ const NotEditing = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttribute
             <Button
                 ref={ref}
                 variant='icon'
-                className={`grow bg-foreground p-1 rounded-none invisible group-hover:visible ${className}`}
+                className={`grow bg-secondary p-1 rounded-none invisible group-hover:visible ${className}`}
                 {...props}
             >
                 <PencilIcon />

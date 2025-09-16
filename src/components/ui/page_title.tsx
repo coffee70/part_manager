@@ -9,7 +9,7 @@ type Props = {
 export function PageTitle({ title, subtitle, icon }: Props) {
     return (
         <div className="flex items-center space-x-4">
-            <div className='flex items-center justify-center w-14 h-14 bg-black rounded-md text-white'>
+            <div className='flex items-center justify-center w-14 h-14 bg-foreground rounded-md text-text'>
                 {icon}
             </div>
             <div className="flex flex-col">

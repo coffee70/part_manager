@@ -151,7 +151,7 @@ export default function StepDropdown({
                             ))}
                             {!isCompleted && (
                                 <DropdownMenuItem
-                                    className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
+                                    className='focus:bg-destructive-focus'
                                     onSelect={onStopRoute}>
                                     <div className='flex items-center space-x-2 text-destructive'>
                                         <SquareIcon className='h-4 w-4' />
@@ -162,7 +162,7 @@ export default function StepDropdown({
                         </>
                     )}
                     <DropdownMenuItem
-                        className='hover:bg-gradient-to-br hover:from-red-50 hover:to-red-100'
+                        className='focus:bg-destructive-focus'
                         onSelect={onDeleteClick}>
                         <div className='flex items-center space-x-2 text-destructive'>
                             <TrashIcon className='h-4 w-4' />

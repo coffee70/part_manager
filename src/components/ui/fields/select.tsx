@@ -19,7 +19,7 @@ export default function Select({ label, description, className, error, ...props 
         <div className="flex flex-col space-y-0.5">
             <label className="text-sm" htmlFor={props.id}>{label}</label>
             <div className={cn(
-                "border border-accent-foreground shadow-sm rounded-md p-1",
+                "border border-subtle rounded-md bg-background-focus p-1",
                 error ? "border-destructive" : "",
             )}>
                 <Combobox {...props} />

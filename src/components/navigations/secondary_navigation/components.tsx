@@ -19,10 +19,10 @@ function SecondaryGroup({
     return (
         <div className="mt-1 px-4 mb-6">
             <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-semibold text-stone-500">{label.toUpperCase()}</span>
+                <span className="text-xs font-semibold text-text-secondary">{label.toUpperCase()}</span>
                 {action && <button
                     type="button"
-                    className={`p-1 rounded-md hover:bg-stone-300 transition-colors duration-200`}
+                    className={`p-1 rounded-md interactive-subtle`}
                     onClick={action}
                     title={`Add ${label}`}
                 >
@@ -57,12 +57,8 @@ function SecondaryItem({
         <Link
             id={id}
             className={cn(
-                "flex items-center space-x-3 px-2 py-1.5 text-stone-600 text-sm rounded-lg cursor-pointer transition-all duration-200",
-                selected
-                    ? "bg-white shadow-sm text-stone-800 font-medium"
-                    : isHovered
-                        ? "bg-white/70 text-stone-700"
-                        : "hover:bg-white/50"
+                "flex items-center space-x-3 px-2 py-1.5 text-text text-sm rounded-lg cursor-pointer transition-all duration-200 focus:bg-surface-contrast-focus hover:bg-surface-contrast-focus",
+                selected ? "bg-background shadow-sm font-medium" : ""
             )}
             href={href}
             onMouseEnter={onMouseEnter}
@@ -99,18 +95,14 @@ function SecondaryGenericItem({
     const circleColor = selected
         ? `${contextColors.bg} ${contextColors.border}`
         : isHovered
-            ? `bg-white ${contextColors.border}`
-            : "bg-white border-stone-300";
+            ? `bg-background ${contextColors.border}`
+            : "bg-background border-subtle";
 
     return (
         <Link
             className={cn(
-                "flex items-center space-x-3 h-10 text-stone-600 text-sm rounded-lg cursor-pointer transition-all duration-200",
-                selected
-                    ? "bg-white shadow-sm text-stone-800 font-medium"
-                    : isHovered
-                        ? "bg-white/70 text-stone-700"
-                        : "hover:bg-white/50"
+                "flex items-center space-x-3 h-10 text-text text-sm rounded-lg cursor-pointer transition-all duration-200 focus:bg-surface-contrast-focus hover:bg-surface-contrast-focus",
+                selected ? "bg-background shadow-sm font-medium" : ""
             )}
             href={href}
             onMouseEnter={onMouseEnter}
@@ -121,10 +113,10 @@ function SecondaryGenericItem({
                 {/* Vertical connecting line */}
                 <div className="absolute inset-0 flex flex-col items-center">
                     <div className={cn("w-[2px] h-1/2",
-                        top ? "bg-transparent" : selected || isHovered ? contextColors.bg : "bg-stone-300"
+                        top ? "bg-transparent" : selected || isHovered ? contextColors.bg : "bg-border"
                     )} />
                     <div className={cn("w-[2px] h-1/2",
-                        bottom ? "bg-transparent" : selected || isHovered ? contextColors.bg : "bg-stone-300"
+                        bottom ? "bg-transparent" : selected || isHovered ? contextColors.bg : "bg-border"
                     )} />
                 </div>
 

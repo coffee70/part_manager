@@ -33,13 +33,13 @@ export default function Navigation({ context, setContext }: Props) {
         <>
             <NavBase>
                 <NavLogo />
-                <div className="flex flex-1 bg-slate-800 rounded-lg w-72 h-12">
+                <div className="flex flex-1 surface-contrast rounded-lg w-72 h-12">
                     {selections.map((selection) => (
                         <div
                             key={selection.id}
                             className={cn(
                                 "flex-1 flex items-center justify-center h-content m-1 rounded-lg cursor-pointer font-bold text-lg",
-                                context === selection.context ? "bg-slate-700" : ""
+                                context === selection.context ? "bg-hover" : ""
                             )}
                             onClick={() => setContext(selection.context)}>
                             {selection.context}

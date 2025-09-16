@@ -51,8 +51,8 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
 
             <div
                 className={cn(
-                    "group flex items-center justify-between hover:cursor-pointer hover:bg-stone-100 rounded-md py-1 px-2 h-8 my-1",
-                    visibleOptions && "bg-stone-100"
+                    "group flex items-center justify-between hover:cursor-pointer interactive-subtle rounded-md py-1 px-2 h-8 my-1",
+                    visibleOptions && "surface-contrast"
                 )}
                 onClick={() => onCollapse(!collapsed)}
                 onMouseEnter={onMouseEnter}
@@ -61,20 +61,20 @@ export function SectionHeader({ section, onAddField, onEditSection, collapsed, o
             >
                 <div className="flex items-center gap-2">
                     <ChevronDownIcon className={cn(
-                        "w-4 h-4 transition-transform duration-200 text-stone-500 group-hover:text-stone-700",
+                        "w-4 h-4 transition-transform duration-200 text-weak group-hover:text-text",
                         collapsed ? "-rotate-90" : "",
-                        visibleOptions && "text-stone-700"
+                        visibleOptions && "text-text"
                     )} />
                     <span className={cn(
-                        "text-xs font-semibold text-stone-500 group-hover:text-stone-700",
-                        visibleOptions && "text-stone-700"
+                        "text-xs font-semibold text-muted group-hover:text-text",
+                        visibleOptions && "text-text"
                     )}>
                         {section.name.toUpperCase()}
                     </span>
                 </div>
                 <DropdownMenu open={dropdownOpen} onOpenChange={onDropdownOpenChange}>
                     <DropdownMenuTrigger asChild data-testid={`route-fields-section-header-dropdown-trigger-${section.name}`}>
-                        {visibleOptions && <button type="button" className="rounded-full p-0.5 mr-1 hover:bg-stone-300">
+                        {visibleOptions && <button type="button" className="rounded-full p-0.5 mr-1 interactive-subtle">
                             <MoreHorizontalIcon className="w-4 h-4" />
                         </button>}
                     </DropdownMenuTrigger>

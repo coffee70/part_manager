@@ -1,9 +1,10 @@
 'use client'
 import React from "react";
 import { ArrowUpFromDotIcon } from "lucide-react";
-import { useBuilderContext } from "../builder.context";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
-import { START_NODE_ID } from "../types";
+import { useBuilderContext } from "@/components/route_builder/builder_view/builder.context";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { START_NODE_ID } from "@/components/route_builder/builder_view/types";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 export default function AddStartingStep() {
     const { 
@@ -32,9 +33,9 @@ export default function AddStartingStep() {
                 </button>
             </TooltipTrigger>
             <TooltipContent>
-                <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                <TooltipWrapper>
                     <span>Add Starting Step</span>
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     )

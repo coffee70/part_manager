@@ -9,13 +9,13 @@ export default function Error({ message }: { message?: string }) {
     return (
         <Tooltip>
             <TooltipTrigger asChild>
-                <div className='grow flex items-center p-1 bg-red-500'>
-                    <TriangleAlertIcon className="text-white" />
+                <div className='grow flex items-center p-1 bg-destructive'>
+                    <TriangleAlertIcon className="text-destructive-text" />
                 </div>
             </TooltipTrigger>
             <TooltipContent>
-                <div className='rounded-sm bg-red-500 p-2'>
-                    <p className='text-xs text-white font-bold'>{message}</p>
+                <div className='rounded-sm bg-destructive p-2'>
+                    <p className='text-xs text-destructive-text font-bold'>{message}</p>
                 </div>
             </TooltipContent>
         </Tooltip>

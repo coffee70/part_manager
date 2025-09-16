@@ -1,4 +1,5 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 import { LucideIcon } from "lucide-react";
 import React from "react";
 
@@ -18,18 +19,18 @@ export function SectionActionButton({ icon: Icon, label, onClick }: SectionActio
     return (
         <Tooltip>
             <TooltipTrigger asChild>
-                <button 
-                    type="button" 
-                    className="hover:cursor-pointer hover:bg-stone-200 rounded-full p-1 hidden group-hover:block"
+                <button
+                    type="button"
+                    className="hover:cursor-pointer interactive-subtle rounded-full p-1 hidden group-hover:block"
                     onClick={_onClick}
                 >
                     <Icon className="w-4 h-4" />
                 </button>
             </TooltipTrigger>
             <TooltipContent>
-                <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                <TooltipWrapper>
                     <span>{label}</span>
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     );

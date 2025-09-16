@@ -3,6 +3,7 @@ import React from "react";
 import { Trash2Icon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
 import { useBuilderContext } from "../builder.context";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 export default function Delete() {
     const { removeRoute } = useBuilderContext();
@@ -10,16 +11,16 @@ export default function Delete() {
         <Tooltip>
             <TooltipTrigger asChild>
                 <button
-                    className="flex items-center justify-center bg-red-100 text-destructive shadow-md rounded-full h-10 w-10 disabled:opacity-50"
+                    className="flex items-center justify-center bg-destructive-foreground text-destructive shadow-md rounded-full h-10 w-10 disabled:opacity-50"
                     onClick={removeRoute}
                 >
                     <Trash2Icon size={24} />
                 </button>
             </TooltipTrigger>
             <TooltipContent>
-                <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                <TooltipWrapper>
                     <span>Remove Route</span>
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     )

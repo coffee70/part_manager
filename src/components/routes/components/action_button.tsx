@@ -1,21 +1,22 @@
 import { StepState } from "@/types/collections";
 import { LucideIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 function colorSpecificStyles(state: StepState, disabled: boolean = false) {
     if (disabled) {
-        return "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-50";
+        return "border-subtle bg-background text-muted cursor-not-allowed opacity-50";
     }
     
     switch (state) {
         case StepState.NotStarted:
-            return "border-green-200 bg-stone-50 text-green-600 hover:bg-green-50 hover:border-green-300 active:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm";
+            return "border-green-200 bg-background text-green-600 hover:bg-green-50 hover:border-green-300 active:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm";
         case StepState.Failed:
-            return "border-red-200 bg-stone-50 text-red-600 hover:bg-red-50 hover:border-red-300 active:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm";
+            return "border-red-200 bg-background text-red-600 hover:bg-red-50 hover:border-red-300 active:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-sm";
         case StepState.Completed:
-            return "border-green-200 bg-stone-50 text-green-600 hover:bg-green-50 hover:border-green-300 active:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm";
+            return "border-green-200 bg-background text-green-600 hover:bg-green-50 hover:border-green-300 active:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 shadow-sm";
         case StepState.InProgress:
-            return "border-blue-200 bg-stone-50 text-blue-600 hover:bg-blue-50 hover:border-blue-300 active:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm";
+            return "border-blue-200 bg-background text-blue-600 hover:bg-blue-50 hover:border-blue-300 active:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm";
         default:
             throw new Error(`Unknown step state: ${state}`);
     }
@@ -45,9 +46,9 @@ function ActionButton({ icon: Icon, label, onClick, state, className, disabled =
                 </button>
             </TooltipTrigger>
             <TooltipContent>
-                <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md shadow-sm">
+                <TooltipWrapper>
                     <span>{label}</span>
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     );

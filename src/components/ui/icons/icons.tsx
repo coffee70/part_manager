@@ -27,7 +27,7 @@ function TitleModelIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "p-1 rounded-md bg-gradient-to-br from-rose-500 to-red-700 text-white shadow-md",
+                "p-1 rounded-md bg-gradient-to-br from-rose-500 to-red-700 text-primary-foreground shadow-md",
             )}
         >
             <BoxesIcon size={size} strokeWidth={1.5} />
@@ -41,8 +41,8 @@ function PrimaryModelIcon({ size, selected }: Props) {
             className={cn(
                 "p-1 rounded-md transition-all duration-200",
                 selected
-                    ? "bg-gradient-to-br from-rose-500 to-red-700 text-white shadow-md"
-                    : "text-stone-600 hover:bg-stone-200"
+                    ? "bg-gradient-to-br from-rose-500 to-red-700 text-primary-foreground shadow-md"
+                    : "icon-muted hover:bg-hover"
             )}
         >
             <BoxesIcon size={size} strokeWidth={1.5} />
@@ -68,8 +68,8 @@ function RouteIcon({ size, selected }: Props) {
             className={cn(
                 "p-1 rounded-md transition-all duration-200",
                 selected
-                    ? "bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-md"
-                    : "text-stone-600 hover:bg-stone-200"
+                    ? "bg-gradient-to-br from-violet-500 to-purple-700 text-primary-foreground shadow-md"
+                    : "icon-muted hover:bg-hover"
             )}
         >
             <LucideRouteIcon size={size} strokeWidth={1.5} />
@@ -93,7 +93,7 @@ function TitleRouterIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "p-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-700 text-white shadow-md",
+                "p-1 rounded-md bg-gradient-to-br from-violet-500 to-purple-700 text-primary-foreground shadow-md",
             )}
         >
             <LucideRouteIcon size={size} strokeWidth={1.5} />
@@ -107,8 +107,8 @@ function PrimaryUserIcon({ size, selected }: Props) {
             className={cn(
                 "p-1 rounded-md transition-all duration-200",
                 selected
-                    ? "bg-gradient-to-br from-green-500 to-lime-600 text-white shadow-md"
-                    : "text-stone-600 hover:bg-stone-200"
+                    ? "bg-gradient-to-br from-green-500 to-lime-600 text-primary-foreground shadow-md"
+                    : "icon-muted hover:bg-hover"
             )}
         >
             <LucideUserIcon size={size} strokeWidth={1.5} />
@@ -120,7 +120,7 @@ function SecondaryUserIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "p-1 rounded-md bg-gradient-to-br from-green-500 to-lime-600 text-white shadow-md",
+                "p-1 rounded-md bg-gradient-to-br from-green-500 to-lime-600 text-primary-foreground shadow-md",
             )}
         >
             <LucideUserIcon size={size} strokeWidth={1.5} />
@@ -132,7 +132,7 @@ function TitleFieldIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "p-1 rounded-md bg-gradient-to-br from-slate-800 to-black text-white shadow-md",
+                "p-1 rounded-md bg-gradient-to-br from-slate-800 to-black text-primary-foreground shadow-md",
             )}
         >
             <AlignLeftIcon size={size} />
@@ -158,7 +158,7 @@ function NotFoundIcon({ size }: Props) {
     return (
         <div
             className={cn(
-                "p-1 rounded-md bg-gradient-to-br from-rose-500 to-red-700 text-white shadow-md",
+                "p-1 rounded-md bg-gradient-to-br from-rose-500 to-red-700 text-primary-foreground shadow-md",
             )}
         >
             <SearchXIcon size={size} strokeWidth={1.5} />
@@ -188,7 +188,7 @@ function FieldType({ type, size }: { type: FieldType, size: number }) {
 function CompletedIcon() {
     return (
         <CircleCheckIcon
-            className="w-6 h-6 fill-green-500 text-green-50 rounded-full"
+            className="w-6 h-6 fill-green-500 text-primary-foreground rounded-full"
             data-testid="completed-icon"
         />
     )
@@ -197,7 +197,7 @@ function CompletedIcon() {
 function FailedIcon() {
     return (
         <CircleXIcon
-            className="w-6 h-6 fill-red-500 text-red-50 rounded-full"
+            className="w-6 h-6 fill-red-500 text-primary-foreground rounded-full"
             data-testid="failed-icon"
         />
     )
@@ -225,7 +225,7 @@ function NotStartedIcon() {
     return (
         <div className="flex items-center justify-center w-6 h-6">
             <CircleIcon
-                className="w-5 h-5 text-stone-400 rounded-full"
+                className="w-5 h-5 icon-muted rounded-full"
                 data-testid="not-started-icon"
                 strokeWidth={2}
                 fill="none"
@@ -238,7 +238,7 @@ function PausedIcon() {
     return (
         <div className="flex items-center justify-center w-6 h-6">
             <CircleIcon
-                className="w-5 h-5 text-stone-400 fill-stone-400 rounded-full"
+                className="w-5 h-5 icon-muted rounded-full"
                 data-testid="paused-icon"
                 strokeWidth={2}
                 fill="none"

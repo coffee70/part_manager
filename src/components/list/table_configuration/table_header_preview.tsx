@@ -51,13 +51,13 @@ export function TableHeaderPreview({
     return (
         <div>
             <h3 className="text-lg font-medium mb-4">Table Header Layout</h3>
-            <div className="border border-stone-200 rounded-lg p-4 min-h-[160px] bg-gradient-to-b from-stone-50 to-stone-100">
-                <div className="flex items-center gap-2 text-sm text-stone-600 mb-3">
+            <div className="border border-subtle rounded-lg p-4 min-h-[160px] bg-surface-contrast">
+                <div className="flex items-center gap-2 text-sm text-text mb-3">
                     <GripVertical className="h-4 w-4" />
                     <span>Drag columns left or right to reorder them in the table header</span>
                 </div>
                 {allColumns.length === 0 ? (
-                    <div className="flex items-center justify-center py-12 text-stone-500 border-2 border-dashed border-stone-300 rounded-lg bg-white">
+                    <div className="flex items-center justify-center py-12 text-weak border-2 border-dashed border-subtle rounded-lg bg-background">
                         <div className="text-center">
                             <div className="text-lg mb-2">No columns selected</div>
                             <div className="text-sm">Add columns from the available options below</div>
@@ -77,7 +77,7 @@ export function TableHeaderPreview({
                         >
                             <div className="relative">
                                 {/* Table header simulation with horizontal scroll */}
-                                <div className="border border-stone-300 rounded-lg bg-white shadow-sm">
+                                <div className="border border-subtle rounded-lg bg-background shadow-sm">
                                     {/* Scrollable container with max width */}
                                     <div className="max-w-[1000px] overflow-x-auto p-2">
                                         <div className="flex gap-2 min-h-[120px] items-start" style={{ minWidth: `${allColumns.length * 200}px` }}>
@@ -97,8 +97,8 @@ export function TableHeaderPreview({
                                 </div>
                                 
                                 {/* Visual hint for table */}
-                                <div className="mt-2 text-xs text-stone-500 text-center">
-                                    ↑ Table Header Preview {allColumns.length > 3 && <span className="text-stone-400">(scroll horizontally to see all columns)</span>}
+                                <div className="mt-2 text-xs text-weak text-center">
+                                    ↑ Table Header Preview {allColumns.length > 3 && <span className="text-text">(scroll horizontally to see all columns)</span>}
                                 </div>
                             </div>
                         </SortableContext>

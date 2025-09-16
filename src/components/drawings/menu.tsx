@@ -8,13 +8,13 @@ export default function Menu() {
     const { pointer, setPointer } = useDrawingViewerContext()
     return (
         <div className="flex space-x-2 w-full p-2 bg-foreground border border-border">
-            <Button variant="icon" className={cn("p-2", pointer === "select" ? "bg-black text-white rounded-full" : "")} onClick={() => setPointer("select")}>
+            <Button variant="icon" className={cn("p-2", pointer === "select" ? "bg-primary text-primary-foreground rounded-full" : "")} onClick={() => setPointer("select")}>
                 <PointerIcon />
             </Button>
-            <Button variant="icon" className={cn("p-2", pointer === "add" ? "bg-black text-white rounded-full" : "")} onClick={() => setPointer("add")}>
+            <Button variant="icon" className={cn("p-2", pointer === "add" ? "bg-primary text-primary-foreground rounded-full" : "")} onClick={() => setPointer("add")}>
                 <PlusIcon />
             </Button>
-            <Button variant="icon" className={cn("p-2", pointer === "delete" ? "bg-black text-white rounded-full" : "")} onClick={() => setPointer("delete")}>
+            <Button variant="icon" className={cn("p-2", pointer === "delete" ? "bg-primary text-primary-foreground rounded-full" : "")} onClick={() => setPointer("delete")}>
                 <Trash2Icon />
             </Button>
         </div>

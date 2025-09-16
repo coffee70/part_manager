@@ -21,8 +21,8 @@ export default function ButtonGroup<T extends string>({ value, onChange, labels,
                     onClick={() => onChange(label)}
                 >
                     <span className='text-sm'>{label}</span>
-                    {value === label && <CircleCheckIcon className='text-white bg-black rounded-full' strokeWidth={1} size={stacked ? 24 : 30} />}
-                    {value !== label && <CircleIcon strokeWidth={1} size={stacked ? 24 : 30} />}
+                    {value === label && <CircleCheckIcon className='text-primary-foreground bg-primary rounded-full' strokeWidth={1} size={stacked ? 24 : 30} />}
+                    {value !== label && <CircleIcon className='icon-muted' strokeWidth={1} size={stacked ? 24 : 30} />}
                 </div>
             ))}
         </div>

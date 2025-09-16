@@ -71,6 +71,7 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                             ...prev,
                                             [field._id]: e.target.value,
                                         }))}
+                                        className='border border-subtle rounded-md bg-background-focus'
                                     /> 
                                 ) : field.type === 'key_value' ? (
                                     <KVField
@@ -94,6 +95,7 @@ export default function Fields({ fieldState, setFieldState, kvFieldState, setKvF
                                             ...prev,
                                             [field._id]: e.target.value,
                                         }))}
+                                        className='border border-subtle rounded-md bg-background-focus'
                                     />
                                 )}
                             </div>

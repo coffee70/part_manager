@@ -24,13 +24,13 @@ export const stepBackgroundVariants = cva<Variants>(
     {
         variants: {
             variant: {
-                [StepState.NotStarted]: "bg-gray-600",
-                [StepState.Completed]: "bg-green-600",
-                [StepState.Failed]: "bg-red-600",
-                [StepState.InProgress]: "bg-blue-600"
+                [StepState.NotStarted]: "bg-gray-600 text-text",
+                [StepState.Completed]: "bg-green-600 text-primary-foreground",
+                [StepState.Failed]: "bg-red-600 text-primary-foreground",
+                [StepState.InProgress]: "bg-blue-600 text-primary-foreground"
             },
             paused: {
-                true: "bg-transparent text-gray-600 border border-gray-600",
+                true: "bg-transparent text-muted border border-accent-foreground",
                 false: ""
             },
             idle: {
@@ -38,7 +38,7 @@ export const stepBackgroundVariants = cva<Variants>(
                 false: ""
             },
             disabled: {
-                true: "bg-gray-600",
+                true: "bg-border-strong",
                 false: ""
             }
         },
@@ -47,28 +47,28 @@ export const stepBackgroundVariants = cva<Variants>(
             {
                 variant: StepState.NotStarted,
                 paused: true,
-                class: "text-gray-600 border-gray-600"
+                class: "f border-accent-foreground"
             },
             {
                 variant: StepState.Completed,
                 paused: true,
-                class: "text-gray-600 border-gray-600"
+                class: "text-accent-secondary border-accent-foreground"
             },
             {
                 variant: StepState.Failed,
                 paused: true,
-                class: "text-gray-600 border-gray-600"
+                class: "text-accent-secondary border-accent-foreground"
             },
             {
                 variant: StepState.InProgress,
                 paused: true,
-                class: "text-gray-600 border-gray-600"
+                class: "text-accent-secondary border-accent-foreground"
             },
             // Idle state: colored text and border matching the variant, transparent background
             {
                 variant: StepState.NotStarted,
                 idle: true,
-                class: "text-gray-600 border-gray-600"
+                class: "text-accent-secondary border-accent-foreground"
             },
             {
                 variant: StepState.Completed,
@@ -101,13 +101,13 @@ export function stepSummaryButtonDividerVariants({
 }) {
     // If either paused or idle, use the border color for the step state
     if (paused) {
-        return "border-l border-gray-600";
+        return "border-l border-slate-200";
     }
 
     if (idle) {
         switch (variant) {
             case StepState.NotStarted:
-                return "border-l border-gray-600";
+                return "border-l border-accent-foreground";
             case StepState.Completed:
                 return "border-l border-green-600";
             case StepState.Failed:
@@ -118,8 +118,7 @@ export function stepSummaryButtonDividerVariants({
                 return "border-l";
         }
     }
-    // If both are false, just return border-l (default border color)
-    return "border-l";
+    return "border-l border-slate-200";
 }
 
 export function stepSummaryTriggerButtonHoverVariants({
@@ -138,13 +137,13 @@ export function stepSummaryTriggerButtonHoverVariants({
     }
 
     if (paused) {
-        return "hover:bg-gray-50";
+        return "hover:bg-hover";
     }
 
     if (idle) {
         switch (variant) {
             case StepState.NotStarted:
-                return "hover:bg-gray-50";
+                return "hover:bg-hover";
             case StepState.Completed:
                 return "hover:bg-green-50";
             case StepState.Failed:
@@ -152,13 +151,13 @@ export function stepSummaryTriggerButtonHoverVariants({
             case StepState.InProgress:
                 return "hover:bg-blue-50";
             default:
-                return "hover:bg-gray-50";
+                return "hover:bg-hover";
         }
     }
     
     switch (variant) {
         case StepState.NotStarted:
-            return "hover:bg-gray-700";
+            return "hover:bg-border-strong";
         case StepState.Completed:
             return "hover:bg-green-700";
         case StepState.Failed:
@@ -166,7 +165,7 @@ export function stepSummaryTriggerButtonHoverVariants({
         case StepState.InProgress:
             return "hover:bg-blue-700";
         default:
-            return "hover:bg-gray-700";
+            return "hover:bg-border-strong";
     }
 }
 
@@ -178,7 +177,7 @@ export function stepDropdownItemBackgroundVariants({
 }) {
     switch (variant) {
         case StepState.NotStarted:
-            return "hover:bg-gray-50 active:bg-gray-100 focus:bg-gray-50";
+            return "hover:bg-hover active:bg-border focus:bg-hover";
         case StepState.Completed:
             return "hover:bg-green-50 active:bg-green-100 focus:bg-green-50";
         case StepState.Failed:

@@ -59,18 +59,18 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
       ref={setNodeRef} 
       style={style} 
       className={cn(
-        "flex items-center gap-2 p-2 bg-white border border-stone-200 rounded-md shadow-sm transition-colors duration-200",
+        "flex items-center gap-2 p-2 bg-surface-contrast border border-subtle rounded-md shadow-sm transition-colors duration-200",
         isDragging ? "shadow-md" : "hover:shadow",
         isPartOfEdge() ? "border-l-4 border-l-stone-400" : ""
       )}
     >
       <div 
-        className="cursor-grab p-1 rounded-md hover:bg-stone-100 transition-colors duration-200" 
+        className="cursor-grab p-1 rounded-md interactive-subtle transition-colors duration-200" 
         {...attributes} 
         {...listeners}
         data-testid={`drag-handle-${index}`}
       >
-        <GripVertical className="h-5 w-5 text-stone-400" />
+        <GripVertical className="h-5 w-5 icon-muted" />
       </div>
 
       <div className="flex-1">
@@ -79,7 +79,7 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
             <Button 
               ref={instanceTriggerRef}
               variant="outline" 
-              className="w-full justify-between border-stone-200 bg-white hover:bg-stone-50 text-stone-700 font-normal transition-colors duration-200"
+              className="w-full justify-between border-subtle bg-surface-contrast hover:bg-hover text-text font-normal transition-colors duration-200"
             >
               {instances.find(i => i._id === row.instanceId)?.number || 'Select an instance'}
               <ChevronDown className="h-4 w-4 opacity-50" />
@@ -87,14 +87,14 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
           </DropdownMenuTrigger>
           <DropdownMenuContent 
             style={{ width: `${instanceTriggerWidth}px` }}
-            className="border-stone-200 shadow-sm" 
+            className="border-subtle shadow-sm" 
             align="start"
           >
             {instances.map(instance => (
               <DropdownMenuItem 
                 key={instance._id} 
                 onClick={() => onUpdate(row.id, instance._id)}
-                className="text-stone-700 hover:bg-stone-50"
+                className="text-text hover:bg-hover"
               >
                 {instance.number}
               </DropdownMenuItem>
@@ -107,7 +107,7 @@ export default function SortableRow({ row, instances, index, totalRows, onRemove
         variant="ghost" 
         size="icon" 
         onClick={() => onRemove(row.id)}
-        className={cn("text-stone-400 hover:text-red-500 hover:bg-transparent")}
+        className={cn("icon-muted hover:text-destructive hover:bg-transparent")}
         data-testid={`delete-step-button-${index}`}
       >
         <Trash className="h-4 w-4" />

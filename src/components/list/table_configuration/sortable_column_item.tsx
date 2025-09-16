@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { GripVertical, Trash2, Settings } from 'lucide-react';
 import { Field } from '@/types/collections';
 import { getColumnInfo } from './utils';
+import { TooltipWrapper } from '@/components/ui/tooltip_wrapper';
 
 type SortableColumnItemProps = {
     column: any;
@@ -54,33 +55,33 @@ export function SortableColumnItem({
             ref={setNodeRef}
             style={style}
             className={`
-                relative flex-shrink-0 w-48 h-36 bg-white border rounded-lg shadow-sm flex flex-col
+                relative flex-shrink-0 w-48 h-36 bg-surface-contrast border rounded-lg shadow-sm flex flex-col
                 ${isDragging ? 'z-0' : 'transition-all hover:shadow-md'}
-                ${isFocused && !isDragging ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-stone-200 hover:border-stone-300'}
+                ${isFocused && !isDragging ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' : 'border-subtle hover:border-border'}
             `}
             data-testid='table-configuration-sortable-column-item'
         >
             {/* Header section with drag handle and remove button */}
-            <div className="flex items-center justify-between p-2 border-b border-stone-200 flex-shrink-0">
+            <div className="flex items-center justify-between p-2 border-b border-subtle flex-shrink-0">
                 <div
                     {...attributes}
                     {...listeners}
-                    className="cursor-grab active:cursor-grabbing p-1 rounded hover:bg-stone-100 touch-none"
+                    className="cursor-grab active:cursor-grabbing p-1 rounded interactive-subtle touch-none"
                     role="button"
                     aria-label="Drag to reorder column"
                     tabIndex={0}
                     data-testid='table-configuration-sortable-column-item-drag-handle'
                 >
-                    <GripVertical className="h-4 w-4 text-stone-400 hover:text-stone-600" />
+                    <GripVertical className="h-4 w-4 icon-muted hover:text-text" />
                 </div>
                 <Button
-                    variant="ghost"
+                    variant="icon"
                     size="sm"
                     onClick={(e) => {
                         e.stopPropagation();
                         onRemove();
                     }}
-                    className="h-6 w-6 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="h-6 w-6 p-0 bg-transparent text-destructive hover:bg-destructive-focus dark:hover:border dark:hover:border-destructive"
                     data-testid='table-configuration-sortable-column-item-remove-button'
                 >
                     <Trash2 className="h-3 w-3" />
@@ -93,8 +94,8 @@ export function SortableColumnItem({
                     <span className="font-medium text-sm truncate">{columnInfo.name}</span>
                     <span className={`text-xs px-1.5 py-0.5 rounded flex-shrink-0 ${
                         columnInfo.type === 'System' 
-                            ? 'bg-blue-100 text-blue-700' 
-                            : 'bg-green-100 text-green-700'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-700' 
+                            : 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700'
                     }`}>
                         {columnInfo.type}
                     </span>
@@ -102,19 +103,19 @@ export function SortableColumnItem({
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div className="w-5 h-5 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-                                    <Settings className="h-2.5 w-2.5 text-white drop-shadow-sm" />
+                                    <Settings className="h-2.5 w-2.5 text-primary-foreground drop-shadow-sm" />
                                 </div>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <div className="bg-stone-800 text-white text-xs px-2 py-1.5 rounded-md shadow-sm">
+                                <TooltipWrapper>
                                     <span>Click to Configure</span>
-                                </div>
+                                </TooltipWrapper>
                             </TooltipContent>
                         </Tooltip>
                     )}
                 </div>
                 
-                <div className="text-xs text-stone-500 line-clamp-3">
+                <div className="text-xs text-weak line-clamp-3">
                     {columnInfo.description}
                 </div>
             </div>

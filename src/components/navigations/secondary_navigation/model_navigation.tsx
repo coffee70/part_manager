@@ -24,9 +24,9 @@ export default function ModelNavigation() {
     })
 
     return (
-        <div className="shrink-0 w-60 bg-stone-100 border-r border-stone-200 overflow-y-auto">
+        <div className="shrink-0 w-60 nav-surface overflow-y-auto">
             <div className="py-5 px-4">
-                <h2 className="font-medium text-stone-800">Models</h2>
+                <h2 className="font-medium text-text">Models</h2>
             </div>
             <SecondaryGroup
                 label="Models"

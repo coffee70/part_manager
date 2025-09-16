@@ -9,6 +9,7 @@ import { getTableConfiguration } from "@/server/configuration/get_table_configur
 import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import { getContexts } from "@/server/contexts/get_contexts";
 import { getCurrentUser } from "@/server/auth/get_current_user";
+import { getAppearance } from "@/server/auth/get_appearance";
 
 export default async function Page({
     params,
@@ -42,6 +43,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: userKeys.current(),
         queryFn: () => getCurrentUser(),
+    })
+
+    // appearance
+    await queryClient.prefetchQuery({
+        queryKey: userKeys.appearance(),
+        queryFn: () => getAppearance(),
     })
 
     // table configuration

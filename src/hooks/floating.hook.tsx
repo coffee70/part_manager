@@ -83,14 +83,14 @@ export const FloatingExample = () => {
             <button
                 {...referenceProps}
                 onClick={() => setOpen(!open)}
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 focus:outline-none"
             >
                 Toggle Floating Div
             </button>
             {open && (
                 <div
                     {...floatingProps}
-                    className="bg-blue-500 border border-blue-500 rounded shadow-lg p-4 w-48 text-center"
+                    className="bg-background border border-subtle rounded shadow-lg p-4 w-48 text-center"
                 >
                     <p>This is a floating div.</p>
                     <p>It appears below the button.</p>

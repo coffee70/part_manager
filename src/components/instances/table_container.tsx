@@ -51,6 +51,7 @@ import TimeFieldFilter from "@/components/list/filters/filter_time_field/filter_
 import SelectFieldFilter from "../list/filters/filter_select_field/filter_select_field";
 import KVFieldFilter from "@/components/list/filters/filter_kv_field/filter_kv_field";
 import { clientToServerSearchParams } from "@/lib/search_params";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 type Column = (ModelSystemColumn & { isSystem: true })
     | (RouterSystemColumn & { isSystem: true })
@@ -61,7 +62,6 @@ export default function TableContainer() {
     const searchParams = clientToServerSearchParams(readOnlySearchParams);
     const pathname = usePathname();
     const { replace } = useRouter();
-    const [isClient, setIsClient] = useState(false);
 
     const { context, id, instanceId } = useInstanceURL();
 
@@ -97,10 +97,6 @@ export default function TableContainer() {
         queryKey: instanceKeys.all(context, id),
         queryFn: () => getInstances({ id, context, searchParams }),
     })
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     // Helper function to get system column description
     const getSystemColumnDescription = (columnType: string): string => {
@@ -211,9 +207,9 @@ export default function TableContainer() {
                                     <InfoIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <div className="bg-stone-800 text-white text-xs px-2 py-1.5 rounded-md shadow-sm">
+                                    <TooltipWrapper>
                                         <span>{description}</span>
-                                    </div>
+                                    </TooltipWrapper>
                                 </TooltipContent>
                             </Tooltip>
                         )}
@@ -237,9 +233,9 @@ export default function TableContainer() {
                                     <InfoIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <div className="bg-stone-800 text-white text-xs px-2 py-1.5 rounded-md shadow-sm">
+                                    <TooltipWrapper>
                                         <span>{field.description}</span>
-                                    </div>
+                                    </TooltipWrapper>
                                 </TooltipContent>
                             </Tooltip>
                         )}
@@ -358,7 +354,7 @@ export default function TableContainer() {
                     <InstanceForm>
                         <New id={`create-instance-${contextImpl?.name}`} />
                     </InstanceForm>
-                    {isClient && user?.role === 'admin' && (
+                    {user?.role === 'admin' && (
                         <TableConfigurationModal>
                             <TableConfiguration />
                         </TableConfigurationModal>

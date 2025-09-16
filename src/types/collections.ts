@@ -170,6 +170,33 @@ export type FieldDoc = {
     keys?: string[];
 }
 
+export const themes = ['light', 'dark', 'system'] as const;
+export const ThemeSchema = z.enum(themes);
+export type Theme = z.infer<typeof ThemeSchema>;
+
+export const AppearanceSchema = z.object({
+    theme: ThemeSchema,
+});
+export type Appearance = z.infer<typeof AppearanceSchema>;
+
+export const defaultAppearance: Appearance = {
+    theme: 'light'
+}
+
+// if the theme is system, then the client will use the system theme
+export const clientThemes = ['light', 'dark'] as const;
+export const ClientThemeSchema = z.enum(clientThemes);
+export type ClientTheme = z.infer<typeof ClientThemeSchema>;
+
+export const ClientAppearanceSchema = z.object({
+    theme: ClientThemeSchema,
+});
+export type ClientAppearance = z.infer<typeof ClientAppearanceSchema>;
+
+export const defaultClientAppearance: ClientAppearance = {
+    theme: 'light'
+}
+
 export interface UserDoc {
     _id: string;
     username: string;
@@ -177,12 +204,7 @@ export interface UserDoc {
     name: string;
     title: string;
     role: Role;
-}
-
-export interface SessionDoc {
-    _id: string;
-    expires_at: Date;
-    user_id: string;
+    appearance?: Appearance;
 }
 
 export interface User {
@@ -191,6 +213,13 @@ export interface User {
     username: string;
     title: string;
     role: Role;
+    appearance?: Appearance;
+}
+
+export interface SessionDoc {
+    _id: string;
+    expires_at: Date;
+    user_id: string;
 }
 
 export interface Password {

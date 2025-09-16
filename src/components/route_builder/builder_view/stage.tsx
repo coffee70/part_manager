@@ -53,7 +53,7 @@ function useStage() {
 
     const getStageProps = () => ({
         ref: containerRef,
-        className: "relative m-6 border-dashed border-gray-400 rounded-md h-[720px] outline-none",
+        className: "relative m-6 border-dashed border-border rounded-md h-[720px] outline-none",
         style: {
             borderWidth: `${STAGE_BORDER_WIDTH}px`,
         },

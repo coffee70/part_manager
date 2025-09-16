@@ -17,7 +17,7 @@ export default async function Layout({ children }: Props) {
 
   return (
     <main className="h-screen w-full flex flex-col">
-      <div className="w-full bg-foreground p-4">
+      <div className="w-full bg-muted p-4">
         <Logo />
       </div>
       <div className="flex-1 flex items-center justify-center">

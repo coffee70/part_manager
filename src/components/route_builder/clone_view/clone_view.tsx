@@ -188,13 +188,13 @@ export default function CloneView({ children }: Props) {
 
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-stone-700">Model</label>
+                        <label className="text-sm font-medium text-text">Model</label>
                         <DropdownMenu onOpenChange={handleModelDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     ref={modelTriggerRef}
                                     variant="outline"
-                                    className="w-full justify-between border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-700 font-normal transition-colors duration-200"
+                                    className="w-full justify-between border-subtle bg-background hover:bg-hover text-text font-normal transition-colors duration-200"
                                 >
                                     {selectedModelName}
                                     <ChevronDown className="h-4 w-4 opacity-50" />
@@ -202,14 +202,14 @@ export default function CloneView({ children }: Props) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 style={{ width: `${modelTriggerWidth}px` }}
-                                className="border-stone-200 bg-white shadow-sm"
+                                className="border-subtle bg-background shadow-sm"
                                 align="start"
                             >
                                 {models.map(model => (
                                     <DropdownMenuItem
                                         key={model._id}
                                         onClick={() => handleModelSelect(model._id)}
-                                        className="text-stone-700 hover:bg-stone-50"
+                                        className="text-text hover:bg-hover"
                                     >
                                         {model.name}
                                     </DropdownMenuItem>
@@ -219,13 +219,13 @@ export default function CloneView({ children }: Props) {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-stone-700">Instance with Route</label>
+                        <label className="text-sm font-medium text-text">Instance with Route</label>
                         <DropdownMenu onOpenChange={handleInstanceDropdownOpen}>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     ref={instanceTriggerRef}
                                     variant="outline"
-                                    className="w-full justify-between border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-700 font-normal transition-colors duration-200"
+                                    className="w-full justify-between border-subtle bg-background hover:bg-hover text-text font-normal transition-colors duration-200"
                                     disabled={!selectedModelId || isLoadingInstances}
                                 >
                                     {isLoadingInstances && (
@@ -240,7 +240,7 @@ export default function CloneView({ children }: Props) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                                 style={{ width: `${instanceTriggerWidth}px` }}
-                                className="border-stone-200 bg-white shadow-sm"
+                                className="border-subtle bg-background shadow-sm"
                                 align="start"
                             >
                                 {instances.length === 0 && !isLoadingInstances ? (
@@ -252,7 +252,7 @@ export default function CloneView({ children }: Props) {
                                         <DropdownMenuItem
                                             key={instance._id}
                                             onClick={() => handleInstanceSelect(instance._id)}
-                                            className="text-stone-700 hover:bg-stone-50"
+                                            className="text-text hover:bg-hover"
                                         >
                                             {instance.number}
                                         </DropdownMenuItem>

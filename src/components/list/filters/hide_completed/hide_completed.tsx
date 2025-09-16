@@ -44,7 +44,7 @@ export default function HideCompleted() {
             >
                 <div
                     className={cn(
-                        'bg-white rounded-full h-3 w-3 absolute left-0.5 transition-transform duration-300 ease-in-out shadow-lg border border-gray-300',
+                        'bg-background rounded-full h-3 w-3 absolute left-0.5 transition-transform duration-300 ease-in-out shadow-lg border border-subtle',
                         urlHideCompleted ? 'translate-x-4' : 'translate-x-0'
                     )}
                 />

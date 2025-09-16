@@ -45,7 +45,7 @@ export function SectionField({ sectionId, field, onEditField }: SectionFieldProp
             />
 
             <div
-                className="group flex items-center justify-between p-1 h-8 border-b border-stone-200 hover:bg-stone-200 transition-all duration-200"
+                className="group flex items-center justify-between p-1 h-8 border-b border-subtle interactive-subtle transition-all duration-200"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 data-testid={`route-fields-field-${field.name}`}
@@ -54,14 +54,14 @@ export function SectionField({ sectionId, field, onEditField }: SectionFieldProp
                     <div className="py-1">
                         <FieldType type={field.type} size={18} />
                     </div>
-                    <div className="py-1 text-xs text-stone-500 group-hover:text-stone-700">
+                    <div className="py-1 text-xs text-muted group-hover:text-text">
                         {field.name}
                     </div>
                 </div>
                 <div className="flex items-center justify-center w-8 py-1">
                     <DropdownMenu open={dropdownOpen} onOpenChange={onDropdownOpenChange}>
                         <DropdownMenuTrigger asChild data-testid={`route-fields-field-dropdown-trigger-${field.name}`}>
-                            {visibleOptions && <button type="button" className="rounded-full p-0.5 hover:bg-stone-300">
+                            {visibleOptions && <button type="button" className="rounded-full p-0.5 interactive-subtle">
                                 <MoreHorizontalIcon className="w-4 h-4" />
                             </button>}
                         </DropdownMenuTrigger>

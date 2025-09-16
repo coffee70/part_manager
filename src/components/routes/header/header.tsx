@@ -38,7 +38,7 @@ export default function Header() {
     } = routeHelpers;
 
     return (
-        <div className="flex flex-col space-y-4 py-4 px-8 bg-stone-100 border-b border-stone-300 shadow-sm">
+        <div className="flex flex-col space-y-4 py-4 px-8 surface-contrast border-b border-subtle shadow-sm">
             <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                     <TitleRouterIcon size={40} />

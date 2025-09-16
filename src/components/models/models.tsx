@@ -45,7 +45,7 @@ export default function Models() {
                         {data.map(model => (
                             <TableRow key={model._id}>
                                 <TableCell>
-                                    <div className="w-6 h-6 rounded-sm ring-1 ring-black" style={{ backgroundColor: model.color }} />
+                                    <div className="w-6 h-6 rounded-sm ring-1 ring-border-strong" style={{ backgroundColor: model.color }} />
                                 </TableCell>
                                 <TableCell>{model.name}</TableCell>
                                 <TableCell>

@@ -17,7 +17,7 @@ export default function Toggle({ label, value, onChange }: Props) {
                 onClick={() => onChange(!value)}
             >
                 <div
-                    className={cn('bg-white rounded-md h-3 w-3 absolute', value ? 'right-0.5' : 'left-0.5')}
+                    className={cn('bg-background rounded-md h-3 w-3 absolute', value ? 'right-0.5' : 'left-0.5')}
                 />
             </button>
         </div>

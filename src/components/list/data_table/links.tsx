@@ -6,6 +6,7 @@ import { getContexts } from '@/server/contexts/get_contexts'
 import { contextKeys } from '@/lib/query_keys'
 import { LinksColumn, Model, Router } from '@/types/collections'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { TooltipWrapper } from '@/components/ui/tooltip_wrapper'
 
 type Props = {
     column: LinksColumn
@@ -111,16 +112,16 @@ export default function Links({ column, links = [] }: Props) {
                             <button
                                 onClick={() => setActiveContextIndex(index)}
                                 className={`flex-shrink-0 w-3 h-3 rounded-full border transition-all duration-200 ${index === activeContextIndex
-                                        ? 'border-2 border-white shadow-md scale-110'
-                                        : 'border border-stone-300 hover:scale-105'
+                                        ? 'border-2 border-subtle shadow-md scale-110'
+                                        : 'border border-subtle hover:scale-105'
                                     }`}
                                 style={{ backgroundColor: ctx.color }}
                             />
                         </TooltipTrigger>
                         <TooltipContent>
-                            <div className="bg-stone-800 text-white text-xs px-2 py-1.5 rounded-md shadow-sm">
+                            <TooltipWrapper>
                                 <span>{getContextDisplayName(ctx.name)}</span>
-                            </div>
+                            </TooltipWrapper>
                         </TooltipContent>
                     </Tooltip>
                 ) : null)}

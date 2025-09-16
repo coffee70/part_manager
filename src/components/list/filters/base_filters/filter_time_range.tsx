@@ -136,22 +136,22 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
         <div className="flex flex-col space-y-3 p-3">
             {/* Start Time Input */}
             <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium text-stone-700 w-12">From:</label>
-                <div className="flex items-center flex-grow space-x-2 px-3 h-10 bg-stone-50 border border-stone-300 rounded-lg shadow-sm transition-colors duration-200 focus-within:ring-1 focus-within:ring-stone-400 focus-within:border-stone-400">
+                <label className="text-sm font-medium text-text w-12">From:</label>
+                <div className="flex items-center flex-grow space-x-2 px-3 h-10 input-wrapper">
                     <Input
                         ref={startRef}
                         type='time'
-                        className="bg-transparent border-none shadow-none text-stone-700 font-medium focus-visible:ring-0 p-0 h-auto"
+                        className="input-field font-medium focus-visible:ring-0 p-0 h-auto"
                         onChange={e => onStartTimeChange(e.target.value)}
                         value={startTime}
                     />
                     <button
                         onClick={clearStartTime}
                         disabled={startTime.length === 0}
-                        className={`p-1 rounded transition-colors ${
+                        className={`p-1 rounded ${
                             startTime.length > 0
-                                ? "text-red-500 hover:text-red-700 hover:bg-red-50 cursor-pointer"
-                                : "text-stone-300 cursor-not-allowed"
+                                ? "text-destructive hover:text-destructive hover:bg-destructive-foreground/30 cursor-pointer"
+                                : "text-weak cursor-not-allowed"
                         }`}
                     >
                         <Trash2 className="h-4 w-4" />
@@ -161,22 +161,22 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
 
             {/* End Time Input */}
             <div className="flex items-center space-x-2">
-                <label className="text-sm font-medium text-stone-700 w-12">To:</label>
-                <div className="flex items-center flex-grow space-x-2 px-3 h-10 bg-stone-50 border border-stone-300 rounded-lg shadow-sm transition-colors duration-200 focus-within:ring-1 focus-within:ring-stone-400 focus-within:border-stone-400">
+                <label className="text-sm font-medium text-text w-12">To:</label>
+                <div className="flex items-center flex-grow space-x-2 px-3 h-10 input-wrapper">
                     <Input
                         ref={endRef}
                         type='time'
-                        className="bg-transparent border-none shadow-none text-stone-700 font-medium focus-visible:ring-0 p-0 h-auto"
+                        className="input-field font-medium focus-visible:ring-0 p-0 h-auto"
                         onChange={e => onEndTimeChange(e.target.value)}
                         value={endTime}
                     />
                     <button
                         onClick={clearEndTime}
                         disabled={endTime.length === 0}
-                        className={`p-1 rounded transition-colors ${
+                        className={`p-1 rounded ${
                             endTime.length > 0
-                                ? "text-red-500 hover:text-red-700 hover:bg-red-50 cursor-pointer"
-                                : "text-stone-300 cursor-not-allowed"
+                                ? "text-destructive hover:text-destructive hover:bg-destructive-foreground/30 cursor-pointer"
+                                : "text-weak cursor-not-allowed"
                         }`}
                     >
                         <Trash2 className="h-4 w-4" />

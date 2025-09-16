@@ -45,10 +45,10 @@ export default function TargetActions({
                 className="group hover:bg-green-600 active:bg-green-700 focus:bg-green-600 transition-colors duration-150"
             >
                 <div className="flex items-center justify-center space-x-6">
-                    <div className="bg-green-100 p-1.5 rounded-full group-hover:bg-white/20 transition-colors duration-150">
-                        <CheckIcon size={18} className="text-green-600 group-hover:text-white transition-colors duration-150" />
+                    <div className="bg-green-100 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors duration-150">
+                        <CheckIcon size={18} className="text-green-600 group-hover:text-primary-foreground transition-colors duration-150" />
                     </div>
-                    <span className="text-sm font-semibold text-slate-700 group-hover:text-white transition-colors duration-150">Complete Step</span>
+                    <span className="text-sm font-semibold text-text group-hover:text-primary-foreground transition-colors duration-150">Complete Step</span>
                 </div>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -57,10 +57,10 @@ export default function TargetActions({
                 className="group hover:bg-red-600 active:bg-red-700 focus:bg-red-600 transition-colors duration-150"
             >
                 <div className="flex items-center justify-center space-x-6">
-                    <div className="bg-red-100 p-1.5 rounded-full group-hover:bg-white/20 transition-colors duration-150">
-                        <XIcon size={18} className="text-red-600 group-hover:text-white transition-colors duration-150" />
+                    <div className="bg-red-100 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors duration-150">
+                        <XIcon size={18} className="text-red-600 group-hover:text-primary-foreground transition-colors duration-150" />
                     </div>
-                    <span className="text-sm font-semibold text-slate-700 group-hover:text-white transition-colors duration-150">Fail Step</span>
+                    <span className="text-sm font-semibold text-text group-hover:text-primary-foreground transition-colors duration-150">Fail Step</span>
                 </div>
             </DropdownMenuItem>
         </>
@@ -73,10 +73,10 @@ export default function TargetActions({
             className="group hover:bg-green-600 active:bg-green-700 focus:bg-green-600 transition-colors duration-150"
         >
             <div className="flex items-center justify-center space-x-6">
-                <div className="bg-green-100 p-1.5 rounded-full group-hover:bg-white/20 transition-colors duration-150">
-                    <PlayIcon size={18} className="text-green-600 group-hover:text-white transition-colors duration-150" />
+                <div className="bg-green-100 p-1.5 rounded-full group-hover:bg-primary/20 transition-colors duration-150">
+                    <PlayIcon size={18} className="text-green-600 group-hover:text-primary-foreground transition-colors duration-150" />
                 </div>
-                <span className="text-sm font-semibold text-slate-700 group-hover:text-white transition-colors duration-150">Start Route</span>
+                <span className="text-sm font-semibold text-text group-hover:text-primary-foreground transition-colors duration-150">Start Route</span>
             </div>
         </DropdownMenuItem>
     )

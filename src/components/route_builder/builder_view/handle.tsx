@@ -19,10 +19,10 @@ const getIcon = ({
 }) => {
     if (isAddingEdges && !isSelected) {
         if (isStartNode) return null;
-        return <CirclePlusIcon className="w-4 h-4 text-gray-800 fill-gray-300 opacity-60 hover:opacity-100" />;
+        return <CirclePlusIcon className="w-4 h-4 text-text opacity-60 hover:opacity-100" />;
     }
 
-    const className = "w-5 h-5 text-gray-600 fill-gray-600"
+    const className = "w-5 h-5 text-text"
 
     switch (position) {
         case HandlePosition.Left:

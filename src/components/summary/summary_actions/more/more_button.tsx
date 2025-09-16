@@ -21,17 +21,17 @@ const MoreButton = React.forwardRef<HTMLDivElement, Props>((props, ref) => {
         <div
             id='more-button'
             ref={ref}
-            className='flex rounded-sm bg-foreground border font-bold'
+            className='flex rounded-sm bg-secondary text-secondary-foreground border border-secondary-border font-bold'
         >
             <div className='px-2 py-1 rounded-l-sm'>
                 <span>More</span>
             </div>
-            <div className='border-l'></div>
+            <div className='border-l border-secondary-border'></div>
             <button
                 {...props}
                 id='more-button-dropdown-trigger'
                 className={cn(
-                    'px-1 rounded-r-sm bg-foreground',
+                    'px-1 rounded-r-sm bg-secondary text-secondary-foreground',
                     isHovered ? 'brightness-90' : 'brightness-100'
                 )}
                 onMouseEnter={handleMouseEnter}

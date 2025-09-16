@@ -13,8 +13,8 @@ export function Checkbox(props: Props) {
     return (
         <div className="flex cursor-pointer" onClick={() => onChange(!value)}>
             <div className="flex items-center justify-center pr-2">
-                {value && <CircleCheckIcon className='text-white bg-black rounded-full' strokeWidth={1} size={30} />}
-                {!value && <CircleIcon strokeWidth={1} size={30} />}
+                {value && <CircleCheckIcon className='text-primary-foreground bg-primary rounded-full' strokeWidth={1} size={30} />}
+                {!value && <CircleIcon className='icon-muted' strokeWidth={1} size={30} />}
             </div>
             <div className="flex flex-col">
                 <div>{label}</div>

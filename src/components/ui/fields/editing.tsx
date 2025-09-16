@@ -14,8 +14,8 @@ const Editing = React.forwardRef<HTMLButtonElement, Props>(
                 ref={ref}
                 variant='icon'
                 className={cn(
-                    'grow bg-foreground p-1 rounded-none',
-                    error && 'text-white bg-destructive',
+                    'grow bg-secondary p-1 rounded-none',
+                    error && 'text-destructive-text bg-destructive',
                     className
                 )}
                 type="submit"

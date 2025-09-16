@@ -136,10 +136,10 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
         <div className="p-3 w-80">
             {/* Search/Add Input */}
             <div className="mb-3">
-                <div className="flex items-center space-x-2 px-3 h-10 bg-stone-50 border border-stone-300 rounded-lg shadow-sm transition-colors duration-200 focus-within:ring-1 focus-within:ring-stone-400 focus-within:border-stone-400">
+                <div className="flex items-center space-x-2 px-3 h-10 input-wrapper">
                     <Input
                         type="text"
-                        className="bg-transparent border-none shadow-none text-stone-700 text-sm font-medium placeholder:text-stone-500 focus-visible:ring-0 p-0 h-auto"
+                        className="input-field text-sm font-medium focus-visible:ring-0 p-0 h-auto"
                         placeholder={creative ? "Search or add new option..." : "Search options..."}
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
@@ -148,7 +148,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                     {canAddNew && (
                         <button
                             onClick={addNewOption}
-                            className="text-stone-500 hover:text-stone-700 hover:bg-stone-200 p-1 rounded transition-colors"
+                            className="text-weak interactive-subtle p-1 rounded"
                             title="Add new option"
                         >
                             <Plus className="h-4 w-4" />
@@ -158,7 +158,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
             </div>
 
             {/* Checklist */}
-            <div className="max-h-48 overflow-y-auto border border-stone-300 rounded-lg bg-stone-50">
+            <div className="max-h-48 overflow-y-auto border border-subtle rounded-lg bg-background">
                 {filteredOptions.length > 0 ? (
                     <div className="p-2 space-y-1">
                         {filteredOptions.map((option) => {
@@ -166,13 +166,13 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                             return (
                                 <label
                                     key={option}
-                                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-stone-100 cursor-pointer transition-colors duration-150"
+                                    className="flex items-center space-x-3 p-2 rounded-md interactive-subtle cursor-pointer transition-colors duration-150"
                                     data-testid={`filter-select-field-option-${option}`}
                                 >
                                     <div className={`flex items-center justify-center w-4 h-4 border-2 rounded transition-colors ${
                                         isSelected 
-                                            ? "bg-stone-600 border-stone-600 text-white" 
-                                            : "border-stone-400 hover:border-stone-500"
+                                            ? "bg-foreground border-subtle text-text" 
+                                            : "border-subtle"
                                     }`}>
                                         {isSelected && <Check className="h-3 w-3" />}
                                     </div>
@@ -182,7 +182,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                                         checked={isSelected}
                                         onChange={() => toggleOption(option)}
                                     />
-                                    <span className="text-stone-700 text-sm font-medium flex-1">
+                                    <span className="text-text text-sm font-medium flex-1">
                                         {option}
                                     </span>
                                 </label>
@@ -190,7 +190,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                         })}
                     </div>
                 ) : (
-                    <div className="p-4 text-center text-stone-500 text-sm">
+                    <div className="p-4 text-center text-weak text-sm">
                         {filterText ? "No matching options found" : "No options available"}
                     </div>
                 )}
@@ -198,8 +198,8 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
 
             {/* Selected count indicator */}
             {selectedValues.length > 0 && (
-                <div className="mt-3 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-center">
-                    <span className="text-blue-700 text-sm font-medium">
+                <div className="mt-3 px-3 py-2 bg-primary/10 border border-primary/30 rounded-lg text-center">
+                    <span className="text-primary text-sm font-medium">
                         {selectedValues.length} item{selectedValues.length !== 1 ? 's' : ''} selected
                     </span>
                 </div>

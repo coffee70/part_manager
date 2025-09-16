@@ -31,7 +31,7 @@ export default function Profile() {
 
     return (
         <>
-            <div className='flex justify-between space-x-1 m-2 bg-neutral-400/30 p-2'>
+            <div className='flex justify-between space-x-1 m-2 surface-contrast p-2 rounded-md'>
                 <div className='flex space-x-2'>
                     <CircleUserIcon size={48} strokeWidth={1} />
                     <div className='flex flex-col'>

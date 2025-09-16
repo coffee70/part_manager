@@ -75,8 +75,8 @@ export default function RouteSteps({ route, instances, selectedRouterId, onRoute
   };
 
   return (
-    <div className="bg-stone-50 border border-stone-200 rounded-lg p-4">
-      <div className="text-sm font-medium text-stone-700 mb-3">Route Steps</div>
+    <div className="bg-background border border-subtle rounded-lg p-4">
+      <div className="text-sm font-medium text-text mb-3">Route Steps</div>
       
       <DndContext 
         sensors={sensors}
@@ -110,7 +110,7 @@ export default function RouteSteps({ route, instances, selectedRouterId, onRoute
 
       <Button 
         variant="outline" 
-        className="w-full mt-3 flex items-center justify-center border-dashed border-stone-300 bg-white hover:bg-stone-100 text-stone-600 transition-colors duration-200"
+        className="w-full mt-3 flex items-center justify-center border-dashed border-subtle bg-background hover:bg-hover text-text transition-colors duration-200"
         onClick={addRow}
         disabled={!selectedRouterId}
       >

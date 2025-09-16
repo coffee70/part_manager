@@ -43,7 +43,7 @@ export default function KVPairsList({
             </div>
             {canAddLine() && <button
                 type="button"
-                className="w-full py-1.5 px-2 rounded-md border border-stone-200 bg-stone-50/50 text-stone-500 hover:bg-stone-100 hover:text-stone-700 hover:border-stone-300 active:bg-stone-200 active:border-stone-400 transition-all duration-200 flex items-center justify-center gap-1.5 group"
+                className="w-full py-1.5 px-2 rounded-md border border-subtle bg-background/50 text-weak hover:bg-hover hover:text-text hover:border-border active:bg-border-strong active:border-border-strong transition-all duration-200 flex items-center justify-center gap-1.5 group"
                 aria-label="Add new key-value pair"
                 onClick={handleAddLine}
             >

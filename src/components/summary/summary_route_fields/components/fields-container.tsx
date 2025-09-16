@@ -22,7 +22,7 @@ export function FieldsContainer({ fields, sectionId }: FieldsContainerProps) {
     }
 
     return (
-        <div className="border border-stone-200 bg-stone-50 rounded-md shadow-sm">
+        <div className="border border-subtle bg-background rounded-md shadow-sm">
 
             <FieldForm
                 key={`field-form-${selectedField?._id || "new"}`}

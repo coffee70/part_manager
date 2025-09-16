@@ -32,13 +32,13 @@ const PriorityButton = React.forwardRef<HTMLDivElement, ButtonProps & Props>(({ 
         <div
             id='priority-button'
             ref={ref}
-            className='flex rounded-sm border text-white font-bold'
+            className='flex rounded-sm border border-secondary-border text-primary-foreground font-bold'
             style={{ backgroundColor: info.color }}
         >
             <div className='px-2 py-1 rounded-l-sm'>
                 <span>{priority}</span>
             </div>
-            <div className='border-l'></div>
+            <div className='border-l border-slate-200'></div>
             <button
                 {...props}
                 id='priority-button-dropdown-trigger'

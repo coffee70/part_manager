@@ -8,7 +8,7 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
-	],
+  ],
   prefix: "",
   theme: {
     container: {
@@ -20,30 +20,45 @@ const config = {
     },
     extend: {
       colors: {
-        text: "var(--text)",
+        text: {
+          DEFAULT: "var(--text)",
+          secondary: "var(--text-secondary)",
+        },
         hover: "var(--hover)",
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",
-        background: "var(--background)",
+        background: {
+          DEFAULT: "var(--background)",
+          focus: "var(--background-focus)",
+          contrast: {
+            DEFAULT: "var(--background-contrast)",
+            text: "var(--background-contrast-text)",
+            focus: "var(--background-contrast-focus)",
+          },
+        },
         foreground: "var(--foreground)",
         primary: {
           DEFAULT: "var(--primary)",
           foreground: "var(--primary-foreground)",
           secondary: "var(--primary-secondary)",
+          hover: "var(--primary-hover)",
         },
         secondary: {
           DEFAULT: "var(--secondary)",
           foreground: "var(--secondary-foreground)",
+          border: "var(--secondary-border)",
         },
         destructive: {
           DEFAULT: "var(--destructive)",
           foreground: "var(--destructive-foreground)",
           text: "var(--destructive-text)",
+          focus: "var(--destructive-focus)",
         },
         muted: {
           DEFAULT: "var(--muted)",
           foreground: "var(--muted-foreground)",
+          secondary: "var(--muted-secondary)",
         },
         accent: {
           DEFAULT: "var(--accent)",
@@ -66,6 +81,13 @@ const config = {
           DEFAULT: "var(--warning)",
           secondary: "var(--warning-secondary)",
           foreground: "var(--warning-foreground)",
+        },
+        surface: {
+          DEFAULT: "var(--surface)",
+          contrast: {
+            DEFAULT: "var(--surface-contrast)",
+            focus: "var(--surface-contrast-focus)",
+          },
         },
       },
       borderRadius: {

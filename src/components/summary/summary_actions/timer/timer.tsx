@@ -34,10 +34,10 @@ export default function Timer({ endTime }: Props) {
 
     return (
         <>
-            {tick && <div className="flex items-center bg-red-600 h-10 rounded-sm text-white">
+            {tick && <div className="flex items-center bg-red-600 h-10 rounded-sm text-primary-foreground">
                 <span className='font-bold px-2'>{hours}:{minutes}:{seconds}</span>
                 {open && <>
-                    <div className='border-l border-white h-full'></div>
+                    <div className='border-l border-primary-foreground h-full'></div>
                     <div className="flex items-center space-x-2 bg-red-800 h-full px-2">
                         <Button variant='icon'>
                             <SquareIcon strokeWidth={1} onClick={() => setTick(false)}/>
@@ -50,14 +50,14 @@ export default function Timer({ endTime }: Props) {
                         </Button>
                     </div>
                 </>}
-                <div className='border-l border-white h-full' />
+                <div className='border-l border-primary-foreground h-full' />
                 <Button variant='icon' onClick={() => setOpen(prev => !prev)}>
                     {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
                 </Button>
             </div>}
-            {!tick && <div className='flex items-center bg-green-600 h-10 rounded-sm text-white'>
+            {!tick && <div className='flex items-center bg-green-600 h-10 rounded-sm text-primary-foreground'>
                 <span className='font-bold px-2'>{hours}:{minutes}:{seconds}</span>
-                <div className='border-l border-white h-full' />
+                <div className='border-l border-primary-foreground h-full' />
                 <Button variant='icon' onClick={() => setTick(true)}>
                     <PlayIcon />
                 </Button>

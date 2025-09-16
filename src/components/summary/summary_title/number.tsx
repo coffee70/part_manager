@@ -88,9 +88,9 @@ export default function Number({ initialValue }: Props) {
         <ClickAwayListener onClickAway={() => setIsEditing(false)}>
             <form className={cn(
                 "group relative flex space-x-1 justify-between border border-transparent pl-1",
-                data?.success === false ? "border-red-500" :
-                    isPending ? "border-foreground" :
-                        isEditing ? "border-foreground" : "hover:border-foreground",
+                data?.success === false ? "border-destructive" :
+                    isPending ? "border-subtle" :
+                        isEditing ? "border-subtle" : "hover:border-subtle",
             )}
                 onSubmit={handleSubmit}
             >
@@ -107,7 +107,7 @@ export default function Number({ initialValue }: Props) {
                     </TooltipTrigger>
                     <TooltipContent>
                         <div className="bg-destructive p-2 rounded-md">
-                            <p className='text-white text-xs font-bold'>{data?.fieldErrors?.number}</p>
+                            <p className='text-destructive-text text-xs font-bold'>{data?.fieldErrors?.number}</p>
                         </div>
                     </TooltipContent>
                 </Tooltip>}

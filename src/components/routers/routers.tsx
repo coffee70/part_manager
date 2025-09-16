@@ -44,7 +44,7 @@ export default function Routers() {
                         {data.map(router => (
                             <TableRow key={router._id}>
                                 <TableCell>
-                                    <div className="w-6 h-6 rounded-sm ring-1 ring-black" style={{ backgroundColor: router.color }} />
+                                    <div className="w-6 h-6 rounded-sm ring-1 ring-border-strong" style={{ backgroundColor: router.color }} />
                                 </TableCell>
                                 <TableCell>{router.name}</TableCell>
                                 <TableCell>

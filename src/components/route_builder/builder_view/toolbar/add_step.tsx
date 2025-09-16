@@ -3,6 +3,7 @@ import React from "react";
 import { PlusIcon } from "lucide-react";
 import StepForm from "../step_form";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../../../ui/tooltip";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 export default function AddStep() {
     const [open, setOpen] = React.useState(false);
@@ -18,9 +19,9 @@ export default function AddStep() {
                     </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <div className="bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                    <TooltipWrapper>
                         <span>Add Step</span>
-                    </div>
+                    </TooltipWrapper>
                 </TooltipContent>
             </Tooltip>
 

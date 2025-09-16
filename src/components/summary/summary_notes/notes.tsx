@@ -86,8 +86,8 @@ export default function Notes({ initialValue }: Props) {
             <form className={cn(
                 "group relative flex justify-between border border-transparent pl-1",
                 isError ? "border-red-500" :
-                    isPending ? "border-foreground" :
-                        isEditing ? "border-foreground" : "hover:border-foreground",
+                    isPending ? "border-subtle" :
+                        isEditing ? "border-subtle" : "hover:border-subtle",
             )}
                 onSubmit={handleSubmit}
             >

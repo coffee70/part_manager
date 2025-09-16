@@ -16,7 +16,7 @@ export default function Profile() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant='icon' className="h-20 w-20 hover:bg-white hover:text-black">
+                <Button variant='icon' className="h-20 w-20 interactive-subtle">
                     <CircleUserIcon size={28} />
                 </Button>
             </DropdownMenuTrigger>
@@ -32,7 +32,7 @@ export default function Profile() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem className='flex items-center justify-center w-full h-full border border-red-700 text-red-700 font-bold cursor-pointer focus-visible:bg-red-700 focus-visible:text-white'>
+                    <DropdownMenuItem className='flex items-center justify-center w-full h-full border border-destructive text-destructive font-bold cursor-pointer focus-visible:bg-destructive focus-visible:text-destructive-foreground'>
                         <span>Logout</span>
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

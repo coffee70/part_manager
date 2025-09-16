@@ -1,5 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { InfoIcon } from "lucide-react";
+import { TooltipWrapper } from "@/components/ui/tooltip_wrapper";
 
 type Props = {
     htmlFor: string;
@@ -17,11 +18,11 @@ function FieldRequirements({ htmlFor, label, requirements }: Props) {
                 </div>
             </TooltipTrigger>
             <TooltipContent>
-                <div className="flex flex-col space-y-2 bg-black text-white text-xs px-2 py-1.5 rounded-md">
+                <TooltipWrapper className="flex flex-col space-y-2">
                     {requirements.map((req, i) => (
                         <p key={i}>{req}</p>
                     ))}
-                </div>
+                </TooltipWrapper>
             </TooltipContent>
         </Tooltip>
     )

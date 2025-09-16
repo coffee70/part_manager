@@ -27,7 +27,7 @@ function Calendar({
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 hover:bg-gray-100"
+          "h-7 w-7 bg-transparent p-0 interactive-subtle"
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
@@ -36,19 +36,19 @@ function Calendar({
         head_cell:
           "opacity-80 rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative cursor-pointer hover:bg-orange-50 hover:rounded-md [&:has([aria-selected])]:bg-orange-100 focus-within:relative focus-within:z-20",
+        cell: "h-9 w-9 text-center text-sm p-0 relative cursor-pointer hover:bg-primary/10 hover:rounded-md [&:has([aria-selected])]:bg-primary/20 focus-within:relative focus-within:z-20",
         day:
           "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 w-9 p-0 aria-selected:opacity-100 rounded-md",
-        day_range_start: "day-range-start rounded-md bg-orange-500 text-white",
-        day_range_end: "day-range-end rounded-md bg-orange-500 text-white",
+        day_range_start: "day-range-start rounded-md bg-primary text-primary-foreground",
+        day_range_end: "day-range-end rounded-md bg-primary text-primary-foreground",
         day_selected:
-          "hover:bg-orange-600 focus:bg-orange-600 rounded-md",
-        day_today: "text-orange-600 font-black border border-orange-200 rounded-md [&[aria-selected]]:bg-orange-600 [&[aria-selected]]:text-white [&[aria-selected]]:border-orange-800 [&[aria-selected]]:rounded-md",
+          "hover:bg-primary/90 focus:bg-primary/90 rounded-md",
+        day_today: "text-primary font-black border border-primary/20 rounded-md [&[aria-selected]]:bg-primary [&[aria-selected]]:text-primary-foreground [&[aria-selected]]:border-primary/60 [&[aria-selected]]:rounded-md",
         day_outside:
-          "day-outside opacity-50 aria-selected:bg-orange-50 aria-selected:text-orange-400 rounded-md",
-        day_disabled: "text-stone-400 opacity-50",
+          "day-outside opacity-50 aria-selected:bg-primary/10 aria-selected:text-primary/60 rounded-md",
+        day_disabled: "text-muted opacity-50",
         day_range_middle:
-          "rounded-none [&[aria-selected]]:bg-orange-100 [&[aria-selected]]:text-orange-800 hover:bg-orange-200 [&[aria-selected]:hover]:bg-orange-200 [&.rdp-day_today]:bg-transparent [&.rdp-day_today]:border-2 [&.rdp-day_today]:border-orange-600 [&.rdp-day_today]:text-orange-600 [&.rdp-day_today]:font-black [&.rdp-day_today]:rounded-md",
+          "rounded-none [&[aria-selected]]:bg-primary/20 [&[aria-selected]]:text-primary hover:bg-primary/30 [&[aria-selected]:hover]:bg-primary/30 [&.rdp-day_today]:bg-transparent [&.rdp-day_today]:border-2 [&.rdp-day_today]:border-primary [&.rdp-day_today]:text-primary [&.rdp-day_today]:font-black [&.rdp-day_today]:rounded-md",
         day_hidden: "invisible",
         ...classNames,
       }}

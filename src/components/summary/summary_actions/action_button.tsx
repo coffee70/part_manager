@@ -24,7 +24,7 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(({
         <button
             ref={ref}
             className={cn(
-                "flex rounded-sm border text-white font-bold disabled:cursor-not-allowed disabled:opacity-50",
+                "flex rounded-sm border font-bold disabled:cursor-not-allowed disabled:opacity-50",
                 stepBackgroundVariants({
                     variant: state,
                     paused: pausedStyle,

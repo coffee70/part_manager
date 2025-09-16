@@ -71,7 +71,7 @@ export default function KVLine({
             </Select>
             {selectedKey && selectedKey.value !== DEFAULT_KEY.value ? (
                 <Input
-                    className="flex-1 h-8 rounded-md border-stone-300 bg-white text-stone-700 placeholder:text-stone-400 focus:ring-stone-400 focus:ring-1 focus:border-stone-400 hover:border-stone-400 hover:bg-stone-50/50 cursor-text transition-colors px-3"
+                    className="flex-1 h-8 rounded-md border-subtle bg-background-focus text-text placeholder:text-weak focus:ring-ring focus:ring-1 focus:border-subtle hover:border-subtle hover:bg-hover/50 cursor-text transition-colors px-3"
                     value={state[index].value}
                     onChange={onValueChange}
                     placeholder="Enter value"
@@ -82,7 +82,7 @@ export default function KVLine({
                 />
             ) : (
                 <div
-                    className="flex-1 h-8 bg-stone-100 rounded-md border border-stone-300 flex items-center px-3 text-stone-500 text-sm truncate"
+                    className="flex-1 h-8 surface-contrast rounded-md border border-subtle bg-background-focus flex items-center px-3 text-weak text-sm truncate"
                     data-testid={`kv-line-value-placeholder-${selectedKey.testId || selectedKey.value}-${index}`}
                 >
                     Select a key to enter value
@@ -90,7 +90,7 @@ export default function KVLine({
             )}
             <button
                 type="button"
-                className="p-1.5 rounded-md text-stone-400 hover:text-red-500 hover:bg-red-50 active:text-red-600 active:bg-red-100 transition-colors"
+                className="p-1.5 rounded-md icon-muted hover:text-destructive hover:bg-destructive-foreground/20 active:text-destructive active:bg-destructive-foreground/30 transition-colors"
                 aria-label="Delete key-value pair"
                 onClick={handleDeleteLine}
                 data-testid={`delete-kv-line-button-${selectedKey.testId || selectedKey.value}-${index}`}

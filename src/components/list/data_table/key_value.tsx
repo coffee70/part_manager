@@ -13,12 +13,12 @@ export default function KeyValue({ kvValue }: { kvValue: KVValue | undefined }) 
                     className="flex items-center gap-2 rounded text-xs"
                 >
                     <div className="flex items-center justify-center">
-                        <span className="font-medium text-gray-700 min-w-0 flex-shrink-0">
+                        <span className="font-medium text-text min-w-0 flex-shrink-0">
                             {key}
                         </span>
-                        <span className="text-gray-500">:</span>
+                        <span className="text-weak">:</span>
                     </div>
-                    <span className="text-gray-800 min-w-0 truncate">
+                    <span className="text-text min-w-0 truncate">
                         {value}
                     </span>
                 </div>

@@ -11,7 +11,7 @@ function RouteTableBody({ children, className }: { children?: React.ReactNode, c
 
 function RouteTableRow({ children, className, onClick }: { children?: React.ReactNode, className?: string, onClick?: () => void }) {
     return <div
-        className={cn("flex items-center justify-between p-4 border border-stone-300 bg-stone-50 rounded-lg shadow-sm cursor-pointer hover:bg-stone-100", className)}
+        className={cn("flex items-center justify-between p-4 border border-subtle bg-background rounded-lg shadow-sm cursor-pointer hover:bg-hover", className)}
         onClick={onClick}
         data-testid="route-table-row"
     >{children}</div>
@@ -19,14 +19,14 @@ function RouteTableRow({ children, className, onClick }: { children?: React.Reac
 
 function RouteTableHeaderRow({ children, className }: { children?: React.ReactNode, className?: string }) {
     return <div
-        className={cn("flex items-center justify-between px-4 py-2 border border-stone-300 bg-stone-50 rounded-lg shadow-sm", className)}
+        className={cn("flex items-center justify-between px-4 py-2 border border-subtle bg-background rounded-lg shadow-sm", className)}
         data-testid="route-table-header-row"
     >{children}</div>
 }
 
 function RouteTableFooterRow({ children, className }: { children?: React.ReactNode, className?: string }) {
     return <div
-        className={cn("flex items-center justify-between px-4 py-2 border border-stone-300 bg-stone-50 rounded-lg shadow-sm", className)}
+        className={cn("flex items-center justify-between px-4 py-2 border border-subtle bg-background rounded-lg shadow-sm", className)}
         data-testid="route-table-footer-row"
     >{children}</div>
 }

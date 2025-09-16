@@ -30,13 +30,13 @@ const nodeVariants = cva<Variants>(
     {
         variants: {
             variant: {
-                [StepState.NotStarted]: "bg-gray-100 text-gray-800 border border-gray-600",
+                [StepState.NotStarted]: "bg-background text-text border border-subtle",
                 [StepState.InProgress]: "bg-blue-100 text-blue-800 border border-blue-600",
                 [StepState.Completed]: "bg-green-100 text-green-800 border border-green-600",
                 [StepState.Failed]: "bg-red-100 text-red-800 border border-red-600",
             },
             selected: {
-                [StepState.NotStarted]: "ring-2 ring-gray-600",
+                [StepState.NotStarted]: "ring-2 ring-border-strong",
                 [StepState.InProgress]: "ring-2 ring-blue-600",
                 [StepState.Completed]: "ring-2 ring-green-600",
                 [StepState.Failed]: "ring-2 ring-red-600",

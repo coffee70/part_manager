@@ -74,8 +74,8 @@ export default function SectionName() {
             <form className={cn(
                 "group relative flex space-x-1 justify-between border border-transparent pl-1",
                 data?.success === false ? "border-red-500" :
-                    isPending ? "border-foreground" :
-                        isEditing ? "border-foreground" : "hover:border-foreground",
+                    isPending ? "border-subtle" :
+                        isEditing ? "border-subtle" : "hover:border-subtle",
             )}
                 onSubmit={handleSubmit}
             >
@@ -92,7 +92,7 @@ export default function SectionName() {
                     </TooltipTrigger>
                     <TooltipContent>
                         <div className="bg-destructive p-2 rounded-md">
-                            <p className='text-white text-xs font-bold'>{data?.fieldErrors?.name}</p>
+                            <p className='text-destructive-text text-xs font-bold'>{data?.fieldErrors?.name}</p>
                         </div>
                     </TooltipContent>
                 </Tooltip>}

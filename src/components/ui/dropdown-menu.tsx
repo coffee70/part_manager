@@ -27,7 +27,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
   <DropdownMenuPrimitive.SubTrigger
     ref={ref}
     className={cn(
-      "flex cursor-default select-none items-center px-2 py-1.5 text-sm rounded-sm outline-none focus:bg-foreground data-[state=open]:bg-foreground",
+      "flex cursor-default select-none items-center px-2 py-1.5 text-sm rounded-sm outline-none focus:bg-hover data-[state=open]:bg-hover",
       inset && "pl-8",
       className
     )}
@@ -47,7 +47,8 @@ const DropdownMenuSubContent = React.forwardRef<
   <DropdownMenuPrimitive.SubContent
     ref={ref}
     className={cn(
-      "z-50 min-w-[8rem] overflow-hidden border border-gray-300 rounded-sm bg-popover p-1 shadow-lg",
+      "z-50 min-w-[8rem] overflow-hidden border border-subtle rounded-sm bg-popover p-1 shadow-lg",
+      "dark:bg-[color:var(--popover)]",
       className
     )}
     {...props}
@@ -65,7 +66,8 @@ const DropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden border border-gray-300 rounded-sm bg-popover p-1 shadow-lg",
+        "z-50 min-w-[8rem] overflow-hidden border border-subtle rounded-sm bg-popover p-1 shadow-lg",
+        "dark:bg-[color:var(--popover)]",
         className
       )}
       {...props}
@@ -83,7 +85,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-hover data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
     )}
@@ -162,7 +164,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DropdownMenuPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-stone-300", className)}
+    className={cn("-mx-1 my-1 h-px bg-border", className)}
     {...props}
   />
 ))

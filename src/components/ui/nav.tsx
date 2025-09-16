@@ -12,7 +12,7 @@ type NavBaseProps = {
 
 function NavBase({ children }: NavBaseProps) {
     return (
-        <div className="flex items-center justify-between space-x-6 w-full bg-black text-white">
+        <div className="flex items-center justify-between space-x-6 w-full surface-contrast">
             {children}
         </div>
     )

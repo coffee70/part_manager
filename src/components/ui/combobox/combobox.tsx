@@ -302,7 +302,7 @@ export const Combobox = React.forwardRef<HTMLInputElement | null, ComboboxProps>
                     >
                         <div
                             {...getFloatingProps({
-                                className: 'bg-white border border-foreground shadow-md overflow-y-auto p-1 space-y-1 z-10',
+                                className: 'bg-background border border-subtle shadow-md overflow-y-auto p-1 space-y-1 z-10',
                                 ref: refs.setFloating,
                                 style: {
                                     ...floatingStyles,

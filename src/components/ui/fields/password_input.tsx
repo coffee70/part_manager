@@ -14,7 +14,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, Props>((props, ref) => 
         <div className="flex flex-col space-y-0.5">
             {label && <label className='text-sm' htmlFor={props.id}>{label}</label>}
             <BasePasswordInput ref={ref} {...props} containerClassName={cn(
-                'border border-accent-foreground shadow-sm rounded-md p-1 no-icon',
+                'border border-subtle shadow-sm rounded-md p-1 no-icon',
                 error ? 'border-destructive' : '',
                 className
             )} />

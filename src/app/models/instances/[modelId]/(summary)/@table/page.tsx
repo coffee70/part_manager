@@ -12,6 +12,7 @@ import { getContexts } from "@/server/contexts/get_contexts";
 import { getCurrentUser } from "@/server/auth/get_current_user";
 import { getCurrentStep } from "@/server/routes/get_current_step";
 import { getRoute } from "@/server/routes/get_route";
+import { getAppearance } from "@/server/auth/get_appearance";
 
 export default async function Page({
     params,
@@ -64,6 +65,12 @@ export default async function Page({
     await queryClient.prefetchQuery({
         queryKey: userKeys.current(),
         queryFn: () => getCurrentUser(),
+    })
+
+    // appearance
+    await queryClient.prefetchQuery({
+        queryKey: userKeys.appearance(),
+        queryFn: () => getAppearance(),
     })
 
     // table configuration

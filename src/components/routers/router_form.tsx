@@ -137,7 +137,7 @@ export default function RouterForm({ router, open, setOpen }: Props) {
                                 <div
                                     key={index}
                                     onClick={() => setFormState(prev => ({ ...prev, color: color }))}
-                                    className={cn("aspect-square rounded-lg cursor-pointer transition-transform hover:scale-105", color === formState.color && 'ring-4 ring-black')}
+                                    className={cn("aspect-square rounded-lg cursor-pointer transition-transform hover:scale-105", color === formState.color && 'ring-4 ring-border-strong')}
                                     style={{ backgroundColor: color }}
                                 />
                             ))}

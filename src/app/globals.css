@@ -6,59 +6,124 @@
 @layer base {
   :root {
     --background: #ffffff;
+    --background-focus: #f5f5f4;
+    --background-contrast: #000000;
+    --background-contrast-text: #ffffff;
     --foreground: #d9d9d9;
+    --text: #000000;
+    --text-secondary: #6c6a6a;
     --card: #ffffff;
     --card-foreground: #d9d9d9;
     --popover: #ffffff;
     --popover-foreground: #000000;
     --primary: #ff431a;
+    --primary-hover: #ff441ad5;
     --primary-foreground: #fafaf9;
     --primary-secondary: #ffc4b8;
     --secondary: #d9d9d9;
+    --secondary-border: #757575;
     --secondary-foreground: #000000;
     --muted: #f5f5f4;
     --muted-foreground: #6c6a6a;
+    --muted-secondary: #dcdcdc;
     --accent: #f5f5f4;
     --accent-foreground: #9a9a9a;
     --accent-secondary: #4d4d4d;
     --destructive: #ff1500;
     --destructive-foreground: #fdcfcf;
+    --destructive-focus: #ff150022;
     --destructive-text: #ffffff;
     --alert: #d90000;
     --alert-foreground: #ffffff;
     --warning: #f59e0b;
     --warning-secondary: #f59f0b1a;
     --warning-foreground: #451a03;
-    --text: #000000;
-    --hover: #b8b7b7;
-    --border:	#000000;
+    --hover: #dcdcdc;
+    --border:	#d3d1d1;
     --input:	#e7e5e4;
     --ring: #ff431a;
     --radius: 0.5rem;
+
+    /* Additional semantic tokens */
+    --surface: #fafaf9; /* stone-50 */
+    --surface-contrast: #f5f5f4; /* stone-100 */
+    --surface-contrast-focus: #e7e5e4;
+    --border-strong: #d6d3d1; /* stone-300 */
+    --placeholder: #78716c; /* stone-500 */
+    --icon: #57534e; /* stone-600 */
+    --overlay: rgba(0, 0, 0, 0.8);
+
+    /* Inputs */
+    --input-bg: #ffffff00;
+
+    /* Tables */
+    --table-header-bg: var(--surface-contrast);
+    --table-footer-bg: var(--surface-contrast);
+    --table-row-hover-bg: #e7e5e4; /* stone-200 */
+    --table-row-selected-bg: #d6d3d1; /* stone-300 */
+    --table-row-selected-fg: #1c1917; /* stone-900 */
+
+    /* Navigation */
+    --nav-bg: var(--surface-contrast);
+    --nav-border: var(--border);
   }
 
   .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 20.5 90.2% 48.2%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 72.2% 50.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --warning: 32 95% 44%;
-    --warning-foreground: 20 14.3% 4.1%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 20.5 90.2% 48.2%;
+    --background: #0c0a09;
+    --background-focus: #23201e;
+    --background-contrast: #ffffff;
+    --background-contrast-text: #000000;
+    --foreground: #e7e5e4;
+    --text: #ffffff;
+    --text-secondary: #9e9b99;
+    --card: #0c0a09;
+    --card-foreground: #ffffff;
+    --popover: #1c1917;
+    --popover-foreground: #ffffff;
+    --primary: #ff431a;
+    --primary-hover: #ff441ad5;
+    --primary-foreground: #ffffff;
+    --secondary: #3a3a3a;
+    --secondary-border: #757575;
+    --secondary-foreground: #f5f5f5;
+    --muted: #1f1f1f;
+    --muted-foreground: #d6d3d1;
+    --muted-secondary: #333231;
+    --accent: #232323;
+    --accent-foreground: #e5e5e5;
+    --accent-secondary: #cccccc;
+    --destructive: #ef4444;
+    --destructive-foreground: #fee2e2;
+    --destructive-focus: #ff00001a;
+    --warning: #f59e0b;
+    --warning-foreground: #ffa200;
+    --hover: #333231;
+    --border: #53504e;
+    --input: #a8a29e;
+    --ring: #ff431a;
+
+    /* Additional semantic tokens */
+    --surface: #1c1917; /* stone-800 */
+    --surface-contrast: #23201e; /* approx stone-700 */
+    --surface-contrast-focus: #3a3a3a;
+    --border-strong: #d6d3d1; /* stone-300 */
+    --placeholder: #a8a29e; /* stone-400 */
+    --icon: #d6d3d1; /* stone-300 */
+    --overlay: rgba(0, 0, 0, 0.8);
+
+    /* Inputs */
+    --input-bg: #201d1b00;
+
+    /* Tables */
+    --table-header-bg: var(--surface-contrast);
+    --table-footer-bg: var(--surface-contrast);
+    --table-row-hover-bg: #26221f;
+    --table-row-selected-bg: #3a332f;
+    --table-row-selected-fg: #ffffff;
+
+    /* Navigation */
+    --nav-bg: var(--surface-contrast);
+    --nav-border: var(--border);
   }
 }
 
@@ -77,4 +142,82 @@
 /* Remove icon from date/time inputs **/
 .no-icon::-webkit-calendar-picker-indicator {
   display: none;
+}
+
+/* Global placeholder and icon defaults */
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+}
+
+@layer components {
+  /* Surfaces and containers */
+  .surface { background-color: var(--surface); color: var(--text); }
+  .surface-contrast { background-color: var(--surface-contrast); color: var(--text); }
+  .panel {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  }
+
+  /* Borders */
+  .border-subtle { border-color: var(--border); }
+  .border-strong { border-color: var(--border-strong); }
+
+  /* Text */
+  .text-muted { color: var(--muted-foreground); }
+  .text-weak { color: var(--placeholder); }
+  .text-invert { color: var(--card-foreground); }
+
+  /* Icons */
+  .icon-muted { color: var(--icon); }
+
+  /* Focus ring */
+  .ring-focus { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+  /* Inputs */
+  .input-wrapper {
+    background-color: var(--input-bg);
+    border: 1px solid var(--input);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  }
+  .input-field {
+    background: transparent;
+    border: 1px solid var(--input);
+    box-shadow: none;
+    color: var(--text);
+  }
+
+  /* Tables */
+  .table-container { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 1px 2px rgb(0 0 0 / 0.04); }
+  .table-header { background-color: var(--table-header-bg); border-bottom: 1px solid var(--border); }
+  .table-footer { background-color: var(--table-footer-bg); border-top: 1px solid var(--border); color: var(--muted-foreground); }
+  .table-head { color: var(--muted-foreground); }
+  .table-cell { color: var(--text); }
+  .row-hover:hover { background-color: var(--table-row-hover-bg); }
+  .row-selected { background-color: var(--table-row-selected-bg); color: var(--table-row-selected-fg); }
+
+  /* Navigation */
+  .nav-surface { background-color: var(--nav-bg); border-right: 1px solid var(--nav-border); box-shadow: 0 1px 2px rgb(0 0 0 / 0.04); }
+
+  /* Overlay */
+  .bg-overlay { background-color: var(--overlay); }
+
+  /* Chips */
+  .chip { background-color: var(--foreground); color: var(--text); border-radius: calc(var(--radius) - 2px); }
+  .chip-muted { background-color: var(--muted); color: var(--muted-foreground); }
+
+  /* Subtle interactive */
+  .interactive-subtle { border-radius: calc(var(--radius) - 2px); transition: background-color 150ms, color 150ms; }
+  .interactive-subtle:hover { background-color: var(--hover); }
+
+  /* Primary interactive */
+  .interactive-primary { border-radius: calc(var(--radius) - 2px); transition: background-color 150ms, color 150ms; }
+  .interactive-primary:hover { background-color: var(--primary-hover); }
+
+  input {
+    background-color: var(--input-bg);
+  }
 }

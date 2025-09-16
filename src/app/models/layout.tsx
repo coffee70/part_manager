@@ -4,6 +4,7 @@ import ModelNavigationProvider from "@/components/navigations/secondary_navigati
 import { router } from "@/lib/url";
 import { getCurrentSession } from "@/server/auth/get_current_session";
 import { redirect } from "next/navigation";
+import PrimaryNavigationProvider from "@/components/navigations/primary_navigation/primary_navigation_provider";
 
 export default async function Layout({
     children
@@ -17,7 +18,9 @@ export default async function Layout({
 
     return (
         <main className="flex h-screen w-full">
-            <PrimaryNavigation role={user.role} />
+            <PrimaryNavigationProvider>
+                <PrimaryNavigation role={user.role} />
+            </PrimaryNavigationProvider>
             <ModelNavigationProvider>
                 <ModelNavigation />
             </ModelNavigationProvider>

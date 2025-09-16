@@ -135,18 +135,18 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
     }
 
     return (
-        <div className="flex items-center flex-grow space-x-2 px-3 h-10 bg-stone-50 border border-stone-300 rounded-lg shadow-sm transition-colors duration-200 focus-within:ring-1 focus-within:ring-stone-400 focus-within:border-stone-400">
+        <div className="flex items-center flex-grow space-x-2 px-3 h-10 input-wrapper">
             <Input
                 ref={inputRef}
                 type={inputType}
-                className="bg-transparent border-none shadow-none text-stone-700 font-medium placeholder:text-stone-500 placeholder:text-sm focus-visible:ring-0 p-0 h-auto"
+                className="input-field font-medium placeholder:text-sm focus-visible:ring-0 p-0 h-auto"
                 onChange={e => onImmediateChange(e.target.value)}
                 value={value}
                 placeholder={placeholder}
             />
             <button
                 onClick={handleClear}
-                className={`text-stone-500 hover:text-stone-700 hover:bg-stone-200 p-1 rounded transition-colors ${value.length > 0 ? "" : "invisible disabled"}`}
+                className={`text-weak interactive-subtle p-1 rounded ${value.length > 0 ? "" : "invisible disabled"}`}
             >
                 <X className="h-4 w-4" />
             </button>

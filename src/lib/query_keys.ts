@@ -12,7 +12,8 @@ export const instanceKeys = {
 export const userKeys = {
     all: () => ['users'],
     id: (id?: string) => [...userKeys.all(), id],
-    current: () => [...userKeys.all(), 'current']
+    current: () => [...userKeys.all(), 'current'],
+    appearance: () => [...userKeys.all(), 'appearance']
 }
 
 export const commentKeys = {
