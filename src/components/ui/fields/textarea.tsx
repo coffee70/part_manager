@@ -14,7 +14,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, Props>((props, ref) => {
         <div className="flex flex-col space-y-0.5">
             {label && <label className='text-sm' htmlFor={props.id}>{label}</label>}
             <BaseTextarea ref={ref} {...props} className={cn(
-                'border border-accent-foreground shadow-sm rounded-md p-1 no-icon',
+                'border border-subtleshadow-sm rounded-md bg-background-focus p-1 no-icon',
                 error ? 'border-destructive' : '',
                 className
             )} />

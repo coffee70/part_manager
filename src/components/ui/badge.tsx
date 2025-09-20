@@ -52,11 +52,11 @@ type ComboboxBadgeProps = {
 export function ComboboxBadge({ label, onRemove }: ComboboxBadgeProps) {
     return <Badge
         label={label}
-        className="mr-1 my-0.5 pl-1.5 bg-foreground text-text text-sm font-normal"
+        className="mr-1 my-0.5 pl-1.5 bg-secondary text-accent-secondary dark:text-accent-foreground text-sm font-normal"
         appendIcon={
             <button
                 onClick={onRemove}
-                className="ml-0.5 p-1.5 rounded-sm hover:bg-destructive-foreground hover:text-destructive">
+                className="ml-0.5 p-1.5 rounded-sm hover:text-destructive hover:bg-destructive-focus focus:bg-destructive-focus">
                 <XIcon
                     size={12}
                     strokeWidth={2.5}

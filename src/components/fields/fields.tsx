@@ -31,10 +31,10 @@ export default function Fields() {
                         <TableCell>{field.description}</TableCell>
                         <TableCell>{field.default}</TableCell>
                         <TableCell>{field.options?.map(option => (
-                            <Badge key={option} label={option} color='gray' className='px-2 ml-1' />
+                            <Badge key={option} label={option} className='px-2 ml-1 bg-secondary text-accent-secondary dark:text-accent-foreground' />
                         ))}</TableCell>
                         <TableCell>{field.keys?.map(key => (
-                            <Badge key={key} label={key} color='gray' className='px-2 ml-1' />
+                            <Badge key={key} label={key} className='px-2 ml-1 bg-secondary text-accent-secondary dark:text-accent-foreground' />
                         ))}</TableCell>
                         <TableCell className='w-8'>
                             <FieldOptions field={field} />

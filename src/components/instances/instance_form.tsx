@@ -144,7 +144,6 @@ export default function InstanceForm({ instance, children }: Props) {
                             value={attributeState.number}
                             onChange={(e) => setAttributeState({ ...attributeState, number: e.target.value })}
                             error={data?.fieldErrors?.number}
-                            className='border border-subtle rounded-md bg-background-focus'
                         />
                         {contextImpl
                             && 'priority' in contextImpl
@@ -165,7 +164,6 @@ export default function InstanceForm({ instance, children }: Props) {
                             value={attributeState.notes}
                             onChange={(e) => setAttributeState({ ...attributeState, notes: e.target.value })}
                             error={data?.fieldErrors?.notes}
-                            className='border border-subtle rounded-md bg-background-focus'
                         />
                         <Fields
                             fieldState={fieldState}

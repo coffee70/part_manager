@@ -15,7 +15,7 @@ export default function ButtonGroup<T extends string>({ value, onChange, labels,
                 <div
                     key={label}
                     className={cn(
-                        "flex-1 flex items-center justify-between px-4 border border-accent-foreground rounded-md shadow-sm",
+                        "flex-1 flex items-center justify-between px-4 border border-subtle rounded-md shadow-sm bg-background-focus",
                         stacked ? 'flex-col py-2 space-y-2' : ''
                     )}
                     onClick={() => onChange(label)}

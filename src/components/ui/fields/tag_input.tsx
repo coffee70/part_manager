@@ -14,7 +14,7 @@ export default function TagInput(props: Props) {
             <label className='text-sm'>{label}</label>
             <BaseTagInput
                 className={cn(
-                    'border border-accent-foreground shadow-sm rounded-md p-1',
+                    'border border-subtle shadow-sm rounded-md bg-background-focus p-1',
                     error ? 'border-destructive' : '',
                     className
                 )}
