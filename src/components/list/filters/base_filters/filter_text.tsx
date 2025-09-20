@@ -31,12 +31,12 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
         if (isCustomField) {
             const customFieldParam = searchParams.get('custom-field');
             if (!customFieldParam) return '';
-            
+
             try {
                 const customFields = JSON.parse(customFieldParam);
                 const value = customFields[fieldId!];
                 if (!value) return '';
-                
+
                 // Parse the JSON string value
                 try {
                     return JSON.parse(value);
@@ -58,15 +58,15 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
 
     const handleClear = () => {
         const params = new URLSearchParams(searchParams);
-        
+
         if (isCustomField) {
             const customFieldParam = params.get('custom-field');
-            
+
             if (customFieldParam) {
                 try {
                     const customFields = JSON.parse(customFieldParam);
                     delete customFields[fieldId!];
-                    
+
                     // If no custom fields remain, remove the parameter entirely
                     if (Object.keys(customFields).length === 0) {
                         params.delete('custom-field');
@@ -80,7 +80,7 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
         } else {
             params.delete(paramKey!);
         }
-        
+
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         const newUrl = `${pathname}?${params.toString()}`;
         push(newUrl);
@@ -92,10 +92,10 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
 
     const onDebouncedChange = useDebouncedCallback((text: string) => {
         const params = new URLSearchParams(searchParams);
-        
+
         if (isCustomField) {
             const customFieldParam = params.get('custom-field');
-            
+
             let customFields: Record<string, string> = {};
             if (customFieldParam) {
                 try {
@@ -104,7 +104,7 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
                     customFields = {};
                 }
             }
-            
+
             if (text.length > 0) {
                 customFields[fieldId!] = JSON.stringify(text);
                 params.set('custom-field', JSON.stringify(customFields));
@@ -123,7 +123,7 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
                 params.delete(paramKey!);
             }
         }
-        
+
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         const newUrl = `${pathname}?${params.toString()}`;
         push(newUrl);
@@ -139,7 +139,7 @@ export default function TextFilter({ paramKey, fieldId, inputType = 'text', plac
             <Input
                 ref={inputRef}
                 type={inputType}
-                className="input-field font-medium placeholder:text-sm focus-visible:ring-0 p-0 h-auto"
+                className="font-medium placeholder:text-sm focus-visible:ring-0 p-0 h-auto"
                 onChange={e => onImmediateChange(e.target.value)}
                 value={value}
                 placeholder={placeholder}

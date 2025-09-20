@@ -27,12 +27,12 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
     const getInitialValue = React.useCallback((): string[] => {
         const customFieldParam = searchParams.get('custom-field');
         if (!customFieldParam) return [];
-        
+
         try {
             const customFields = JSON.parse(customFieldParam);
             const value = customFields[fieldId];
             if (!value) return [];
-            
+
             // Parse the stored value (it's stored as JSON string)
             const parsedValue = JSON.parse(value);
             // Always return an array for checklist
@@ -60,7 +60,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
     const updateCustomField = useDebouncedCallback((newValues: string[]) => {
         const params = new URLSearchParams(searchParams);
         const customFieldParam = params.get('custom-field');
-        
+
         let customFields: Record<string, string> = {};
         if (customFieldParam) {
             try {
@@ -69,7 +69,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                 customFields = {};
             }
         }
-        
+
         if (newValues.length > 0) {
             // Store as single value if multiple is false, otherwise as array
             const valueToStore = !multiple && newValues.length === 1 ? newValues[0] : newValues;
@@ -83,7 +83,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                 params.set('custom-field', JSON.stringify(customFields));
             }
         }
-        
+
         queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id) });
         const newUrl = `${pathname}?${params.toString()}`;
         push(newUrl);
@@ -91,7 +91,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
 
     const toggleOption = (option: string) => {
         let newValues: string[];
-        
+
         if (selectedValues.includes(option)) {
             // Remove the option
             newValues = selectedValues.filter(v => v !== option);
@@ -99,7 +99,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
             // Always allow multiple selections for filtering purposes
             newValues = [...selectedValues, option];
         }
-        
+
         setSelectedValues(newValues);
         updateCustomField(newValues);
     };
@@ -109,7 +109,7 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
         if (trimmedText && creative && !availableOptions.includes(trimmedText)) {
             const newOptions = [...availableOptions, trimmedText];
             setAvailableOptions(newOptions);
-            
+
             // Auto-select the new option (always add to existing selections)
             const newValues = [...selectedValues, trimmedText];
             setSelectedValues(newValues);
@@ -136,10 +136,10 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
         <div className="p-3 w-80">
             {/* Search/Add Input */}
             <div className="mb-3">
-                <div className="flex items-center space-x-2 px-3 h-10 input-wrapper">
+                <div className="border border-subtle rounded-md flex items-center space-x-2 px-3 h-10">
                     <Input
                         type="text"
-                        className="input-field text-sm font-medium focus-visible:ring-0 p-0 h-auto"
+                        className="text-sm font-medium focus-visible:ring-0 p-0 h-auto"
                         placeholder={creative ? "Search or add new option..." : "Search options..."}
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
@@ -169,16 +169,8 @@ export default function SelectFieldFilterBase({ fieldId, options, multiple, crea
                                     className="flex items-center space-x-3 p-2 rounded-md interactive-subtle cursor-pointer transition-colors duration-150"
                                     data-testid={`filter-select-field-option-${option}`}
                                 >
-                                    <div className={`flex items-center justify-center w-4 h-4 border-2 rounded transition-colors ${
-                                        isSelected 
-                                            ? "bg-foreground border-subtle text-text" 
-                                            : "border-subtle"
-                                    }`}>
-                                        {isSelected && <Check className="h-3 w-3" />}
-                                    </div>
                                     <input
                                         type="checkbox"
-                                        className="sr-only"
                                         checked={isSelected}
                                         onChange={() => toggleOption(option)}
                                     />

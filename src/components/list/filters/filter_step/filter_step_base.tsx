@@ -91,7 +91,15 @@ export default function StepFilterBase() {
             )}
             {data.includePaused && (
                 <SelectItem onClick={() => handleRouteStatusChange(RouteState.Paused)} className="flex items-center justify-between">
-                    <Badge label={"PAUSED"} className="border border-subtle text-muted px-2" />
+                    <StepBadge
+                        step={{
+                            id: RouteState.Paused,
+                            name: "Paused",
+                            type: StepState.NotStarted
+                        }}
+                        pausedStyle={true}
+                        idleStyle={false}
+                    />
                     <CheckIcon className={cn(urlRouteStatus.includes(RouteState.Paused) ? "" : "invisible")} strokeWidth={1.5} size={20} />
                 </SelectItem>
             )}

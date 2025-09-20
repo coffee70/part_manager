@@ -24,7 +24,7 @@ export const stepBackgroundVariants = cva<Variants>(
     {
         variants: {
             variant: {
-                [StepState.NotStarted]: "bg-gray-600 text-text",
+                [StepState.NotStarted]: "bg-gray-600 text-primary-foreground",
                 [StepState.Completed]: "bg-green-600 text-primary-foreground",
                 [StepState.Failed]: "bg-red-600 text-primary-foreground",
                 [StepState.InProgress]: "bg-blue-600 text-primary-foreground"
@@ -47,7 +47,7 @@ export const stepBackgroundVariants = cva<Variants>(
             {
                 variant: StepState.NotStarted,
                 paused: true,
-                class: "f border-accent-foreground"
+                class: "text-accent-secondary border-accent-foreground"
             },
             {
                 variant: StepState.Completed,

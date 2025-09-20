@@ -141,7 +141,7 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
                     <Input
                         ref={startRef}
                         type='time'
-                        className="input-field font-medium focus-visible:ring-0 p-0 h-auto"
+                        className="font-medium focus-visible:ring-0 p-0 h-auto"
                         onChange={e => onStartTimeChange(e.target.value)}
                         value={startTime}
                     />
@@ -150,7 +150,7 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
                         disabled={startTime.length === 0}
                         className={`p-1 rounded ${
                             startTime.length > 0
-                                ? "text-destructive hover:text-destructive hover:bg-destructive-foreground/30 cursor-pointer"
+                                ? "text-destructive hover:text-destructive hover:bg-destructive-focus cursor-pointer"
                                 : "text-weak cursor-not-allowed"
                         }`}
                     >
@@ -166,7 +166,7 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
                     <Input
                         ref={endRef}
                         type='time'
-                        className="input-field font-medium focus-visible:ring-0 p-0 h-auto"
+                        className="font-medium focus-visible:ring-0 p-0 h-auto"
                         onChange={e => onEndTimeChange(e.target.value)}
                         value={endTime}
                     />
@@ -175,7 +175,7 @@ export default function TimeRangeFilter({ paramKey, fieldId }: Props) {
                         disabled={endTime.length === 0}
                         className={`p-1 rounded ${
                             endTime.length > 0
-                                ? "text-destructive hover:text-destructive hover:bg-destructive-foreground/30 cursor-pointer"
+                                ? "text-destructive hover:text-destructive hover:bg-destructive-focus cursor-pointer"
                                 : "text-weak cursor-not-allowed"
                         }`}
                     >
