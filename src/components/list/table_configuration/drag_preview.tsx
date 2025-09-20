@@ -16,18 +16,18 @@ type CustomDragPreviewProps = {
     isFocused: boolean;
 };
 
-export function CustomDragPreview({ 
-    column, 
-    intrinsicFields, 
-    systemColumnInfo, 
-    position, 
-    isFocused 
+export function CustomDragPreview({
+    column,
+    intrinsicFields,
+    systemColumnInfo,
+    position,
+    isFocused
 }: CustomDragPreviewProps) {
     const { context } = useInstanceURL();
-    
+
     // Get the proper plural form
     const contextPlural = context === 'models' ? 'models' : 'routers';
-    
+
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -59,7 +59,10 @@ export function CustomDragPreview({
                 <div className="p-3 flex-1 flex flex-col">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="font-medium text-sm truncate">{columnInfo.name}</span>
-                        <span className="text-xs px-1.5 py-0.5 rounded surface-contrast text-muted flex-shrink-0">
+                        <span className={`text-xs px-1.5 py-0.5 rounded flex-shrink-0 ${columnInfo.type === 'System'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-700'
+                            : 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700'
+                            }`}>
                             {columnInfo.type}
                         </span>
                         {'column' in column && column.column === 'links' && (
@@ -77,7 +80,7 @@ export function CustomDragPreview({
                             </Tooltip>
                         )}
                     </div>
-                    
+
                     <div className="text-xs text-weak line-clamp-3">
                         {columnInfo.description}
                     </div>

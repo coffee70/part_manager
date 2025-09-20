@@ -17,13 +17,13 @@ type SortableColumnItemProps = {
     onRemove: () => void;
 };
 
-export function SortableColumnItem({ 
-    column, 
-    intrinsicFields, 
-    systemColumnInfo, 
-    isFocused, 
-    onFocus, 
-    onRemove 
+export function SortableColumnItem({
+    column,
+    intrinsicFields,
+    systemColumnInfo,
+    isFocused,
+    onFocus,
+    onRemove
 }: SortableColumnItemProps) {
 
     const {
@@ -33,7 +33,7 @@ export function SortableColumnItem({
         transform,
         transition,
         isDragging,
-    } = useSortable({ 
+    } = useSortable({
         id: column._id,
         data: {
             type: 'column',
@@ -92,11 +92,10 @@ export function SortableColumnItem({
             <div className="p-3 cursor-pointer flex-1 flex flex-col" onClick={onFocus}>
                 <div className="flex items-center gap-2 mb-2">
                     <span className="font-medium text-sm truncate">{columnInfo.name}</span>
-                    <span className={`text-xs px-1.5 py-0.5 rounded flex-shrink-0 ${
-                        columnInfo.type === 'System' 
-                            ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-700' 
+                    <span className={`text-xs px-1.5 py-0.5 rounded flex-shrink-0 ${columnInfo.type === 'System'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-900 dark:text-blue-300 dark:border-blue-700'
                             : 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-900 dark:text-green-300 dark:border-green-700'
-                    }`}>
+                        }`}>
                         {columnInfo.type}
                     </span>
                     {'column' in column && column.column === 'links' && (
@@ -114,7 +113,7 @@ export function SortableColumnItem({
                         </Tooltip>
                     )}
                 </div>
-                
+
                 <div className="text-xs text-weak line-clamp-3">
                     {columnInfo.description}
                 </div>
