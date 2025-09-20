@@ -1,5 +1,5 @@
-import TableSkeleton from "@/components/list/data_table/table_skeleton";
+import TableContainerSkeleton from "@/components/list/data_table/table_skeleton";
 
 export default function Loading() {
-    return <TableSkeleton />
+    return <TableContainerSkeleton />
 }

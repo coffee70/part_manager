@@ -7,7 +7,7 @@ import SearchInput from "@/components/list/filters/search_input";
 import { Table, TableBody, TableRow, TableCell, TableHead, TableHeader } from "@/components/ui/table";
 import Label from "@/components/list/data_table/label";
 import People from "@/components/ui/people";
-import TableSkeleton from "@/components/list/data_table/table_skeleton";
+import { TableSkeleton } from "@/components/list/data_table/table_skeleton";
 import Priority from "@/components/list/priority/priority";
 import {
     Instance,
@@ -94,7 +94,7 @@ export default function TableContainer() {
     })
 
     const { data, isError, isPending } = useQuery({
-        queryKey: instanceKeys.all(context, id),
+        queryKey: instanceKeys.all(context, id, searchParams),
         queryFn: () => getInstances({ id, context, searchParams }),
     })
 
@@ -343,8 +343,6 @@ export default function TableContainer() {
         }
     };
 
-    if (isPending) return <TableSkeleton />
-
     if (isError) return <div>Error...</div>
 
     return (
@@ -367,40 +365,44 @@ export default function TableContainer() {
                     </ToolbarRow>
                 )}
             </Toolbar>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        {/* priority column header */}
-                        {hasPriority && <TableHead className="h-8">
-                            <div className="flex items-center gap-1">
-                                <PriorityFilter />
-                            </div>
-                        </TableHead>}
-                        {sortedColumns.map((column) => renderHeaderCell(column))}
-                        <TableHead className="h-8 w-12">
-                            {/* Actions column header */}
-                        </TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {data.map((instance) => (
-                        <TableRow
-                            key={instance._id}
-                            onClick={() => handleClick(instance._id)}
-                            selected={instanceId === instance._id}
-                        >
-                            {/* priority column */}
-                            {hasPriority && <TableCell className="px-1">
-                                <Priority priority={instance.priority} />
-                            </TableCell>}
-                            {sortedColumns.map((column) => renderTableCell(column, instance))}
-                            <TableCell>
-                                <DeleteInstance id={instance._id} />
-                            </TableCell>
+            {isPending ? (
+                <TableSkeleton />
+            ) : (
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            {/* priority column header */}
+                            {hasPriority && <TableHead className="h-8">
+                                <div className="flex items-center gap-1">
+                                    <PriorityFilter />
+                                </div>
+                            </TableHead>}
+                            {sortedColumns.map((column) => renderHeaderCell(column))}
+                            <TableHead className="h-8 w-12">
+                                {/* Actions column header */}
+                            </TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {data.map((instance) => (
+                            <TableRow
+                                key={instance._id}
+                                onClick={() => handleClick(instance._id)}
+                                selected={instanceId === instance._id}
+                            >
+                                {/* priority column */}
+                                {hasPriority && <TableCell className="px-1">
+                                    <Priority priority={instance.priority} />
+                                </TableCell>}
+                                {sortedColumns.map((column) => renderTableCell(column, instance))}
+                                <TableCell>
+                                    <DeleteInstance id={instance._id} />
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            )}
         </DataLayout>
     )
 }

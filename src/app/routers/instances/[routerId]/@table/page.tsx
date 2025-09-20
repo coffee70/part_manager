@@ -27,7 +27,7 @@ export default async function Page({
     })
 
     await queryClient.prefetchQuery({
-        queryKey: instanceKeys.all("routers", routerId),
+        queryKey: instanceKeys.all("routers", routerId, searchParams),
         queryFn: () => getInstances({ id: routerId, context: "routers", searchParams }),
     })
 

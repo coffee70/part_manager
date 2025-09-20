@@ -3,7 +3,7 @@ import { useModelInstanceRoutingURL } from "@/hooks/url_metadata.hook";
 import { routeKeys } from "@/lib/query_keys";
 import { getRoute } from "@/server/routes/get_route";
 import { useQuery } from "@tanstack/react-query";
-import TableSkeleton from "@/components/list/data_table/table_skeleton";
+import { TableSkeleton } from "@/components/list/data_table/table_skeleton";
 import RouteTable from "@/components/ui/route_table";
 import { RouteState } from "@/types/collections";
 import { useRouter } from "next/navigation";
