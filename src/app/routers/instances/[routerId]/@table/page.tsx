@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { NextServerSearchParams } from "@/types/collections";
-import TableContainer from "@/components/instances/table_container";
+import TableContainer from "@/components/instances/table_container/table_container";
 import { instanceKeys, sectionKeys, contextKeys, tableConfigurationKeys, userKeys } from "@/lib/query_keys";
 import { getInstances } from "@/server/instances/get_instances";
 import { getSections } from "@/server/sections/get_sections";
@@ -10,6 +10,7 @@ import { getFieldsByContextId } from "@/server/fields/get_fields_by_context_id";
 import { getContexts } from "@/server/contexts/get_contexts";
 import { getCurrentUser } from "@/server/auth/get_current_user";
 import { getAppearance } from "@/server/auth/get_appearance";
+import { hasPriority } from "@/server/contexts/has_priority";
 
 export default async function Page({
     params,
@@ -27,8 +28,13 @@ export default async function Page({
     })
 
     await queryClient.prefetchQuery({
-        queryKey: instanceKeys.all("routers", routerId, searchParams),
+        queryKey: instanceKeys.all("routers", routerId),
         queryFn: () => getInstances({ id: routerId, context: "routers", searchParams }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: contextKeys.hasPriority("routers", routerId),
+        queryFn: () => hasPriority({ context: "routers", id: routerId }),
     })
 
     await queryClient.prefetchQuery({

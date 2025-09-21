@@ -39,6 +39,9 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
+    console.log('getInstances');
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
     const { id, context, searchParams } = InputSchema.parse(input)
 
     const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);

@@ -26,5 +26,14 @@ export async function hasPriority(
         return false;
     }
 
-    return modelHasPriority({ modelId: id });
+    const hasPriority = await modelHasPriority({ modelId: id });
+
+    // If the model doesn't have a priority, return false
+    // Some databases don't have a priority field leading to 
+    // undefined being returned in a query, which we must handle here
+    if (hasPriority === undefined) {
+        return false;
+    }
+
+    return hasPriority;
 } 

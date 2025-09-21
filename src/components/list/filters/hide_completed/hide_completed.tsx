@@ -1,24 +1,22 @@
 'use client'
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useInstanceURL } from "@/hooks/url_metadata.hook";
-import { useQueryClient } from "@tanstack/react-query";
-import { instanceKeys } from "@/lib/query_keys";
 import { cn } from "@/lib/utils";
+import { useServerTransitionContext } from "@/components/instances/table_container/server_transition.context";
 
 export default function HideCompleted() {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { push } = useRouter();
 
-    const { context, id } = useInstanceURL();
-    const queryClient = useQueryClient();
-
+    const { context } = useInstanceURL();
+    const { startServerTransition } = useServerTransitionContext();
     const urlHideCompleted = searchParams.get('hideCompleted') === 'true';
-    const [localHideCompleted, setLocalHideCompleted] = useState(urlHideCompleted);
+    const [localHideCompleted, setLocalHideCompleted] = React.useState(urlHideCompleted);
 
     // Update local state when URL changes
-    useEffect(() => {
+    React.useEffect(() => {
         setLocalHideCompleted(searchParams.get('hideCompleted') === 'true');
     }, [searchParams]);
 
@@ -33,10 +31,11 @@ export default function HideCompleted() {
         // Optimistically update local state for immediate feedback
         setLocalHideCompleted(value);
 
-        // Update URL and invalidate cache
-        queryClient.invalidateQueries({ queryKey: instanceKeys.all(context, id, searchParams) });
+        // Update URL and start a server transition
         const newUrl = `${pathname}?${params.toString()}`;
-        push(newUrl);
+        startServerTransition(() => {
+            push(newUrl);
+        });
     };
 
     return (

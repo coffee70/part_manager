@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { NextServerSearchParams } from "@/types/collections";
-import TableContainer from "@/components/instances/table_container";
+import TableContainer from "@/components/instances/table_container/table_container";
 import { instanceKeys, sectionKeys, contextKeys, routeKeys, tableConfigurationKeys, userKeys } from "@/lib/query_keys";
 import { getInstances } from "@/server/instances/get_instances";
 import { getSections } from "@/server/sections/get_sections";
@@ -13,6 +13,7 @@ import { getCurrentUser } from "@/server/auth/get_current_user";
 import { getCurrentStep } from "@/server/routes/get_current_step";
 import { getRoute } from "@/server/routes/get_route";
 import { getAppearance } from "@/server/auth/get_appearance";
+import { hasPriority } from "@/server/contexts/has_priority";
 
 export default async function Page({
     params,
@@ -30,8 +31,13 @@ export default async function Page({
     })
 
     await queryClient.prefetchQuery({
-        queryKey: instanceKeys.all("models", id, searchParams),
+        queryKey: instanceKeys.all("models", id),
         queryFn: () => getInstances({ id, context: "models", searchParams }),
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: contextKeys.hasPriority("models", id),
+        queryFn: () => hasPriority({ context: "models", id }),
     })
 
     // fetch current step and route for all instances displayed
