@@ -106,7 +106,7 @@ export default function DateRangeFilter({ paramKey, fieldId }: Props) {
                 onSelect={onChange}
             />
             <Button
-                className="w-full mt-2 border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 hover:border-red-300 active:bg-red-200 active:text-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full mt-2 border border-red-200 dark:border-red-700 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-100 hover:bg-red-100 dark:hover:bg-red-800 active:bg-red-200 active:text-red-800 dark:active:bg-red-800 dark:active:text-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={() => onChange(undefined)}
                 aria-label="Clear selection"
                 disabled={!hasSelection}
