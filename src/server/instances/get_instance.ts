@@ -38,7 +38,7 @@ export async function getInstance(input: z.input<typeof InputSchema>) {
     const { id, instanceId, searchParams } = InputSchema.parse(input);
     if (!instanceId) throw new Error('Instance ID is required');
 
-    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priorities, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);
 
     const instanceCollection = db.collection<InstanceDoc>(id);
 
@@ -69,7 +69,7 @@ export async function getInstance(input: z.input<typeof InputSchema>) {
     const numberBuild = filterNumber(number, pipeline);
     if (numberBuild.match) Object.assign(matchStage, numberBuild.match);
 
-    const priorityBuild = filterPriority(priority, pipeline);
+        const priorityBuild = filterPriority(priorities, pipeline);
     if (priorityBuild.match) Object.assign(matchStage, priorityBuild.match);
 
     const routeStatusBuild = filterRouteStatus(routeStatus, pipeline);

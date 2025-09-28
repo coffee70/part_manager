@@ -39,12 +39,9 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const { user } = await getCurrentSession();
     if (!user) throw new Error('Unauthorized');
 
-    console.log('getInstances');
-    await new Promise(resolve => setTimeout(resolve, 3000));
-
     const { id, context, searchParams } = InputSchema.parse(input)
 
-    const { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);
+    const { updatedAt, search, number, priorities, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted } = getSearchParams(searchParams);
 
     // Get table configuration for links
     let linksColumnConfig: { contextIds: string[], maxLinksPerContext: number } | null = null;
@@ -106,7 +103,7 @@ export async function getInstances(input: z.input<typeof InputSchema>) {
     const numberBuild = filterNumber(number, pipeline);
     if (numberBuild.match) Object.assign(matchStage, numberBuild.match);
 
-    const priorityBuild = filterPriority(priority, pipeline);
+    const priorityBuild = filterPriority(priorities, pipeline);
     if (priorityBuild.match) Object.assign(matchStage, priorityBuild.match);
 
     const routeStatusBuild = filterRouteStatus(routeStatus, pipeline);

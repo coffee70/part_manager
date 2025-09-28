@@ -5,7 +5,7 @@ export const sectionKeys = {
 }
 
 export const instanceKeys = {
-    all: (context: Context, id: string | null) => ['instances', context, id],
+    all: (context: Context, id: string | null, searchParams?: NextServerSearchParams) => searchParams ? ['instances', context, id, searchParams] : ['instances', context, id],
     id: (context: Context, id: string | null, instanceId?: string | null) => [...instanceKeys.all(context, id), instanceId]
 }
 

@@ -1,4 +1,7 @@
-export type CustomFieldFilter = Record<string, string> | undefined;
+import { z } from "zod";
+import { CustomFieldFilterSchema } from "@/lib/search_params";
+
+export type CustomFieldFilter = z.infer<typeof CustomFieldFilterSchema> | undefined;
 
 export type FilterBuild = {
   andConditions?: any[];
@@ -12,12 +15,10 @@ export function filterCustomField(customField: CustomFieldFilter, _pipeline: any
   for (const [fieldId, filterValue] of Object.entries(customField)) {
     let fieldCondition: any = {};
     try {
-      const parsedValue = JSON.parse(filterValue);
-
-      if (parsedValue && typeof parsedValue === "object" && !Array.isArray(parsedValue)) {
-        if (!("from" in parsedValue) && !("to" in parsedValue) && !("start" in parsedValue) && !("end" in parsedValue)) {
+      if (filterValue && typeof filterValue === "object" && !Array.isArray(filterValue)) {
+        if (!("from" in filterValue) && !("to" in filterValue) && !("start" in filterValue) && !("end" in filterValue)) {
           const kvConditions: any[] = [];
-          for (const [key, value] of Object.entries(parsedValue)) {
+          for (const [key, value] of Object.entries(filterValue)) {
             if (value && typeof value === "string" && value.trim() !== "") {
               kvConditions.push({ [`kv_values.${fieldId}.${key}`]: { $regex: value, $options: "i" } });
             }
@@ -25,44 +26,44 @@ export function filterCustomField(customField: CustomFieldFilter, _pipeline: any
           if (kvConditions.length > 0) {
             fieldCondition = kvConditions.length === 1 ? kvConditions[0] : { $and: kvConditions };
           }
-        } else if ("from" in parsedValue || "to" in parsedValue) {
+        } else if ("from" in filterValue || "to" in filterValue) {
           const conditions: any[] = [];
-          if (parsedValue.from) {
-            const fromDate = new Date(parsedValue.from).toISOString().split("T")[0];
+          if ('from' in filterValue && filterValue.from && typeof filterValue.from === "string") {
+            const fromDate = new Date(filterValue.from).toISOString().split("T")[0];
             conditions.push({ [`values.${fieldId}`]: { $gte: fromDate } });
           }
-          if (parsedValue.to) {
-            const toDate = new Date(parsedValue.to).toISOString().split("T")[0];
+          if ('to' in filterValue && filterValue.to && typeof filterValue.to === "string") {
+            const toDate = new Date(filterValue.to).toISOString().split("T")[0];
             conditions.push({ [`values.${fieldId}`]: { $lte: toDate } });
           }
           if (conditions.length > 0) {
             fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
           }
-        } else if ("start" in parsedValue || "end" in parsedValue) {
+        } else if ("start" in filterValue || "end" in filterValue) {
           const conditions: any[] = [];
-          if (parsedValue.start) {
-            conditions.push({ [`values.${fieldId}`]: { $gte: parsedValue.start } });
+          if ('start' in filterValue && filterValue.start) {
+            conditions.push({ [`values.${fieldId}`]: { $gte: filterValue.start } });
           }
-          if (parsedValue.end) {
-            conditions.push({ [`values.${fieldId}`]: { $lte: parsedValue.end } });
+          if ('end' in filterValue && filterValue.end) {
+            conditions.push({ [`values.${fieldId}`]: { $lte: filterValue.end } });
           }
           if (conditions.length > 0) {
             fieldCondition = conditions.length === 1 ? conditions[0] : { $and: conditions };
           }
         }
-      } else if (Array.isArray(parsedValue)) {
-        fieldCondition = { [`values.${fieldId}`]: { $in: parsedValue } };
-      } else if (typeof parsedValue === "string") {
-        fieldCondition = { [`values.${fieldId}`]: { $regex: parsedValue, $options: "i" } };
-      } else if (typeof parsedValue === "number") {
+      } else if (Array.isArray(filterValue)) {
+        fieldCondition = { [`values.${fieldId}`]: { $in: filterValue } };
+      } else if (typeof filterValue === "string") {
+        fieldCondition = { [`values.${fieldId}`]: { $regex: filterValue, $options: "i" } };
+      } else if (typeof filterValue === "number") {
         fieldCondition = {
           $or: [
-            { [`values.${fieldId}`]: parsedValue },
-            { [`values.${fieldId}`]: { $regex: parsedValue.toString(), $options: "i" } },
+            { [`values.${fieldId}`]: filterValue },
+            { [`values.${fieldId}`]: { $regex: filterValue.toString(), $options: "i" } },
           ],
         };
       } else {
-        fieldCondition = { [`values.${fieldId}`]: parsedValue };
+        fieldCondition = { [`values.${fieldId}`]: filterValue };
       }
     } catch {
       continue;

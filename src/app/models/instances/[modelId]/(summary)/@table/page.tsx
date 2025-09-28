@@ -30,8 +30,8 @@ export default async function Page({
         queryFn: () => getContext({ context: "models", id }),
     })
 
-    await queryClient.prefetchQuery({
-        queryKey: instanceKeys.all("models", id),
+    const instances = await queryClient.fetchQuery({
+        queryKey: instanceKeys.all("models", id, searchParams),
         queryFn: () => getInstances({ id, context: "models", searchParams }),
     })
 
@@ -41,7 +41,6 @@ export default async function Page({
     })
 
     // fetch current step and route for all instances displayed
-    const instances = await getInstances({ id, context: "models", searchParams });
     for (const instance of instances) {
         await queryClient.prefetchQuery({
             queryKey: routeKeys.currentStep(id, instance._id.toString()),

@@ -1,16 +1,18 @@
 import { ReadonlyURLSearchParams } from "next/navigation"
 import { z } from "zod"
-import { NextServerSearchParams, Priority, sortKeys } from "@/types/collections"
+import { NextServerSearchParams, priorities, sortKeys } from "@/types/collections"
 import { RouteState } from "@/types/collections";
 
-const UpdatedAt = z.object({
+export const UpdatedAtSchema = z.object({
     to: z.coerce.date().optional(),
     from: z.coerce.date().optional(),
 });
 
-const LinkFilter = z.record(z.string(), z.string());
+export const LinkFilterSchema = z.record(z.string(), z.string());
 
-const CustomFieldFilter = z.record(z.string(), z.string());
+export const CustomFieldFilterSchema = z.record(z.string(), z.unknown());
+
+export const PriorityFilterSchema = z.union([z.enum(priorities), z.array(z.enum(priorities))]);
 
 export type SearchParams = NextServerSearchParams | ReadonlyURLSearchParams
 
@@ -33,7 +35,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("updatedAt must be a json string");
     }
     const updatedAtParsed = updatedAtJson ? JSON.parse(updatedAtJson) : undefined;
-    const { data: updatedAt, error: updatedAtError } = UpdatedAt.optional().safeParse(updatedAtParsed);
+    const { data: updatedAt, error: updatedAtError } = UpdatedAtSchema.optional().safeParse(updatedAtParsed);
     if (updatedAtError) {
         throw new Error("updatedAt must be a valid date range");
     }
@@ -51,7 +53,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
     }
 
     // pull out priority
-    const { data: priority, error: priorityError } = z.custom<Priority>().optional().safeParse(params.priority);
+    const { data: priorities, error: priorityError } = PriorityFilterSchema.optional().safeParse(params.priority);
     if (priorityError) {
         throw new Error("priority must be a valid priority");
     }
@@ -85,7 +87,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("link must be a json string");
     }
     const linkParsed = linkJson ? JSON.parse(linkJson) : undefined;
-    const { data: link, error: linkError } = LinkFilter.optional().safeParse(linkParsed);
+    const { data: link, error: linkError } = LinkFilterSchema.optional().safeParse(linkParsed);
     if (linkError) {
         throw new Error("link must be a valid link filter object");
     }
@@ -96,7 +98,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
         throw new Error("custom-field must be a json string");
     }
     const customFieldParsed = customFieldJson ? JSON.parse(customFieldJson) : undefined;
-    const { data: customField, error: customFieldError } = CustomFieldFilter.optional().safeParse(customFieldParsed);
+    const { data: customField, error: customFieldError } = CustomFieldFilterSchema.optional().safeParse(customFieldParsed);
     if (customFieldError) {
         throw new Error("custom-field must be a valid custom field filter object");
     }
@@ -104,7 +106,7 @@ export const getSearchParams = (searchParams?: SearchParams) => {
     // pull out hideCompleted
     const hideCompleted = params.hideCompleted === 'true';
 
-    return { updatedAt, search, number, priority, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted };
+    return { updatedAt, search, number, priorities, steps, routeStatus, sortBy, sortOrder, link, customField, hideCompleted };
 }
 
 // Client → Server: convert ReadonlyURLSearchParams to NextServerSearchParams

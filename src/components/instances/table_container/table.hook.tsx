@@ -41,7 +41,7 @@ export default function useTable() {
         isPending: isInstancesPending, 
         isFetching: isInstancesFetching 
     } = useQuery({
-        queryKey: instanceKeys.all(context, id),
+        queryKey: instanceKeys.all(context, id, searchParams),
         queryFn: () => getInstances({ id, context, searchParams }),
     })
 
